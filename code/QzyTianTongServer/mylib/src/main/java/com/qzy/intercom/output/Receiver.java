@@ -32,8 +32,10 @@ public class Receiver extends JobHandler {
             DatagramPacket datagramPacket = new DatagramPacket(receivedData, receivedData.length);
             try {
                 // 接收数据报文
-                Unicast.getUnicast().getReceiveSocket().receive(datagramPacket);
-            } catch (IOException e) {
+                if (Unicast.getUnicast().getReceiveSocket() != null) {
+                    Unicast.getUnicast().getReceiveSocket().receive(datagramPacket);
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             // 判断数据报文类型，并做相应处理
@@ -85,7 +87,7 @@ public class Receiver extends JobHandler {
      */
     private void handleAudioData(DatagramPacket packet) {
 
-       // byte[] data = Arrays.copyOfRange(packet.getData(),1,1024 * 4  + 1);
+        // byte[] data = Arrays.copyOfRange(packet.getData(),1,1024 * 4  + 1);
         AudioData audioData = new AudioData(packet.getData());
         MessageQueue.getInstance(MessageQueue.DECODER_DATA_QUEUE).put(audioData);
     }

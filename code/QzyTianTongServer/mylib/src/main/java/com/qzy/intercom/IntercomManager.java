@@ -48,16 +48,17 @@ public class IntercomManager {
     private void initJobHandler() {
         // 初始化音频输入节点
         recorder = new Recorder(handler);
-        //recorder.setRecording(true);
+        recorder.setRecording(true);
         encoder = new Encoder(handler);
         sender = new Sender(handler);
         // 初始化音频输出节点
         receiver = new Receiver(handler);
         decoder = new Decoder(handler);
         tracker = new Tracker(handler);
+        tracker.setPlaying(true);
 
         //recorder
-        //threadPool.execute(recorder);
+        threadPool.execute(recorder);
         threadPool.execute(encoder);
         threadPool.execute(sender);
 
@@ -65,7 +66,7 @@ public class IntercomManager {
         //player
         threadPool.execute(receiver);
         threadPool.execute(decoder);
-        //threadPool.execute(tracker);
+        threadPool.execute(tracker);
 
     }
 

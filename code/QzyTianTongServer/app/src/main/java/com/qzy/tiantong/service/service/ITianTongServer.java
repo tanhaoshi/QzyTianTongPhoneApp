@@ -12,12 +12,15 @@ public interface ITianTongServer {
     QzyPhoneManager getQzyPhoneManager();
 
     /**  初始化天通资源  **/
-    void initLocalPcmDevice();
+   /* void initLocalPcmDevice();
     void startRecorder();
     void startPlayer();
-    void closeRecorderAndPlayer();
+    void closeRecorderAndPlayer();*/
 
      void onPhoneStateChange(TtPhoneState state);
+
+    void initTtPcmDevice();
+    void freeTtPcmDevice();
 
 
 }

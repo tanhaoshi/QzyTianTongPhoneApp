@@ -50,6 +50,8 @@ public class Recorder extends JobHandler {
                 MessageQueue.getInstance(MessageQueue.ENCODER_DATA_QUEUE).put(audioData);
             }
         }
+
+        free();
     }
 
     @Override

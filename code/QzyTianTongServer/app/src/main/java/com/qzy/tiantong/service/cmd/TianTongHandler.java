@@ -27,10 +27,10 @@ public class TianTongHandler extends Handler {
         try {
             switch (msg.what) {
                 case 222:
-                    mServer.startRecorder();
+                    //mServer.startRecorder();
                     break;
                 case msg_init_localpcm:
-                    mServer.initLocalPcmDevice();
+                    //mServer.initLocalPcmDevice();
                     break;
                 case PrototocalTools.IProtoServerIndex.call_phone:
                     CallPhoneProtos.CallPhone callPhone = (CallPhoneProtos.CallPhone) msg.obj;

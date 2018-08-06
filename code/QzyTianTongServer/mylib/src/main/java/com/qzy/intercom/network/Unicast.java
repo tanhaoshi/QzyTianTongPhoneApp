@@ -22,7 +22,7 @@ public class Unicast {
     //private DatagramPacket sendPacket;
     private DatagramSocket sendSocket;
 
-    private static final Unicast unicast = new Unicast();
+    private static Unicast unicast;
 
     private Unicast() {
         try {
@@ -38,6 +38,9 @@ public class Unicast {
     }
 
     public static Unicast getUnicast() {
+        if (unicast == null) {
+            unicast = new Unicast();
+        }
         return unicast;
     }
 

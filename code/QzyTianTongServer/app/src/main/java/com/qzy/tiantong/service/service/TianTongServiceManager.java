@@ -120,33 +120,9 @@ public class TianTongServiceManager implements ITianTongServer {
         return mQzyPhoneManager;
     }
 
-    @Override
-    public void initLocalPcmDevice() {
-        mIntercomManager = new IntercomManager();
-    }
 
-    @Override
-    public void startRecorder() {
-        if (mIntercomManager != null) {
-            mIntercomManager.startRecord();
-        }
-    }
 
-    @Override
-    public void startPlayer() {
-        if (mIntercomManager != null) {
-            mIntercomManager.startPlayer();
-        }
 
-    }
-
-    @Override
-    public void closeRecorderAndPlayer() {
-        if (mIntercomManager != null) {
-            mIntercomManager.stopPlayer();
-            mIntercomManager.stopRecord();
-        }
-    }
 
     @Override
     public void onPhoneStateChange(TtPhoneState state) {
@@ -170,6 +146,23 @@ public class TianTongServiceManager implements ITianTongServer {
             cmd.setMessage(callPhoneState);
             mNettyServerManager.sendData(cmd);
         }
+    }
+
+    @Override
+    public void initTtPcmDevice() {
+        LogUtils.e("initTtPcmDevice");
+        if(mIntercomManager == null){
+            mIntercomManager = new IntercomManager();
+        }
+    }
+
+    @Override
+    public void freeTtPcmDevice() {
+        if(mIntercomManager != null){
+            mIntercomManager.release();
+            mIntercomManager = null;
+        }
+
     }
 
 

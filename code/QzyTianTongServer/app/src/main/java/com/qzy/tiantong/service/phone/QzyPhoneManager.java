@@ -52,7 +52,8 @@ public class QzyPhoneManager {
                     break;
                 case TelephonyManager.CALL_STATE_IDLE:
                     LogUtils.e("========hung up=======");
-                    mServer.closeRecorderAndPlayer();
+                    //mServer.closeRecorderAndPlayer();
+                    mServer.freeTtPcmDevice();
                     mServer.onPhoneStateChange(TtPhoneState.HUANGUP);
                     //挂断状态
                     break;
