@@ -7,12 +7,10 @@ import com.qzy.intercom.data.AudioData;
 import com.qzy.intercom.data.MessageQueue;
 import com.qzy.intercom.job.JobHandler;
 import com.qzy.intercom.network.Unicast;
-import com.qzy.intercom.util.Buffer;
 import com.qzy.intercom.util.Command;
+import com.qzy.utils.LogUtils;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
-import java.util.Arrays;
 
 /**
  * Created by yanghao1 on 2017/4/12.
@@ -28,12 +26,13 @@ public class Receiver extends JobHandler {
     public void run() {
         while (true) {
             // 设置接收缓冲段
-            byte[] receivedData = new byte[4096 + 1];
+            byte[] receivedData = new byte[160 * 8 + 1];
             DatagramPacket datagramPacket = new DatagramPacket(receivedData, receivedData.length);
             try {
                 // 接收数据报文
                 if (Unicast.getUnicast().getReceiveSocket() != null) {
                     Unicast.getUnicast().getReceiveSocket().receive(datagramPacket);
+                   /// LogUtils.e("receiver data .....");
                 }
             } catch (Exception e) {
                 e.printStackTrace();

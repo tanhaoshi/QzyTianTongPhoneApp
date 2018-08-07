@@ -45,7 +45,7 @@ public class Tracker extends JobHandler {
             if (readLen == 0) {
                 readLen = VoiceManager.initPcmPlayer();
             }
-            if (readLen == 4096) {
+            if (readLen == 160 * 8) {
                 AudioData audioData;
                 while ((audioData = MessageQueue.getInstance(MessageQueue.TRACKER_DATA_QUEUE).take()) != null) {
                     if (isPlaying()) {

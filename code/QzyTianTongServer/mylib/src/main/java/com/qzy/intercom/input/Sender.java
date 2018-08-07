@@ -35,19 +35,22 @@ public class Sender extends JobHandler {
             if (id < 256) {
                 id++;
             } else {
-                id = 0;
+                id = 1;
             }
             data[0] = ByteUtils.intToByte(id);
-            System.arraycopy(audioData.getEncodedData(),0,data,1,len);
+            System.arraycopy(audioData.getEncodedData(), 0, data, 1, len);
 
             DatagramPacket datagramPacket = new DatagramPacket(
                     data, data.length,
-                   Unicast.getUnicast().getInetAddress(), Constants.UNICAST_PORT);
+                    Unicast.getUnicast().getInetAddress(), Constants.UNICAST_PORT);
             try {
                 //Multicast.getMulticast().getMulticastSocket().send(datagramPacket);
 
-                Unicast.getUnicast().getSendSocket().send(datagramPacket);
-            } catch (IOException e) {
+                if( Unicast.getUnicast().getSendSocket() != null) {
+                    Unicast.getUnicast().getSendSocket().send(datagramPacket);
+                }
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

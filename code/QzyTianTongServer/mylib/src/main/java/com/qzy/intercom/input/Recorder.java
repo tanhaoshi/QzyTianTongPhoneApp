@@ -43,7 +43,8 @@ public class Recorder extends JobHandler {
             if (readLen == 0) {
                 readLen = VoiceManager.initPcmRecorder();
             }
-            if(readLen == 4096) {
+            //LogUtils.e("readLen == " + readLen);
+            if(readLen == 160 * 8) {
                 byte[] rawData = new byte[readLen];
                 VoiceManager.readPcmData(rawData);
                 AudioData audioData = new AudioData(rawData);
@@ -58,6 +59,7 @@ public class Recorder extends JobHandler {
     public void free() {
         // 释放音频录制资源
         VoiceManager.releasePcmRecorder();
+        readLen = 0;
     }
 
 }
