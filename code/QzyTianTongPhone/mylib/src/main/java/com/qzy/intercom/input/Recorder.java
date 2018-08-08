@@ -56,9 +56,9 @@ public class Recorder extends JobHandler {
             byte[] rawData = new byte[160 * 8 * 2 ];
             audioRecord.read(rawData, 0, rawData.length);
 
-           /* if (VoiceInputUtils.calculateVolume(rawData, 16) < 2) {
+            if (VoiceInputUtils.calculateVolume(rawData, 16) < 2) {
                 continue;
-            }*/
+            }
 
             //LogUtils.e("rawData.length = " + rawData.length);
             int readSize = rawData.length;
