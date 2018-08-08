@@ -83,4 +83,11 @@ public class MessageQueue {
     public synchronized void clear() {
         audioDataQueue.clear();
     }
+
+    public static void release(){
+        MessageQueue.getInstance(MessageQueue.ENCODER_DATA_QUEUE).clear();
+        MessageQueue.getInstance(MessageQueue.SENDER_DATA_QUEUE).clear();
+        MessageQueue.getInstance(MessageQueue.DECODER_DATA_QUEUE).clear();
+        MessageQueue.getInstance(MessageQueue.TRACKER_DATA_QUEUE).clear();
+    }
 }

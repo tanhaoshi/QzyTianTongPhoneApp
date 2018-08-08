@@ -8,6 +8,7 @@ import com.qzy.intercom.job.JobHandler;
 import com.qzy.intercom.network.Unicast;
 import com.qzy.intercom.util.ByteUtils;
 import com.qzy.intercom.util.Constants;
+import com.qzy.utils.LogUtils;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -21,6 +22,8 @@ public class Sender extends JobHandler {
 
     private int id = 0;
 
+    private boolean isBreak;
+
     public Sender(Handler handler) {
         super(handler);
     }
@@ -29,6 +32,10 @@ public class Sender extends JobHandler {
     public void run() {
         AudioData audioData;
         while ((audioData = MessageQueue.getInstance(MessageQueue.SENDER_DATA_QUEUE).take()) != null) {
+            //LogUtils.d("Sender tid = " + android.os.Process.myTid()+" name "+Thread.currentThread().getName());
+            if(isBreak){
+                break;
+            }
             int len = audioData.getEncodedData().length;
             //LogUtils.e("audioData.getEncodedData().length = " + len);
             byte[] data = new byte[audioData.getEncodedData().length + 1];
@@ -54,11 +61,14 @@ public class Sender extends JobHandler {
                 e.printStackTrace();
             }
         }
+        Unicast.setUnicast(null);
     }
 
     @Override
     public void free() {
         //Multicast.getMulticast().free();
         Unicast.getUnicast().free();
+        isBreak = true;
     }
+
 }

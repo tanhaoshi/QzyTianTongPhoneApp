@@ -1,9 +1,14 @@
 package com.qzy.netty;
 
 
-import java.nio.ByteBuffer;
+import com.google.protobuf.Message;
+import com.qzy.data.PhoneCmd;
+import com.qzy.data.PrototocalTools;
+import com.qzy.utils.ByteUtils;
+import com.qzy.utils.LogUtils;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 
 /**
@@ -27,9 +32,9 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
 
 
     @Override
-    public void onReceiveData(byte[] data) {
+    public void onReceiveData(ByteBufInputStream inputStream) {
        if(iNettyListener != null){
-           iNettyListener.onReceiveData(data);
+           iNettyListener.onReceiveData(inputStream);
        }
     }
 
@@ -44,9 +49,28 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
         }
     }
 
-    public void sendData(byte[] data){
-        if(mNettyClent != null){
-            mNettyClent.sendData(data);
+    public void sendData(PhoneCmd cmd){
+        try {
+            if (mNettyClent != null && mNettyClent.getConnectHanlerCtx() != null) {
+                ByteBuf buff = mNettyClent.getConnectHanlerCtx().alloc().buffer(36);
+                ByteBufOutputStream stream = new ByteBufOutputStream(buff);
+                stream.write(PrototocalTools.HEAD);  // 添加协议头
+                stream.writeInt(cmd.getProtoId());
+                Message msg = cmd.getMessage().toBuilder().build();
+                ByteBuf dataBuff = mNettyClent.getConnectHanlerCtx().alloc().buffer();
+                ByteBufOutputStream dataStream = new ByteBufOutputStream(dataBuff);
+                msg.writeDelimitedTo(dataStream);
+                dataStream.flush();
+                int len = dataBuff.capacity();
+                stream.writeInt(len);
+                stream.write(dataBuff.array(), 0, len);
+                //stream.writeBytes(cmdData);
+                LogUtils.d("write buff:" + ByteUtils.byteArrToHexString(buff.array()));
+                stream.flush();
+                mNettyClent.getConnectHanlerCtx().writeAndFlush(buff);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -64,7 +88,7 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
      * 接口回调
      */
     public interface INettyListener{
-        void onReceiveData(byte[] data);
+        void onReceiveData(ByteBufInputStream inputStream);
         void onConnected();
         void onDisconnected();
     }

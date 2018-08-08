@@ -1,5 +1,6 @@
 package com.qzy.tt.phone.eventbus;
 
+import com.qzy.data.PhoneCmd;
 import com.qzy.eventbus.MessageEvent;
 
 /**
@@ -9,13 +10,18 @@ import com.qzy.eventbus.MessageEvent;
 public class CommandModel extends MessageEvent {
     private boolean isStartRecorder;
 
-    private String phoneNumber;
 
     private String msgTag;
+
+   // private PhoneCmd cmd;
 
     public CommandModel(String msg){
         msgTag = msg;
     }
+
+    /*public CommandModel(PhoneCmd cmd){
+       this.cmd = cmd;
+    }*/
 
     public boolean isStartRecorder() {
         return isStartRecorder;
@@ -33,12 +39,12 @@ public class CommandModel extends MessageEvent {
         this.msgTag = msgTag;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+   /*public PhoneCmd getCmd() {
+        return cmd;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+    public void setCmd(PhoneCmd cmd) {
+        this.cmd = cmd;
+    }*/
 
 }

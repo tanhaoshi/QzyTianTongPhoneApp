@@ -89,4 +89,7 @@ public class Unicast {
         }
     }
 
+    public static void setUnicast(Unicast unicast) {
+        Unicast.unicast = unicast;
+    }
 }

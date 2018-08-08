@@ -9,6 +9,7 @@ import com.qzy.intercom.data.MessageQueue;
 import com.qzy.intercom.job.JobHandler;
 import com.qzy.intercom.util.Constants;
 import com.qzy.utils.LogUtils;
+import com.qzy.voice.VoiceInputUtils;
 
 
 /**
@@ -52,10 +53,24 @@ public class Recorder extends JobHandler {
             // 实例化音频数据缓冲
            /* short[] rawData = new short[1024 * 2];
             audioRecord.read(rawData, 0, inAudioBufferSize);*/
-            byte[] rawData = new byte[1024 * 4];
+            byte[] rawData = new byte[160 * 8 * 2 ];
             audioRecord.read(rawData, 0, rawData.length);
+
+           /* if (VoiceInputUtils.calculateVolume(rawData, 16) < 2) {
+                continue;
+            }*/
+
             //LogUtils.e("rawData.length = " + rawData.length);
-            AudioData audioData = new AudioData(rawData);
+            int readSize = rawData.length;
+            byte[] leftChannelAudioData = new byte[readSize / 2];
+            for (int i = 0; i < readSize / 2; i = i + 2) {
+                leftChannelAudioData[i] = rawData[2 * i];
+                leftChannelAudioData[i + 1] = rawData[2 * i + 1];
+                //rightChannelAudioData[i] =  audiodata[2*i+2];
+                //rightChannelAudioData[i+1] = audiodata[2*i+3];
+            }
+            AudioData audioData = new AudioData(leftChannelAudioData);
+           // AudioData audioData = new AudioData(rawData);
             MessageQueue.getInstance(MessageQueue.ENCODER_DATA_QUEUE).put(audioData);
         }
     }

@@ -17,7 +17,6 @@ import java.util.List;
 
 public class LocalPcmManager {
 
-    private Context mContext;
 
     private int isRead = -1;
 
@@ -31,8 +30,7 @@ public class LocalPcmManager {
 
     private boolean isOpen = false;
 
-    public LocalPcmManager(Context context, IReadPcmData listener) {
-        mContext = context;
+    public LocalPcmManager(IReadPcmData listener) {
         iReadPcmData = listener;
     }
 
@@ -45,8 +43,8 @@ public class LocalPcmManager {
         try {
             isWrite = VoiceManager.initPcmPlayer();
             isRead = VoiceManager.initPcmRecorder();
-            if(isRead != -1 || isWrite != -1){
-                isOpen  = true;
+            if (isRead != -1 || isWrite != -1) {
+                isOpen = true;
             }
             LogUtils.d("read pcm data isRead = " + isRead);
             readThread = new Thread(mReadThread);
@@ -62,18 +60,18 @@ public class LocalPcmManager {
     private Runnable mReadThread = new Runnable() {
         @Override
         public void run() {
-           while (isRead == 4096){
-               byte[] data = new byte[isRead];
-             //  LogUtils.d("read pcm to local my tid = " + android.os.Process.myTid()+" name "+Thread.currentThread().getName());
-               int len = VoiceManager.readPcmData(data);
-              //  LogUtils.d("read pcm data len = " + len);
-               //LogUtils.d("read pcm data = " + ByteUtils.byteArrToHexString(data));
-               if(len > 0){
-                   if(iReadPcmData != null){
-                       iReadPcmData.readData(data);
-                   }
-               }
-           }
+            while (isRead == 4096) {
+                byte[] data = new byte[isRead];
+                //  LogUtils.d("read pcm to local my tid = " + android.os.Process.myTid()+" name "+Thread.currentThread().getName());
+                int len = VoiceManager.readPcmData(data);
+                //  LogUtils.d("read pcm data len = " + len);
+                //LogUtils.d("read pcm data = " + ByteUtils.byteArrToHexString(data));
+                if (len > 0) {
+                    if (iReadPcmData != null) {
+                        iReadPcmData.readData(data);
+                    }
+                }
+            }
         }
     };
 
@@ -84,9 +82,9 @@ public class LocalPcmManager {
     private Runnable mWriteThread = new Runnable() {
         @Override
         public void run() {
-            while (isStop){
+            while (isStop) {
 
-               // LogUtils.d("write pcm to local my tid = " + android.os.Process.myTid()+" name "+Thread.currentThread().getName());
+                // LogUtils.d("write pcm to local my tid = " + android.os.Process.myTid()+" name "+Thread.currentThread().getName());
 
                 // 暂停当前线程
                 if (isSuspended) {
@@ -100,13 +98,13 @@ public class LocalPcmManager {
                 }
 
                 if (mListPhoneData != null && mListPhoneData.size() > 0) {
-                    if(mListPhoneData.get(0) != null){
+                    if (mListPhoneData.get(0) != null) {
                         byte[] data = mListPhoneData.get(0).data;
-                        if(data != null && data[0] != 0){
+                        if (data != null && data[0] != 0) {
                             byte[] dataValue = new byte[data.length - 1];
                             System.arraycopy(data, 1, dataValue, 0, dataValue.length);
 
-                           // LogUtils.d("write receive pohone data inde =" + ByteUtils.byteToInt(data[0]));
+                            // LogUtils.d("write receive pohone data inde =" + ByteUtils.byteToInt(data[0]));
                             writePcmData(dataValue);
                             mListPhoneData.remove(0);
                             // appServiceManager.setVoiceReaderResume();
@@ -114,22 +112,22 @@ public class LocalPcmManager {
                     }
 
 
-                }else{
+                } else {
                     isSuspended = true;
                 }
             }
         }
     };
 
-    public void setPcmData(byte[] data){
+    public void setPcmData(byte[] data) {
         setIsSuspended(false);
-        if(mListPhoneData == null){
+        if (mListPhoneData == null) {
             mListPhoneData = new ArrayList<>();
         }
         if (data != null && data.length > 100 && data[0] != 0) {
             MyBuffer myBuffer = new MyBuffer();
             myBuffer.data = new byte[data.length];
-            System.arraycopy(data,0,myBuffer.data,0,data.length);
+            System.arraycopy(data, 0, myBuffer.data, 0, data.length);
             mListPhoneData.add(myBuffer);
         }
     }
@@ -140,7 +138,7 @@ public class LocalPcmManager {
 
     public void setIsSuspended(boolean isSuspend) {
         this.isSuspended = isSuspend;
-        if(!isSuspended) {
+        if (!isSuspended) {
             synchronized (obj) {
                 obj.notify();
             }
@@ -166,7 +164,7 @@ public class LocalPcmManager {
         return isOpen;
     }
 
-    public void writePcmData(byte[] data){
+    public void writePcmData(byte[] data) {
         VoiceManager.writePcmData(data);
     }
 
@@ -177,11 +175,11 @@ public class LocalPcmManager {
 
         try {
             closePlayAndRecorderDevice();
-            if(readThread != null && readThread.isAlive()){
+            if (readThread != null && readThread.isAlive()) {
                 readThread.interrupt();
             }
 
-            if(writeThread != null && writeThread.isAlive()){
+            if (writeThread != null && writeThread.isAlive()) {
                 writeThread.interrupt();
             }
 
@@ -191,7 +189,7 @@ public class LocalPcmManager {
     }
 
 
-    public interface IReadPcmData{
+    public interface IReadPcmData {
 
         void readData(byte[] data);
 

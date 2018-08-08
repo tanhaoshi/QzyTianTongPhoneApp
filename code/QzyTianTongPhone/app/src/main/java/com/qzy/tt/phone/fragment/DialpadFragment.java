@@ -3,6 +3,7 @@ package com.qzy.tt.phone.fragment;
 
 import android.annotation.SuppressLint;
 
+import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
@@ -10,7 +11,6 @@ import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;

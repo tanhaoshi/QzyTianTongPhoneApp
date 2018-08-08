@@ -18,6 +18,7 @@ public class PrototocalTools {
 
     public interface IProtoServerIndex{
         int call_phone = 102;
+        int chang_pcmplayer_db = 104;
     }
 
     public interface IProtoClientIndex{

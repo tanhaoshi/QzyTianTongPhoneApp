@@ -1,10 +1,10 @@
 package com.qzy.tt.phone;
 
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,8 +13,15 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.qzy.data.PhoneCmd;
+import com.qzy.data.PrototocalTools;
+import com.qzy.intercom.util.IPUtil;
+import com.qzy.tt.data.CallPhoneProtos;
 import com.qzy.tt.phone.common.CommonData;
+import com.qzy.tt.phone.common.IFragmentChange;
+import com.qzy.tt.phone.eventbus.CallingModel;
 import com.qzy.tt.phone.eventbus.CommandModel;
+import com.qzy.tt.phone.fragment.CallingFragment;
 import com.qzy.tt.phone.fragment.DialpadFragment;
 import com.qzy.tt.phone.fragment.StateFragment;
 import com.qzy.tt.phone.service.TtPhoneService;
@@ -27,8 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements DialpadFragment.OnDialpadQueryChangedListener {
-
+public class MainActivity extends AppCompatActivity implements DialpadFragment.OnDialpadQueryChangedListener,IFragmentChange {
 
 
     @BindView(R.id.button_dialpad)
@@ -43,7 +49,11 @@ public class MainActivity extends AppCompatActivity implements DialpadFragment.O
     //拨号键盘
     private DialpadFragment mDialpadFragment;
     private static final String TAG_DIALPAD_FRAGMENT = "dialpad";
+
     private static final String TAG_STATE_FRAGMENT = "state";
+
+    private CallingFragment mCallingFragment;
+    private static final String TAG_CALLING_FRAGMENT = "calling";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +63,14 @@ public class MainActivity extends AppCompatActivity implements DialpadFragment.O
         ButterKnife.bind(this);
         mContext = this;
         if (savedInstanceState == null) {
-            getSupportFragmentManager()
+            getFragmentManager()
                     .beginTransaction()
-                    .add(R.id.layout_dial,new StateFragment(),TAG_STATE_FRAGMENT)
-                    .add(R.id.layout_dialer_panel, new DialpadFragment(), TAG_DIALPAD_FRAGMENT).commit();
+                    .add(R.id.layout_dial, new StateFragment(), TAG_STATE_FRAGMENT)
+                    .add(R.id.layout_dialer_panel, new DialpadFragment(), TAG_DIALPAD_FRAGMENT)
+                    .add(R.id.layout_calling, new CallingFragment(), TAG_CALLING_FRAGMENT)
+                    .commit();
         }
-
+        CommonData.localWifiIp = IPUtil.getLocalIPAddress(this);
     }
 
 
@@ -66,10 +78,17 @@ public class MainActivity extends AppCompatActivity implements DialpadFragment.O
     public void onAttachFragment(Fragment fragment) {
         if (fragment instanceof DialpadFragment) {
             mDialpadFragment = (DialpadFragment) fragment;
-            final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            final FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.hide(mDialpadFragment);
             transaction.commit();
+        } else if (fragment instanceof CallingFragment) {
+            mCallingFragment = (CallingFragment) fragment;
+            final FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.hide(mCallingFragment);
+            transaction.commit();
         }
+
+
        /* else if (fragment instanceof RecentContactsFragment) {
             mFrequentDialFragment = (RecentContactsFragment) fragment;
         }*/
@@ -86,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements DialpadFragment.O
     /**
      * 开启服务
      */
-    private  void startServcie(){
+    private void startServcie() {
         startService(new Intent(this, TtPhoneService.class));
 
     }
@@ -94,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements DialpadFragment.O
     /**
      * 停止服务
      */
-    private  void stopServcie(){
+    private void stopServcie() {
         stopService(new Intent(this, TtPhoneService.class));
 
     }
@@ -112,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements DialpadFragment.O
         mDialpadButton.setVisibility(View.GONE);
         mDialButton.setVisibility(View.VISIBLE);
         // mSmsButton.setVisibility(View.VISIBLE);
-        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        final FragmentTransaction ft = getFragmentManager().beginTransaction();
         if (animate) {
             ft.setCustomAnimations(R.anim.slide_in, 0);
         } else {
@@ -128,6 +147,20 @@ public class MainActivity extends AppCompatActivity implements DialpadFragment.O
 
     @Override
     public void onBackPressed() {
+
+        if(isDCallingShowing()){
+
+           /* long currentTime = System.currentTimeMillis();
+            if ((currentTime - touchTime) >= waitTime) {
+                Toast.makeText(this, "再按一次挂断电话", Toast.LENGTH_SHORT).show();
+                touchTime = currentTime;
+            } else {
+               hideCallingView();
+            }*/
+
+            return;
+        }
+
         if (isDialpadShowing()) {
             hideDialpad(true, false);
             return;
@@ -167,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements DialpadFragment.O
         if (!mDialpadFragment.isVisible())
             return;
         mDialpadFragment.setAdjustTranslationForAnimation(animate);
-        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        final FragmentTransaction ft = getFragmentManager().beginTransaction();
         if (animate) {
             ft.setCustomAnimations(0, R.anim.slide_out);
         }
@@ -175,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements DialpadFragment.O
         ft.commit();
     }
 
-    @OnClick({R.id.button_dialpad,R.id.button_dial,R.id.button_send_message,R.id.button_all_contacts})
+    @OnClick({R.id.button_dialpad, R.id.button_dial, R.id.button_send_message, R.id.button_all_contacts})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button_dialpad:
@@ -185,11 +218,11 @@ public class MainActivity extends AppCompatActivity implements DialpadFragment.O
                 if (isDialpadShowing()) {
                     String number = mDialpadFragment.getDiapadNumber();
                     if (!TextUtils.isEmpty(number) && number.length() >= 3) {
-                        if(CommonData.isConnected) {
+                        if (CommonData.isConnected) {
                             //ContactHelper.makePhoneCall(number);
                             callPhone(number);
-                        }else{
-                            ToastUtils.showToast(mContext,"未连接天通猫");
+                        } else {
+                            ToastUtils.showToast(mContext, "未连接天通猫");
                         }
                     }
                 }
@@ -198,13 +231,13 @@ public class MainActivity extends AppCompatActivity implements DialpadFragment.O
                 if (isDialpadShowing()) {
                     String number = mDialpadFragment.getDiapadNumber();
                     if (!TextUtils.isEmpty(number) && number.length() >= 3) {
-                       // ContactHelper.sendSMS(number);
+                        // ContactHelper.sendSMS(number);
                     }
                 }
                 break;
             case R.id.button_all_contacts:
-              //  Intent intent = new Intent(this, AllContactActivity.class);
-              //  startActivity(intent);
+                //  Intent intent = new Intent(this, AllContactActivity.class);
+                //  startActivity(intent);
                 break;
             default:
                 break;
@@ -213,12 +246,48 @@ public class MainActivity extends AppCompatActivity implements DialpadFragment.O
 
     /**
      * 打电话
+     *
      * @param phoneNumber
      */
-    private void callPhone(String phoneNumber){
-        CommandModel model = new CommandModel("call_phone");
-        model.setPhoneNumber(phoneNumber);
-        EventBus.getDefault().post(model);
+    private void callPhone(String phoneNumber) {
+        CallPhoneProtos.CallPhone callPhone = CallPhoneProtos.CallPhone.newBuilder()
+                .setIp(CommonData.localWifiIp)
+                .setPhoneNumber(phoneNumber)
+                .setPhonecommand(CallPhoneProtos.CallPhone.PhoneCommand.CALL)
+                .build();
+        EventBus.getDefault().post(new PhoneCmd(PrototocalTools.IProtoServerIndex.call_phone, callPhone));
+
+        if(showCallingView()){
+            setCallingPhoneNumber(phoneNumber);
+        }
+    }
+
+
+    private boolean isDCallingShowing() {
+        return mCallingFragment != null && mCallingFragment.isVisible();
+    }
+
+    public boolean showCallingView() {
+        if(!isDCallingShowing()){
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.show(mCallingFragment).commit();
+            return true;
+        }
+        return false;
+    }
+
+    public void setCallingPhoneNumber(String phoneNumber){
+        CallingModel callingModel = new CallingModel();
+        callingModel.setPhone_number(phoneNumber);
+        EventBus.getDefault().post(callingModel);
+    }
+
+    @Override
+    public void hideCallingView() {
+        if(isDCallingShowing()){
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.hide(mCallingFragment).commit();
+        }
     }
 
     private boolean isDialpadShowing() {

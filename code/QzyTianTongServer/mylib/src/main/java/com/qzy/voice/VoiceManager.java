@@ -20,4 +20,6 @@ public class VoiceManager {
     public static native int writePcmData(byte[] data);
 
     public static native int readPcmData(byte[] data);
+
+    public static native void setVolume(int db);  //默认25db
 }

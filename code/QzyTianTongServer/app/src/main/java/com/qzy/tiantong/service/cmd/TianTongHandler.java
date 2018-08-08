@@ -6,6 +6,8 @@ import android.os.Message;
 import com.qzy.data.PrototocalTools;
 import com.qzy.tiantong.service.service.ITianTongServer;
 import com.qzy.tt.data.CallPhoneProtos;
+import com.qzy.tt.data.ChangePcmPlayerDbProtos;
+import com.qzy.voice.VoiceManager;
 
 /**
  * Created by yj.zhang on 2018/8/3/003.
@@ -41,6 +43,10 @@ public class TianTongHandler extends Handler {
                             mServer.getQzyPhoneManager().hangupPhone();
                         }
                     }
+                    break;
+                case PrototocalTools.IProtoServerIndex.chang_pcmplayer_db:
+                    ChangePcmPlayerDbProtos.ChangePcmPlayerDb changePcmPlayerDb = (ChangePcmPlayerDbProtos.ChangePcmPlayerDb)msg.obj;
+                    VoiceManager.setVolume(changePcmPlayerDb.getDb());
                     break;
                 default:
                     break;

@@ -53,6 +53,7 @@ public class Tracker extends JobHandler {
         while ((audioData = MessageQueue.getInstance(MessageQueue.TRACKER_DATA_QUEUE).take()) != null) {
             if (isPlaying()) {
                 short[] bytesPkg = audioData.getRawData();
+                //byte[] bytesPkg =audioData.getEncodedData();
                 try {
                     audioTrack.write(bytesPkg, 0, bytesPkg.length);
                 } catch (Exception e) {

@@ -4,6 +4,7 @@ import android.os.Message;
 
 import com.qzy.data.PrototocalTools;
 import com.qzy.tt.data.CallPhoneProtos;
+import com.qzy.tt.data.ChangePcmPlayerDbProtos;
 import com.qzy.utils.LogUtils;
 
 
@@ -54,6 +55,10 @@ public class CmdHandler {
                 case PrototocalTools.IProtoServerIndex.call_phone:
                     CallPhoneProtos.CallPhone callPhone = CallPhoneProtos.CallPhone.parseDelimitedFrom(inputStream);
                     senMsg(protoId,callPhone);
+                    break;
+                case PrototocalTools.IProtoServerIndex.chang_pcmplayer_db:
+                    ChangePcmPlayerDbProtos.ChangePcmPlayerDb changePcmPlayerDb = ChangePcmPlayerDbProtos.ChangePcmPlayerDb.parseDelimitedFrom(inputStream);
+                    senMsg(protoId,changePcmPlayerDb);
                     break;
             }
         }catch (Exception e){

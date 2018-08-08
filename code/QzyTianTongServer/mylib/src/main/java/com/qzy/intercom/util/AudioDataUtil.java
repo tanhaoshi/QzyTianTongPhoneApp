@@ -47,6 +47,6 @@ public class AudioDataUtil {
      * 释放音频编解码资源
      */
     public static void free() {
-        Speex.getInstance().release();
+       // Speex.getInstance().release();
     }
 }

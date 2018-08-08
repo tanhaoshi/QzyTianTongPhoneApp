@@ -8,6 +8,7 @@ import com.qzy.intercom.data.MessageQueue;
 import com.qzy.intercom.job.JobHandler;
 import com.qzy.intercom.util.ByteUtils;
 import com.qzy.intercom.util.Constants;
+import com.qzy.ttpcm.TtAudioTrack;
 import com.qzy.utils.LogUtils;
 import com.qzy.voice.VoiceManager;
 
@@ -21,42 +22,27 @@ import java.util.Arrays;
  */
 public class Tracker extends JobHandler {
 
+    private TtAudioTrack audioTrack;
 
-    // 播放标志
-    private boolean isPlaying;
-    private int readLen = 0;
 
     public Tracker(Handler handler) {
         super(handler);
 
     }
 
-    public boolean isPlaying() {
-        return isPlaying;
-    }
-
-    public void setPlaying(boolean playing) {
-        isPlaying = playing;
-    }
-
     @Override
     public void run() {
-        while (isPlaying){
-            if (readLen == 0) {
-                readLen = VoiceManager.initPcmPlayer();
-            }
-            if (readLen == 160 * 8) {
-                AudioData audioData;
-                while ((audioData = MessageQueue.getInstance(MessageQueue.TRACKER_DATA_QUEUE).take()) != null) {
-                    if (isPlaying()) {
-                        byte[] bytesPkg = audioData.getEncodedData();
-                        try {
-                            //LogUtils.e("write pcm index = " + ByteUtils.byteToInt(bytesPkg[0]));
-                            VoiceManager.writePcmData(Arrays.copyOfRange(bytesPkg,1,bytesPkg.length));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
+        audioTrack = new TtAudioTrack();
+        audioTrack.initTtAudioTrack();
+        AudioData audioData;
+        while ((audioData = MessageQueue.getInstance(MessageQueue.TRACKER_DATA_QUEUE).take()) != null) {
+            if (audioTrack != null) {
+                byte[] bytesPkg = audioData.getEncodedData();
+                try {
+                   // LogUtils.e("write pcm index = " + ByteUtils.byteToInt(bytesPkg[0]));
+                    audioTrack.setPcmData(bytesPkg);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -64,6 +50,10 @@ public class Tracker extends JobHandler {
 
     @Override
     public void free() {
-        VoiceManager.releasePcmPlayer();
+        if(audioTrack != null){
+            audioTrack.release();
+            audioTrack = null;
+        }
+
     }
 }

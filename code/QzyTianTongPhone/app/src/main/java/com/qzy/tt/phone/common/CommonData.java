@@ -5,6 +5,9 @@ package com.qzy.tt.phone.common;
  */
 
 public class CommonData {
+
+    public static String localWifiIp ;
+
     public static boolean isConnected = false;
 
     public static boolean isStartRecorder = false;
@@ -12,6 +15,7 @@ public class CommonData {
     public static void relase(){
         isConnected = false;
         isStartRecorder = false;
+        localWifiIp = null;
     }
 
 }

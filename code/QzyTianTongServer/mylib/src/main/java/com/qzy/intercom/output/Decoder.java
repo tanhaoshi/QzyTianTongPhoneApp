@@ -6,6 +6,7 @@ import com.qzy.intercom.data.AudioData;
 import com.qzy.intercom.data.MessageQueue;
 import com.qzy.intercom.job.JobHandler;
 import com.qzy.intercom.util.AudioDataUtil;
+import com.qzy.utils.LogUtils;
 
 
 /**
@@ -24,6 +25,7 @@ public class Decoder extends JobHandler {
         AudioData audioData;
         // 当MessageQueue为空时，take方法阻塞
         while ((audioData = MessageQueue.getInstance(MessageQueue.DECODER_DATA_QUEUE).take()) != null) {
+           // LogUtils.d("Decoder tid = " + android.os.Process.myTid()+" name "+Thread.currentThread().getName());
             MessageQueue.getInstance(MessageQueue.TRACKER_DATA_QUEUE).put(audioData);
         }
     }

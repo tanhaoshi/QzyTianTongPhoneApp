@@ -3,11 +3,15 @@ package com.qzy.tt.phone.service;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.qzy.PhoneManager;
+import com.qzy.data.PhoneCmd;
 import com.qzy.eventbus.MessageEvent;
 import com.qzy.eventbus.NettyStateModel;
 import com.qzy.intercom.IntercomManager;
 import com.qzy.intercom.input.Encoder;
+import com.qzy.intercom.util.IPUtil;
 import com.qzy.netty.NettyClientManager;
+import com.qzy.tt.phone.cmd.CmdHandler;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.eventbus.CommandModel;
 import com.qzy.voice.VoiceManager;
@@ -15,6 +19,8 @@ import com.qzy.voice.VoiceManager;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import io.netty.buffer.ByteBufInputStream;
 
 /**
  * Created by yj.zhang on 2018/7/31/031.
@@ -30,22 +36,26 @@ public class PhoneServiceManager implements NettyClientManager.INettyListener {
 
     private IntercomManager mIntercomManager;
 
+    private PhoneManager mPhoneManager;
+
+    private CmdHandler mCmdHandler;
+
     public PhoneServiceManager(Context context) {
         mContext = context;
 
         mNettyClientManager = new NettyClientManager(this);
         mNettyClientManager.startConnect();
-
+        mPhoneManager = new PhoneManager(context,mNettyClientManager);
         //mVoiceManager = new VoiceManager();
-
+        mCmdHandler = new CmdHandler();
         mIntercomManager = new IntercomManager();
         EventBus.getDefault().register(this);
     }
 
 
     @Override
-    public void onReceiveData(byte[] data) {
-
+    public void onReceiveData(ByteBufInputStream inputStream) {
+        mCmdHandler.handlerCmd(inputStream);
     }
 
     @Override
@@ -71,13 +81,11 @@ public class PhoneServiceManager implements NettyClientManager.INettyListener {
                     stopRecord();
                 }
             }
-
-            if(commandModel.getMsgTag().equals("call_phone")){
-                callPhone(commandModel.getPhoneNumber());
+        }else if( event instanceof PhoneCmd){
+            if(mPhoneManager != null){
+                mPhoneManager.sendPhoneCmd((PhoneCmd) event);
             }
-
         }
-
     }
 
     /**
@@ -99,22 +107,6 @@ public class PhoneServiceManager implements NettyClientManager.INettyListener {
             mIntercomManager.stopRecord();
             setRecorderState(false);
         }
-    }
-
-    /**
-     * 打电话
-     * @param phone
-     */
-    public void callPhone(String phone){
-        if(mNettyClientManager != null){
-
-            if(phone != null && !phone.equals("")&&phone.length()==11){
-                mNettyClientManager.sendData(phone.getBytes());
-            }else {
-               // Toast.makeText(MainActivity.this,"请输入正确的手机号码",Toast.LENGTH_SHORT).show();
-            }
-        }
-
     }
 
 

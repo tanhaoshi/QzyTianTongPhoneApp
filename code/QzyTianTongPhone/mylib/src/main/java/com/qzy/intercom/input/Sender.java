@@ -38,8 +38,9 @@ public class Sender extends JobHandler {
             if (id < 256) {
                 id++;
             } else {
-                id = 0;
+                id = 1;
             }
+
             data[0] = ByteUtils.intToByte(id);
             System.arraycopy(audioData.getEncodedData(),0,data,1,len);
 

@@ -1,72 +1,91 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical" >
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+    >
 
-    <RelativeLayout
+    <LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" >
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <FrameLayout
+                android:id="@+id/layout_dial"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"/>
+
+            <FrameLayout
+                android:id="@+id/layout_dialer_panel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"/>
+        </RelativeLayout>
 
         <FrameLayout
-            android:id="@+id/layout_dial"
+            android:id="@+id/fake_action_bar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true" />
+            android:layout_height="@dimen/fake_action_bar_height"
+            android:background="@color/actionbar_background_color">
 
-        <FrameLayout
-            android:id="@+id/layout_dialer_panel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" />
-    </RelativeLayout>
+            <ImageButton
+                android:id="@+id/button_all_contacts"
+                android:layout_width="@dimen/fake_menu_button_min_width"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom|start"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@string/action_menu_call_history_description"
+                android:src="@drawable/ic_menu_contacts"
+                android:visibility="invisible"
+                />
+
+            <ImageButton
+                android:id="@+id/button_dialpad"
+                android:layout_width="@dimen/fake_menu_button_min_width"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom|center"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@string/action_menu_dialpad_button"
+                android:src="@drawable/ic_menu_dialpad_lt"/>
+
+            <ImageButton
+                android:id="@+id/button_dial"
+                android:layout_width="@dimen/fake_menu_button_min_width"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom|center"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@string/description_dial_button"
+                android:src="@drawable/ic_dial_action_call"
+                android:visibility="gone"/>
+
+            <ImageButton
+                android:id="@+id/button_send_message"
+                android:layout_width="@dimen/fake_menu_button_min_width"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom|end"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@string/action_menu_overflow_description"
+                android:src="@drawable/ic_menu_send_message"
+                android:visibility="visible"/>
+        </FrameLayout>
+
+    </LinearLayout>
+
 
     <FrameLayout
-        android:id="@+id/fake_action_bar"
+        android:id="@+id/layout_calling"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/fake_action_bar_height"
-        android:background="@color/actionbar_background_color" >
+        android:layout_height="match_parent"
+        >
 
-        <ImageButton
-            android:id="@+id/button_all_contacts"
-            android:layout_width="@dimen/fake_menu_button_min_width"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom|start"
-            android:background="?android:attr/selectableItemBackground"
-            android:contentDescription="@string/action_menu_call_history_description"
-            android:src="@drawable/ic_menu_contacts"
-            android:visibility="invisible"
-            />
 
-        <ImageButton
-            android:id="@+id/button_dialpad"
-            android:layout_width="@dimen/fake_menu_button_min_width"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom|center"
-            android:background="?android:attr/selectableItemBackground"
-            android:contentDescription="@string/action_menu_dialpad_button"
-            android:src="@drawable/ic_menu_dialpad_lt" />
 
-        <ImageButton
-            android:id="@+id/button_dial"
-            android:layout_width="@dimen/fake_menu_button_min_width"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom|center"
-            android:background="?android:attr/selectableItemBackground"
-            android:contentDescription="@string/description_dial_button"
-            android:src="@drawable/ic_dial_action_call"
-            android:visibility="gone" />
-
-        <ImageButton
-            android:id="@+id/button_send_message"
-            android:layout_width="@dimen/fake_menu_button_min_width"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom|end"
-            android:background="?android:attr/selectableItemBackground"
-            android:contentDescription="@string/action_menu_overflow_description"
-            android:src="@drawable/ic_menu_send_message"
-            android:visibility="visible" />
     </FrameLayout>
 
-</LinearLayout>
+</FrameLayout>

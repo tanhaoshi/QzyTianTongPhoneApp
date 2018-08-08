@@ -3,6 +3,7 @@ package com.qzy.intercom;
 import android.os.Handler;
 import android.os.Message;
 
+import com.qzy.intercom.data.MessageQueue;
 import com.qzy.intercom.input.Encoder;
 import com.qzy.intercom.input.Recorder;
 import com.qzy.intercom.input.Sender;
@@ -34,6 +35,7 @@ public class IntercomManager {
     private ExecutorService threadPool = Executors.newCachedThreadPool();
 
     public IntercomManager() {
+
         initData();
     }
 
@@ -46,16 +48,16 @@ public class IntercomManager {
      * 初始化JobHandler
      */
     private void initJobHandler() {
+
+
         // 初始化音频输入节点
         recorder = new Recorder(handler);
-        recorder.setRecording(true);
         encoder = new Encoder(handler);
         sender = new Sender(handler);
         // 初始化音频输出节点
         receiver = new Receiver(handler);
-        decoder = new Decoder(handler);
-        tracker = new Tracker(handler);
-        tracker.setPlaying(true);
+       // decoder = new Decoder(handler);
+       // tracker = new Tracker(handler);
 
         //recorder
         threadPool.execute(recorder);
@@ -65,8 +67,8 @@ public class IntercomManager {
 
         //player
         threadPool.execute(receiver);
-        threadPool.execute(decoder);
-        threadPool.execute(tracker);
+       // threadPool.execute(decoder);
+       // threadPool.execute(tracker);
 
     }
 
@@ -101,7 +103,7 @@ public class IntercomManager {
      */
     public void startRecord() {
 
-        recorder.setRecording(true);
+        //recorder.setRecording(true);
         // 开启音频输入、输出
         threadPool.execute(recorder);
         // threadPool.execute(encoder);
@@ -113,7 +115,6 @@ public class IntercomManager {
      * 停止读取天通模块pcm数据线程
      */
     public void stopRecord() {
-        recorder.setRecording(false);
         recorder.free();
     }
 
@@ -124,7 +125,6 @@ public class IntercomManager {
     public void startPlayer() {
         //threadPool.execute(receiver);
         // threadPool.execute(decoder);
-        tracker.setPlaying(true);
         threadPool.execute(tracker);
     }
 
@@ -132,7 +132,6 @@ public class IntercomManager {
      * 停止往天通模块写入pcm数据
      */
     public void stopPlayer() {
-        tracker.setPlaying(false);
         tracker.free();
     }
 
@@ -146,11 +145,15 @@ public class IntercomManager {
         encoder.free();
         sender.free();
         receiver.free();
-        decoder.free();
-        tracker.free();
+       // decoder.free();
+       // tracker.free();
 
         // 释放线程池
-        threadPool.shutdown();
+        if (threadPool != null) {
+            threadPool.shutdownNow();
+        }
+        threadPool = null;
+        MessageQueue.release();
     }
 
 }

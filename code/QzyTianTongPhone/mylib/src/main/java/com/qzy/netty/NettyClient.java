@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -87,9 +88,11 @@ public class NettyClient {
     };
 
     private ChannelInboundHandler connectedChannelHandler = new ChannelInboundHandler() {
+        private ByteBuf dataBuf;
+
         @Override
         public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-            LogUtils.d("channelRegistered" );
+            LogUtils.e("channelRegistered" );
             connectHanlerCtx = ctx;
             Channel channel = ctx.channel();
 
@@ -97,7 +100,7 @@ public class NettyClient {
 
         @Override
         public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-            LogUtils.d("channelUnregistered" );
+            LogUtils.e("channelUnregistered" );
             connectHanlerCtx = ctx;
             Channel channel = ctx.channel();
 
@@ -105,7 +108,7 @@ public class NettyClient {
 
         @Override
         public void channelActive(ChannelHandlerContext ctx) throws Exception {
-            LogUtils.d("channelActive" );
+            LogUtils.e("channelActive" );
             connectHanlerCtx = ctx;
             if(connectedReadDataListener != null){
                 connectedReadDataListener.onConnectedState(true);
@@ -114,8 +117,8 @@ public class NettyClient {
 
         @Override
         public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-            LogUtils.d("channelInactive" );
-            connectHanlerCtx = ctx;
+            LogUtils.e("channelInactive" );
+            connectHanlerCtx = null;
             if(connectedReadDataListener != null){
                 connectedReadDataListener.onConnectedState(false);
             }
@@ -125,10 +128,13 @@ public class NettyClient {
         public void channelRead(ChannelHandlerContext ctx, Object msg) {
             connectHanlerCtx = ctx;
             try {
-
-
                 ByteBuf buf = ((ByteBuf) msg);
-
+               // LogUtils.e("receve data = " + buf.array().length);
+                if (dataBuf == null) {
+                    dataBuf = buf;
+                } else {
+                    dataBuf.writeBytes(buf.array());
+                }
 
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -137,9 +143,14 @@ public class NettyClient {
 
         @Override
         public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-            LogUtils.d("channelReadComplete ");
+            LogUtils.e("channelReadComplete ");
             connectHanlerCtx = ctx;
 
+            if (connectedReadDataListener != null && dataBuf != null) {
+                ByteBufInputStream inputStream = new ByteBufInputStream(dataBuf);
+                connectedReadDataListener.onReceiveData(inputStream);
+                dataBuf = null;
+            }
         }
 
         @Override
@@ -173,19 +184,9 @@ public class NettyClient {
         }
     };
 
-    public void sendData(byte[] data){
-        try {
-            if (connectHanlerCtx != null) {
-                ByteBuf byteBuf = connectHanlerCtx.alloc().buffer(36);
-                ByteBufOutputStream stream = new ByteBufOutputStream(byteBuf);
-                stream.write(data);
-                connectHanlerCtx.writeAndFlush(byteBuf);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+    public ChannelHandlerContext getConnectHanlerCtx() {
+        return connectHanlerCtx;
     }
-
 
     /**
      * 断开连接
@@ -206,7 +207,7 @@ public class NettyClient {
 
 
     public interface IConnectedReadDataListener{
-        void onReceiveData(byte[] data);
+        void onReceiveData(ByteBufInputStream data);
         void onConnectedState(boolean state);
     }
 

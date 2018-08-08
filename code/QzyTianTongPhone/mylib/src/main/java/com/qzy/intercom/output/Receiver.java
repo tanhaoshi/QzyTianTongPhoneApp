@@ -38,7 +38,7 @@ public class Receiver extends JobHandler {
     public void run() {
         while (true) {
             // 设置接收缓冲段
-            byte[] receivedData = new byte[4096 + 1];
+            byte[] receivedData = new byte[160 * 8 + 1];
             DatagramPacket datagramPacket = new DatagramPacket(receivedData, receivedData.length);
             try {
                 // 接收数据报文
@@ -93,54 +93,24 @@ public class Receiver extends JobHandler {
      *
      * @param packet 音频数据包
      */
-   Buffer buffer;
+    Buffer buffer;
+
     private void handleAudioData(DatagramPacket packet) {
-       // LogUtils.d("read  pcm data inde =" + ByteUtils.byteToInt(data[0]));
-        byte[] data = Arrays.copyOfRange(packet.getData(),1,1024 * 4  + 1);
-        /*byte[] leftChannelAudioData = new byte[data.length/2];
-        for(int i = 0; i <leftChannelAudioData.length ; i = i + 2)
-        {
-            leftChannelAudioData[i] = data[2*i];
-            leftChannelAudioData[i+1] = data[2*i+1];
+        // LogUtils.d("read  pcm data inde =" + ByteUtils.byteToInt(data[0]));
+        byte[] data = Arrays.copyOfRange(packet.getData(), 1, packet.getData().length);
 
-        }*/
-        short[] pcmData = ByteUtils.byteArrayToShortArray(data);
+       /* int readSize = data.length;
+        byte[] chanelData = new byte[readSize * 2];
+        for (int i = 0; i < readSize; i = i + 2) {
+            chanelData[2 * i] = data[i];
+            chanelData[2 * i + 1] = data[i + 1];
+            chanelData[2 * i + 2] = data[i];
+            chanelData[2 * i + 3] = data[i + 1];
+        }
 
-      /*  short[] pcmData = ByteUtils.byteArrayToShortArray(data);
-        short[] sdata = new short[(pcmData.length / 160 + 1) * 160];
-        System.arraycopy(pcmData,0,sdata,0,pcmData.length);
-        byte[] encodedData = AudioDataUtil.raw2spx(sdata);
-        AudioData audioData = new AudioData(encodedData);*/
-
-      /*  AudioData audioData = new AudioData();
-        audioData.setRawData(ByteUtils.byteArrayToShortArray(data));*/
-       /* if(buffer == null){
-            buffer = new Buffer(data,data.length);
-
-            byte[] tmp = buffer.readAndMove(12 * 320);
-            short[] pcmData = ByteUtils.byteArrayToShortArray(tmp);
-            AudioData audioData = new AudioData(pcmData);
-            MessageQueue.getInstance(MessageQueue.DECODER_DATA_QUEUE).put(audioData);
-
-        }else{
-            buffer.append(data,data.length);
-            int size = buffer.getAvailabeSize() / 320;
-            if(size > 0){
-                byte[] tmp = buffer.readAndMove(size * 320);
-                short[] pcmData = ByteUtils.byteArrayToShortArray(tmp);
-                AudioData audioData = new AudioData(pcmData);
-                MessageQueue.getInstance(MessageQueue.DECODER_DATA_QUEUE).put(audioData);
-            }
-        }*/
-
-
-
-
-       // byte[] encodedData = Arrays.copyOf(packet.getData(), packet.getLength());
-       // AudioData audioData = new AudioData(encodedData);
-        //MessageQueue.getInstance(MessageQueue.DECODER_DATA_QUEUE).put(audioData);
-
-        AudioData audioData = new AudioData(pcmData);
+        short[] pcmData = ByteUtils.byteArrayToShortArray(chanelData);
+        AudioData audioData = new AudioData(pcmData);*/
+        AudioData audioData = new AudioData(data);
         MessageQueue.getInstance(MessageQueue.DECODER_DATA_QUEUE).put(audioData);
     }
 
