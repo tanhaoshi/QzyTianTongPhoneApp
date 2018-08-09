@@ -145,14 +145,14 @@ public class TianTongServiceManager implements ITianTongServer {
     public void initTtPcmDevice() {
         LogUtils.e("initTtPcmDevice");
         if (mIntercomManager == null) {
-           // mIntercomManager = new IntercomManager();
+            mIntercomManager = new IntercomManager();
         }
     }
 
     @Override
     public void freeTtPcmDevice() {
         if (mIntercomManager != null) {
-           // mIntercomManager.release();
+            mIntercomManager.release();
             mIntercomManager = null;
         }
     }

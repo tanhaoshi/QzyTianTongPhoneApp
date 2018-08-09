@@ -9,9 +9,7 @@ import com.qzy.intercom.job.JobHandler;
 import com.qzy.intercom.network.Unicast;
 import com.qzy.intercom.util.ByteUtils;
 import com.qzy.intercom.util.Command;
-import com.qzy.ttpcm.TtAudioTrack;
 import com.qzy.utils.LogUtils;
-import com.qzy.voice.VoiceManager;
 
 import java.net.DatagramPacket;
 
@@ -23,18 +21,14 @@ public class Receiver extends JobHandler {
 
     private boolean isBreak = false;
 
-    private TtAudioTrack audioTrack;
-
     public Receiver(Handler handler) {
         super(handler);
-        audioTrack = new TtAudioTrack();
-        audioTrack.initTtAudioTrack();
     }
 
     @Override
     public void run() {
         while (true) {
-           // LogUtils.d("Receiver tid = " + android.os.Process.myTid()+" name "+Thread.currentThread().getName());
+           // LogUtils.d("ReceiverNew tid = " + android.os.Process.myTid()+" name "+Thread.currentThread().getName());
             if(isBreak){
                 break;
             }
@@ -104,13 +98,10 @@ public class Receiver extends JobHandler {
      */
     private void handleAudioData(DatagramPacket packet) {
 
-        byte[] data = packet.getData();
-       // AudioData audioData = new AudioData(packet.getData());
-        //LogUtils.e("reece pcm index = " + ByteUtils.byteToInt(data[0]));
-        //MessageQueue.getInstance(MessageQueue.DECODER_DATA_QUEUE).put(audioData);
-        if(audioTrack != null) {
-            audioTrack.setPcmData(data);
-        }
+        // byte[] data = Arrays.copyOfRange(packet.getData(),1,1024 * 4  + 1);
+        AudioData audioData = new AudioData(packet.getData());
+        LogUtils.e("reece pcm index = " + ByteUtils.byteToInt(audioData.getEncodedData()[0]));
+        MessageQueue.getInstance(MessageQueue.DECODER_DATA_QUEUE).put(audioData);
     }
 
     /**
@@ -130,9 +121,5 @@ public class Receiver extends JobHandler {
         isBreak = true;
         //Multicast.getMulticast().free();
         Unicast.getUnicast().free();
-        if(audioTrack != null){
-            audioTrack.release();
-            audioTrack = null;
-        }
     }
 }

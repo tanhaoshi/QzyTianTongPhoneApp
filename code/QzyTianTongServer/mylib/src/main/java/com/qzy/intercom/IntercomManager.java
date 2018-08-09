@@ -6,10 +6,13 @@ import android.os.Message;
 import com.qzy.intercom.data.MessageQueue;
 import com.qzy.intercom.input.Encoder;
 import com.qzy.intercom.input.Recorder;
+import com.qzy.intercom.input.RecorderNew;
 import com.qzy.intercom.input.Sender;
 import com.qzy.intercom.output.Decoder;
 import com.qzy.intercom.output.Receiver;
+import com.qzy.intercom.output.ReceiverNew;
 import com.qzy.intercom.output.Tracker;
+import com.qzy.intercom.output.TrackerNew;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -52,12 +55,14 @@ public class IntercomManager {
 
         // 初始化音频输入节点
         recorder = new Recorder(handler);
+        recorder.setRecording(true);
         encoder = new Encoder(handler);
         sender = new Sender(handler);
         // 初始化音频输出节点
         receiver = new Receiver(handler);
-       // decoder = new Decoder(handler);
-       // tracker = new Tracker(handler);
+        decoder = new Decoder(handler);
+        tracker = new Tracker(handler);
+        tracker.setPlaying(true);
 
         //recorder
         threadPool.execute(recorder);
@@ -67,8 +72,8 @@ public class IntercomManager {
 
         //player
         threadPool.execute(receiver);
-       // threadPool.execute(decoder);
-       // threadPool.execute(tracker);
+        threadPool.execute(decoder);
+        threadPool.execute(tracker);
 
     }
 
@@ -145,8 +150,8 @@ public class IntercomManager {
         encoder.free();
         sender.free();
         receiver.free();
-       // decoder.free();
-       // tracker.free();
+        decoder.free();
+        tracker.free();
 
         // 释放线程池
         if (threadPool != null) {

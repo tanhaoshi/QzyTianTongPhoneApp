@@ -5,8 +5,8 @@ import android.os.Handler;
 import com.qzy.intercom.data.AudioData;
 import com.qzy.intercom.data.MessageQueue;
 import com.qzy.intercom.job.JobHandler;
-import com.qzy.ttpcm.TtAudioRecorder;
 import com.qzy.utils.LogUtils;
+import com.qzy.voice.VoiceManager;
 
 
 /**
@@ -15,35 +15,54 @@ import com.qzy.utils.LogUtils;
  * @author yanghao1
  */
 public class Recorder extends JobHandler {
-    private TtAudioRecorder audioRecorder;
+
+
+    // 录音标志
+    private boolean isRecording = false;
+
+    private int readLen = -1;
+
+    private boolean isFree = false;
 
     public Recorder(Handler handler) {
         super(handler);
-        audioRecorder = new TtAudioRecorder(new TtAudioRecorder.IReadPcmData() {
-            @Override
-            public void readData(byte[] rawData) {
-                // LogUtils.d("readData...........");
-                AudioData audioData = new AudioData(rawData);
-                MessageQueue.getInstance(MessageQueue.ENCODER_DATA_QUEUE).put(audioData);
-            }
-        });
-        audioRecorder.initTtAudioRecorder();
+
     }
 
+    public boolean isRecording() {
+        return isRecording;
+    }
+
+    public void setRecording(boolean recording) {
+        isRecording = recording;
+    }
 
     @Override
     public void run() {
-        //LogUtils.e("Recorder run");
+        if (readLen == -1) {
+            readLen = VoiceManager.initPcmRecorder();
+        }
+        while (isRecording) {
+            //LogUtils.e("readLen == " + readLen);
+            if (isRecording && readLen == 160 * 8) {
+                byte[] rawData = new byte[readLen];
+                VoiceManager.readPcmData(rawData);
+                AudioData audioData = new AudioData(rawData);
+                MessageQueue.getInstance(MessageQueue.ENCODER_DATA_QUEUE).put(audioData);
+            }
+        }
+
+        VoiceManager.releasePcmRecorder();
+
+        LogUtils.e("recorde finished ...");
     }
 
     @Override
     public void free() {
         // 释放音频录制资源
-        if(audioRecorder != null) {
-            audioRecorder.releaseTtAudioRecorder();
-            audioRecorder = null;
-        }
+        //VoiceManager.releasePcmRecorder();
+        isRecording = false;
+        readLen = -1;
     }
-
 
 }
