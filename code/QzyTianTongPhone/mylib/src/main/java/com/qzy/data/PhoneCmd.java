@@ -13,15 +13,15 @@ public class PhoneCmd extends MessageEvent{
 
     private GeneratedMessageV3 message;
 
-    public PhoneCmd(){
+    private PhoneCmd() {
 
     }
 
-    public PhoneCmd(int protoId){
+    private PhoneCmd(int protoId) {
         this.protoId = protoId;
     }
 
-    public PhoneCmd(int protoId,GeneratedMessageV3 msg){
+    private PhoneCmd(int protoId, GeneratedMessageV3 msg) {
         this.protoId = protoId;
         message = msg;
     }
@@ -40,6 +40,14 @@ public class PhoneCmd extends MessageEvent{
 
     public void setMessage(GeneratedMessageV3 message) {
         this.message = message;
+    }
+
+    public static final PhoneCmd getPhoneCmd(int protoId) {
+        return new PhoneCmd(protoId);
+    }
+
+    public static final PhoneCmd getPhoneCmd(int protoId, GeneratedMessageV3 msg) {
+        return new PhoneCmd(protoId, msg);
     }
 
 }

@@ -17,6 +17,8 @@ public class BroadcastManager {
     private Context mContext;
     private ITianTongServer mServer;
 
+    private String lastPhoneState = "0";
+
     public BroadcastManager(Context context, ITianTongServer server) {
         mContext = context;
         mServer = server;
@@ -50,16 +52,20 @@ public class BroadcastManager {
             } else if (action.equals("com.qzy.phone.state")) {
                 String phoneState = intent.getStringExtra("phone_state");
                 LogUtils.d("phoneState = " + phoneState);
-                if (phoneState.equals("2")) {
-                    //mServer.startRecorder();
-                    //mServer.startPlayer();
-                    mServer.initTtPcmDevice();
-                    mServer.onPhoneStateChange(TtPhoneState.CALL);
-                } else if (phoneState.equals("0")) {
-                    //关闭设备
-                   // mServer.closeRecorderAndPlayer();
-                    //mServer.onPhoneStateChange(TtPhoneState.NOCALL);
-                    mServer.freeTtPcmDevice();
+                if(!phoneState.equals(lastPhoneState) ) {
+                    lastPhoneState = phoneState;
+                    if (phoneState.equals("2")) {
+                        //mServer.startRecorder();
+                        //mServer.startPlayer();
+                        mServer.initTtPcmDevice();
+                        mServer.onPhoneStateChange(TtPhoneState.CALL);
+                    } else if (phoneState.equals("0")) {
+                        //关闭设备
+                        // mServer.closeRecorderAndPlayer();
+                        mServer.freeTtPcmDevice();
+                        mServer.onPhoneStateChange(TtPhoneState.NOCALL);
+                    }
+
                 }
 
             } else if (action.equals("com.test.close")) {

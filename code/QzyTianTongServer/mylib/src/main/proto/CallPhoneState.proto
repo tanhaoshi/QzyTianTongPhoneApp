@@ -17,9 +17,7 @@ message CallPhoneState {
 
     PhoneState phoneState = 1;
 
-
-
-
+    int32 ttPhoneSignal = 2;
 
 }
 

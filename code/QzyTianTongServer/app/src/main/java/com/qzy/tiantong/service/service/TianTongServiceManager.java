@@ -1,22 +1,16 @@
 package com.qzy.tiantong.service.service;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 
-import com.qzy.data.PhoneCmd;
-import com.qzy.data.PrototocalTools;
 import com.qzy.intercom.IntercomManager;
-import com.qzy.intercom.util.ByteUtils;
 import com.qzy.intercom.util.Constants;
 import com.qzy.netty.NettyServerManager;
-import com.qzy.tiantong.service.cmd.CmdHandler;
-import com.qzy.tiantong.service.cmd.TianTongHandler;
+import com.qzy.tiantong.service.netty.PhoneNettyManager;
+import com.qzy.tiantong.service.netty.cmd.CmdHandler;
+import com.qzy.tiantong.service.netty.cmd.TianTongHandler;
 import com.qzy.tiantong.service.phone.BroadcastManager;
 import com.qzy.tiantong.service.phone.QzyPhoneManager;
 import com.qzy.tiantong.service.phone.TtPhoneState;
-import com.qzy.tt.data.CallPhoneStateProtos;
 import com.qzy.utils.LogUtils;
 
 import io.netty.buffer.ByteBufInputStream;
@@ -49,6 +43,9 @@ public class TianTongServiceManager implements ITianTongServer {
 
     private CmdHandler mCmdHandler;
 
+    //管理server与phone端通讯命令
+    private PhoneNettyManager mPhoneNettyManager;
+
     public TianTongServiceManager(Context context) {
         mContext = context;
 
@@ -75,8 +72,8 @@ public class TianTongServiceManager implements ITianTongServer {
 
             @Override
             public void onConnected(String ip) {
+                initPhoneNettyManager();
                 Constants.UNICAST_BROADCAST_IP = ip;
-                mTianTongHandler.sendEmptyMessage(TianTongHandler.msg_init_localpcm);
             }
 
             @Override
@@ -94,6 +91,14 @@ public class TianTongServiceManager implements ITianTongServer {
     private void initBroadcast() {
         mBroadcastManager = new BroadcastManager(mContext, this);
         mBroadcastManager.registerReceiver();
+    }
+
+
+    /**
+     * 初始化 Phone客户端管理工具
+     */
+    private void initPhoneNettyManager() {
+        mPhoneNettyManager = new PhoneNettyManager(mNettyServerManager);
     }
 
 
@@ -121,48 +126,35 @@ public class TianTongServiceManager implements ITianTongServer {
     }
 
 
-
-
-
     @Override
     public void onPhoneStateChange(TtPhoneState state) {
-        LogUtils.e("onPhoneStateChange " + state.ordinal());
-        CallPhoneStateProtos.CallPhoneState.PhoneState phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL;
-        if (state == TtPhoneState.NOCALL) {
-           // phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL;
-        } else if (state == TtPhoneState.RING) {
-            phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.RING;
-            mTianTongHandler.sendEmptyMessageDelayed(222,1000 * 50);
-        } else if (state == TtPhoneState.CALL) {
-            phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.CALL;
-        } else if (state == TtPhoneState.HUANGUP) {
-            phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.HUANGUP;
+
+        if (mPhoneNettyManager != null) {
+            mPhoneNettyManager.updateTtCallPhoneState(state);
         }
-        if (mNettyServerManager != null) {
-            CallPhoneStateProtos.CallPhoneState callPhoneState = CallPhoneStateProtos.CallPhoneState.newBuilder()
-                    .setPhoneState(phoneState)
-                    .build();
-            PhoneCmd cmd = new PhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state);
-            cmd.setMessage(callPhoneState);
-            mNettyServerManager.sendData(cmd);
+    }
+
+    @Override
+    public void onPhoneSignalStrengthChange(int value) {
+        if (mPhoneNettyManager != null) {
+            mPhoneNettyManager.sendTtCallPhoneSignalToClient(value);
         }
     }
 
     @Override
     public void initTtPcmDevice() {
         LogUtils.e("initTtPcmDevice");
-        if(mIntercomManager == null){
-            mIntercomManager = new IntercomManager();
+        if (mIntercomManager == null) {
+           // mIntercomManager = new IntercomManager();
         }
     }
 
     @Override
     public void freeTtPcmDevice() {
-        if(mIntercomManager != null){
-            mIntercomManager.release();
+        if (mIntercomManager != null) {
+           // mIntercomManager.release();
             mIntercomManager = null;
         }
-
     }
 
 

@@ -13,6 +13,7 @@ import com.qzy.data.PhoneCmd;
 import com.qzy.data.PrototocalTools;
 import com.qzy.eventbus.MessageEvent;
 import com.qzy.eventbus.NettyStateModel;
+import com.qzy.tt.data.CallPhoneProtos;
 import com.qzy.tt.data.CallPhoneStateProtos;
 import com.qzy.tt.phone.R;
 import com.qzy.tt.phone.common.CommonData;
@@ -53,14 +54,14 @@ public class CallingFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-         View view = inflater.inflate(R.layout.fragment_blank, container, false);
+        View view = inflater.inflate(R.layout.fragment_blank, container, false);
         view.setClickable(true);
         ButterKnife.bind(this, view);
         initView();
         return view;
     }
 
-    private void initView(){
+    private void initView() {
         fragmentChange = (IFragmentChange) getActivity();
     }
 
@@ -78,39 +79,68 @@ public class CallingFragment extends Fragment {
         if (event instanceof CallingModel) {
             CallingModel callingModel = (CallingModel) event;
             txtv_phone_number.setText(callingModel.getPhone_number());
-        }else if (event instanceof CommandClientModel) {
+        } else if (event instanceof CommandClientModel) {
             CommandClientModel commandModel = (CommandClientModel) event;
             handlerCommadView(commandModel);
         }
 
     }
 
-    private void handlerCommadView(CommandClientModel commandModel){
+    /**
+     * 处理服务端过来的命令
+     *
+     * @param commandModel
+     */
+    private void handlerCommadView(CommandClientModel commandModel) {
 
         PhoneCmd cmd = commandModel.getCmd();
-        if(cmd.getProtoId() == PrototocalTools.IProtoClientIndex.call_phone_state){
-            CallPhoneStateProtos.CallPhoneState callPhoneState = (CallPhoneStateProtos.CallPhoneState) cmd.getMessage();
-            LogUtils.e("call Phone State = " + callPhoneState.getPhoneStateValue());
-            if(callPhoneState.getPhoneState() == CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL){
-                fragmentChange.hideCallingView();
-                setRecorderState(false);
-            }else if(callPhoneState.getPhoneState() == CallPhoneStateProtos.CallPhoneState.PhoneState.CALL){
-                txtv_phone_state.setText("通话中...");
-                setRecorderState(true);
-            }else if(callPhoneState.getPhoneState() == CallPhoneStateProtos.CallPhoneState.PhoneState.RING){
-                txtv_phone_state.setText("接通中...");
-            }else if(callPhoneState.getPhoneState() == CallPhoneStateProtos.CallPhoneState.PhoneState.HUANGUP){
-                fragmentChange.hideCallingView();
-                setRecorderState(false);
-            }
+        switch (cmd.getProtoId()) {
+            case PrototocalTools.IProtoClientIndex.call_phone_state:
+                updatePhoneState(cmd);
+                break;
+        }
+    }
+
+
+    /**
+     * 更新天通电话状态
+     *
+     * @param cmd
+     */
+    private void updatePhoneState(PhoneCmd cmd) {
+        CallPhoneStateProtos.CallPhoneState callPhoneState = (CallPhoneStateProtos.CallPhoneState) cmd.getMessage();
+        LogUtils.e("call Phone State = " + callPhoneState.getPhoneStateValue());
+        if (callPhoneState.getPhoneState() == CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL) {
+            fragmentChange.hideCallingView();
+            setRecorderState(false);
+        } else if (callPhoneState.getPhoneState() == CallPhoneStateProtos.CallPhoneState.PhoneState.CALL) {
+            txtv_phone_state.setText("通话中...");
+            setRecorderState(true);
+        } else if (callPhoneState.getPhoneState() == CallPhoneStateProtos.CallPhoneState.PhoneState.RING) {
+            txtv_phone_state.setText("接通中...");
+        } else if (callPhoneState.getPhoneState() == CallPhoneStateProtos.CallPhoneState.PhoneState.HUANGUP) {
+            fragmentChange.hideCallingView();
+            setRecorderState(false);
         }
     }
 
     /**
+     * 挂断电话接口
+     */
+    private void hangupCall() {
+        CallPhoneProtos.CallPhone callPhone = CallPhoneProtos.CallPhone.newBuilder()
+                .setIp(CommonData.localWifiIp)
+                .setPhonecommand(CallPhoneProtos.CallPhone.PhoneCommand.HUANGUP)
+                .build();
+        EventBus.getDefault().post(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.call_phone, callPhone));
+    }
+
+    /**
      * 开启录音方法
+     *
      * @param state
      */
-    private void setRecorderState(boolean state){
+    private void setRecorderState(boolean state) {
         CommandModel model = new CommandModel(StateFragment.class.getSimpleName());
         model.setStartRecorder(state);
         EventBus.getDefault().post(model);
@@ -118,10 +148,11 @@ public class CallingFragment extends Fragment {
 
 
     @OnClick({R.id.btn_hangup})
-    public void onClick(View view){
-        switch (view.getId()){
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.btn_hangup:
-                fragmentChange.hideCallingView();
+                hangupCall();
+                // fragmentChange.hideCallingView();
                 break;
         }
     }

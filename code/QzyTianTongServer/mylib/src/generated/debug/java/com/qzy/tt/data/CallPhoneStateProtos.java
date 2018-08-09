@@ -26,6 +26,11 @@ public final class CallPhoneStateProtos {
      * <code>optional .phonedata.CallPhoneState.PhoneState phoneState = 1;</code>
      */
     com.qzy.tt.data.CallPhoneStateProtos.CallPhoneState.PhoneState getPhoneState();
+
+    /**
+     * <code>optional int32 ttPhoneSignal = 2;</code>
+     */
+    int getTtPhoneSignal();
   }
   /**
    * Protobuf type {@code phonedata.CallPhoneState}
@@ -40,6 +45,7 @@ public final class CallPhoneStateProtos {
     }
     private CallPhoneState() {
       phoneState_ = 0;
+      ttPhoneSignal_ = 0;
     }
 
     @java.lang.Override
@@ -71,6 +77,11 @@ public final class CallPhoneStateProtos {
               int rawValue = input.readEnum();
 
               phoneState_ = rawValue;
+              break;
+            }
+            case 16: {
+
+              ttPhoneSignal_ = input.readInt32();
               break;
             }
           }
@@ -228,6 +239,15 @@ public final class CallPhoneStateProtos {
       return result == null ? com.qzy.tt.data.CallPhoneStateProtos.CallPhoneState.PhoneState.UNRECOGNIZED : result;
     }
 
+    public static final int TTPHONESIGNAL_FIELD_NUMBER = 2;
+    private int ttPhoneSignal_;
+    /**
+     * <code>optional int32 ttPhoneSignal = 2;</code>
+     */
+    public int getTtPhoneSignal() {
+      return ttPhoneSignal_;
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -243,6 +263,9 @@ public final class CallPhoneStateProtos {
       if (phoneState_ != com.qzy.tt.data.CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL.getNumber()) {
         output.writeEnum(1, phoneState_);
       }
+      if (ttPhoneSignal_ != 0) {
+        output.writeInt32(2, ttPhoneSignal_);
+      }
     }
 
     public int getSerializedSize() {
@@ -253,6 +276,10 @@ public final class CallPhoneStateProtos {
       if (phoneState_ != com.qzy.tt.data.CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(1, phoneState_);
+      }
+      if (ttPhoneSignal_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, ttPhoneSignal_);
       }
       memoizedSize = size;
       return size;
@@ -271,6 +298,8 @@ public final class CallPhoneStateProtos {
 
       boolean result = true;
       result = result && phoneState_ == other.phoneState_;
+      result = result && (getTtPhoneSignal()
+          == other.getTtPhoneSignal());
       return result;
     }
 
@@ -283,6 +312,8 @@ public final class CallPhoneStateProtos {
       hash = (19 * hash) + getDescriptorForType().hashCode();
       hash = (37 * hash) + PHONESTATE_FIELD_NUMBER;
       hash = (53 * hash) + phoneState_;
+      hash = (37 * hash) + TTPHONESIGNAL_FIELD_NUMBER;
+      hash = (53 * hash) + getTtPhoneSignal();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -403,6 +434,8 @@ public final class CallPhoneStateProtos {
         super.clear();
         phoneState_ = 0;
 
+        ttPhoneSignal_ = 0;
+
         return this;
       }
 
@@ -426,6 +459,7 @@ public final class CallPhoneStateProtos {
       public com.qzy.tt.data.CallPhoneStateProtos.CallPhoneState buildPartial() {
         com.qzy.tt.data.CallPhoneStateProtos.CallPhoneState result = new com.qzy.tt.data.CallPhoneStateProtos.CallPhoneState(this);
         result.phoneState_ = phoneState_;
+        result.ttPhoneSignal_ = ttPhoneSignal_;
         onBuilt();
         return result;
       }
@@ -469,6 +503,9 @@ public final class CallPhoneStateProtos {
         if (other == com.qzy.tt.data.CallPhoneStateProtos.CallPhoneState.getDefaultInstance()) return this;
         if (other.phoneState_ != 0) {
           setPhoneStateValue(other.getPhoneStateValue());
+        }
+        if (other.getTtPhoneSignal() != 0) {
+          setTtPhoneSignal(other.getTtPhoneSignal());
         }
         onChanged();
         return this;
@@ -539,6 +576,32 @@ public final class CallPhoneStateProtos {
         onChanged();
         return this;
       }
+
+      private int ttPhoneSignal_ ;
+      /**
+       * <code>optional int32 ttPhoneSignal = 2;</code>
+       */
+      public int getTtPhoneSignal() {
+        return ttPhoneSignal_;
+      }
+      /**
+       * <code>optional int32 ttPhoneSignal = 2;</code>
+       */
+      public Builder setTtPhoneSignal(int value) {
+        
+        ttPhoneSignal_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 ttPhoneSignal = 2;</code>
+       */
+      public Builder clearTtPhoneSignal() {
+        
+        ttPhoneSignal_ = 0;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return this;
@@ -602,12 +665,13 @@ public final class CallPhoneStateProtos {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\024CallPhoneState.proto\022\tphonedata\"\205\001\n\016Ca" +
+      "\n\024CallPhoneState.proto\022\tphonedata\"\234\001\n\016Ca" +
       "llPhoneState\0228\n\nphoneState\030\001 \001(\0162$.phone" +
-      "data.CallPhoneState.PhoneState\"9\n\nPhoneS" +
-      "tate\022\n\n\006NOCALL\020\000\022\010\n\004RING\020\001\022\010\n\004CALL\020\002\022\013\n\007" +
-      "HUANGUP\020\003B\'\n\017com.qzy.tt.dataB\024CallPhoneS" +
-      "tateProtosb\006proto3"
+      "data.CallPhoneState.PhoneState\022\025\n\rttPhon" +
+      "eSignal\030\002 \001(\005\"9\n\nPhoneState\022\n\n\006NOCALL\020\000\022" +
+      "\010\n\004RING\020\001\022\010\n\004CALL\020\002\022\013\n\007HUANGUP\020\003B\'\n\017com." +
+      "qzy.tt.dataB\024CallPhoneStateProtosb\006proto" +
+      "3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -626,7 +690,7 @@ public final class CallPhoneStateProtos {
     internal_static_phonedata_CallPhoneState_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_phonedata_CallPhoneState_descriptor,
-        new java.lang.String[] { "PhoneState", });
+        new java.lang.String[] { "PhoneState", "TtPhoneSignal", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

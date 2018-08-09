@@ -37,8 +37,9 @@ void protobuf_AssignDesc_CallPhoneState_2eproto() {
       "CallPhoneState.proto");
   GOOGLE_CHECK(file != NULL);
   CallPhoneState_descriptor_ = file->message_type(0);
-  static const int CallPhoneState_offsets_[1] = {
+  static const int CallPhoneState_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CallPhoneState, phonestate_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CallPhoneState, ttphonesignal_),
   };
   CallPhoneState_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -92,12 +93,13 @@ void protobuf_AddDesc_CallPhoneState_2eproto_impl() {
 
   protobuf_InitDefaults_CallPhoneState_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\024CallPhoneState.proto\022\tphonedata\"\205\001\n\016Ca"
+    "\n\024CallPhoneState.proto\022\tphonedata\"\234\001\n\016Ca"
     "llPhoneState\0228\n\nphoneState\030\001 \001(\0162$.phone"
-    "data.CallPhoneState.PhoneState\"9\n\nPhoneS"
-    "tate\022\n\n\006NOCALL\020\000\022\010\n\004RING\020\001\022\010\n\004CALL\020\002\022\013\n\007"
-    "HUANGUP\020\003B\'\n\017com.qzy.tt.dataB\024CallPhoneS"
-    "tateProtosb\006proto3", 218);
+    "data.CallPhoneState.PhoneState\022\025\n\rttPhon"
+    "eSignal\030\002 \001(\005\"9\n\nPhoneState\022\n\n\006NOCALL\020\000\022"
+    "\010\n\004RING\020\001\022\010\n\004CALL\020\002\022\013\n\007HUANGUP\020\003B\'\n\017com."
+    "qzy.tt.dataB\024CallPhoneStateProtosb\006proto"
+    "3", 241);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "CallPhoneState.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_CallPhoneState_2eproto);
@@ -154,6 +156,7 @@ const int CallPhoneState::PhoneState_ARRAYSIZE;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int CallPhoneState::kPhoneStateFieldNumber;
+const int CallPhoneState::kTtPhoneSignalFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 CallPhoneState::CallPhoneState()
@@ -175,7 +178,8 @@ CallPhoneState::CallPhoneState(const CallPhoneState& from)
 }
 
 void CallPhoneState::SharedCtor() {
-  phonestate_ = 0;
+  ::memset(&phonestate_, 0, reinterpret_cast<char*>(&ttphonesignal_) -
+    reinterpret_cast<char*>(&phonestate_) + sizeof(ttphonesignal_));
   _cached_size_ = 0;
 }
 
@@ -214,7 +218,27 @@ CallPhoneState* CallPhoneState::New(::google::protobuf::Arena* arena) const {
 
 void CallPhoneState::Clear() {
 // @@protoc_insertion_point(message_clear_start:phonedata.CallPhoneState)
-  phonestate_ = 0;
+#if defined(__clang__)
+#define ZR_HELPER_(f) \
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(CallPhoneState, f) \
+  _Pragma("clang diagnostic pop")
+#else
+#define ZR_HELPER_(f) reinterpret_cast<char*>(\
+  &reinterpret_cast<CallPhoneState*>(16)->f)
+#endif
+
+#define ZR_(first, last) do {\
+  ::memset(&(first), 0,\
+           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
+} while (0)
+
+  ZR_(phonestate_, ttphonesignal_);
+
+#undef ZR_HELPER_
+#undef ZR_
+
 }
 
 bool CallPhoneState::MergePartialFromCodedStream(
@@ -235,6 +259,21 @@ bool CallPhoneState::MergePartialFromCodedStream(
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
                  input, &value)));
           set_phonestate(static_cast< ::phonedata::CallPhoneState_PhoneState >(value));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_ttPhoneSignal;
+        break;
+      }
+
+      // optional int32 ttPhoneSignal = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_ttPhoneSignal:
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &ttphonesignal_)));
         } else {
           goto handle_unusual;
         }
@@ -272,6 +311,11 @@ void CallPhoneState::SerializeWithCachedSizes(
       1, this->phonestate(), output);
   }
 
+  // optional int32 ttPhoneSignal = 2;
+  if (this->ttphonesignal() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->ttphonesignal(), output);
+  }
+
   // @@protoc_insertion_point(serialize_end:phonedata.CallPhoneState)
 }
 
@@ -283,6 +327,11 @@ void CallPhoneState::SerializeWithCachedSizes(
   if (this->phonestate() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       1, this->phonestate(), target);
+  }
+
+  // optional int32 ttPhoneSignal = 2;
+  if (this->ttphonesignal() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->ttphonesignal(), target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:phonedata.CallPhoneState)
@@ -297,6 +346,13 @@ size_t CallPhoneState::ByteSizeLong() const {
   if (this->phonestate() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::EnumSize(this->phonestate());
+  }
+
+  // optional int32 ttPhoneSignal = 2;
+  if (this->ttphonesignal() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->ttphonesignal());
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -335,6 +391,9 @@ void CallPhoneState::UnsafeMergeFrom(const CallPhoneState& from) {
   if (from.phonestate() != 0) {
     set_phonestate(from.phonestate());
   }
+  if (from.ttphonesignal() != 0) {
+    set_ttphonesignal(from.ttphonesignal());
+  }
 }
 
 void CallPhoneState::CopyFrom(const ::google::protobuf::Message& from) {
@@ -362,6 +421,7 @@ void CallPhoneState::Swap(CallPhoneState* other) {
 }
 void CallPhoneState::InternalSwap(CallPhoneState* other) {
   std::swap(phonestate_, other->phonestate_);
+  std::swap(ttphonesignal_, other->ttphonesignal_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
@@ -389,6 +449,20 @@ void CallPhoneState::set_phonestate(::phonedata::CallPhoneState_PhoneState value
   
   phonestate_ = value;
   // @@protoc_insertion_point(field_set:phonedata.CallPhoneState.phoneState)
+}
+
+// optional int32 ttPhoneSignal = 2;
+void CallPhoneState::clear_ttphonesignal() {
+  ttphonesignal_ = 0;
+}
+::google::protobuf::int32 CallPhoneState::ttphonesignal() const {
+  // @@protoc_insertion_point(field_get:phonedata.CallPhoneState.ttPhoneSignal)
+  return ttphonesignal_;
+}
+void CallPhoneState::set_ttphonesignal(::google::protobuf::int32 value) {
+  
+  ttphonesignal_ = value;
+  // @@protoc_insertion_point(field_set:phonedata.CallPhoneState.ttPhoneSignal)
 }
 
 inline const CallPhoneState* CallPhoneState::internal_default_instance() {

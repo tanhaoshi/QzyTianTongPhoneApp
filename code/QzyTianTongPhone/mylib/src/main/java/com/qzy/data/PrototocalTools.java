@@ -19,6 +19,7 @@ public class PrototocalTools {
 
     public interface IProtoClientIndex{
         int call_phone_state = 101;
+        int tt_phone_signal = 103;
     }
 
     public static boolean readToFour0x5aHeaderByte(ByteBufInputStream stream) throws IOException {

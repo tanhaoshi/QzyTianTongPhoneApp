@@ -19,13 +19,6 @@ public class Recorder extends JobHandler {
 
     public Recorder(Handler handler) {
         super(handler);
-
-    }
-
-
-    @Override
-    public void run() {
-        //LogUtils.e("Recorder run");
         audioRecorder = new TtAudioRecorder(new TtAudioRecorder.IReadPcmData() {
             @Override
             public void readData(byte[] rawData) {
@@ -35,6 +28,12 @@ public class Recorder extends JobHandler {
             }
         });
         audioRecorder.initTtAudioRecorder();
+    }
+
+
+    @Override
+    public void run() {
+        //LogUtils.e("Recorder run");
     }
 
     @Override

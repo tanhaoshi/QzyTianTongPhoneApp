@@ -7,6 +7,7 @@ import com.qzy.data.PhoneCmd;
 import com.qzy.data.PrototocalTools;
 import com.qzy.tt.data.CallPhoneProtos;
 import com.qzy.tt.data.CallPhoneStateProtos;
+import com.qzy.tt.data.TtPhoneSignalProtos;
 import com.qzy.tt.phone.eventbus.CommandClientModel;
 import com.qzy.tt.phone.eventbus.CommandModel;
 import com.qzy.utils.LogUtils;
@@ -61,6 +62,10 @@ public class CmdHandler {
                     CallPhoneStateProtos.CallPhoneState callPhoneState = CallPhoneStateProtos.CallPhoneState.parseDelimitedFrom(inputStream);
                     sendCmdToView(protoId, callPhoneState);
                     break;
+                case PrototocalTools.IProtoClientIndex.tt_phone_signal:
+                    TtPhoneSignalProtos.PhoneSignalStrength phoneSignalStrength = TtPhoneSignalProtos.PhoneSignalStrength.parseDelimitedFrom(inputStream);
+                    sendCmdToView(protoId, phoneSignalStrength);
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,9 +74,7 @@ public class CmdHandler {
     }
 
     private void sendCmdToView(int protoId, GeneratedMessageV3 messageV3) {
-        PhoneCmd cmd = new PhoneCmd(protoId);
-        cmd.setMessage(messageV3);
-        CommandClientModel model = new CommandClientModel(cmd);
+        CommandClientModel model = new CommandClientModel(PhoneCmd.getPhoneCmd(protoId, messageV3));
         EventBus.getDefault().post(model);
     }
 

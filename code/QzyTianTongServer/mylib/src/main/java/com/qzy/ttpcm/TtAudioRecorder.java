@@ -33,12 +33,15 @@ public class TtAudioRecorder {
         @Override
         public void run() {
             try {
-                while (isRead == 160 * 8) {
-                    isRunning = true;
+                while (isRead == 160 * 8 && isRunning) {
+                    if (isRead == -1) {
+                        break;
+                    }
                     byte[] data = new byte[isRead];
-                      //LogUtils.d("read pcm to local my tid = " + android.os.Process.myTid()+" name "+Thread.currentThread().getName());
+                    //LogUtils.d("read pcm to local my tid = " + android.os.Process.myTid()+" name "+Thread.currentThread().getName());
+                   // LogUtils.d("mReadThread running = ");
                     int len = VoiceManager.readPcmData(data);
-                      //LogUtils.d("read pcm data len = " + len);
+                  //  LogUtils.d("mReadThread read pcm data len = " + len);
                     //LogUtils.d("read pcm data = " + ByteUtils.byteArrToHexString(data));
                     if (len == 0) {
                         if (iReadPcmData != null) {
@@ -48,7 +51,7 @@ public class TtAudioRecorder {
                 }
                 isRunning = false;
                 VoiceManager.releasePcmRecorder();
-                LogUtils.d("mReadThread=  ..........finish..................." );
+                LogUtils.d("mReadThread=  ..........finish...................");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -58,13 +61,14 @@ public class TtAudioRecorder {
     public void initTtAudioRecorder() {
         LogUtils.d("initTtAudioRecorder = " + isRead);
         //try {
-            isRead = VoiceManager.initPcmRecorder();
-            LogUtils.d("read pcm data isRead = " + isRead);
-            readThread = new Thread(mReadThread);
-            readThread.start();
-       // } catch (Exception e) {
-       //     e.printStackTrace();
-       // }
+        isRead = VoiceManager.initPcmRecorder();
+        LogUtils.d("read pcm data isRead = " + isRead);
+        isRunning = true;
+        readThread = new Thread(mReadThread);
+        readThread.start();
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        // }
     }
 
 
@@ -75,6 +79,7 @@ public class TtAudioRecorder {
 
         try {
             isRead = -1;
+            isRunning = false;
             if (readThread != null && readThread.isAlive()) {
                 readThread.interrupt();
             }

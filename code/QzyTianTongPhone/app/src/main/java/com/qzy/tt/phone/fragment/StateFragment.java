@@ -17,8 +17,10 @@ import com.qzy.eventbus.MessageEvent;
 import com.qzy.eventbus.NettyStateModel;
 import com.qzy.intercom.util.IPUtil;
 import com.qzy.tt.data.ChangePcmPlayerDbProtos;
+import com.qzy.tt.data.TtPhoneSignalProtos;
 import com.qzy.tt.phone.R;
 import com.qzy.tt.phone.common.CommonData;
+import com.qzy.tt.phone.eventbus.CommandClientModel;
 import com.qzy.tt.phone.eventbus.CommandModel;
 import com.sws.WebRtcTools;
 
@@ -95,8 +97,41 @@ public class StateFragment extends Fragment {
             } else {
                 btn_recorder.setText("开始录音");
             }
+        } else if (event instanceof CommandClientModel) {
+            CommandClientModel commandModel = (CommandClientModel) event;
+            handlerCommadView(commandModel);
         }
 
+    }
+
+    /**
+     * 处理服务端过来的命令
+     *
+     * @param commandModel
+     */
+    private void handlerCommadView(CommandClientModel commandModel) {
+
+        PhoneCmd cmd = commandModel.getCmd();
+        switch (cmd.getProtoId()) {
+            case PrototocalTools.IProtoClientIndex.tt_phone_signal:
+                updateTianTongCatSignal(cmd);
+                break;
+        }
+    }
+
+    /**
+     * 更新天通猫链接卫星状态
+     *
+     * @param cmd
+     */
+    private void updateTianTongCatSignal(PhoneCmd cmd) {
+        TtPhoneSignalProtos.PhoneSignalStrength signalStrength = (TtPhoneSignalProtos.PhoneSignalStrength) cmd.getMessage();
+        int value = signalStrength.getSignalStrength();
+        if (value == 99) {
+            txt_tt_server_state.setText("天通猫-卫星连接状态：" + "未连接 (" + 99 + ")");
+        } else {
+            txt_tt_server_state.setText("天通猫-卫星连接状态：" + "已连接 (" + value + ")");
+        }
     }
 
     @OnClick({R.id.btn_recorder, R.id.btn_set_db})
@@ -124,8 +159,7 @@ public class StateFragment extends Fragment {
         ChangePcmPlayerDbProtos.ChangePcmPlayerDb db = ChangePcmPlayerDbProtos.ChangePcmPlayerDb.newBuilder()
                 .setDb(dbvalue)
                 .build();
-        EventBus.getDefault().post(new PhoneCmd(PrototocalTools.IProtoServerIndex.chang_pcmplayer_db, db));
-
+        EventBus.getDefault().post(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.chang_pcmplayer_db, db));
     }
 
 

@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements DialpadFragment.O
                 .setPhoneNumber(phoneNumber)
                 .setPhonecommand(CallPhoneProtos.CallPhone.PhoneCommand.CALL)
                 .build();
-        EventBus.getDefault().post(new PhoneCmd(PrototocalTools.IProtoServerIndex.call_phone, callPhone));
+        EventBus.getDefault().post(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.call_phone, callPhone));
 
         if(showCallingView()){
             setCallingPhoneNumber(phoneNumber);

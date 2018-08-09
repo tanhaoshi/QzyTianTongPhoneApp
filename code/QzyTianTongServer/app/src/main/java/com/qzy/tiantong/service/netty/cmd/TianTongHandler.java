@@ -1,4 +1,4 @@
-package com.qzy.tiantong.service.cmd;
+package com.qzy.tiantong.service.netty.cmd;
 
 import android.os.Handler;
 import android.os.Message;

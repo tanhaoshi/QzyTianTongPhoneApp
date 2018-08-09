@@ -164,11 +164,18 @@ class CallPhoneState : public ::google::protobuf::Message /* @@protoc_insertion_
   ::phonedata::CallPhoneState_PhoneState phonestate() const;
   void set_phonestate(::phonedata::CallPhoneState_PhoneState value);
 
+  // optional int32 ttPhoneSignal = 2;
+  void clear_ttphonesignal();
+  static const int kTtPhoneSignalFieldNumber = 2;
+  ::google::protobuf::int32 ttphonesignal() const;
+  void set_ttphonesignal(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:phonedata.CallPhoneState)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   int phonestate_;
+  ::google::protobuf::int32 ttphonesignal_;
   mutable int _cached_size_;
   friend void  protobuf_InitDefaults_CallPhoneState_2eproto_impl();
   friend void  protobuf_AddDesc_CallPhoneState_2eproto_impl();
@@ -199,6 +206,20 @@ inline void CallPhoneState::set_phonestate(::phonedata::CallPhoneState_PhoneStat
   
   phonestate_ = value;
   // @@protoc_insertion_point(field_set:phonedata.CallPhoneState.phoneState)
+}
+
+// optional int32 ttPhoneSignal = 2;
+inline void CallPhoneState::clear_ttphonesignal() {
+  ttphonesignal_ = 0;
+}
+inline ::google::protobuf::int32 CallPhoneState::ttphonesignal() const {
+  // @@protoc_insertion_point(field_get:phonedata.CallPhoneState.ttPhoneSignal)
+  return ttphonesignal_;
+}
+inline void CallPhoneState::set_ttphonesignal(::google::protobuf::int32 value) {
+  
+  ttphonesignal_ = value;
+  // @@protoc_insertion_point(field_set:phonedata.CallPhoneState.ttPhoneSignal)
 }
 
 inline const CallPhoneState* CallPhoneState::internal_default_instance() {
