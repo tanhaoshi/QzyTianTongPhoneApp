@@ -100,7 +100,7 @@ public class Receiver extends JobHandler {
 
         // byte[] data = Arrays.copyOfRange(packet.getData(),1,1024 * 4  + 1);
         AudioData audioData = new AudioData(packet.getData());
-        LogUtils.e("reece pcm index = " + ByteUtils.byteToInt(audioData.getEncodedData()[0]));
+       // LogUtils.e("reece pcm index = " + ByteUtils.byteToInt(audioData.getEncodedData()[0]));
         MessageQueue.getInstance(MessageQueue.DECODER_DATA_QUEUE).put(audioData);
     }
 
