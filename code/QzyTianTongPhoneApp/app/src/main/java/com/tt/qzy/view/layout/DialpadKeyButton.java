@@ -26,6 +26,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 /**
  * Custom class for dialpad buttons.
@@ -33,7 +34,7 @@ import android.widget.FrameLayout;
  * This class implements lift-to-type interaction when touch exploration is
  * enabled.
  */
-public class DialpadKeyButton extends FrameLayout {
+public class DialpadKeyButton extends LinearLayout {
     /** Accessibility manager instance used to check touch exploration state. */
     private AccessibilityManager mAccessibilityManager;
 
