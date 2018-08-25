@@ -29,32 +29,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <LinearLayout
-            android:layout_marginTop="7dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="19dp">
+        <!--<LinearLayout-->
+            <!--android:layout_marginTop="7dp"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="19dp">-->
+
+            <!--<TextView-->
+                <!--android:visibility="gone"-->
+                <!--android:text="广东深圳"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:gravity="end"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_marginRight="12dp"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"/>-->
 
             <TextView
-                android:layout_weight="1"
-                android:text="广东深圳"
+                android:id="@+id/phoneNumber"
                 android:textColor="@color/white"
-                android:gravity="end"
-                android:layout_centerHorizontal="true"
-                android:layout_marginRight="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:id="@+id/textView"
-                android:textColor="@color/white"
-                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_weight="1"
-                android:text="手机"/>
+                android:layout_gravity="center_horizontal"
+                android:text=""/>
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
 
         <TextView
             android:layout_marginTop="7dp"

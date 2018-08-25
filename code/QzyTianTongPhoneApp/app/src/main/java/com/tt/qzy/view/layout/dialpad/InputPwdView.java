@@ -175,8 +175,9 @@ public class InputPwdView extends LinearLayout implements View.OnTouchListener,V
             case R.id.software:
                 break;
             case R.id.tellphone:
-                Intent intent = new Intent(context, TellPhoneActivity.class);
-                context.startActivity(intent);
+                if(inputPwdListener != null){
+                    inputPwdListener.inputString(sb.toString());
+                }
                 break;
             case R.id.clear:
                 if (sb.length() == 0) return;
@@ -268,11 +269,7 @@ public class InputPwdView extends LinearLayout implements View.OnTouchListener,V
     }
 
     public interface InputPwdListener {
-        void hide();
-
-        void forgetPwd();
-
-        void finishPwd(String pwd);
+        void inputString(String diapadNumber);
     }
 
 }

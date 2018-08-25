@@ -1,5 +1,6 @@
 package com.tt.qzy.view.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.tt.qzy.view.R;
+import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.adapter.CallRecordAdapter;
 import com.tt.qzy.view.adapter.EarlierAdapter;
 import com.tt.qzy.view.adapter.YesterdayRecordAdapter;
@@ -33,7 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissListener{
+public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissListener,InputPwdView.InputPwdListener{
 
     @BindView(R.id.base_iv_back)
     ImageView base_iv_back;
@@ -116,6 +118,7 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
         base_tv_toolbar_right.setImageDrawable(getActivity().getDrawable(R.drawable.more));
         myInputPwdUtil = new MyInputPwdUtil(getActivity());
         myInputPwdUtil.getMyInputDialogBuilder().setAnimStyle(R.style.dialog_anim);
+        myInputPwdUtil.setListener(this);
     }
 
     @OnClick({R.id.fab,R.id.base_tv_toolbar_right})
@@ -149,5 +152,12 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
         WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
         lp.alpha = color;
         getActivity().getWindow().setAttributes(lp);
+    }
+
+    @Override
+    public void inputString(String diapadNumber) {
+        Intent intent = new Intent(getActivity(), TellPhoneActivity.class);
+        intent.putExtra("diapadNumber",diapadNumber);
+        getActivity().startActivity(intent);
     }
 }

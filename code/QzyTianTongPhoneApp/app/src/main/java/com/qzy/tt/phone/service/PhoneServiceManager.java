@@ -50,7 +50,6 @@ public class PhoneServiceManager implements NettyClientManager.INettyListener {
     // 1 :loca pcm  2: udb  3: rtp 4: tcp/ip
     private int useProtocalIndex = 2;
 
-
     public PhoneServiceManager(Context context) {
         mContext = context;
 

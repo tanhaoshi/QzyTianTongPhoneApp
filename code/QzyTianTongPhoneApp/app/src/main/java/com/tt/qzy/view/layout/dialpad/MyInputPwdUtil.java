@@ -3,12 +3,6 @@ package com.tt.qzy.view.layout.dialpad;
 import android.content.Context;
 import android.view.Gravity;
 
-/**
- * @version 1.0
- * @author TanHaoShi
- * Created by TanHaoShi on 2017/6/9.
- */
-
 public class MyInputPwdUtil {
     private InputPwdView inputView;
     private Context context;
@@ -28,17 +22,8 @@ public class MyInputPwdUtil {
     public void init(){
         inputView.setListener(new InputPwdView.InputPwdListener() {
             @Override
-            public void hide() {
-                inputListener.hide();
-            }
-            @Override
-            public void forgetPwd() {
-                inputListener.forgetPwd();
-            }
-
-            @Override
-            public void finishPwd(String pwd) {
-                inputListener.finishPwd(pwd);
+            public void inputString(String diapadNumber) {
+               inputListener.inputString(diapadNumber);
             }
         });
     }
