@@ -1,0 +1,87 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+              android:orientation="vertical"
+             tools:context="com.tt.qzy.view.fragment.CityListFragment">
+
+    <ScrollView
+        android:scrollbars="none"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:layout_width="match_parent"
+                android:layout_height="29dp"
+                android:background="@drawable/goods_like_selector">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="17dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/search"/>
+
+                <EditText
+                    android:layout_marginLeft="13dp"
+                    android:id="@+id/tv_toolbar_title"
+                    android:textSize="9sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:hint="@string/TMT_hint_editors"
+                    android:textColor="@color/black"
+                    android:layout_weight="1"
+                    android:background="@null"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_marginTop="14dp"
+                android:text="@string/TMT_hotaddres"
+                android:textColor="@color/deep_black"
+                android:gravity="center_vertical"
+                android:textSize="10sp"
+                android:paddingLeft="15dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="27dp"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </android.support.v7.widget.RecyclerView>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:text="@string/TMT_allArea"
+                android:textColor="@color/deep_black"
+                android:gravity="center_vertical"
+                android:textSize="10sp"
+                android:paddingLeft="15dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="27dp"/>
+
+            <com.tt.qzy.view.layout.NestedExpandaleListView
+                android:id="@+id/expanded_menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </com.tt.qzy.view.layout.NestedExpandaleListView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

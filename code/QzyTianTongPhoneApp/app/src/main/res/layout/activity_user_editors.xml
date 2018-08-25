@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.tt.qzy.view.activity.UserEditorsActivity">
+
+    <include layout="@layout/toobar_layout"/>
+
+    <include layout="@layout/line_dimens"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:src="@drawable/mine_default_avatar"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="53dp"
+        android:layout_height="53dp"/>
+
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:layout_height="48dp">
+
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:text="姓名"
+            android:textSize="12sp"
+            android:layout_marginLeft="16dp"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/consigneeName"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:textSize="12sp"
+            android:textColorHint="#8a8a8a"
+            android:background="@null"
+            android:layout_width="0dp"
+            android:layout_height="50dp"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+    
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_margin="10dp"
+        android:textColor="@color/pink"
+        android:text="@string/TMT_exit"
+        android:textSize="16sp"
+        android:background="@drawable/user_editors_style_bg"
+        />
+
+</LinearLayout>

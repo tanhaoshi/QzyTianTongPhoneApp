@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="tab_text_color_selected">#66000000</color>
+
+    <color name="line_bg">#e5e5e5</color>
+
+    <color name="white">#fff</color>
+
+    <color name="tab_select">#66000000</color>
+    <color name="tab_stander">#669F9D9D</color>
+
+    <color name="bg_dump_color">#A0E0F5</color>
+
+    <color name="black">#000</color>
+
+    <color name="yellow">#FFECB850</color>
+    <color name="gray">#FFF1F1F1</color>
+    <color name="deep_black">#8a8a8a</color>
+    <color name="pink">#fff95972</color>
+    <color name="cannel">#ff333333</color>
+    <color name="yes">#ff2a9acc</color>
+
+    <color name="blue">#FF3EB6EC</color>
+
+    <color name="myInputPwdBase_gray">#f0f0f6</color>
+
+    <color name="phoneNumber">#F0F0F0</color>
+
+</resources>

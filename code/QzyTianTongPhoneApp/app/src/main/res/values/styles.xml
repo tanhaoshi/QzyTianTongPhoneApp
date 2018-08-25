@@ -1,0 +1,73 @@
+<resources xmlns:tools="http://schemas.android.com/tools"
+           xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- custom Base application theme. -->
+    <style name="BaseAppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/tab_text_color_selected</item>
+        <item name="colorAccent">@color/tab_text_color_selected</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <!--屏幕方向（纵向）-->
+        <item name="android:screenOrientation">portrait</item>
+        <!--状态栏4.4-->
+        <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">false</item>
+    </style>
+
+    <!-- 所有普通的view的样式 -->
+    <style name="CommonViewStyle" parent="BaseAppTheme">
+        <item name="android:windowFullscreen">false</item>
+    </style>
+
+    <style name="SwitchComputer" parent="Theme.AppCompat.Light">
+        <!--开启时的颜色-->
+        <item name="colorControlActivated">@color/yellow</item>
+        <!--关闭时的颜色-->
+        <item name="colorSwitchThumbNormal">@color/tab_stander</item>
+        <!--关闭时的轨迹颜色取30%的颜色-->
+        <item name="android:colorForeground">@color/tab_stander</item>
+    </style>
+
+    <!-- input pwd -->
+    <style name="myinputpwd_dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowFrame">@null</item>
+        <!-- 边框 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- 半透明 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 无标题 -->
+        <!-- dialog背景样式 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 背景透明 -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- 模糊 -->
+    </style>
+
+    <!-- input type -->
+    <style name="dialog_anim" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/anim_dialog_enter</item>
+        <item name="android:windowExitAnimation">@anim/anim_dialog_exit</item>
+    </style>
+
+    <!-- popupwindow -->
+    <style name="take_photo_anim" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/pop_enter_anim</item>
+        <item name="android:windowExitAnimation">@anim/pop_exit_anim</item>
+        <!--<item name-->
+    </style>
+
+</resources>

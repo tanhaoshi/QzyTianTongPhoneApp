@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.tt.qzy.view.activity.MainAboutActivity">
+
+    <include layout="@layout/left_toobar_layout"/>
+
+    <LinearLayout
+        android:layout_marginTop="13dp"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="48dp">
+
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:text="@string/TMT_version"
+            android:textSize="14sp"
+            android:layout_weight="1"
+            android:textColor="#ff666666"
+            android:layout_marginLeft="16dp"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/about_version"
+            android:layout_gravity="center_vertical"
+            android:textSize="10sp"
+            android:layout_marginRight="18dp"
+            android:textColor="#ff666666"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginLeft="15dp"
+        android:background="@color/line_bg"
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"/>
+
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="48dp">
+
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:text="@string/TMT_soft_version"
+            android:textSize="14sp"
+            android:layout_weight="1"
+            android:textColor="#ff666666"
+            android:layout_marginLeft="16dp"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/about_soft_version"
+            android:layout_gravity="center_vertical"
+            android:textSize="10sp"
+            android:text="未知"
+            android:layout_marginRight="18dp"
+            android:textColor="#ff666666"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginLeft="15dp"
+        android:background="@color/line_bg"
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"/>
+
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="48dp">
+
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:text="@string/TMT_fixed_version"
+            android:textSize="14sp"
+            android:layout_weight="1"
+            android:textColor="#ff666666"
+            android:layout_marginLeft="16dp"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/about_fixed_version"
+            android:layout_gravity="center_vertical"
+            android:textSize="10sp"
+            android:text="未知"
+            android:layout_marginRight="18dp"
+            android:textColor="#ff666666"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginLeft="15dp"
+        android:background="@color/line_bg"
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"/>
+
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="48dp">
+
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:text="@string/TMT_number"
+            android:textSize="14sp"
+            android:layout_weight="1"
+            android:textColor="#ff666666"
+            android:layout_marginLeft="16dp"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/about_number"
+            android:layout_gravity="center_vertical"
+            android:textSize="10sp"
+            android:text="未知"
+            android:layout_marginRight="18dp"
+            android:textColor="#ff666666"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</LinearLayout>

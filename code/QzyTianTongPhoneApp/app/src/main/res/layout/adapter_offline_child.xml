@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="56dp">
+
+    <TextView
+        android:layout_marginLeft="14dp"
+        android:background="@color/line_bg"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/child_mapName"
+                android:layout_marginLeft="13dp"
+                android:layout_marginTop="8dp"
+                android:text="全国基础包"
+                android:textColor="#333333"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/child_mapSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ff666666"
+                android:textSize="10sp"
+                android:text="地图102.0MB"
+                android:layout_marginLeft="13dp"
+                android:layout_marginTop="6dp"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/child_download"
+            android:src="@drawable/download"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="19dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>
