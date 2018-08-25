@@ -252,7 +252,7 @@ public class InputPwdView extends LinearLayout implements View.OnTouchListener,V
     }
 
     private void shock(MotionEvent event){
-        if(vb != null){
+       /* if(vb != null){
             if(event.getAction() == MotionEvent.ACTION_DOWN){
                 vb.vibrate(5000);
             }else if(event.getAction() == MotionEvent.ACTION_UP){
@@ -265,7 +265,7 @@ public class InputPwdView extends LinearLayout implements View.OnTouchListener,V
             }else if(event.getAction() == MotionEvent.ACTION_UP){
                 vb.cancel();
             }
-        }
+        }*/
     }
 
     public interface InputPwdListener {
