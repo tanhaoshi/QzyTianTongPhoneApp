@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    tools:context="com.tt.qzy.view.activity.AddContactsActivity">
+
+    <include layout="@layout/toobar_layout"/>
+
+    <include layout="@layout/line_dimens"/>
+
+    <ImageView
+        android:id="@+id/mine"
+        android:src="@drawable/mine_default_avatar"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp"
+        android:layout_width="53dp"
+        android:layout_height="53dp"/>
+
+    <LinearLayout
+        android:layout_marginTop="24dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <TextView
+            android:text="@string/TMT_contacts_name"
+            android:textSize="13sp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:textColor="#333333"
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:textSize="13sp"
+            android:textColor="#333333"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="17dp"
+            android:background="@null"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginLeft="15dp"
+        android:background="@color/line_bg"
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"/>
+
+    <LinearLayout
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <TextView
+            android:text="@string/TMT_mobile"
+            android:textSize="13sp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:textColor="#333333"
+            android:drawableRight="@drawable/xiala_small"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"/>
+        
+        <TextView
+            android:layout_marginLeft="13dp"
+            android:background="#979797"
+            android:layout_gravity="center_vertical"
+            android:layout_width="1dp"
+            android:layout_height="10dp"/>
+
+        <EditText
+            android:textSize="13sp"
+            android:textColor="#333333"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="17dp"
+            android:background="@null"
+            android:hint="@string/TMT_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginLeft="15dp"
+        android:background="@color/line_bg"
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"/>
+
+    <TextView
+        android:id="@+id/main_location"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:drawablePadding="20dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:background="@color/white"
+        android:drawableRight="@drawable/add_number"
+        android:paddingRight="17dp"
+        android:textColor="#333333"
+        android:text="@string/TMT_add_mobile"/>
+
+    <TextView
+        android:layout_marginLeft="15dp"
+        android:background="@color/line_bg"
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"/>
+
+    <LinearLayout
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <TextView
+            android:text="@string/TMT_email"
+            android:textSize="13sp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:textColor="#333333"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_marginLeft="13dp"
+            android:background="#979797"
+            android:layout_gravity="center_vertical"
+            android:layout_width="1dp"
+            android:layout_height="10dp"/>
+
+        <EditText
+            android:textSize="13sp"
+            android:textColor="#333333"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="17dp"
+            android:background="@null"
+            android:hint="@string/TMT_email"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginLeft="15dp"
+        android:background="@color/line_bg"
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"/>
+
+    <LinearLayout
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <TextView
+            android:text="@string/TMT_QQ"
+            android:textSize="13sp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:textColor="#333333"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_marginLeft="13dp"
+            android:background="#979797"
+            android:layout_gravity="center_vertical"
+            android:layout_width="1dp"
+            android:layout_height="10dp"/>
+
+        <EditText
+            android:textSize="13sp"
+            android:textColor="#333333"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="17dp"
+            android:background="@null"
+            android:hint="@string/TMT_QQ"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+</LinearLayout>

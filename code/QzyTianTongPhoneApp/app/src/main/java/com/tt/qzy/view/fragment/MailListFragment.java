@@ -1,5 +1,6 @@
 package com.tt.qzy.view.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,17 +8,22 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tt.qzy.view.R;
+import com.tt.qzy.view.activity.AddContactsActivity;
 import com.tt.qzy.view.adapter.SortAdapter;
 import com.tt.qzy.view.bean.SortModel;
 import com.tt.qzy.view.layout.ClearEditText;
 import com.tt.qzy.view.layout.PinyinComparator;
+import com.tt.qzy.view.layout.PopMallListWindow;
+import com.tt.qzy.view.layout.PopWindow;
 import com.tt.qzy.view.layout.SideBar;
 import com.tt.qzy.view.utils.PinyinUtils;
 
@@ -27,8 +33,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class MailListFragment extends Fragment {
+public class MailListFragment extends Fragment implements PopWindow.OnDismissListener{
 
     @BindView(R.id.base_tv_toolbar_title)
     TextView base_tv_toolbar_title;
@@ -48,6 +55,8 @@ public class MailListFragment extends Fragment {
     private List<SortModel> SourceDateList;
     private PinyinComparator pinyinComparator;
     private SortAdapter adapter;
+
+    private PopMallListWindow mPopMallListWindow;
 
     public MailListFragment() {
         // Required empty public constructor
@@ -80,7 +89,7 @@ public class MailListFragment extends Fragment {
     private void initView() {
         base_iv_back.setVisibility(View.GONE);
         base_tv_toolbar_title.setText(getActivity().getResources().getString(R.string.TMT_mall_list));
-        base_tv_toolbar_right.setImageDrawable(getActivity().getDrawable(R.drawable.more));
+        base_tv_toolbar_right.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.more));
 
         mSideBar.setTextView(mDialog);
         pinyinComparator = new PinyinComparator();
@@ -180,4 +189,37 @@ public class MailListFragment extends Fragment {
         adapter.updateList(filterDateList);
     }
 
+    @OnClick({R.id.base_tv_toolbar_right,R.id.fab})
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.base_tv_toolbar_right:
+                if(mPopMallListWindow == null){
+                    mPopMallListWindow = new PopMallListWindow(getActivity());
+                    mPopMallListWindow.setOnDismissListener(this);
+                    setWindowAttibus(0.5f);
+                    mPopMallListWindow.showAtLocation(getActivity().findViewById(R.id.recyclerView),
+                            Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                }else{
+                    setWindowAttibus(0.5f);
+                    mPopMallListWindow.showAtLocation(getActivity().findViewById(R.id.recyclerView),
+                            Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                }
+                break;
+            case R.id.fab:
+                Intent intent = new Intent(getActivity(), AddContactsActivity.class);
+                startActivity(intent);
+                break;
+        }
+    }
+
+    @Override
+    public void onDismiss() {
+        setWindowAttibus(1f);
+    }
+
+    private void setWindowAttibus(float color){
+        WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
+        lp.alpha = color;
+        getActivity().getWindow().setAttributes(lp);
+    }
 }

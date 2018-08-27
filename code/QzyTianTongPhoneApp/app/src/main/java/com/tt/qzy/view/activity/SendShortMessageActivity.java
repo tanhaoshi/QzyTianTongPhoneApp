@@ -2,32 +2,31 @@ package com.tt.qzy.view.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.tt.qzy.view.R;
-import com.tt.qzy.view.utils.APKVersionCodeUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainAboutActivity extends AppCompatActivity {
+public class SendShortMessageActivity extends AppCompatActivity {
 
-    @BindView(R.id.about_version)
-    TextView about_version;
+    @BindView(R.id.base_tv_toolbar_right)
+    ImageView mImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_about);
+        setContentView(R.layout.activity_send_short_message);
         ButterKnife.bind(this);
         initView();
     }
 
     private void initView() {
-        about_version.setText(String.valueOf(APKVersionCodeUtils.getVersionCode(this)));
+        mImageView.setVisibility(View.VISIBLE);
+        mImageView.setImageDrawable(getResources().getDrawable(R.drawable.user));
     }
 
     @OnClick({R.id.main_quantity})

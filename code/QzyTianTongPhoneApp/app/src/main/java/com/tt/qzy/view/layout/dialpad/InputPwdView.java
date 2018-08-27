@@ -7,6 +7,7 @@ import android.media.ToneGenerator;
 import android.provider.Settings;
 import android.text.Editable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.widget.LinearLayout;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.layout.DialpadKeyButton;
 import com.tt.qzy.view.layout.DigitsEditText;
+import com.tt.qzy.view.utils.AudioUtil;
 
 import java.util.HashSet;
 
@@ -44,20 +46,15 @@ public class InputPwdView extends LinearLayout implements View.OnTouchListener,V
     private DialpadKeyButton start;
     private DialpadKeyButton zero;
     private DialpadKeyButton jinghao;
-    private StringBuffer sb;
 
-    private final Object mToneGeneratorLock = new Object();
+    private AudioUtil mAudioUtil;
+
     private final HashSet<View> mPressedDialpadKeys = new HashSet<View>(12);
-    private ToneGenerator mToneGenerator;
     /**
      * 系统设置中的拨号键盘触摸音效开关
      */
-    private boolean mDTMFToneEnabled;
     private boolean mAdjustTranslationForAnimation = true;
     private static final int TONE_LENGTH_INFINITE = -1;
-    private static final int TONE_RELATIVE_VOLUME = 80;
-    private static final int DIAL_TONE_STREAM_TYPE = AudioManager.STREAM_DTMF;
-    private static final float DIALPAD_SLIDE_FRACTION = 0.67f;
 
     public InputPwdView(Context context) {
         super(context);
@@ -93,25 +90,13 @@ public class InputPwdView extends LinearLayout implements View.OnTouchListener,V
         start = (DialpadKeyButton) view.findViewById(R.id.start);
         zero = (DialpadKeyButton) view.findViewById(R.id.zero);
         jinghao = (DialpadKeyButton) view.findViewById(R.id.jinghao);
-        sb = new StringBuffer();
+
+        mAudioUtil = AudioUtil.getInstance(context);
+
         initListener();
     }
 
     public void initListener() {
-        final ContentResolver contentResolver = context
-                .getContentResolver();
-        mDTMFToneEnabled = Settings.System.getInt(contentResolver,
-                Settings.System.DTMF_TONE_WHEN_DIALING, 1) == 1;
-        synchronized (mToneGeneratorLock) {
-            if (mToneGenerator == null) {
-                try {
-                    mToneGenerator = new ToneGenerator(DIAL_TONE_STREAM_TYPE,
-                            TONE_RELATIVE_VOLUME);
-                } catch (RuntimeException e) {
-                    mToneGenerator = null;
-                }
-            }
-        }
         one.setOnPressedListener(this);
         two.setOnPressedListener(this);
         three.setOnPressedListener(this);
@@ -250,7 +235,7 @@ public class InputPwdView extends LinearLayout implements View.OnTouchListener,V
             view.jumpDrawablesToCurrentState();
             mPressedDialpadKeys.remove(view);
             if (mPressedDialpadKeys.isEmpty()) {
-                stopTone();
+                mAudioUtil.stopTone();
             }
         }
     }
@@ -258,40 +243,40 @@ public class InputPwdView extends LinearLayout implements View.OnTouchListener,V
     private void keyPressed(int keyCode) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_1:
-                playTone(ToneGenerator.TONE_DTMF_1, TONE_LENGTH_INFINITE);
+                mAudioUtil.playTone(ToneGenerator.TONE_DTMF_1);
                 break;
             case KeyEvent.KEYCODE_2:
-                playTone(ToneGenerator.TONE_DTMF_2, TONE_LENGTH_INFINITE);
+                mAudioUtil.playTone(ToneGenerator.TONE_DTMF_2);
                 break;
             case KeyEvent.KEYCODE_3:
-                playTone(ToneGenerator.TONE_DTMF_3, TONE_LENGTH_INFINITE);
+                mAudioUtil.playTone(ToneGenerator.TONE_DTMF_3);
                 break;
             case KeyEvent.KEYCODE_4:
-                playTone(ToneGenerator.TONE_DTMF_4, TONE_LENGTH_INFINITE);
+                mAudioUtil.playTone(ToneGenerator.TONE_DTMF_4);
                 break;
             case KeyEvent.KEYCODE_5:
-                playTone(ToneGenerator.TONE_DTMF_5, TONE_LENGTH_INFINITE);
+                mAudioUtil.playTone(ToneGenerator.TONE_DTMF_5);
                 break;
             case KeyEvent.KEYCODE_6:
-                playTone(ToneGenerator.TONE_DTMF_6, TONE_LENGTH_INFINITE);
+                mAudioUtil.playTone(ToneGenerator.TONE_DTMF_6);
                 break;
             case KeyEvent.KEYCODE_7:
-                playTone(ToneGenerator.TONE_DTMF_7, TONE_LENGTH_INFINITE);
+                mAudioUtil.playTone(ToneGenerator.TONE_DTMF_7);
                 break;
             case KeyEvent.KEYCODE_8:
-                playTone(ToneGenerator.TONE_DTMF_8, TONE_LENGTH_INFINITE);
+                mAudioUtil.playTone(ToneGenerator.TONE_DTMF_8);
                 break;
             case KeyEvent.KEYCODE_9:
-                playTone(ToneGenerator.TONE_DTMF_9, TONE_LENGTH_INFINITE);
+                mAudioUtil.playTone(ToneGenerator.TONE_DTMF_9);
                 break;
             case KeyEvent.KEYCODE_0:
-                playTone(ToneGenerator.TONE_DTMF_0, TONE_LENGTH_INFINITE);
+                mAudioUtil.playTone(ToneGenerator.TONE_DTMF_0);
                 break;
             case KeyEvent.KEYCODE_POUND:
-                playTone(ToneGenerator.TONE_DTMF_P, TONE_LENGTH_INFINITE);
+                mAudioUtil.playTone(ToneGenerator.TONE_DTMF_P);
                 break;
             case KeyEvent.KEYCODE_STAR:
-                playTone(ToneGenerator.TONE_DTMF_S, TONE_LENGTH_INFINITE);
+                mAudioUtil.playTone(ToneGenerator.TONE_DTMF_S);
                 break;
             default:
                 break;
@@ -301,45 +286,11 @@ public class InputPwdView extends LinearLayout implements View.OnTouchListener,V
         }
         KeyEvent event = new KeyEvent(KeyEvent.ACTION_DOWN, keyCode);
         mDigits.onKeyDown(keyCode, event);
-
         // If the cursor is at the end of the text we hide it.
         final int length = mDigits.length();
         if (length == mDigits.getSelectionStart()
                 && length == mDigits.getSelectionEnd()) {
             mDigits.setCursorVisible(false);
-        }
-    }
-
-    private void playTone(int tone, int durationMs) {
-        if (!mDTMFToneEnabled) {
-            return;
-        }
-        // TODO to resume
-        AudioManager audioManager = (AudioManager)context
-                .getSystemService(Context.AUDIO_SERVICE);
-        int ringerMode = audioManager.getRingerMode();
-        if ((ringerMode == AudioManager.RINGER_MODE_SILENT)
-                || (ringerMode == AudioManager.RINGER_MODE_VIBRATE)) {
-            return;
-        }
-
-        synchronized (mToneGeneratorLock) {
-            if (mToneGenerator == null) {
-                return;
-            }
-            mToneGenerator.startTone(tone, durationMs);
-        }
-    }
-
-    private void stopTone() {
-        if (!mDTMFToneEnabled) {
-            return;
-        }
-        synchronized (mToneGeneratorLock) {
-            if (mToneGenerator == null) {
-                return;
-            }
-            mToneGenerator.stopTone();
         }
     }
 

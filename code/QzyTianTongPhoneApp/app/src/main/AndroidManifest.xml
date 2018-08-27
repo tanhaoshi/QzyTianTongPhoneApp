@@ -53,6 +53,14 @@
             android:enabled="true"
             android:exported="true">
         </service>
+
+        <activity android:name=".activity.AddContactsActivity"
+                  android:theme="@style/CommonViewStyle">
+        </activity>
+        <activity android:name=".activity.SendShortMessageActivity"
+                  android:theme="@style/CommonViewStyle"
+                  android:windowSoftInputMode="stateVisible|adjustResize|stateHidden">
+        </activity>
     </application>
 
 </manifest>

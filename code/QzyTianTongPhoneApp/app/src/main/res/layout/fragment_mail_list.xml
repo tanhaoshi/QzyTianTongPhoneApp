@@ -4,8 +4,8 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               android:focusable="true"
-              android:background="@color/white"
-              android:focusableInTouchMode="true">
+              android:focusableInTouchMode="true"
+              android:background="@color/white">
 
     <include layout="@layout/toobar_layout"/>
 

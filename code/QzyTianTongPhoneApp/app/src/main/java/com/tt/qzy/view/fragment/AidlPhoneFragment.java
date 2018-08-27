@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.adapter.CallRecordAdapter;
@@ -25,10 +23,8 @@ import com.tt.qzy.view.bean.CallRecordModel;
 import com.tt.qzy.view.layout.PopWindow;
 import com.tt.qzy.view.layout.dialpad.InputPwdView;
 import com.tt.qzy.view.layout.dialpad.MyInputPwdUtil;
-import com.tt.qzy.view.utils.NToast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -93,7 +89,7 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
         list.add(new CallRecordModel("181-2644-0000","广东深圳","响铃8秒"));
         list.add(new CallRecordModel("181-2644-0000","广东深圳","响铃8秒"));
         list.add(new CallRecordModel("181-2644-0000","广东深圳","响铃8秒"));
-        todayRecyclerView.setAdapter(new CallRecordAdapter(list));
+        todayRecyclerView.setAdapter(new CallRecordAdapter(list,getActivity()));
 
         yesterdayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         List<CallRecordModel> list1 = new ArrayList<>();
@@ -115,7 +111,7 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     private void initView() {
         base_iv_back.setVisibility(View.GONE);
         base_tv_toolbar_title.setText(getActivity().getResources().getString(R.string.TMT_phone_histroy));
-        base_tv_toolbar_right.setImageDrawable(getActivity().getDrawable(R.drawable.more));
+        base_tv_toolbar_right.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.more));
         myInputPwdUtil = new MyInputPwdUtil(getActivity());
         myInputPwdUtil.getMyInputDialogBuilder().setAnimStyle(R.style.dialog_anim);
         myInputPwdUtil.setListener(this);

@@ -42,4 +42,18 @@
     <string name="TMT_text">[中国平安]倒计时!“29元深圳政府重疾险个人”,,,,</string>
     <string name="TMT_delete">删除</string>
     <string name="TMT_delete_all">删除全部</string>
+    <string name="TMT_email">邮箱</string>
+    <string name="TMT_QQ">QQ</string>
+    <string name="TMT_loding_more">查看更多通话记录</string>
+    <string name="TMT_contacts">联系人</string>
+    <string name="TMT_takeup">收起</string>
+    <string name="TMT_sendMessage">发送信息</string>
+    <string name="TMT_editor_caotacts">编辑</string>
+    <string name="TMT_import_malllist">导入手机通讯录</string>
+    <string name="TMT_contacts_name">姓名</string>
+    <string name="TMT_add_contacts">新增联系人</string>
+    <string name="TMT_phone">电话</string>
+    <string name="TMT_mobile">手机</string>
+    <string name="TMT_add_mobile">添加号码</string>
+    <string name="TMT_short_message">短信</string>
 </resources>

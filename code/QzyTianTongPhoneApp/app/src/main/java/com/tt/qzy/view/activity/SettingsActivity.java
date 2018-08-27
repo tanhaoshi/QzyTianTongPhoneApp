@@ -37,7 +37,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
-    @OnClick({R.id.settings_sos,R.id.setting_map,R.id.setting_about})
+    @OnClick({R.id.settings_sos,R.id.setting_map,R.id.setting_about,R.id.main_quantity})
     public void onClick(View view){
         switch (view.getId()){
             case R.id.settings_sos:
@@ -50,6 +50,9 @@ public class SettingsActivity extends AppCompatActivity {
             case R.id.setting_about:
                 Intent about_intent = new Intent(SettingsActivity.this,MainAboutActivity.class);
                 startActivity(about_intent);
+                break;
+            case R.id.main_quantity:
+                finish();
                 break;
         }
     }
@@ -90,7 +93,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
-    public void showSoftInputFromWindow( EditText editText) {
+    public void showSoftInputFromWindow(EditText editText) {
         editText.setFocusable(true);
         editText.setFocusableInTouchMode(true);
         editText.requestFocus();
