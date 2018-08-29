@@ -40,6 +40,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile files('libs/pinyin4j-2.5.0.jar')
+    compile project(':ttphonelib')
+    compile project(':rtptest')
+    compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:support-v4:26.+'
@@ -51,10 +54,6 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.daimajia.numberprogressbar:library:1.4@aar'
     compile 'com.android.support:design:26.+'
-    testCompile 'junit:junit:4.12'
-    compile project(':ttphonelib')
-    compile project(':rtptest')
-
     compile 'com.android.support:multidex:1.0.1'
-
+    testCompile 'junit:junit:4.12'
 }

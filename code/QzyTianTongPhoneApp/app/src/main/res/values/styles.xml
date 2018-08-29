@@ -63,10 +63,17 @@
         <item name="android:windowExitAnimation">@anim/anim_dialog_exit</item>
     </style>
 
-    <!-- popupwindow -->
+    <!-- popupwindow 从上往下弹出-->
     <style name="take_photo_anim" parent="android:Animation">
         <item name="android:windowEnterAnimation">@anim/pop_enter_anim</item>
         <item name="android:windowExitAnimation">@anim/pop_exit_anim</item>
+        <!--<item name-->
+    </style>
+
+    <!-- popupwindows 从下往上弹出 -->
+    <style name="downup_anim" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/pop_delete_enter</item>
+        <item name="android:windowExitAnimation">@anim/pop_delete_exit</item>
         <!--<item name-->
     </style>
 

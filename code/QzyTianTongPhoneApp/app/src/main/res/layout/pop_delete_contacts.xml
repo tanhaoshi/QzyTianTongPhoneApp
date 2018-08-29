@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:id="@+id/bg"
+              android:background="@color/line_bg"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/delete"
+        android:background="@drawable/custom_edittext_layout"
+        android:text="删除所选联系人"
+        android:gravity="center"
+        android:textColor="#F95972"
+        android:textSize="16sp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"/>
+
+    <TextView
+        android:id="@+id/cannel"
+        android:text="@string/TMT_cannel"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:textColor="#2A9ACC"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/custom_edittext_layout"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"/>
+
+</LinearLayout>

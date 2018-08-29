@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tag"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:text="A"
+        android:textColor="#454545" />
+
+    <include layout="@layout/line_layout"/>
+
+    <RelativeLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/mine"
+            android:src="@drawable/mine_default_avatar"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_width="27dp"
+            android:layout_height="27dp"/>
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_toRightOf="@+id/mine"
+            android:layout_marginLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:text="hhhh"
+            android:textColor="#336598" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/ck_chose"
+            android:button="@null"
+            android:background="@drawable/selector_contacts_style"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="27dp"
+            android:scaleX="0.8"
+            android:scaleY="0.8" />
+
+    </RelativeLayout>
+
+</LinearLayout>

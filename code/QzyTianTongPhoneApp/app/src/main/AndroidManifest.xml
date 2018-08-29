@@ -8,6 +8,15 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
+    <!--允许访问网络状态的权限-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--允许修改网络状态的权限-->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <!--允许修改 WIFI 状态的权限。-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <!--允许访问 WIFI 状态的权限-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
     <application
         android:name=".application.TtPhoneApplication"
         android:allowBackup="true"
@@ -16,7 +25,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/CommonViewStyle">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -54,13 +65,28 @@
             android:exported="true">
         </service>
 
-        <activity android:name=".activity.AddContactsActivity"
-                  android:theme="@style/CommonViewStyle">
+        <activity
+            android:name=".activity.AddContactsActivity"
+            android:theme="@style/CommonViewStyle">
         </activity>
-        <activity android:name=".activity.SendShortMessageActivity"
-                  android:theme="@style/CommonViewStyle"
-                  android:windowSoftInputMode="stateVisible|adjustResize|stateHidden">
+        <activity
+            android:name=".activity.SendShortMessageActivity"
+            android:theme="@style/CommonViewStyle"
+            android:windowSoftInputMode="stateVisible|adjustResize|stateHidden">
         </activity>
+        <activity
+            android:name=".activity.SelectContactsActivity"
+            android:theme="@style/CommonViewStyle">
+        </activity>
+        <activity android:name=".activity.DeleteContactsActivity">
+        </activity>
+        <receiver android:name=".receiver.WifiReceiver">
+            <intent-filter >
+                <action android:name="android.net.wifi.RSSI_CHANGED"/>
+                <action android:name="android.net.wifi.STATE_CHANGE"/>
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

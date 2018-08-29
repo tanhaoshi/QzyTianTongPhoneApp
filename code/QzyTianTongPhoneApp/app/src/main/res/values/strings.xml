@@ -38,6 +38,8 @@
     <string name="TMT_jilu">搜索6条记录</string>
     <string name="TMT_phone_histroy">通话记录</string>
     <string name="TMT_today">今天</string>
+    <string name="TMT_yesterday">明天</string>
+    <string name="TMT_earlier">更早</string>
     <string name="TMT_mall_list">通讯录</string>
     <string name="TMT_text">[中国平安]倒计时!“29元深圳政府重疾险个人”,,,,</string>
     <string name="TMT_delete">删除</string>
@@ -56,4 +58,9 @@
     <string name="TMT_mobile">手机</string>
     <string name="TMT_add_mobile">添加号码</string>
     <string name="TMT_short_message">短信</string>
+    <string name="TMT_select_contacts">选择联系人</string>
+    <string name="TMT_please_select">请先选择联系人</string>
+    <string name="TMT_click_connect">点击连接</string>
+    <!-- 连接成功状态下 -->
+    <string name="TMT_connect_sussces">默认用户</string>
 </resources>

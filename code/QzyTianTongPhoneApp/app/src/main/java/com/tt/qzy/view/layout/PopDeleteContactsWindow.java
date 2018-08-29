@@ -3,10 +3,12 @@ package com.tt.qzy.view.layout;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tt.qzy.view.R;
@@ -14,23 +16,22 @@ import com.tt.qzy.view.activity.DeleteContactsActivity;
 import com.tt.qzy.view.utils.NToast;
 
 /**
- * Created by qzy009 on 2018/8/27.
+ * Created by qzy009 on 2018/8/28.
  */
 
-public class PopMallListWindow extends PopWindow{
+public class PopDeleteContactsWindow extends PopWindow{
 
     private Context mContext;
 
     private View mMenuView;
 
-    private PopWindow.OpenPictureListener mOpenPictureListener;
+    private DeleteEntryListener mDeleteEntryListener;
 
-    private TextView main_location;
     private TextView delete;
-    private TextView delete_all;
-    private TextView import_malllist;
+    private TextView cannel;
+//    private LinearLayout bg;
 
-    public PopMallListWindow(Context context){
+    public PopDeleteContactsWindow(Context context){
 
         super(context);
 
@@ -43,18 +44,16 @@ public class PopMallListWindow extends PopWindow{
 
     private void initView() {
         LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mMenuView = inflater.inflate(R.layout.pop_malllist_layout,null);
-        main_location = (TextView)mMenuView.findViewById(R.id.main_location);
+        mMenuView = inflater.inflate(R.layout.pop_delete_contacts,null);
         delete = (TextView)mMenuView.findViewById(R.id.delete);
-        delete_all = (TextView)mMenuView.findViewById(R.id.delete_all);
-        import_malllist = (TextView)mMenuView.findViewById(R.id.import_malllist);
+        cannel = (TextView)mMenuView.findViewById(R.id.cannel);
+//        bg = (LinearLayout)mMenuView.findViewById(R.id.bg);
+//        bg.setAlpha(0.5f);
         this.setContentView(mMenuView);
         this.setWidth(WindowManager.LayoutParams.MATCH_PARENT);
         this.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         this.setFocusable(true);
-        this.setAnimationStyle(R.style.take_photo_anim);
-        ColorDrawable cd = new ColorDrawable(0x80000000);
-        this.setBackgroundDrawable(cd);
+        this.setAnimationStyle(R.style.downup_anim);
     }
 
     private void initListener(){
@@ -72,44 +71,27 @@ public class PopMallListWindow extends PopWindow{
             }
         });
 
-        main_location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
-
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, DeleteContactsActivity.class);
-                mContext.startActivity(intent);
+                mDeleteEntryListener.deleteEntry();
                 dismiss();
             }
         });
 
-        delete_all.setOnClickListener(new View.OnClickListener() {
+        cannel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NToast.shortToast(mContext,"删除全部");
-                dismiss();
-            }
-        });
-
-        import_malllist.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NToast.shortToast(mContext,"导入手机通讯录");
                 dismiss();
             }
         });
     }
 
-    public void setOpenWindowListener(PopWindow.OpenPictureListener listener){
-        this.mOpenPictureListener = listener;
+    public void setDeleteEneryListener(DeleteEntryListener listener){
+        this.mDeleteEntryListener = listener;
     }
 
-    public interface OpenWindowListener{
-        void popupDismiss();
+    public interface DeleteEntryListener{
+        void deleteEntry();
     }
 }

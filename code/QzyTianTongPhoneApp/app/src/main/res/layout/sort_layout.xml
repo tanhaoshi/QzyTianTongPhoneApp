@@ -8,11 +8,13 @@
         android:id="@+id/tag"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="#E0E0E0"
+        android:background="@color/white"
         android:gravity="center_vertical"
         android:paddingLeft="15dp"
         android:text="A"
         android:textColor="#454545" />
+
+    <include layout="@layout/line_layout"/>
 
     <TextView
         android:id="@+id/name"

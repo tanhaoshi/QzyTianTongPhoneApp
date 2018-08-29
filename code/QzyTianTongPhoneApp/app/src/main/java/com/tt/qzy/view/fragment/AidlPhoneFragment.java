@@ -83,6 +83,7 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     }
 
     private void initAdapter(){
+        todayRecyclerView.setNestedScrollingEnabled(false);
         todayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         List<CallRecordModel> list = new ArrayList<>();
         list.add(new CallRecordModel("181-2644-0000","广东深圳","响铃9秒"));
@@ -91,6 +92,7 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
         list.add(new CallRecordModel("181-2644-0000","广东深圳","响铃8秒"));
         todayRecyclerView.setAdapter(new CallRecordAdapter(list,getActivity()));
 
+        yesterdayRecyclerView.setNestedScrollingEnabled(false);
         yesterdayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         List<CallRecordModel> list1 = new ArrayList<>();
         list1.add(new CallRecordModel("181-2644-0000","广东深圳","响铃9秒"));
@@ -99,6 +101,7 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
         list1.add(new CallRecordModel("181-2644-0000","广东深圳","响铃8秒"));
         yesterdayRecyclerView.setAdapter(new YesterdayRecordAdapter(list1));
 
+        earlierRecyclerView.setNestedScrollingEnabled(false);
         earlierRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         List<CallRecordModel> list2 = new ArrayList<>();
         list2.add(new CallRecordModel("181-2644-0000","广东深圳","响铃9秒"));

@@ -83,6 +83,7 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
         base_tv_toolbar_title.setText(getActivity().getResources().getString(R.string.TMT_phone_histroy));
         base_tv_toolbar_right.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.more));
 
+        todayRecyclerView.setNestedScrollingEnabled(false);
         todayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         List<ShortMessageModel> list = new ArrayList<>();
         list.add(new ShortMessageModel("106575020131875",getResources().getString(R.string.TMT_text),"今天 14:31"));
@@ -91,6 +92,7 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
         list.add(new ShortMessageModel("106575020131875",getResources().getString(R.string.TMT_text),"今天 14:31"));
         todayRecyclerView.setAdapter(new ShortMessageAdapter(list));
 
+        yesterdayRecyclerView.setNestedScrollingEnabled(false);
         yesterdayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         List<ShortMessageModel> list1 = new ArrayList<>();
         list1.add(new ShortMessageModel("106575020131875",getResources().getString(R.string.TMT_text),"今天 14:31"));
@@ -99,6 +101,7 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
         list1.add(new ShortMessageModel("106575020131875",getResources().getString(R.string.TMT_text),"今天 14:31"));
         yesterdayRecyclerView.setAdapter(new YesterDayMessageAdapter(list1));
 
+        earlierRecyclerView.setNestedScrollingEnabled(false);
         earlierRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         List<ShortMessageModel> list2 = new ArrayList<>();
         list2.add(new ShortMessageModel("181-2644-0000","广东深圳","响铃9秒"));
