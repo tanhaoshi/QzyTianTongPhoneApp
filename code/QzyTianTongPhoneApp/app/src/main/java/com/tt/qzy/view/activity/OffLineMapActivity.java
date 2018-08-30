@@ -4,22 +4,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.tt.qzy.view.R;
-import com.tt.qzy.view.adapter.AllAreaAdapter;
-import com.tt.qzy.view.adapter.OffLineMapAdapter;
-import com.tt.qzy.view.bean.AllArea;
-import com.tt.qzy.view.bean.OffLineMap;
 import com.tt.qzy.view.fragment.CityListFragment;
 import com.tt.qzy.view.fragment.LoadManagerFragment;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,7 +34,7 @@ public class OffLineMapActivity extends AppCompatActivity {
         showCityListFragment();
     }
 
-    @OnClick({R.id.cityList,R.id.loadManager})
+    @OnClick({R.id.cityList,R.id.loadManager,R.id.main_quantity})
     public void onClick(View view){
         switch (view.getId()){
             case R.id.cityList:
@@ -59,6 +50,9 @@ public class OffLineMapActivity extends AppCompatActivity {
                 cityList.setTextColor(getResources().getColor(R.color.blue));
                 cityList.setBackground(getResources().getDrawable(R.drawable.offline_city_stander));
                 showLoadManagerFragment();
+                break;
+            case R.id.main_quantity:
+                finish();
                 break;
         }
     }

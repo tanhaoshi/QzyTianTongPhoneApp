@@ -11,27 +11,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tt.qzy.view.R;
+import com.tt.qzy.view.activity.ContactsActivity;
 import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.adapter.CallRecordAdapter;
-import com.tt.qzy.view.adapter.EarlierAdapter;
-import com.tt.qzy.view.adapter.YesterdayRecordAdapter;
 import com.tt.qzy.view.bean.CallRecordModel;
+import com.tt.qzy.view.bean.ShortMessageModel;
 import com.tt.qzy.view.layout.PopWindow;
 import com.tt.qzy.view.layout.dialpad.InputPwdView;
 import com.tt.qzy.view.layout.dialpad.MyInputPwdUtil;
+import com.tt.qzy.view.utils.DateUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissListener,InputPwdView.InputPwdListener{
+public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissListener,InputPwdView.InputPwdListener
+      ,CallRecordAdapter.OnItemClickListener{
 
     @BindView(R.id.base_iv_back)
     ImageView base_iv_back;
@@ -39,24 +43,23 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     TextView base_tv_toolbar_title;
     @BindView(R.id.base_tv_toolbar_right)
     ImageView base_tv_toolbar_right;
-    @BindView(R.id.todayRecyclerView)
-    RecyclerView todayRecyclerView;
-    @BindView(R.id.yesterdayRecyclerView)
-    RecyclerView yesterdayRecyclerView;
-    @BindView(R.id.earlierRecyclerView)
-    RecyclerView earlierRecyclerView;
-    @BindView(R.id.content)
-    LinearLayout mLinearLayout;
+    @BindView(R.id.recyclerView)
+    RecyclerView mRecyclerView;
 
     private MyInputPwdUtil myInputPwdUtil;
-
     private PopWindow mPopWindow;
+    private CallRecordAdapter mCallRecordAdapter;
+    private List<CallRecordModel> mModelList;
+
+    // "昨天" 标题进行添加一次的控制
+    private boolean isYesterday = true;
+
+    // "更早" 标题进行添加一次的控制
+    private boolean isEarlier = true;
 
     public AidlPhoneFragment() {
-        // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static AidlPhoneFragment newInstance() {
         AidlPhoneFragment fragment = new AidlPhoneFragment();
         Bundle args = new Bundle();
@@ -74,7 +77,6 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_aidl_phone, container, false);
         ButterKnife.bind(this, view);
         initView();
@@ -83,32 +85,43 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     }
 
     private void initAdapter(){
-        todayRecyclerView.setNestedScrollingEnabled(false);
-        todayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        mRecyclerView.setNestedScrollingEnabled(false);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         List<CallRecordModel> list = new ArrayList<>();
-        list.add(new CallRecordModel("181-2644-0000","广东深圳","响铃9秒"));
-        list.add(new CallRecordModel("181-2644-0000","广东深圳","响铃8秒"));
-        list.add(new CallRecordModel("181-2644-0000","广东深圳","响铃8秒"));
-        list.add(new CallRecordModel("181-2644-0000","广东深圳","响铃8秒"));
-        todayRecyclerView.setAdapter(new CallRecordAdapter(list,getActivity()));
-
-        yesterdayRecyclerView.setNestedScrollingEnabled(false);
-        yesterdayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        List<CallRecordModel> list1 = new ArrayList<>();
-        list1.add(new CallRecordModel("181-2644-0000","广东深圳","响铃9秒"));
-        list1.add(new CallRecordModel("181-2644-0000","广东深圳","响铃8秒"));
-        list1.add(new CallRecordModel("181-2644-0000","广东深圳","响铃8秒"));
-        list1.add(new CallRecordModel("181-2644-0000","广东深圳","响铃8秒"));
-        yesterdayRecyclerView.setAdapter(new YesterdayRecordAdapter(list1));
-
-        earlierRecyclerView.setNestedScrollingEnabled(false);
-        earlierRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        List<CallRecordModel> list2 = new ArrayList<>();
-        list2.add(new CallRecordModel("181-2644-0000","广东深圳","响铃9秒"));
-        list2.add(new CallRecordModel("181-2644-0000","广东深圳","响铃8秒"));
-        list2.add(new CallRecordModel("181-2644-0000","广东深圳","响铃8秒"));
-        list2.add(new CallRecordModel("181-2644-0000","广东深圳","响铃8秒"));
-        earlierRecyclerView.setAdapter(new EarlierAdapter(list2));
+        list.add(new CallRecordModel("181-2644-0000","广东深圳","响铃9秒","2018-8-27 14:33:24",0,""));
+        list.add(new CallRecordModel("181-2644-0000","广东深圳","响铃8秒","2018-8-24 14:33:24",0,""));
+        list.add(new CallRecordModel("181-2644-0000","广东深圳","响铃8秒","2018-8-29 14:33:24",0,""));
+        list.add(new CallRecordModel("181-2644-0000","广东深圳","响铃8秒","2018-8-30 14:33:24",0,""));
+        mModelList = new ArrayList<>();
+        //判断通讯记录列表中 是否有数据 有数据下面的操作才有含义，没有数据的话就不用处理。
+        if(list.size() >= 1){
+            sortData(list);
+            mModelList.add(new CallRecordModel("","","","",1,"今天"));
+            for(CallRecordModel recordModel : list){
+                if(DateUtil.isToday(recordModel.getDate())){
+                    mModelList.add(recordModel);
+                }else if(DateUtil.isYesterday(recordModel.getDate())){
+                    if(isYesterday){
+                        mModelList.add(new CallRecordModel("","","","",1,"昨天"));
+                        isYesterday = false;
+                    }
+                    mModelList.add(recordModel);
+                }else{
+                    if(isYesterday){
+                        mModelList.add(new CallRecordModel("","","","",1,"昨天"));
+                        isYesterday = false;
+                    }
+                    if(isEarlier){
+                        mModelList.add(new CallRecordModel("","","","",1,"更早"));
+                        isEarlier = false;
+                    }
+                    mModelList.add(recordModel);
+                }
+            }
+        }
+        mCallRecordAdapter = new CallRecordAdapter(mModelList,getActivity());
+        mCallRecordAdapter.setOnItemClickListener(this);
+        mRecyclerView.setAdapter(mCallRecordAdapter);
     }
 
     private void initView() {
@@ -118,6 +131,21 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
         myInputPwdUtil = new MyInputPwdUtil(getActivity());
         myInputPwdUtil.getMyInputDialogBuilder().setAnimStyle(R.style.dialog_anim);
         myInputPwdUtil.setListener(this);
+    }
+
+    private List<CallRecordModel> sortData(List<CallRecordModel> mList) {
+        Collections.sort(mList, new Comparator<CallRecordModel>() {
+            @Override
+            public int compare(CallRecordModel lhs, CallRecordModel rhs) {
+                Date date1 = DateUtil.stringToDate(lhs.getDate());
+                Date date2 = DateUtil.stringToDate(rhs.getDate());
+                if (date1.before(date2)) {
+                    return 1;
+                }
+                return -1;
+            }
+        });
+        return mList;
     }
 
     @OnClick({R.id.fab,R.id.base_tv_toolbar_right})
@@ -131,11 +159,11 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
                     mPopWindow = new PopWindow(getActivity());
                     mPopWindow.setOnDismissListener(this);
                     setWindowAttibus(0.5f);
-                    mPopWindow.showAtLocation(getActivity().findViewById(R.id.todayRecyclerView),
+                    mPopWindow.showAtLocation(getActivity().findViewById(R.id.recyclerView),
                             Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
                 }else{
                     setWindowAttibus(0.5f);
-                    mPopWindow.showAtLocation(getActivity().findViewById(R.id.todayRecyclerView),
+                    mPopWindow.showAtLocation(getActivity().findViewById(R.id.recyclerView),
                             Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
                 }
                 break;
@@ -158,5 +186,17 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
         Intent intent = new Intent(getActivity(), TellPhoneActivity.class);
         intent.putExtra("diapadNumber",diapadNumber);
         getActivity().startActivity(intent);
+    }
+
+    @Override
+    public void onClick(int position) {
+        Intent intent = new Intent(getActivity(), ContactsActivity.class);
+        intent.putExtra("phoneNumber",mModelList.get(position).getPhoneNumber());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onLongClick(int position) {
+
     }
 }

@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="date">
-        <item>A 测试</item>
-        <item>A1 测试</item>
-        <item>A2 测试</item>
-        <item>B1 测试</item>
-        <item>B2 测试</item>
-        <item>C 测试</item>
-        <item>C1 测试</item>
-        <item>C2 测试</item>
-        <item>C3 测试</item>
-        <item>D1 测试</item>
-        <item>D2 测试</item>
-        <item>D3 测试</item>
-        <item>D4 测试</item>
-        <item>E1 测试</item>
-        <item>E2 测试</item>
-        <item>E3 测试</item>
-        <item>E4 测试</item>
-        <item>F1 测试</item>
-        <item>F2 测试</item>
-        <item>F3 测试</item>
-        <item>F4 测试</item>
+        <item>张三</item>
+        <item>李四</item>
+        <item>王五</item>
+        <item>赵六</item>
+        <item>房八</item>
+        <item>测试</item>
+        <item>真的</item>
+        <item>如果</item>
+        <item>发了信息</item>
+        <item>搜索</item>
+        <item>java</item>
+        <item>狗蛋</item>
+        <item>钩子</item>
+        <item>android</item>
+        <item>潜入</item>
+        <item>嵌入式</item>
+        <item>搞了</item>
+        <item>windows</item>
+        <item>走开</item>
+        <item>放过来</item>
+        <item>item</item>
     </string-array>
 </resources>

@@ -96,8 +96,6 @@ public class NetworkUtil {
     public static String getConnectWifiSsid(Context context){
         WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-        Log.d("wifiInfo", wifiInfo.toString());
-        Log.d("SSID",wifiInfo.getSSID());
         return wifiInfo.getSSID();
     }
 }

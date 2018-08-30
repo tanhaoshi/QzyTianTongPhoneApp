@@ -7,11 +7,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.LoadMannagerAdapter;
 import com.tt.qzy.view.adapter.OffLineMapAdapter;
 import com.tt.qzy.view.bean.OffLineMap;
+import com.tt.qzy.view.utils.NetworkUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +26,12 @@ public class LoadManagerFragment extends Fragment {
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
+    @BindView(R.id.tv_toolbar_title)
+    TextView tv_toolbar_title;
 
     public LoadManagerFragment() {
-        // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static LoadManagerFragment newInstance() {
         LoadManagerFragment fragment = new LoadManagerFragment();
         Bundle args = new Bundle();
@@ -46,7 +49,6 @@ public class LoadManagerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_load_manager, container, false);
         ButterKnife.bind(this, view);
         initView();
@@ -54,6 +56,13 @@ public class LoadManagerFragment extends Fragment {
     }
 
     private void initView() {
+        //移动网络是否开启
+        if(NetworkUtil.isNetContected(getActivity())){
+            tv_toolbar_title.setHint(getActivity().getResources().getString(R.string.TMT_net_notify));
+        //wifi是否开启
+        }else if(NetworkUtil.isWifiEnabled(getActivity())){
+            tv_toolbar_title.setHint(getActivity().getResources().getString(R.string.TMT_notify));
+        }
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         List<OffLineMap> mList = new ArrayList<>();
         mList.add(new OffLineMap("全国基础包","地图102.0MB"));

@@ -1,11 +1,15 @@
 package com.tt.qzy.view.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.tt.qzy.view.R;
+import com.tt.qzy.view.utils.NToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -15,6 +19,8 @@ public class UserEditorsActivity extends AppCompatActivity {
 
     @BindView(R.id.base_tv_toolbar_title)
     TextView tab_title;
+    @BindView(R.id.consigneeName)
+    EditText consigneeName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +44,14 @@ public class UserEditorsActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.base_tv_toolbar_right:
-                finish();
+                if(TextUtils.isEmpty(consigneeName.getText().toString().trim())){
+                    NToast.shortToast(this,"用户名不能为空");
+                }else{
+                    Intent intent = new Intent();
+                    intent.putExtra("code",consigneeName.getText().toString());
+                    setResult(1,intent);
+                    finish();
+                }
                 break;
         }
     }

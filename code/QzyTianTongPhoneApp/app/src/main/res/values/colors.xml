@@ -31,4 +31,6 @@
 
     <color name="phoneNumber">#F0F0F0</color>
 
+    <color name="specialColor">#FFF9F9F9</color>
+
 </resources>

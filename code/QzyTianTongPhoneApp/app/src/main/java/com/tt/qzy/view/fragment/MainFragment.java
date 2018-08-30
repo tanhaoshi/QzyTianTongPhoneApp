@@ -1,6 +1,9 @@
 package com.tt.qzy.view.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,14 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.common.eventbus.EventBus;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.SettingsActivity;
 import com.tt.qzy.view.activity.UserEditorsActivity;
-import com.tt.qzy.view.receiver.WifiReceiver;
+import com.tt.qzy.view.evenbus.MainFragmentEvenbus;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.NetworkUtil;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,6 +39,8 @@ public class MainFragment extends Fragment{
     CircleImageView mCircleImageView;
     @BindView(R.id.tmt_noEntry)
     TextView tmt_noEntry;
+    @BindView(R.id.battery)
+    TextView battery;
 
     public MainFragment() {
         // Required empty public constructor
@@ -56,11 +64,24 @@ public class MainFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
+        EventBus.getDefault().register(this);
         initView();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().registerReceiver(mBatInfoReveiver, new IntentFilter(
+                Intent.ACTION_BATTERY_CHANGED));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(mBatInfoReveiver);
     }
 
     private void initView() {
@@ -87,8 +108,7 @@ public class MainFragment extends Fragment{
             }
         }
     }
-//    Intent intent = new Intent(getActivity(), UserEditorsActivity.class);
-//    startActivity(intent);
+
     @OnClick({R.id.main_editors,R.id.main_settings,R.id.tmt_noEntry})
     public void onClick(View view){
         switch (view.getId()){
@@ -107,6 +127,9 @@ public class MainFragment extends Fragment{
                         Intent intent = new Intent();
                         intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
                         startActivity(intent);
+                    }else{
+                        Intent intent = new Intent(getActivity(), UserEditorsActivity.class);
+                        startActivityForResult(intent,99);
                     }
                 }
                 break;
@@ -117,5 +140,46 @@ public class MainFragment extends Fragment{
             case R.id.tmt_noEntry:
                 break;
         }
+    }
+
+    private BroadcastReceiver mBatInfoReveiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if(intent.ACTION_BATTERY_CHANGED.equals(action))
+            {
+                int level = intent.getIntExtra("level",0);
+                int scale = intent.getIntExtra("scale",100);
+                onBatteryInfoReceiver(level, scale);
+            }
+        }
+    };
+
+    private void onBatteryInfoReceiver(int intLevel, int intScale) {
+        int percent = intLevel*100/ intScale;
+        battery.setText(percent+"%");
+    };
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMoonEvent(MainFragmentEvenbus evenbus){
+        if(evenbus.isChange() && evenbus.getFlag() == 1){
+            connect.setText(getResources().getString(R.string.TMT_connect_sussces));
+            mCircleImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.yilianjie));
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 99 && resultCode == 1){
+            String content = data.getStringExtra("code");
+            connect.setText(content);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
     }
 }

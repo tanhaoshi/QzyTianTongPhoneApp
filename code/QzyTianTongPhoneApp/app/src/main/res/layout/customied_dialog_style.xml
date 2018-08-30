@@ -25,6 +25,9 @@
         android:layout_marginBottom="29dp"
         android:layout_width="match_parent"
         android:inputType="number"
+        android:textSize="13sp"
+        android:paddingLeft="6dp"
+        android:textColor="@color/black"
         android:layout_height="40dp"/>
 
     <include layout="@layout/line_dimens"/>

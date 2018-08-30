@@ -6,13 +6,19 @@ package com.tt.qzy.view.bean;
 
 public class CallRecordModel {
     private String phoneNumber;
-    private String addres;
-    private String time;
+    private String address;
+    private String state;
+    private String date;
+    private int isTitle;
+    private String titleName;
 
-    public CallRecordModel(String phoneNumber, String addres, String time) {
+    public CallRecordModel(String phoneNumber, String address, String state,String date,int isTitle,String titleName) {
         this.phoneNumber = phoneNumber;
-        this.addres = addres;
-        this.time = time;
+        this.address = address;
+        this.state = state;
+        this.date = date;
+        this.isTitle = isTitle;
+        this.titleName = titleName;
     }
 
     public String getPhoneNumber() {
@@ -23,19 +29,43 @@ public class CallRecordModel {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getAddres() {
-        return addres;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAddres(String addres) {
-        this.addres = addres;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public String getTime() {
-        return time;
+    public String getState() {
+        return state;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public int getIsTitle() {
+        return isTitle;
+    }
+
+    public void setIsTitle(int isTitle) {
+        this.isTitle = isTitle;
+    }
+
+    public String getTitleName() {
+        return titleName;
+    }
+
+    public void setTitleName(String titleName) {
+        this.titleName = titleName;
     }
 }

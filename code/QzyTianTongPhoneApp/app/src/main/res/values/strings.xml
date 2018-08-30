@@ -29,13 +29,14 @@
     <string name="TMT_hotaddres">热门地区</string>
     <string name="TMT_allArea">全部地区</string>
     <string name="TMT_finshLoad">已下载城市</string>
-    <string name="TMT_notify">当前位WI-FI网络,切换至运营商流量会自动暂停下载</string>
+    <string name="TMT_notify">当前为WI-FI网络,切换至运营商流量会自动暂停下载</string>
+    <string name="TMT_net_notify">当前为运营商网络,建议切换至WI-FI网络下载</string>
     <string name="TMT_version">天地通版本</string>
     <string name="TMT_soft_version">天地软件版本</string>
     <string name="TMT_fixed_version">固件版本</string>
     <string name="TMT_number">序列号</string>
     <string name="TMT_hantInput">拨号或使用拼音搜索</string>
-    <string name="TMT_jilu">搜索6条记录</string>
+    <string name="TMT_jilu">拼音搜索或字母搜索</string>
     <string name="TMT_phone_histroy">通话记录</string>
     <string name="TMT_today">今天</string>
     <string name="TMT_yesterday">明天</string>

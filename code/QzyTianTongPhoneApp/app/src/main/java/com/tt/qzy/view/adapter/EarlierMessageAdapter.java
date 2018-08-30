@@ -22,8 +22,9 @@ public class EarlierMessageAdapter extends BaseQuickAdapter<ShortMessageModel,Ba
 
     @Override
     protected void convert(BaseViewHolder helper, ShortMessageModel item) {
-        helper.setText(R.id.phoneNumber,item.getNumberPhone());
-        helper.setText(R.id.message,item.getMessage());
-        helper.setText(R.id.time,item.getTime());
+        helper.setText(R.id.isPhone,item.getNumberPhone());
+        helper.setText(R.id.isMessage,item.getMessage());
+        helper.setText(R.id.isTime,item.getTime());
     }
+
 }

@@ -34,7 +34,6 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void initView() {
-
     }
 
     @OnClick({R.id.settings_sos,R.id.setting_map,R.id.setting_about,R.id.main_quantity})
@@ -89,6 +88,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 NToast.shortToast(SettingsActivity.this,getResources().getString(R.string.TMT_share));
+                dialog.dismiss();
             }
         });
     }

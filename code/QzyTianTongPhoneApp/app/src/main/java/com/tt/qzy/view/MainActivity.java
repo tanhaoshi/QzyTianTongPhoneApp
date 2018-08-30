@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -22,7 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ShortMessageFragment.OnKeyDownListener{
 
     @BindView(R.id.search_close_btn)
     Button button;
@@ -34,6 +36,11 @@ public class MainActivity extends AppCompatActivity {
     private ShortMessageFragment mShortMessageFragment;
 
     private MailListFragment mMailListFragment;
+
+    //用于记录当前显示的fragment;
+    private Fragment mFragment;
+    // 记录是正常退出 还是 我们隐藏的按钮出现 back消失.
+    private boolean isOnkeyDown = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         hideAllFragment(fragmentTransaction);
         if(mShortMessageFragment == null){
             mShortMessageFragment = mShortMessageFragment.newInstance();
+            mShortMessageFragment.setOnKeyDownListener(this);
             fragmentTransaction.add(R.id.fragmentContent, mShortMessageFragment);
         }
         commitShowFragment(fragmentTransaction,mShortMessageFragment);
@@ -88,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
     public void commitShowFragment(FragmentTransaction fragmentTransaction, Fragment fragment){
         fragmentTransaction.show(fragment);
         fragmentTransaction.commit();
+        mFragment = fragment;
     }
 
     public void hideAllFragment(FragmentTransaction fragmentTransaction){
@@ -163,5 +172,24 @@ public class MainActivity extends AppCompatActivity {
         CommonData.relase();
         stopServcie();
         System.exit(0);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (mFragment instanceof ShortMessageFragment) {
+            if(isOnkeyDown){
+                ((ShortMessageFragment) mFragment).onKeyDown(keyCode, event);
+                isOnkeyDown = false;
+                return true;
+            }else{
+                return super.onKeyDown(keyCode,event);
+            }
+        }
+        return super.onKeyDown(keyCode,event);
+    }
+
+    @Override
+    public void setOnkeyDown(boolean isKeyDown) {
+         this.isOnkeyDown = isKeyDown;
     }
 }

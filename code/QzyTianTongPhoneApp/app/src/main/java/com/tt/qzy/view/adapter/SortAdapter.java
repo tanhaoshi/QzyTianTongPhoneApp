@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.bean.SortModel;
+import com.tt.qzy.view.utils.NToast;
 
 import java.util.List;
 
@@ -49,6 +50,7 @@ public class SortAdapter extends RecyclerView.Adapter<SortAdapter.ViewHolder> {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     mOnItemClickListener.onItemClick(holder.itemView, position);
                 }
             });
@@ -60,7 +62,7 @@ public class SortAdapter extends RecyclerView.Adapter<SortAdapter.ViewHolder> {
         holder.tvName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mContext, mData.get(position).getName(), Toast.LENGTH_SHORT).show();
+                NToast.shortToast(mContext,mData.get(position).getName());
             }
         });
 

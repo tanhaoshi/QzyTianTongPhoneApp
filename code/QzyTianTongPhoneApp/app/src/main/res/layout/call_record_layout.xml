@@ -16,6 +16,7 @@
         android:layout_height="48dp">
 
         <LinearLayout
+            android:id="@+id/mobile"
             android:layout_width="50dp"
             android:layout_height="match_parent">
             <ImageView
@@ -27,55 +28,73 @@
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_weight="1"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="7dp"
+            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/phoneNumber"
-                android:text="181-2644-0000"
-                android:textSize="12sp"
-                android:textColor="#F95972"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            
             <LinearLayout
+                android:orientation="vertical"
+                android:layout_weight="1"
                 android:layout_width="wrap_content"
-                android:layout_height="14dp">
+                android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/addres"
-                    android:text="广东深圳"
-                    android:textSize="10sp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginTop="2dp"
+                    android:id="@+id/phoneNumber"
+                    android:text="181-2644-0000"
+                    android:textSize="12sp"
+                    android:textColor="#F95972"
                     android:layout_width="wrap_content"
-                    android:layout_height="14dp"/>
+                    android:layout_height="wrap_content"/>
 
-                <TextView
-                    android:layout_width="0.8dp"
-                    android:layout_marginTop="1dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="7dp"
-                    android:background="@color/line_bg"
-                    android:layout_height="10dp"/>
-
-                <TextView
-                    android:id="@+id/time"
-                    android:text="响铃9秒"
-                    android:textSize="10sp"
-                    android:layout_marginLeft="7dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_gravity="center_vertical"
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="14dp"/>
+                    android:layout_height="14dp">
+
+                    <TextView
+                        android:id="@+id/address"
+                        android:text="广东深圳"
+                        android:textSize="10sp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="2dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="14dp"/>
+
+                    <TextView
+                        android:layout_width="0.8dp"
+                        android:layout_marginTop="1dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="7dp"
+                        android:background="@color/line_bg"
+                        android:layout_height="10dp"/>
+
+                    <TextView
+                        android:id="@+id/state"
+                        android:text="响铃9秒"
+                        android:textSize="10sp"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="14dp"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/date"
+                android:text="6月23日"
+                android:textColor="#999999"
+                android:textSize="10sp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
         </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/see_detail"

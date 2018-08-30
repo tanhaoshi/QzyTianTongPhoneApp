@@ -1,5 +1,9 @@
 package com.tt.qzy.view.utils;
 
+import android.app.Activity;
+import android.app.Service;
+import android.os.Vibrator;
+
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
@@ -69,5 +73,12 @@ public class PinyinUtils {
         }
         return pinYinBF.toString().replaceAll("\\W", "").trim();
     }
+
+    public static void Vibrate(final Activity activity, long milliseconds) {
+        Vibrator vib = (Vibrator) activity
+                .getSystemService(Service.VIBRATOR_SERVICE);
+        vib.vibrate(milliseconds);
+    }
+
 
 }

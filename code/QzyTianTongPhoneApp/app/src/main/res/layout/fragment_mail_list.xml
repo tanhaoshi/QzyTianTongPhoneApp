@@ -19,6 +19,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:drawableLeft="@drawable/search"
+        android:drawablePadding="6dp"
         android:paddingLeft="8dp"
         android:textColor="#999999"
         android:hint="@string/TMT_jilu"

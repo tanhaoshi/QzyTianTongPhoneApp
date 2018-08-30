@@ -22,7 +22,7 @@
                 android:layout_height="29dp"
                 android:background="@drawable/goods_like_selector">
 
-                <EditText
+                <TextView
                     android:layout_marginLeft="13dp"
                     android:id="@+id/tv_toolbar_title"
                     android:textSize="9sp"

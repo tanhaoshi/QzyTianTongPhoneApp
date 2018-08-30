@@ -113,7 +113,6 @@ public class MailListFragment extends Fragment implements PopWindow.OnDismissLis
         });
 
         mClearEditText.addTextChangedListener(new TextWatcher() {
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 //当输入框里面的值为空，更新为原来的列表，否则为过滤数据列表
