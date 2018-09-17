@@ -1,1 +1,1 @@
-include ':app', ':ttphonelib', ':rtptest'
+include ':app'

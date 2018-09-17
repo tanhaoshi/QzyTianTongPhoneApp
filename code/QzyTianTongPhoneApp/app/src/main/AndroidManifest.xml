@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <!--允许访问网络状态的权限-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <!--允许修改网络状态的权限-->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
     <!--允许修改 WIFI 状态的权限。-->
@@ -20,9 +20,9 @@
     <application
         android:name=".application.TtPhoneApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/CommonViewStyle">
         <meta-data
@@ -31,6 +31,7 @@
         <meta-data
             android:name="design_height_in_dp"
             android:value="640"/>
+
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation">
@@ -86,8 +87,9 @@
         </activity>
         <activity android:name=".activity.DeleteContactsActivity">
         </activity>
+
         <receiver android:name=".receiver.WifiReceiver">
-            <intent-filter >
+            <intent-filter>
                 <action android:name="android.net.wifi.RSSI_CHANGED"/>
                 <action android:name="android.net.wifi.STATE_CHANGE"/>
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>

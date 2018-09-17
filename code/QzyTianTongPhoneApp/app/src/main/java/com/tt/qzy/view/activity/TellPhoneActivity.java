@@ -5,12 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.TextView;
 
-import com.qzy.data.PhoneCmd;
-import com.qzy.data.PrototocalTools;
-import com.qzy.tt.data.CallPhoneProtos;
-import com.qzy.tt.phone.common.CommonData;
-import com.qzy.tt.phone.eventbus.CallingModel;
-import com.qzy.utils.ToastUtils;
+
 import com.tt.qzy.view.R;
 
 import org.greenrobot.eventbus.EventBus;
@@ -31,12 +26,7 @@ public class TellPhoneActivity extends AppCompatActivity {
         String number = getIntent().getStringExtra("diapadNumber");
         phoneNumber.setText(number);
         if (!TextUtils.isEmpty(number) && number.length() >= 3) {
-            if (CommonData.isConnected) {
-                //ContactHelper.makePhoneCall(number);
-                callPhone(number);
-            } else {
-                ToastUtils.showToast(this, "未连接天通猫");
-            }
+
         }
     }
 
@@ -46,17 +36,7 @@ public class TellPhoneActivity extends AppCompatActivity {
      * @param phoneNumber
      */
     private void callPhone(String phoneNumber) {
-        CallPhoneProtos.CallPhone callPhone = CallPhoneProtos.CallPhone.newBuilder()
-                .setIp(CommonData.localWifiIp)
-                .setPhoneNumber(phoneNumber)
-                .setPhonecommand(CallPhoneProtos.CallPhone.PhoneCommand.CALL)
-                .build();
-        EventBus.getDefault().post(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.call_phone, callPhone));
 
-//        if(showCallingView()){
-//            setCallingPhoneNumber(phoneNumber);
-//        }
-        setCallingPhoneNumber(phoneNumber);
     }
 
 
@@ -74,8 +54,6 @@ public class TellPhoneActivity extends AppCompatActivity {
 //    }
 
     public void setCallingPhoneNumber(String phoneNumber){
-        CallingModel callingModel = new CallingModel();
-        callingModel.setPhone_number(phoneNumber);
-        EventBus.getDefault().post(callingModel);
+
     }
 }
