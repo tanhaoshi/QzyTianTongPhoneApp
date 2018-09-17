@@ -124,8 +124,7 @@ public class MainFragment extends Fragment{
                     //判断是否连接着天通指定的wifi
                     if(!Constans.STANDARD_WIFI_NAME.equals(NetworkUtil.getConnectWifiSsid(getActivity()).substring(1,6))){
                         NToast.shortToast(getActivity(),"请连接天通指定的wifi");
-                        Intent intent = new Intent();
-                        intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
+                        Intent intent = new Intent("android.settings.WIFI_SETTINGS");
                         startActivity(intent);
                     }else{
                         Intent intent = new Intent(getActivity(), UserEditorsActivity.class);
