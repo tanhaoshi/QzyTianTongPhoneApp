@@ -1,5 +1,6 @@
 package com.tt.qzy.view;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -11,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 
+import com.qzy.tt.phone.service.TtPhoneService;
 import com.tt.qzy.view.fragment.AidlPhoneFragment;
 import com.tt.qzy.view.fragment.MailListFragment;
 import com.tt.qzy.view.fragment.MainFragment;
@@ -148,14 +150,14 @@ public class MainActivity extends AppCompatActivity implements ShortMessageFragm
      * 开启服务
      */
     private void startServcie() {
-        //startService(new Intent(this, TtPhoneService.class));
+        startService(new Intent(this, TtPhoneService.class));
     }
 
     /**
      * 停止服务
      */
     private void stopServcie() {
-        //stopService(new Intent(this, TtPhoneService.class));
+        stopService(new Intent(this, TtPhoneService.class));
     }
 
     @Override

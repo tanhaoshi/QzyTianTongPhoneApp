@@ -13,10 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.qzy.eventbus.EventBusUtils;
+import com.qzy.eventbus.IMessageEventBustType;
+import com.qzy.eventbus.MessageEventBus;
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.SettingsActivity;
 import com.tt.qzy.view.activity.UserEditorsActivity;
 import com.tt.qzy.view.evenbus.MainFragmentEvenbus;
+import com.tt.qzy.view.presenter.MainFragementPersenter;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.NetworkUtil;
@@ -31,7 +36,7 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class MainFragment extends Fragment{
+public class MainFragment extends Fragment {
 
     @BindView(R.id.connect)
     TextView connect;
@@ -41,6 +46,9 @@ public class MainFragment extends Fragment{
     TextView tmt_noEntry;
     @BindView(R.id.battery)
     TextView battery;
+
+    private MainFragementPersenter mPresneter;
+
 
     public MainFragment() {
         // Required empty public constructor
@@ -59,6 +67,7 @@ public class MainFragment extends Fragment{
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+        mPresneter = new MainFragementPersenter(getActivity());
     }
 
     @Override
@@ -85,52 +94,37 @@ public class MainFragment extends Fragment{
     }
 
     private void initView() {
-        if(!NetworkUtil.isWifiEnabled(getActivity())){
+        if (!NetworkUtil.isWifiEnabled(getActivity())) {
             //未连接情况下
             connect.setText(getResources().getString(R.string.TMT_click_connect));
-            mCircleImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.weilianjie));
-        }else{
+            setConnectStateView(false);
+        } else {
+            mPresneter.checkConnectedSate();
+
             //连接wifi情况下 再次判断wifi名字
-            String wifiName = NetworkUtil.getConnectWifiSsid(getActivity());
+          /*  String wifiName = NetworkUtil.getConnectWifiSsid(getActivity());
             //是否等于我们规定好的wifi
             if(wifiName.length() >= 5){
                if(Constans.STANDARD_WIFI_NAME.equals(wifiName.substring(1,6))){
                    connect.setText(getResources().getString(R.string.TMT_connect_sussces));
-                   mCircleImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.yilianjie));
+                   setConnectStateView(true);
                }else{
                    //连接着wifi 但是并不是连接到天通指定wifi
                    connect.setText(getResources().getString(R.string.TMT_click_connect));
-                   mCircleImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.weilianjie));
+                   setConnectStateView(false);
                    NToast.shortToast(getActivity(),"请连接天通wifi!");
                }
             }else{
                 NToast.shortToast(getActivity(),"请连接天通wifi!");
-            }
+            }*/
         }
     }
 
-    @OnClick({R.id.main_editors,R.id.main_settings,R.id.tmt_noEntry})
-    public void onClick(View view){
-        switch (view.getId()){
+    @OnClick({R.id.main_editors, R.id.main_settings, R.id.tmt_noEntry})
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.main_editors:
-                //先判断wifi开关是否打开 跳转至打开wifi界面
-                if(!NetworkUtil.isWifiEnabled(getActivity())){
-                    WifiManager wfManager = (WifiManager)getActivity().getSystemService(getActivity().WIFI_SERVICE);
-                    wfManager.setWifiEnabled(true);
-                    Intent intent = new Intent();
-                    intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
-                    startActivity(intent);
-                }else{
-                    //判断是否连接着天通指定的wifi
-                    if(!Constans.STANDARD_WIFI_NAME.equals(NetworkUtil.getConnectWifiSsid(getActivity()).substring(1,6))){
-                        NToast.shortToast(getActivity(),"请连接天通指定的wifi");
-                        Intent intent = new Intent("android.settings.WIFI_SETTINGS");
-                        startActivity(intent);
-                    }else{
-                        Intent intent = new Intent(getActivity(), UserEditorsActivity.class);
-                        startActivityForResult(intent,99);
-                    }
-                }
+                mPresneter.startConnect();
                 break;
             case R.id.main_settings:
                 Intent settings_intent = new Intent(getActivity(), SettingsActivity.class);
@@ -145,32 +139,75 @@ public class MainFragment extends Fragment{
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if(intent.ACTION_BATTERY_CHANGED.equals(action))
-            {
-                int level = intent.getIntExtra("level",0);
-                int scale = intent.getIntExtra("scale",100);
-                onBatteryInfoReceiver(level, scale);
+            if (intent.ACTION_BATTERY_CHANGED.equals(action)) {
+                int level = intent.getIntExtra("level", 0);
+                int scale = intent.getIntExtra("scale", 100);
+                //onBatteryInfoReceiver(level, scale);
             }
         }
     };
 
+    /**
+     * 设置连接天通状态显示
+     *
+     * @param isConnected
+     */
+    private void setConnectStateView(boolean isConnected) {
+        mPresneter.setConnected(isConnected);
+        if (isConnected) {
+            mCircleImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.yilianjie));
+            connect.setText(getResources().getString(R.string.TMT_connect_sussces));
+            NToast.shortToast(getActivity(), getString(R.string.TMT_connect_sussces_notice));
+        } else {
+            mCircleImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.weilianjie));
+            connect.setText(getResources().getString(R.string.TMT_click_connect));
+            NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
+        }
+    }
+
+
+
     private void onBatteryInfoReceiver(int intLevel, int intScale) {
-        int percent = intLevel*100/ intScale;
-        battery.setText(percent+"%");
-    };
+        int percent = intLevel * 100 / intScale;
+        battery.setText(percent + "%");
+    }
+
+    /**
+     * 更新天通猫信号强度
+     * @param intLevel
+     *
+     */
+    private void onTiantongInfoReceiver(int intLevel) {
+        battery.setText(intLevel + "");
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMoonEvent(MainFragmentEvenbus evenbus){
-        if(evenbus.isChange() && evenbus.getFlag() == 1){
+    public void onMoonEvent(MainFragmentEvenbus evenbus) {
+        if (evenbus.isChange() && evenbus.getFlag() == 1) {
             connect.setText(getResources().getString(R.string.TMT_connect_sussces));
-            mCircleImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.yilianjie));
+            setConnectStateView(true);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEventBus event) {
+        switch (event.getType()) {
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SUCCESS:
+                setConnectStateView(true);
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_FAILED:
+                setConnectStateView(false);
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SIGNAL:
+                onTiantongInfoReceiver(mPresneter.getTianTongSignalValue(event.getObject()));
+                break;
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 99 && resultCode == 1){
+        if (requestCode == 99 && resultCode == 1) {
             String content = data.getStringExtra("code");
             connect.setText(content);
         }

@@ -6,5 +6,5 @@ package com.tt.qzy.view.utils;
 
 public class Constans {
     //QzyTTWifi_Tcp_1
-    public static final String STANDARD_WIFI_NAME = "QzyTT";
+    public static final String STANDARD_WIFI_NAME = "QzyTt";
 }

@@ -5,7 +5,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- 主页 -->
-    <string name="TMT_quantity">天猫通电量</string>
+    <string name="TMT_energy">天通猫电量</string>
+    <string name="TMT_quantity">天通猫信号</string>
     <string name="TMT_sos">SOS</string>
     <string name="TMT_location">定位</string>
     <string name="TMT_settings">设置</string>
@@ -64,4 +65,6 @@
     <string name="TMT_click_connect">点击连接</string>
     <!-- 连接成功状态下 -->
     <string name="TMT_connect_sussces">默认用户</string>
+    <string name="TMT_connect_tiantong_please">请连接天通</string>
+    <string name="TMT_connect_sussces_notice">已连接天通</string>
 </resources>
