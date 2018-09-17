@@ -10,6 +10,7 @@ import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.data.TtPhoneSignalProtos;
+import com.qzy.tt.phone.common.CommonData;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.UserEditorsActivity;
@@ -25,28 +26,9 @@ public class MainFragementPersenter {
 
     private Context mContext;
 
-    //是否连接天通
-    private boolean isConnected = false;
 
-    public MainFragementPersenter(Context context){
+    public MainFragementPersenter(Context context) {
         mContext = context;
-    }
-
-    /**
-     * 获取天同连接状态
-     * @return
-     */
-    public boolean isConnected() {
-        return isConnected;
-    }
-
-
-    /**
-     * 设置天通连接状态
-     * @param connected
-     */
-    public void setConnected(boolean connected) {
-        isConnected = connected;
     }
 
     /**
@@ -68,14 +50,16 @@ public class MainFragementPersenter {
 
     }
 
+
+
     /**
      * 连接天通
      */
-    public void startConnect(){
+    public void startConnect() {
 
-        if(isConnected()){
+        if (CommonData.getInstance().isConnected()) {
             Intent intent = new Intent(mContext, UserEditorsActivity.class);
-            ((Activity)mContext).startActivityForResult(intent, 99);
+            ((Activity) mContext).startActivityForResult(intent, 99);
             return;
         }
         //先判断wifi开关是否打开 跳转至打开wifi界面
@@ -101,10 +85,11 @@ public class MainFragementPersenter {
 
     /**
      * 获取天通信号强度
+     *
      * @param obj
      * @return
      */
-    public int getTianTongSignalValue(Object obj){
+    public int getTianTongSignalValue(Object obj) {
         PhoneCmd cmd = (PhoneCmd) obj;
         TtPhoneSignalProtos.PhoneSignalStrength signalStrength = (TtPhoneSignalProtos.PhoneSignalStrength) cmd.getMessage();
         int value = signalStrength.getSignalStrength();

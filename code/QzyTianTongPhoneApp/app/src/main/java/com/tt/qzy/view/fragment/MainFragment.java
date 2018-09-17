@@ -153,7 +153,6 @@ public class MainFragment extends Fragment {
      * @param isConnected
      */
     private void setConnectStateView(boolean isConnected) {
-        mPresneter.setConnected(isConnected);
         if (isConnected) {
             mCircleImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.yilianjie));
             connect.setText(getResources().getString(R.string.TMT_connect_sussces));
@@ -164,6 +163,7 @@ public class MainFragment extends Fragment {
             NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
         }
     }
+
 
 
 

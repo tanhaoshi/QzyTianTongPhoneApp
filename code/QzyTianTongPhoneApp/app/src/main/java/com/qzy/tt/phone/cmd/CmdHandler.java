@@ -71,7 +71,7 @@ public class CmdHandler {
                         if( state == CallPhoneStateProtos.CallPhoneState.PhoneState.INCOMING){
                             incommingState(callPhoneState.getPhoneNumber());
                         }else {
-                           // sendCmdToView(protoId, callPhoneState);
+                            sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_STATE,protoId, callPhoneState);
                         }
                     }
 

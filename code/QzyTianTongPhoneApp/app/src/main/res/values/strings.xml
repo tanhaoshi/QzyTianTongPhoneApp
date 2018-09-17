@@ -67,4 +67,6 @@
     <string name="TMT_connect_sussces">默认用户</string>
     <string name="TMT_connect_tiantong_please">请连接天通</string>
     <string name="TMT_connect_sussces_notice">已连接天通</string>
+    <string name="TMT_dial_number_notmull">电话号码不能为空</string>
+    <string name="TMT_dial_dialing">正在拨号</string>
 </resources>

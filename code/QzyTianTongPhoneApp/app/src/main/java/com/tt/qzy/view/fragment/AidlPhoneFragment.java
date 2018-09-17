@@ -22,6 +22,7 @@ import com.tt.qzy.view.bean.ShortMessageModel;
 import com.tt.qzy.view.layout.PopWindow;
 import com.tt.qzy.view.layout.dialpad.InputPwdView;
 import com.tt.qzy.view.layout.dialpad.MyInputPwdUtil;
+import com.tt.qzy.view.presenter.AidlPhoneFragmentPersenter;
 import com.tt.qzy.view.utils.DateUtil;
 
 import java.util.ArrayList;
@@ -57,6 +58,8 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     // "更早" 标题进行添加一次的控制
     private boolean isEarlier = true;
 
+    private AidlPhoneFragmentPersenter mPersenter;
+
     public AidlPhoneFragment() {
     }
 
@@ -72,6 +75,7 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+        mPersenter = new AidlPhoneFragmentPersenter(getActivity());
     }
 
     @Override
@@ -183,9 +187,8 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
 
     @Override
     public void inputString(String diapadNumber) {
-        Intent intent = new Intent(getActivity(), TellPhoneActivity.class);
-        intent.putExtra("diapadNumber",diapadNumber);
-        getActivity().startActivity(intent);
+        //拨打电话
+        mPersenter.dialPhone(diapadNumber);
     }
 
     @Override
