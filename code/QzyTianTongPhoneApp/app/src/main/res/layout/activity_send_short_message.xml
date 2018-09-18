@@ -10,7 +10,7 @@
     android:focusableInTouchMode="true"
     tools:context="com.tt.qzy.view.activity.SendShortMessageActivity">
 
-    <include layout="@layout/left_toobar_layout"/>
+    <include layout="@layout/left_toobar_layout_sms"/>
 
     <include layout="@layout/line_dimens"/>
 

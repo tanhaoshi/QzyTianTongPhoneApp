@@ -9,8 +9,10 @@ import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 import com.qzy.netty.NettyClientManager;
 import com.qzy.tt.data.CallPhoneProtos;
+import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.phone.cmd.CmdHandler;
 import com.qzy.tt.phone.common.CommonData;
+import com.qzy.tt.phone.data.SmsBean;
 import com.qzy.utils.IPUtil;
 import com.socks.library.KLog;
 
@@ -105,6 +107,24 @@ public class PhoneNettyManager {
     }
 
 
+    /**
+     * 发送短信
+     * @param object
+     */
+    private void sendSms(Object object){
+        SmsBean smsBean = (SmsBean) object;
+        TtPhoneSmsProtos.TtPhoneSms ttPhoneSms = TtPhoneSmsProtos.TtPhoneSms.newBuilder()
+                .setIp(CommonData.getInstance().getLocalWifiIp())
+                .setIsSend(true)
+                .setPhoneNumber(smsBean.getPhoneNumber())
+                .setMessageText(smsBean.getMsg())
+                .setIsReceiverSuccess(false)
+                .setIsSendSuccess(false)
+                .build();
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.phone_send_sms, ttPhoneSms));
+    }
+
+
     private NettyClientManager.INettyListener nettyListener = new NettyClientManager.INettyListener() {
         @Override
         public void onReceiveData(ByteBufInputStream inputStream) {
@@ -152,6 +172,9 @@ public class PhoneNettyManager {
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_ACCEPTCALL:
                 acceptCall();
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS:
+                sendSms(event.getObject());
                 break;
         }
     }

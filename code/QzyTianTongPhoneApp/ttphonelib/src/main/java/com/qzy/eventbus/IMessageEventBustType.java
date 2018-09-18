@@ -16,5 +16,7 @@ public interface IMessageEventBustType {
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_HUNGUP = "event_bus_type_connect_tiantong_hungup";
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_ACCEPTCALL = "event_bus_type_connect_tiantong_acceptcall";
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_STATE = "event_bus_type_connect_tiantong_state";
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS = "event_bus_type_connect_tiantong_send_sms";
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS_STATE = "event_bus_type_connect_tiantong_send_sms_state";
 
 }

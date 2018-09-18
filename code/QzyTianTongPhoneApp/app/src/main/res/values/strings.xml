@@ -52,6 +52,10 @@
     <string name="TMT_contacts">联系人</string>
     <string name="TMT_takeup">收起</string>
     <string name="TMT_sendMessage">发送信息</string>
+    <string name="TMT_sendMessage_success">发送信息成功</string>
+    <string name="TMT_sendMessage_failed">发送信息失败</string>
+    <string name="TMT_sendMessage_receiver">对方已接收</string>
+    <string name="TMT_sendMessage_receiver_failed">对方接收失败</string>
     <string name="TMT_editor_caotacts">编辑</string>
     <string name="TMT_import_malllist">导入手机通讯录</string>
     <string name="TMT_contacts_name">姓名</string>
@@ -60,6 +64,8 @@
     <string name="TMT_mobile">手机</string>
     <string name="TMT_add_mobile">添加号码</string>
     <string name="TMT_short_message">短信</string>
+    <string name="TMT_short_message_receiver">收信人</string>
+    <string name="TMT_short_message_receiver_notnull">收信人不能为空</string>
     <string name="TMT_select_contacts">选择联系人</string>
     <string name="TMT_please_select">请先选择联系人</string>
     <string name="TMT_click_connect">点击连接</string>
