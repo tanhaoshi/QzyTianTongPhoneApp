@@ -5,17 +5,18 @@
     android:layout_height="match_parent"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-    android:background="@color/phoneNumber"
+              android:background="@color/black"
     android:orientation="vertical">
 
       <com.tt.qzy.view.layout.DigitsEditText
           android:gravity="center"
           android:id="@+id/inputContent"
           android:layout_width="match_parent"
-          android:layout_height="66dp"
+          android:layout_height="50dp"
           android:layout_gravity="center_vertical"
+          android:textColor="@color/white"
           android:background="@null"
-          android:hint="@string/TMT_hantInput"
+          android:textColorHint="@color/white"
           android:textSize="16sp"/>
 
        <LinearLayout
@@ -26,7 +27,6 @@
            <com.tt.qzy.view.layout.DialpadKeyButton
                android:id="@+id/one"
                android:layout_marginLeft="7dp"
-               android:background="@color/white"
                android:layout_weight="1"
                android:gravity="center"
                android:orientation="vertical"
@@ -35,14 +35,14 @@
 
                    <TextView
                        android:text="1"
-                       android:textColor="#999999"
+                       android:textColor="@color/white"
                        android:textSize="27sp"
                        android:layout_width="match_parent"
                        android:gravity="center"
                        android:layout_height="wrap_content"/>
 
                    <ImageView
-                       android:src="@drawable/ic_dial_action_vm"
+                       android:src="@drawable/ic_dial_action_vm_white"
                        android:layout_width="24dp"
                        android:gravity="center"
                        android:layout_height="18dp"/>
@@ -52,7 +52,6 @@
            <com.tt.qzy.view.layout.DialpadKeyButton
                android:id="@+id/two"
                android:layout_marginLeft="7dp"
-               android:background="@color/white"
                android:layout_weight="1"
                android:gravity="center"
                android:orientation="vertical"
@@ -61,13 +60,14 @@
 
                <TextView
                    android:text="2"
-                   android:textColor="#999999"
+                  android:textColor="@color/white"
                    android:textSize="27sp"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"/>
 
                <TextView
                    android:text="ABC"
+                   android:textColor="@color/white"
                    android:textSize="12sp"
                    android:layout_width="24dp"
                    android:layout_height="18dp"/>
@@ -78,7 +78,6 @@
                android:id="@+id/three"
                android:layout_marginLeft="7dp"
                android:layout_marginRight="7dp"
-               android:background="@color/white"
                android:layout_weight="1"
                android:gravity="center"
                android:orientation="vertical"
@@ -87,13 +86,14 @@
 
                <TextView
                    android:text="3"
-                   android:textColor="#999999"
+                  android:textColor="@color/white"
                    android:textSize="27sp"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"/>
 
                <TextView
                    android:text="DEF"
+                   android:textColor="@color/white"
                    android:textSize="12sp"
                    android:layout_width="24dp"
                    android:layout_height="18dp"/>
@@ -111,7 +111,6 @@
         <com.tt.qzy.view.layout.DialpadKeyButton
             android:id="@+id/four"
             android:layout_marginLeft="7dp"
-            android:background="@color/white"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
@@ -120,7 +119,7 @@
 
             <TextView
                 android:text="4"
-                android:textColor="#999999"
+               android:textColor="@color/white"
                 android:textSize="27sp"
                 android:layout_width="match_parent"
                 android:gravity="center"
@@ -128,6 +127,7 @@
 
             <TextView
                 android:text="GHI"
+                android:textColor="@color/white"
                 android:layout_width="24dp"
                 android:gravity="center"
                 android:layout_height="18dp"/>
@@ -137,7 +137,6 @@
         <com.tt.qzy.view.layout.DialpadKeyButton
             android:id="@+id/five"
             android:layout_marginLeft="7dp"
-            android:background="@color/white"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
@@ -146,13 +145,14 @@
 
             <TextView
                 android:text="5"
-                android:textColor="#999999"
+               android:textColor="@color/white"
                 android:textSize="27sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <TextView
                 android:text="ABC"
+                android:textColor="@color/white"
                 android:textSize="12sp"
                 android:layout_width="24dp"
                 android:layout_height="18dp"/>
@@ -163,7 +163,6 @@
             android:id="@+id/six"
             android:layout_marginLeft="7dp"
             android:layout_marginRight="7dp"
-            android:background="@color/white"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
@@ -172,13 +171,14 @@
 
             <TextView
                 android:text="6"
-                android:textColor="#999999"
+               android:textColor="@color/white"
                 android:textSize="27sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <TextView
                 android:text="DEF"
+                android:textColor="@color/white"
                 android:textSize="12sp"
                 android:layout_width="24dp"
                 android:layout_height="18dp"/>
@@ -196,7 +196,6 @@
         <com.tt.qzy.view.layout.DialpadKeyButton
             android:id="@+id/seven"
             android:layout_marginLeft="7dp"
-            android:background="@color/white"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
@@ -205,7 +204,7 @@
 
             <TextView
                 android:text="7"
-                android:textColor="#999999"
+               android:textColor="@color/white"
                 android:textSize="27sp"
                 android:layout_width="match_parent"
                 android:gravity="center"
@@ -213,6 +212,7 @@
 
             <TextView
                 android:text="PQRS"
+                android:textColor="@color/white"
                 android:layout_width="100dp"
                 android:gravity="center"
                 android:layout_height="18dp"/>
@@ -222,7 +222,6 @@
         <com.tt.qzy.view.layout.DialpadKeyButton
             android:id="@+id/eight"
             android:layout_marginLeft="7dp"
-            android:background="@color/white"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
@@ -231,13 +230,14 @@
 
             <TextView
                 android:text="8"
-                android:textColor="#999999"
+               android:textColor="@color/white"
                 android:textSize="27sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <TextView
                 android:text="TUV"
+                android:textColor="@color/white"
                 android:gravity="center"
                 android:textSize="12sp"
                 android:layout_width="100dp"
@@ -249,7 +249,6 @@
             android:id="@+id/nine"
             android:layout_marginLeft="7dp"
             android:layout_marginRight="7dp"
-            android:background="@color/white"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
@@ -258,13 +257,14 @@
 
             <TextView
                 android:text="9"
-                android:textColor="#999999"
+               android:textColor="@color/white"
                 android:textSize="27sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <TextView
                 android:text="WXYZ"
+                android:textColor="@color/white"
                 android:gravity="center"
                 android:textSize="12sp"
                 android:layout_width="100dp"
@@ -286,11 +286,11 @@
             android:layout_height="57dp"
             android:layout_weight="1"
             android:layout_marginLeft="7dp"
-            android:background="@color/white">
+            >
 
             <TextView
                 android:text="*"
-                android:textColor="#999999"
+               android:textColor="@color/white"
                 android:textSize="27sp"
                 android:layout_weight="1"
                 android:layout_width="30dp"
@@ -305,13 +305,13 @@
             android:layout_height="57dp"
             android:layout_weight="1"
             android:layout_marginLeft="7dp"
-            android:background="@color/white">
+            >
 
             <TextView
                 android:text="0"
                 android:gravity="center"
                 android:layout_weight="1"
-                android:textColor="#999999"
+               android:textColor="@color/white"
                 android:textSize="27sp"
                 android:layout_width="30dp"
                 android:layout_height="57dp"/>
@@ -325,13 +325,13 @@
             android:layout_weight="1"
             android:layout_marginLeft="7dp"
             android:layout_marginRight="7dp"
-            android:background="@color/white">
+           >
 
             <TextView
                 android:text="#"
                 android:gravity="center"
                 android:layout_weight="1"
-                android:textColor="#999999"
+               android:textColor="@color/white"
                 android:textSize="27sp"
                 android:layout_width="30dp"
                 android:layout_height="57dp"/>
@@ -351,11 +351,13 @@
             android:layout_weight="1"
             android:layout_width="30dp"
             android:layout_gravity="center"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            />
 
         <ImageView
             android:id="@+id/tellphone"
-            android:src="@drawable/bohao_big_blue"
+            android:src="@drawable/bohao_big_red"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:layout_width="30dp"
@@ -367,7 +369,9 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:layout_width="30dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            />
 
     </LinearLayout>
 

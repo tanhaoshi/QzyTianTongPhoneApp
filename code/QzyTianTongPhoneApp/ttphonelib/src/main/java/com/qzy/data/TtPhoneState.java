@@ -1,4 +1,4 @@
-package com.qzy.tt.phone.netty;
+package com.qzy.data;
 
 /**
  * Created by yj.zhang on 2018/9/17.

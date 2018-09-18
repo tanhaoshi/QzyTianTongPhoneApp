@@ -123,6 +123,9 @@ public class PhoneNettyManager {
         @Override
         public void onDisconnected() {
             KLog.i("netty disconnected ...");
+            if(mCmdHandler != null){
+                mCmdHandler.resetPhoneState();
+            }
             setConnectedState();
         }
     };

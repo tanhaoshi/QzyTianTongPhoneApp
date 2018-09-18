@@ -7,4 +7,12 @@
         <attr name="civ_fill_color" format="color"/>
     </declare-styleable>
 
+
+    <declare-styleable name="InputPwdView">
+        <attr name="input_bg_color" format="color"/>
+        <attr name="input_btn_bg_color" format="color"/>
+        <attr name="input_hide" format="boolean"/>
+        <attr name="input_text_color" format="color"/>
+    </declare-styleable>
+
 </resources>

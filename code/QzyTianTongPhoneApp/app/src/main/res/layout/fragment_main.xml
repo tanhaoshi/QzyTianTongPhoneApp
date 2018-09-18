@@ -155,12 +155,11 @@
                         android:background="@color/white"
                         android:layout_weight="1"
                         android:text="@string/TMT_quantity"
-                        android:drawableLeft="@drawable/tiantongmaodianliang"/>
+                        android:drawableLeft="@drawable/tiantong_signal"/>
 
                     <TextView
                         android:id="@+id/battery"
                         android:textColor="@color/black"
-                        android:text="50%"
                         android:layout_marginRight="17dp"
                         android:textSize="14sp"
                         android:gravity="center_vertical"

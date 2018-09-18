@@ -1,19 +1,20 @@
 package com.tt.qzy.view.activity;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
-
 
 import com.qzy.data.PhoneCmd;
 import com.qzy.data.PhoneStateUtils;
 import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
-
 import com.qzy.utils.TimeToolUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
@@ -25,52 +26,52 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class TellPhoneActivity extends AppCompatActivity {
+public class TellPhoneIncomingActivity extends AppCompatActivity {
 
-    public static final int msg_calling_time = 1;
-    public static final int msg_calling_time_remove = 2;
 
-    @BindView(R.id.phoneNumber)
-    TextView phoneNumber;
+    @BindView(R.id.txtv_phoneNumber)
+    TextView txtv_phoneNumber;
 
-    @BindView(R.id.text_state)
-    TextView text_state;
-    @BindView(R.id.input_call)
-    InputPwdViewCall input_call;
+    @BindView(R.id.btn_accept)
+    ImageView btn_accept;
+
+    @BindView(R.id.btn_endcall)
+    ImageView btn_endcall;
+
+    private String phoneNumber = "";
 
     private TellPhoneActivityPresenter mTellPhoneActivityPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tell_phone);
-        KLog.e("onCreate");
+        setContentView(R.layout.activity_tell_phone_incoming);
         ButterKnife.bind(this);
-        String number = getIntent().getStringExtra("diapadNumber");
-        phoneNumber.setText(number);
-        if (!TextUtils.isEmpty(number) && number.length() >= 3) {
+        phoneNumber= getIntent().getStringExtra("diapadNumber");
+        txtv_phoneNumber.setText(phoneNumber);
+        if (!TextUtils.isEmpty(phoneNumber) && phoneNumber.length() >= 3) {
 
         }
         mTellPhoneActivityPresenter = new TellPhoneActivityPresenter(this);
-        EventBusUtils.register(TellPhoneActivity.this);
+        EventBusUtils.register(this);
+    }
 
 
-        input_call.setListener(new InputPwdViewCall.InputPwdListener() {
-            @Override
-            public void inputString(String diapadNumber) {
-
-                //挂断
+    @OnClick({R.id.btn_accept, R.id.btn_endcall})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_accept:
+                onCallingState();
+                break;
+            case R.id.btn_endcall:
                 onEndCallState();
-            }
-
-            @Override
-            public void buttonClick(int keyCode) {
-
-            }
-        });
+                break;
+        }
 
     }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEventBus event) {
@@ -82,50 +83,16 @@ public class TellPhoneActivity extends AppCompatActivity {
     }
 
     /**
-     * 刷新通话时长
-     */
-    private void showCallingTime(int time) {
-        text_state.setText(TimeToolUtils.getFormatHMS(time));
-    }
-
-    /**
-     * 展示拨打中
-     */
-    private void showDailing() {
-        text_state.setText(getString(R.string.TMT_dial_dialing));
-    }
-
-    private Handler mHandler = new Handler() {
-
-
-        private int time = 0;
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case msg_calling_time:
-                    time += 1000;
-                    showCallingTime(time);
-                    mHandler.sendEmptyMessageDelayed(1, 1000);
-                    break;
-                case msg_calling_time_remove:
-                    if (mHandler.hasMessages(1)) {
-                        mHandler.removeMessages(1);
-                    }
-                    time = 0;
-                    showDailing();
-                    break;
-            }
-        }
-    };
-
-
-    /**
      * 通话状态
      */
     private void onCallingState() {
-        mHandler.sendEmptyMessage(msg_calling_time);
+        Intent intent = new Intent(TellPhoneIncomingActivity.this, TellPhoneActivity.class);
+       // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("diapadNumber", phoneNumber);
+        startActivity(intent);
+
+        mTellPhoneActivityPresenter.acceptCall();
+        finish();
     }
 
     /**
@@ -133,7 +100,6 @@ public class TellPhoneActivity extends AppCompatActivity {
      */
     private void onEndCallState() {
         mTellPhoneActivityPresenter.endCall();
-        mHandler.sendEmptyMessage(msg_calling_time_remove);
         finish();
     }
 
@@ -167,16 +133,6 @@ public class TellPhoneActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        KLog.e("onStop");
-        EventBusUtils.unregister(TellPhoneActivity.this);
-       //finish();
-}
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        KLog.e("onDestroy");
-
-
+        EventBusUtils.unregister(this);
     }
 }

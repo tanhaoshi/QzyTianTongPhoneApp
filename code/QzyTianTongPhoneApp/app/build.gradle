@@ -57,4 +57,5 @@ dependencies {
     compile 'me.jessyan:autosize:0.9.1'
     testCompile 'junit:junit:4.12'
     compile project(':ttphonelib')
+    compile project(':qzyphonepcmlib')
 }

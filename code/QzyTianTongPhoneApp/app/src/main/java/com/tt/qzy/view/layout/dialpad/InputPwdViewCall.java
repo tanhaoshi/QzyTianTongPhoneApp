@@ -1,15 +1,11 @@
 package com.tt.qzy.view.layout.dialpad;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.media.AudioManager;
 import android.media.ToneGenerator;
-import android.provider.Settings;
 import android.text.Editable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -21,12 +17,13 @@ import android.widget.LinearLayout;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.layout.DialpadKeyButton;
 import com.tt.qzy.view.layout.DigitsEditText;
+import com.tt.qzy.view.layout.dialpad.InputPwdView_Pwd;
 import com.tt.qzy.view.utils.AudioUtil;
 
 import java.util.HashSet;
 
 
-public class InputPwdView extends LinearLayout implements View.OnTouchListener, View.OnClickListener,
+public class InputPwdViewCall extends LinearLayout implements View.OnTouchListener, View.OnClickListener,
         DialpadKeyButton.OnPressedListener, View.OnLongClickListener {
 
     private static final int DEFAULT_BORDER_COLOR = Color.BLACK;
@@ -69,14 +66,14 @@ public class InputPwdView extends LinearLayout implements View.OnTouchListener, 
 
     private int input_text_color = DEFAULT_BORDER_COLOR;
 
-    public InputPwdView(Context context) {
+    public InputPwdViewCall(Context context) {
         super(context);
         init();
     }
 
-    public InputPwdView(Context context, AttributeSet attrs) {
+    public InputPwdViewCall(Context context, AttributeSet attrs) {
         super(context, attrs);
-        //initAttrs(context, attrs);
+        initAttrs(context, attrs);
         init();
     }
 
@@ -90,7 +87,7 @@ public class InputPwdView extends LinearLayout implements View.OnTouchListener, 
 
     public void init() {
         context = getContext();
-        View view = LayoutInflater.from(context).inflate(R.layout.inputpwd_layout, this);
+        View view = LayoutInflater.from(context).inflate(R.layout.inputpwd_layout_call, this);
         layout_root = (LinearLayout) view.findViewById(R.id.layout_root);
         mDigits = (DigitsEditText) view.findViewById(R.id.inputContent);
         one = (DialpadKeyButton) view.findViewById(R.id.one);
@@ -116,8 +113,8 @@ public class InputPwdView extends LinearLayout implements View.OnTouchListener, 
         initListener();
 
 
-       /* layout_root.setBackgroundColor(input_bg_color);
-        one.setBackgroundColor(input_btn_bg_color);
+       layout_root.setBackgroundColor(input_bg_color);
+      /*   one.setBackgroundColor(input_btn_bg_color);
         two.setBackgroundColor(input_btn_bg_color);
         three.setBackgroundColor(input_btn_bg_color);
         four.setBackgroundColor(input_btn_bg_color);
@@ -281,6 +278,9 @@ public class InputPwdView extends LinearLayout implements View.OnTouchListener, 
     }
 
     private void keyPressed(int keyCode) {
+        if(inputPwdListener != null){
+            inputPwdListener.buttonClick(keyCode);
+        }
         switch (keyCode) {
             case KeyEvent.KEYCODE_1:
                 mAudioUtil.playTone(ToneGenerator.TONE_DTMF_1);
@@ -364,6 +364,7 @@ public class InputPwdView extends LinearLayout implements View.OnTouchListener, 
 
     public interface InputPwdListener {
         void inputString(String diapadNumber);
+        void buttonClick(int keyCode);
     }
 
 }

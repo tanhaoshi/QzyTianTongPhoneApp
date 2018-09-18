@@ -13,6 +13,8 @@ import com.qzy.tt.data.CallPhoneStateProtos;
 import com.qzy.tt.data.TtPhoneSignalProtos;
 import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
+import com.tt.qzy.view.activity.TellPhoneActivity;
+import com.tt.qzy.view.activity.TellPhoneIncomingActivity;
 
 
 import io.netty.buffer.ByteBufInputStream;
@@ -96,9 +98,21 @@ public class CmdHandler {
 
 
     private void incommingState(String number){
-        Intent intent = new Intent("com.qzy.tt.incoming");
+       /* Intent intent = new Intent("com.qzy.tt.incoming");
         intent.putExtra("phone_number",number);
-        context.sendBroadcast(intent);
+        context.sendBroadcast(intent);*/
+
+        Intent intent = new Intent(context, TellPhoneIncomingActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("diapadNumber", number);
+        context.startActivity(intent);
+    }
+
+    /**
+     * 重新设置电话状态
+     */
+    public void resetPhoneState(){
+        currentPhoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL;
     }
 
 }
