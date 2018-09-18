@@ -15,6 +15,7 @@ import com.qzy.data.PhoneStateUtils;
 import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
+import com.qzy.ring.RingManager;
 import com.qzy.utils.TimeToolUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
@@ -56,6 +57,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         }
         mTellPhoneActivityPresenter = new TellPhoneActivityPresenter(this);
         EventBusUtils.register(this);
+        RingManager.playDefaultCallMediaPlayer(this);
     }
 
 
@@ -90,7 +92,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
        // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("diapadNumber", phoneNumber);
         startActivity(intent);
-
+        RingManager.stopDefaultCallMediaPlayer(this);
         mTellPhoneActivityPresenter.acceptCall();
         finish();
     }
@@ -99,6 +101,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
      * 挂断状态
      */
     private void onEndCallState() {
+        RingManager.stopDefaultCallMediaPlayer(this);
         mTellPhoneActivityPresenter.endCall();
         finish();
     }
@@ -133,6 +136,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        RingManager.stopDefaultCallMediaPlayer(this);
         EventBusUtils.unregister(this);
     }
 }

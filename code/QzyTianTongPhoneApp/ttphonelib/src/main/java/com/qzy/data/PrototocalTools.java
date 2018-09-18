@@ -15,12 +15,15 @@ public class PrototocalTools {
     public interface IProtoServerIndex{
         int call_phone = 102;
         int chang_pcmplayer_db = 104;
+        int phone_send_sms = 108;
     }
 
     public interface IProtoClientIndex{
         int call_phone_state = 101;
         int tt_phone_signal = 103;
+        int phone_send_sms_callback = 107;
     }
+
 
     public static boolean readToFour0x5aHeaderByte(ByteBufInputStream stream) throws IOException {
         int repeatTimes = 0;
