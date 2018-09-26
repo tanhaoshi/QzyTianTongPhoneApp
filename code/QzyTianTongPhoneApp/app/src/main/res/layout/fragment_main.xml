@@ -145,7 +145,7 @@
                     android:layout_height="48dp">
 
                     <TextView
-                        android:id="@+id/main_quantity"
+                        android:id="@+id/main_signal_quantity"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:drawablePadding="20dp"
@@ -158,9 +158,40 @@
                         android:drawableLeft="@drawable/tiantong_signal"/>
 
                     <TextView
+                        android:id="@+id/txtv_signal"
+                        android:textColor="@color/black"
+                        android:paddingRight="@dimen/dimen_dp_17"
+                        android:textSize="14sp"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp">
+
+                    <TextView
+                        android:id="@+id/main_quantity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:drawablePadding="20dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="16dp"
+                        android:textSize="14sp"
+                        android:background="@color/white"
+                        android:layout_weight="1"
+                        android:text="@string/TMT_energy"
+                        android:drawableLeft="@drawable/tiantongmaodianliang"/>
+
+                    <TextView
                         android:id="@+id/battery"
                         android:textColor="@color/black"
-                        android:layout_marginRight="17dp"
+                        android:paddingRight="@dimen/dimen_dp_17"
+                        android:background="@color/white"
                         android:textSize="14sp"
                         android:gravity="center_vertical"
                         android:layout_width="wrap_content"
@@ -208,7 +239,9 @@
                     android:drawableRight="@drawable/right_arrow"
                     android:paddingRight="17dp"
                     android:text="@string/TMT_location"
-                    android:drawableLeft="@drawable/dingwei"/>
+                    android:drawableLeft="@drawable/dingwei"
+                    android:visibility="gone"
+                    />
 
                 <TextView
                     android:id="@+id/main_settings"

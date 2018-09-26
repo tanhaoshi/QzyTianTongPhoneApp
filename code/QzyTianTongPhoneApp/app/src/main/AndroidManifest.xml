@@ -34,7 +34,9 @@
 
         <activity
             android:name=".MainActivity"
-            android:configChanges="orientation">
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -43,32 +45,53 @@
         </activity>
         <activity
             android:name=".activity.UserEditorsActivity"
-            android:theme="@style/CommonViewStyle">
+            android:theme="@style/CommonViewStyle"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation"
+            >
         </activity>
         <activity
             android:name=".activity.SettingsActivity"
-            android:theme="@style/CommonViewStyle">
+            android:theme="@style/CommonViewStyle"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation"
+            >
         </activity>
         <activity
             android:name=".activity.OffLineMapActivity"
-            android:theme="@style/CommonViewStyle">
+            android:theme="@style/CommonViewStyle"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation"
+            >
         </activity>
         <activity
             android:name=".activity.MainAboutActivity"
-            android:theme="@style/CommonViewStyle">
+            android:theme="@style/CommonViewStyle"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation"
+            >
         </activity>
         <activity
             android:name=".activity.TellPhoneActivity"
             android:launchMode="singleTask"
-            android:theme="@style/CommonViewStyle">
+            android:theme="@style/CommonViewStyle"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation"
+            >
         </activity>
         <activity
             android:name=".activity.TellPhoneIncomingActivity"
-            android:theme="@style/CommonViewStyle">
+            android:theme="@style/CommonViewStyle"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation"
+            >
         </activity>
         <activity
             android:name=".activity.ContactsActivity"
-            android:theme="@style/CommonViewStyle">
+            android:theme="@style/CommonViewStyle"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation"
+            >
         </activity>
 
         <service
@@ -79,18 +102,30 @@
 
         <activity
             android:name=".activity.AddContactsActivity"
-            android:theme="@style/CommonViewStyle">
+            android:theme="@style/CommonViewStyle"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation"
+            >
         </activity>
         <activity
             android:name=".activity.SendShortMessageActivity"
             android:theme="@style/CommonViewStyle"
-            android:windowSoftInputMode="stateVisible|adjustResize|stateHidden">
+            android:windowSoftInputMode="stateVisible|adjustResize|stateHidden"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation"
+            >
         </activity>
         <activity
             android:name=".activity.SelectContactsActivity"
-            android:theme="@style/CommonViewStyle">
+            android:theme="@style/CommonViewStyle"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation"
+            >
         </activity>
-        <activity android:name=".activity.DeleteContactsActivity">
+        <activity android:name=".activity.DeleteContactsActivity"
+                  android:screenOrientation="portrait"
+                  android:configChanges="keyboardHidden|orientation"
+            >
         </activity>
 
         <receiver android:name=".receiver.WifiReceiver">

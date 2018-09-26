@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion "27.0.2"
     defaultConfig {
-        applicationId "com.tt.qzy.view"
+        applicationId "com.tt.qzy.view.new"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1

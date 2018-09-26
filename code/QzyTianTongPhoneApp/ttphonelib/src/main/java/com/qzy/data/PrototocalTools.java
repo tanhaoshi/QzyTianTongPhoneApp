@@ -22,6 +22,7 @@ public class PrototocalTools {
         int call_phone_state = 101;
         int tt_phone_signal = 103;
         int phone_send_sms_callback = 107;
+        int tt_phone_battery = 109;
     }
 
 

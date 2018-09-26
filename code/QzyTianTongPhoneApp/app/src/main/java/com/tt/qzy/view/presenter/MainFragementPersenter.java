@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
+import android.text.TextUtils;
 
 import com.qzy.data.PhoneCmd;
 import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
+import com.qzy.tt.data.TtPhoneBatteryProtos;
 import com.qzy.tt.data.TtPhoneSignalProtos;
 import com.qzy.tt.phone.common.CommonData;
 import com.socks.library.KLog;
@@ -72,13 +74,13 @@ public class MainFragementPersenter {
         }
 
         //判断是否连接着天通指定的wifi
-        if (!Constans.STANDARD_WIFI_NAME.equals(NetworkUtil.getConnectWifiSsid(mContext).substring(1, 6))) {
+        String ssid = NetworkUtil.getConnectWifiSsid(mContext);
+        if(TextUtils.isEmpty(ssid) || ssid.length() < 6 || !Constans.STANDARD_WIFI_NAME.equals(ssid.substring(1, 6))){
             NToast.shortToast(mContext, mContext.getString(R.string.TMT_connect_tiantong_please));
             Intent intent = new Intent("android.settings.WIFI_SETTINGS");
             mContext.startActivity(intent);
             return;
         }
-
 
         EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG));
     }
@@ -94,6 +96,30 @@ public class MainFragementPersenter {
         TtPhoneSignalProtos.PhoneSignalStrength signalStrength = (TtPhoneSignalProtos.PhoneSignalStrength) cmd.getMessage();
         int value = signalStrength.getSignalStrength();
         return value;
+    }
+
+    /**
+     * 获取电量level
+     * @param obj
+     * @return
+     */
+    public int getBatteryLevel(Object obj){
+        PhoneCmd cmd = (PhoneCmd) obj;
+        TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery = (TtPhoneBatteryProtos.TtPhoneBattery) cmd.getMessage();
+        int level = ttPhoneBattery.getLevel();
+        return level;
+    }
+
+    /**
+     * 获取 sdcal
+     * @param obj
+     * @return
+     */
+    public int getBatteryScal(Object obj){
+        PhoneCmd cmd = (PhoneCmd) obj;
+        TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery = (TtPhoneBatteryProtos.TtPhoneBattery) cmd.getMessage();
+        int scal = ttPhoneBattery.getLevel();
+        return scal;
     }
 
 

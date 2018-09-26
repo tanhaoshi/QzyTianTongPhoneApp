@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
+import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.SettingsActivity;
@@ -46,6 +47,9 @@ public class MainFragment extends Fragment {
     TextView tmt_noEntry;
     @BindView(R.id.battery)
     TextView battery;
+
+    @BindView(R.id.txtv_signal)
+    TextView txtv_signal;
 
     private MainFragementPersenter mPresneter;
 
@@ -83,14 +87,13 @@ public class MainFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().registerReceiver(mBatInfoReveiver, new IntentFilter(
-                Intent.ACTION_BATTERY_CHANGED));
+        // getActivity().registerReceiver(mBatInfoReveiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        getActivity().unregisterReceiver(mBatInfoReveiver);
+        //getActivity().unregisterReceiver(mBatInfoReveiver);
     }
 
     private void initView() {
@@ -135,17 +138,17 @@ public class MainFragment extends Fragment {
         }
     }
 
-    private BroadcastReceiver mBatInfoReveiver = new BroadcastReceiver() {
+  /*  private BroadcastReceiver mBatInfoReveiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (intent.ACTION_BATTERY_CHANGED.equals(action)) {
                 int level = intent.getIntExtra("level", 0);
                 int scale = intent.getIntExtra("scale", 100);
-                //onBatteryInfoReceiver(level, scale);
+                onBatteryInfoReceiver(level, scale);
             }
         }
-    };
+    };*/
 
     /**
      * 设置连接天通状态显示
@@ -165,8 +168,6 @@ public class MainFragment extends Fragment {
     }
 
 
-
-
     private void onBatteryInfoReceiver(int intLevel, int intScale) {
         int percent = intLevel * 100 / intScale;
         battery.setText(percent + "%");
@@ -174,11 +175,32 @@ public class MainFragment extends Fragment {
 
     /**
      * 更新天通猫信号强度
-     * @param intLevel
+     * AP 信号格数（共 4 档）和 rssi 对应关系建议方案：
+     * RSSI  格数  dBm
+     * 33     3    -95
+     * ≥8    3    ≥-120
+     * 5-7    2    -123~-121
+     * 2-4    1    -126~-124
+     * 0-1    0    -128~-127
+     * 97 限制服务 -141，格数建议显示特殊符号或汉字，如显示不了显示 0 格
+     * 98 告警服务 -140，格数建议显示感叹号或汉字，如显示不了显示 0 格
+     * 99  无服务  -142，格数建议显示特殊符号或汉字，如显示不了显示 0 格
      *
+     * @param intLevel
      */
     private void onTiantongInfoReceiver(int intLevel) {
-        battery.setText(intLevel + "");
+        KLog.i("intLevel = " + intLevel);
+        if (intLevel == 97) {
+            txtv_signal.setText(getString(R.string.TMT_tt_signal_connect_xz));
+        } else if (intLevel == 98) {
+            txtv_signal.setText(getString(R.string.TMT_tt_signal_connect_gj));
+        } else if (intLevel == 99) {
+            txtv_signal.setText(getString(R.string.TMT_tt_signal_scan));
+        } else if (intLevel > 2 && intLevel <= 33) {
+            txtv_signal.setText(getString(R.string.TMT_tt_signal_connect));
+        } else{
+            txtv_signal.setText(getString(R.string.TMT_tt_signal_scan));
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -200,6 +222,9 @@ public class MainFragment extends Fragment {
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SIGNAL:
                 onTiantongInfoReceiver(mPresneter.getTianTongSignalValue(event.getObject()));
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_BATTERY:
+                onBatteryInfoReceiver(mPresneter.getBatteryLevel(event.getObject()), mPresneter.getBatteryScal(event.getObject()));
                 break;
         }
     }

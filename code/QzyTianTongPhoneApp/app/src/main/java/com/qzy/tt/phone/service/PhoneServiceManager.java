@@ -3,6 +3,7 @@ package com.qzy.tt.phone.service;
 import android.content.Context;
 
 
+import com.qzy.QzySensorManager;
 import com.qzy.data.PhoneCmd;
 import com.qzy.data.PhoneStateUtils;
 import com.qzy.eventbus.EventBusUtils;
@@ -28,15 +29,27 @@ public class PhoneServiceManager {
     private Context mContext;
 
 
+    /**
+     * 服务通讯
+     */
     private PhoneNettyManager mPhoneNettyManager;
 
     private AllLocalPcmManager mAllLocalPcmManager;
+
+    /**
+     * sensor
+     *
+     * @param context
+     */
+
+    private QzySensorManager mQzySensorManager;
+
 
     public PhoneServiceManager(Context context) {
         EventBusUtils.register(this);
         mContext = context;
         mPhoneNettyManager = new PhoneNettyManager(context);
-
+        mQzySensorManager = new QzySensorManager(context);
         initProtocal();
     }
 
@@ -127,6 +140,10 @@ public class PhoneServiceManager {
             mPhoneNettyManager.free();
         }
         releaseProtocal();
+
+        if (mQzySensorManager != null) {
+            mQzySensorManager.freeSenerState();
+        }
 
     }
 

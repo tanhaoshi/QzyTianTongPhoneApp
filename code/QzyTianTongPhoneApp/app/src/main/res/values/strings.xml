@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">天通</string>
+    <string name="app_name">新天通</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -75,4 +75,10 @@
     <string name="TMT_connect_sussces_notice">已连接天通</string>
     <string name="TMT_dial_number_notmull">电话号码不能为空</string>
     <string name="TMT_dial_dialing">正在拨号</string>
+
+
+    <string name="TMT_tt_signal_scan">正在搜星中...</string>
+    <string name="TMT_tt_signal_connect">已连接</string>
+    <string name="TMT_tt_signal_connect_xz">限制服务</string>
+    <string name="TMT_tt_signal_connect_gj">告警服务</string>
 </resources>
