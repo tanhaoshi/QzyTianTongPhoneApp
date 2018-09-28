@@ -1,5 +1,6 @@
-package com.tt.qzy.view.layout;
+package com.tt.qzy.view.utils;
 
+import com.tt.qzy.view.bean.MallListModel;
 import com.tt.qzy.view.bean.SortModel;
 
 import java.util.Comparator;
@@ -8,9 +9,10 @@ import java.util.Comparator;
  * Created by qzy009 on 2018/8/23.
  */
 
-public class PinyinComparator implements Comparator<SortModel> {
+public class PinyinComparator implements Comparator<MallListModel> {
 
-    public int compare(SortModel o1, SortModel o2) {
+    @Override
+    public int compare(MallListModel o1, MallListModel o2) {
         if (o1.getLetters().equals("@")
                 || o2.getLetters().equals("#")) {
             return -1;

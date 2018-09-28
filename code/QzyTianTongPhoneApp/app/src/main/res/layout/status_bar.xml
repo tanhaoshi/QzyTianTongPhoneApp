@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/statusLayout"
+    android:layout_width="match_parent"
+    android:layout_height="30dp">
+
+    <ImageView
+        android:id="@+id/img1"
+        android:src="@drawable/battery"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_width="12dp"
+        android:layout_height="wrap_content"/>
+
+    <ImageView
+        android:id="@+id/img2"
+        android:src="@drawable/sim_noconnect"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="8dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_toLeftOf="@+id/img1"
+        />
+
+    <ImageView
+        android:id="@+id/img3"
+        android:src="@drawable/satellite_noconnect"
+        android:layout_marginRight="8dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/img2"
+        android:layout_width="11dp"
+        android:layout_height="10dp"/>
+
+    <ImageView
+        android:id="@+id/img4"
+        android:src="@drawable/phone_nonetwork"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="6dp"
+        android:layout_toLeftOf="@+id/img3"
+        android:layout_width="20dp"
+        android:layout_height="10dp"/>
+
+    <ImageView
+        android:id="@+id/img5"
+        android:src="@drawable/search_nerwork"
+        android:layout_marginRight="6dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/img4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>

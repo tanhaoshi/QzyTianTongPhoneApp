@@ -36,15 +36,13 @@ public class WifiReceiver extends BroadcastReceiver {
         NetworkInfo info = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
 
         if (info.getState().equals(NetworkInfo.State.DISCONNECTED)) {
-
+            //电量当前变化
             Log.i(TAG, "wifi断开");
 
         } else if (info.getState().equals(NetworkInfo.State.CONNECTED)) {
             WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
             WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-            //获取当前wifi名称
             Log.i(TAG, "连接到网络 " + wifiInfo.getSSID());
-            //当修改连接wifi情况下 去修改界面视图
             if(Constans.STANDARD_WIFI_NAME.equals(wifiInfo.getSSID().toString().substring(1,6))){
                 EventBus.getDefault().post(new MainFragmentEvenbus(true,1));
             }

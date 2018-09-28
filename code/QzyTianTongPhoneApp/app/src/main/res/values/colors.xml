@@ -33,4 +33,7 @@
 
     <color name="specialColor">#FFF9F9F9</color>
 
+    <color name="statusColor">#FF27A5D2</color>
+
+    <color name="status_stander_color">#EFEFF0</color>
 </resources>

@@ -66,7 +66,6 @@ public class SendShortMessageActivity extends AppCompatActivity {
     private void initView() {
         //sms_main_quantity.setText(getResources().getString(R.string.TMT_short_message));
         mImageView.setVisibility(View.VISIBLE);
-        mImageView.setImageDrawable(getResources().getDrawable(R.drawable.user));
     }
 
     private void initMsgs() {

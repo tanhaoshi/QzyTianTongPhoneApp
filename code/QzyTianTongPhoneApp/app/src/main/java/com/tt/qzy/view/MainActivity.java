@@ -13,6 +13,7 @@ import android.widget.Button;
 
 
 import com.qzy.tt.phone.service.TtPhoneService;
+import com.tt.qzy.view.activity.base.BaseActivity;
 import com.tt.qzy.view.fragment.AidlPhoneFragment;
 import com.tt.qzy.view.fragment.MailListFragment;
 import com.tt.qzy.view.fragment.MainFragment;
@@ -23,7 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements ShortMessageFragment.OnKeyDownListener{
+public class MainActivity extends BaseActivity implements ShortMessageFragment.OnKeyDownListener{
 
     @BindView(R.id.search_close_btn)
     Button button;
@@ -45,10 +46,21 @@ public class MainActivity extends AppCompatActivity implements ShortMessageFragm
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        setContentView(R.layout.activity_main);
+    }
+
+    @Override
+    public int getContentView() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    public void initView() {
         showMainFragment();
-        ButterKnife.bind(this);
         remind(button,"12");
+    }
+
+    @Override
+    public void initData() {
     }
 
     public void showMainFragment(){
@@ -59,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements ShortMessageFragm
             fragmentTransaction.add(R.id.fragmentContent, mMainFragment);
         }
         commitShowFragment(fragmentTransaction,mMainFragment);
+
+        statusLayout.setBackgroundColor(getResources().getColor(R.color.statusColor));
     }
 
     public void showAidlPhoneFragment(){
@@ -69,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements ShortMessageFragm
             fragmentTransaction.add(R.id.fragmentContent, mAidlPhoneFragment);
         }
         commitShowFragment(fragmentTransaction,mAidlPhoneFragment);
+
+        statusLayout.setBackgroundColor(getResources().getColor(R.color.tab_stander));
     }
 
     public void showShortMeesageFragmnet(){
@@ -80,6 +96,8 @@ public class MainActivity extends AppCompatActivity implements ShortMessageFragm
             fragmentTransaction.add(R.id.fragmentContent, mShortMessageFragment);
         }
         commitShowFragment(fragmentTransaction,mShortMessageFragment);
+
+        statusLayout.setBackgroundColor(getResources().getColor(R.color.tab_stander));
     }
 
     public void showMailListFragmnet(){
@@ -90,6 +108,8 @@ public class MainActivity extends AppCompatActivity implements ShortMessageFragm
             fragmentTransaction.add(R.id.fragmentContent, mMailListFragment);
         }
         commitShowFragment(fragmentTransaction,mMailListFragment);
+
+        statusLayout.setBackgroundColor(getResources().getColor(R.color.tab_stander));
     }
 
     public void commitShowFragment(FragmentTransaction fragmentTransaction, Fragment fragment){

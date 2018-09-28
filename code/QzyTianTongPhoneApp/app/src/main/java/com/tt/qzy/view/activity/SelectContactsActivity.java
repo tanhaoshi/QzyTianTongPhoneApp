@@ -15,7 +15,8 @@ import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.SelectContactsAdapter;
 import com.tt.qzy.view.bean.SortModel;
 import com.tt.qzy.view.layout.ClearEditText;
-import com.tt.qzy.view.layout.PinyinComparator;
+import com.tt.qzy.view.utils.PingyinContacts;
+import com.tt.qzy.view.utils.PinyinComparator;
 import com.tt.qzy.view.layout.SideBar;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.PinyinUtils;
@@ -46,7 +47,7 @@ public class SelectContactsActivity extends AppCompatActivity implements SelectC
     ClearEditText mClearEditText;
 
     private List<SortModel> SourceDateList;
-    private PinyinComparator pinyinComparator;
+    private PingyinContacts pinyinComparator;
     private SelectContactsAdapter adapter;
 
     private String selectContacts="";
@@ -89,7 +90,7 @@ public class SelectContactsActivity extends AppCompatActivity implements SelectC
         base_tv_toolbar_right.setText(getResources().getString(R.string.TMT_yes));
 
         mSideBar.setTextView(mDialog);
-        pinyinComparator = new PinyinComparator();
+        pinyinComparator = new PingyinContacts();
 
         SourceDateList = filledData(getResources().getStringArray(R.array.date));
         final LinearLayoutManager manager = new LinearLayoutManager(this);

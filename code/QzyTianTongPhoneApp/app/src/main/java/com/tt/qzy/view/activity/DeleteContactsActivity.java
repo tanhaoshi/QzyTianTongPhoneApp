@@ -15,10 +15,10 @@ import android.widget.TextView;
 
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.DeleteContactsAdapter;
-import com.tt.qzy.view.adapter.SelectContactsAdapter;
 import com.tt.qzy.view.bean.SortModel;
 import com.tt.qzy.view.layout.ClearEditText;
-import com.tt.qzy.view.layout.PinyinComparator;
+import com.tt.qzy.view.utils.PingyinContacts;
+import com.tt.qzy.view.utils.PinyinComparator;
 import com.tt.qzy.view.layout.PopDeleteContactsWindow;
 import com.tt.qzy.view.layout.PopWindow;
 import com.tt.qzy.view.layout.SideBar;
@@ -52,7 +52,7 @@ public class DeleteContactsActivity extends AppCompatActivity implements DeleteC
     ClearEditText mClearEditText;
 
     private List<SortModel> sourceDateList;
-    private PinyinComparator pinyinComparator;
+    private PingyinContacts pinyinComparator;
     private DeleteContactsAdapter adapter;
 
     private PopDeleteContactsWindow popContactsWindow;
@@ -77,7 +77,7 @@ public class DeleteContactsActivity extends AppCompatActivity implements DeleteC
         base_tv_toolbar_right.setText(getResources().getString(R.string.TMT_delete));
 
         mSideBar.setTextView(mDialog);
-        pinyinComparator = new PinyinComparator();
+        pinyinComparator = new PingyinContacts();
 
         sourceDateList = filledData(getResources().getStringArray(R.array.date));
         final LinearLayoutManager manager = new LinearLayoutManager(this);

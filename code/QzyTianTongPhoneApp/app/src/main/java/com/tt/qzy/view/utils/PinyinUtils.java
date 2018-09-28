@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Service;
 import android.os.Vibrator;
 
+import com.socks.library.KLog;
+
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
@@ -12,7 +14,7 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
 /**
- * Created by qzy009 on 2018/8/23.
+ * Created by ths on 2018/8/23.
  */
 
 public class PinyinUtils {
@@ -28,7 +30,6 @@ public class PinyinUtils {
         format.setCaseType(HanyuPinyinCaseType.LOWERCASE);
         format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
         format.setVCharType(HanyuPinyinVCharType.WITH_V);
-
         char[] input = inputString.trim().toCharArray();
         String output = "";
 

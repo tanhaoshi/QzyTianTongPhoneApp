@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tt.qzy.view.R;
+import com.tt.qzy.view.bean.MallListModel;
 import com.tt.qzy.view.bean.SortModel;
 import com.tt.qzy.view.utils.NToast;
 
@@ -17,10 +18,10 @@ import java.util.List;
 
 public class SortAdapter extends RecyclerView.Adapter<SortAdapter.ViewHolder> {
     private LayoutInflater mInflater;
-    private List<SortModel> mData;
+    private List<MallListModel> mData;
     private Context mContext;
 
-    public SortAdapter(Context context, List<SortModel> data) {
+    public SortAdapter(Context context, List<MallListModel> data) {
         mInflater = LayoutInflater.from(context);
         mData = data;
         this.mContext = context;
@@ -38,7 +39,6 @@ public class SortAdapter extends RecyclerView.Adapter<SortAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final SortAdapter.ViewHolder holder, final int position) {
         int section = getSectionForPosition(position);
-        //如果当前位置等于该分类首字母的Char的位置 ，则认为是第一次出现
         if (position == getPositionForSection(section)) {
             holder.tvTag.setVisibility(View.VISIBLE);
             holder.tvTag.setText(mData.get(position).getLetters());
@@ -97,7 +97,7 @@ public class SortAdapter extends RecyclerView.Adapter<SortAdapter.ViewHolder> {
      * 提供给Activity刷新数据
      * @param list
      */
-    public void updateList(List<SortModel> list){
+    public void updateList(List<MallListModel> list){
         this.mData = list;
         notifyDataSetChanged();
     }
