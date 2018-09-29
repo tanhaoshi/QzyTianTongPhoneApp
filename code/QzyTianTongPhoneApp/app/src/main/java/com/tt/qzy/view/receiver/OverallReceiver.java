@@ -3,6 +3,7 @@ package com.tt.qzy.view.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -10,6 +11,7 @@ import android.util.Log;
 
 import com.tt.qzy.view.evenbus.MainFragmentEvenbus;
 import com.tt.qzy.view.utils.Constans;
+import com.tt.qzy.view.utils.NetworkUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -17,7 +19,7 @@ import org.greenrobot.eventbus.EventBus;
  * Created by qzy009 on 2018/8/28.
  */
 
-public class WifiReceiver extends BroadcastReceiver {
+public class OverallReceiver extends BroadcastReceiver {
 
     private static final String TAG = "wifiReceiver";
 
@@ -28,6 +30,9 @@ public class WifiReceiver extends BroadcastReceiver {
             //wifi的处理
             case WifiManager.NETWORK_STATE_CHANGED_ACTION:
                 wifiState(intent,context);
+                break;
+            case ConnectivityManager.CONNECTIVITY_ACTION:
+                int status = NetworkUtil.getNetWorkState(context);
                 break;
         }
     }
@@ -47,6 +52,10 @@ public class WifiReceiver extends BroadcastReceiver {
                 EventBus.getDefault().post(new MainFragmentEvenbus(true,1));
             }
         }
+    }
+
+    private void networkStatus(int status){
+
     }
 
     private void batteryChanged(Intent intent){

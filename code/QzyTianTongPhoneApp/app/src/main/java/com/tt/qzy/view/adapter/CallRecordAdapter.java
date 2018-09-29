@@ -10,10 +10,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tt.qzy.view.R;
-import com.tt.qzy.view.bean.CallRecordModel;
+import com.tt.qzy.view.db.dao.CallRecordDao;
 
 import java.util.List;
-import java.util.concurrent.FutureTask;
 
 /**
  * Created by qzy009 on 2018/8/24.
@@ -21,7 +20,7 @@ import java.util.concurrent.FutureTask;
 
 public class CallRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    private List<CallRecordModel> mModelList;
+    private List<CallRecordDao> mModelList;
     private Context mContext;
 
     private static final int SPECIAL_VALUE = 1;
@@ -29,9 +28,14 @@ public class CallRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private OnItemClickListener mOnItemClickListener;
 
-    public CallRecordAdapter(List<CallRecordModel> list,Context context){
+    public CallRecordAdapter(List<CallRecordDao> list,Context context){
         this.mModelList = list;
         this.mContext = context;
+    }
+
+    public void setData(List<CallRecordDao> list){
+        this.mModelList = list;
+        notifyDataSetChanged();
     }
 
     @Override

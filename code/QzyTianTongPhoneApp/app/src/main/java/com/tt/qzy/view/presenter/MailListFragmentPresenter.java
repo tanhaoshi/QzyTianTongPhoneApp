@@ -10,6 +10,8 @@ import android.text.TextUtils;
 
 import com.tt.qzy.view.adapter.SortAdapter;
 import com.tt.qzy.view.bean.MallListModel;
+import com.tt.qzy.view.db.dao.MailListDao;
+import com.tt.qzy.view.db.manager.MailListManager;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
 import com.tt.qzy.view.utils.PinyinComparator;
 import com.tt.qzy.view.utils.MallListUtils;
@@ -49,7 +51,13 @@ public class MailListFragmentPresenter extends BasePresenter<MailListView>{
         Observable.create(new ObservableOnSubscribe<List<MallListModel>>() {
             @Override
             public void subscribe(ObservableEmitter<List<MallListModel>> e) throws Exception {
-                e.onNext(MallListUtils.readContacts(context));
+                List<MailListDao> listDaos = MailListManager.getInstance(context).queryMailList();
+                if(listDaos.size() > 0){
+                    e.onNext(mergeData(listDaos,context));
+                }else{
+                    saveInSqlite(context);
+                    e.onNext(MallListUtils.readContacts(context));
+                }
             }
         }).subscribeOn(Schedulers.io())
           .unsubscribeOn(Schedulers.io())
@@ -99,6 +107,44 @@ public class MailListFragmentPresenter extends BasePresenter<MailListView>{
 
         Collections.sort(filterDateList, pinyinComparator);
         sortAdapter.updateList(filterDateList);
+    }
+
+    private List<MallListModel> mergeData(List<MailListDao> listDaos,Context context){
+        List<MallListModel> listModels = new ArrayList<>();
+        for(MailListDao mailListDao : listDaos){
+            listModels.add(new MallListModel(mailListDao.getPhone(),mailListDao.getName()));
+        }
+        listModels.addAll(MallListUtils.readContacts(context));
+        return removeDuplicate(listModels);
+    }
+
+    private void saveInSqlite(Context context){
+        List<MallListModel> list = MallListUtils.readContacts(context);
+        List<MailListDao> mailListDaos = new ArrayList<>();
+        for(MallListModel mallListModel : list){
+            MailListDao mailListDao = new MailListDao();
+            mailListDao.setPhone(mallListModel.getPhone());
+            mailListDao.setName(mallListModel.getName());
+            mailListDaos.add(mailListDao);
+        }
+        MailListManager.getInstance(context).insertMailListList(mailListDaos,context);
+    }
+
+    public List<MallListModel> removeDuplicate(List<MallListModel> list)  {
+        for  ( int  i  =   0 ; i  <  list.size()  -   1 ; i ++ )  {
+            for  ( int  j  =  list.size()  -   1 ; j  >  i; j -- )  {
+                if(list.get(j).getPhone() != null && list.get(i).getPhone()!=null){
+                    if  (list.get(j).getPhone().equals(list.get(i).getPhone()))  {
+                        list.remove(j);
+                    }
+                }else if(list.get(j).getPhone() == null){
+                    list.remove(j);
+                }else if(list.get(i).getPhone() == null){
+                    list.remove(i);
+                }
+            }
+        }
+        return list;
     }
 
 }

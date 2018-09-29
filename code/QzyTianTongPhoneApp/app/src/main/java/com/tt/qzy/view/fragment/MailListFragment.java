@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.AddContactsActivity;
 import com.tt.qzy.view.adapter.SortAdapter;
@@ -36,6 +37,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import hugo.weaving.DebugLog;
 
 public class MailListFragment extends Fragment implements PopWindow.OnDismissListener,MailListView{
 
@@ -190,6 +192,7 @@ public class MailListFragment extends Fragment implements PopWindow.OnDismissLis
 
     @Override
     public void showError(String msg, boolean pullToRefresh) {
+        mHUD.dismiss();
         NToast.shortToast(getActivity(),msg);
     }
 

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.bean.ShortMessageModel;
+import com.tt.qzy.view.db.dao.ShortMessageDao;
 import com.tt.qzy.view.utils.AudioUtil;
 import com.tt.qzy.view.utils.PinyinUtils;
 
@@ -31,7 +32,7 @@ import butterknife.ButterKnife;
 
 public class ShortMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    private List<ShortMessageModel> mModelList;
+    private List<ShortMessageDao> mModelList;
     private Context mContext;
 
     private static final int SPECIAL_VALUE = 1;
@@ -41,10 +42,15 @@ public class ShortMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private HashMap<Integer,View> mHashMap;
 
-    public ShortMessageAdapter(Context context, List<ShortMessageModel> list){
+    public ShortMessageAdapter(Context context, List<ShortMessageDao> list){
         this.mModelList = list;
         this.mContext = context;
         mHashMap = new HashMap<>();
+    }
+
+    public void setData(List<ShortMessageDao> list){
+        this.mModelList = list;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -87,17 +93,17 @@ public class ShortMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 messageViewHolder.mCompatButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(mModelList.get(position).isCheck()){
+                        if(mModelList.get(position).getIsCheck()){
                             messageViewHolder.mCompatButton.setChecked(false);
-                            mModelList.get(position).setCheck(((RadioButton)v).isChecked());
+                            mModelList.get(position).setIsCheck(((RadioButton)v).isChecked());
                         }else{
                             messageViewHolder.mCompatButton.setChecked(true);
-                            mModelList.get(position).setCheck(((RadioButton)v).isChecked());
+                            mModelList.get(position).setIsCheck(((RadioButton)v).isChecked());
                             mOnItemClickListener.onClick(position);
                         }
                     }
                 });
-                if(mModelList.get(position).isCheck()){
+                if(mModelList.get(position).getIsCheck()){
                     messageViewHolder.mCompatButton.setChecked(true);
                     messageViewHolder.mCompatButton.setVisibility(View.VISIBLE);
                 }else{

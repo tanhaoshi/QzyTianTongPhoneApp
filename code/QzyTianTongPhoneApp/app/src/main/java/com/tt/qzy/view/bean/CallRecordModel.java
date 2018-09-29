@@ -6,19 +6,29 @@ package com.tt.qzy.view.bean;
 
 public class CallRecordModel {
     private String phoneNumber;
+    private String name;
     private String address;
     private String state;
     private String date;
     private int isTitle;
     private String titleName;
 
-    public CallRecordModel(String phoneNumber, String address, String state,String date,int isTitle,String titleName) {
+    public CallRecordModel(String phoneNumber,String name, String address, String state,String date,int isTitle,String titleName) {
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.state = state;
         this.date = date;
         this.isTitle = isTitle;
         this.titleName = titleName;
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPhoneNumber() {

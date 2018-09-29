@@ -35,9 +35,9 @@ android {
     }
 
     greendao {
-        schemaVersion 1
+        schemaVersion 3
         targetGenDir 'src/main/java'
-        daoPackage 'com.tt.qzy.view.new.db'
+        daoPackage 'com.tt.qzy.view.db'
     }
 
 }

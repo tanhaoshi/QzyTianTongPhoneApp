@@ -1,5 +1,7 @@
 package com.tt.qzy.view.bean;
 
+import org.greenrobot.greendao.annotation.Id;
+
 /**
  * Created by qzy009 on 2018/8/24.
  */

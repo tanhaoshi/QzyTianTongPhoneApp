@@ -130,7 +130,7 @@
             >
         </activity>
 
-        <receiver android:name=".receiver.WifiReceiver">
+        <receiver android:name=".receiver.OverallReceiver">
             <intent-filter>
                 <action android:name="android.net.wifi.RSSI_CHANGED"/>
                 <action android:name="android.net.wifi.STATE_CHANGE"/>
