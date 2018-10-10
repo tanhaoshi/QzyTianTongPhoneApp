@@ -9,12 +9,15 @@ import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 import com.qzy.netty.NettyClientManager;
 import com.qzy.tt.data.CallPhoneProtos;
+import com.qzy.tt.data.TtOpenBeiDouProtos;
+import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.phone.cmd.CmdHandler;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.SmsBean;
 import com.qzy.utils.IPUtil;
 import com.socks.library.KLog;
+import com.tt.qzy.view.bean.TtBeidouOpenBean;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -39,7 +42,6 @@ public class PhoneNettyManager {
         mNettyClientManager = new NettyClientManager(nettyListener);
         mCmdHandler = new CmdHandler(context);
     }
-
 
     /**
      * 开始连接
@@ -124,6 +126,26 @@ public class PhoneNettyManager {
         sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.phone_send_sms, ttPhoneSms));
     }
 
+    /**
+     * 请求gps准确位置
+     */
+    private void requestGpsPosition(){
+        TtPhonePositionProtos.TtPhonePosition ttPhonePosition = TtPhonePositionProtos.TtPhonePosition.newBuilder()
+                .setRequestStatus(true)
+                .build();
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_gps_position,ttPhonePosition));
+    }
+
+    /**
+     * 打开或关闭天通北斗卫星
+     */
+    private void openBeidou(Object o){
+        TtBeidouOpenBean ttBeidouOpenBean = (TtBeidouOpenBean)o;
+        TtOpenBeiDouProtos.TtOpenBeiDou ttOpenBeiDou = TtOpenBeiDouProtos.TtOpenBeiDou.newBuilder()
+                .setRequestStatus(ttBeidouOpenBean.isSwitch())
+                .build();
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_open_beidou,ttOpenBeiDou));
+    }
 
     private NettyClientManager.INettyListener nettyListener = new NettyClientManager.INettyListener() {
         @Override
@@ -175,6 +197,12 @@ public class PhoneNettyManager {
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS:
                 sendSms(event.getObject());
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_ACCURACY_POSITION:
+                requestGpsPosition();
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_BEIDOU_SWITCH:
+                openBeidou(event.getObject());
                 break;
         }
     }

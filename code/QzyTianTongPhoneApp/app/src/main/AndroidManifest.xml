@@ -8,15 +8,14 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
-    <!--允许访问网络状态的权限-->
+    <!-- 允许访问网络状态的权限 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <!--允许修改网络状态的权限-->
+    <!-- 允许修改网络状态的权限 -->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-    <!--允许修改 WIFI 状态的权限。-->
+    <!-- 允许修改 WIFI 状态的权限。 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <!--允许访问 WIFI 状态的权限-->
+    <!-- 允许访问 WIFI 状态的权限 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <application
@@ -37,8 +36,7 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -47,53 +45,46 @@
         </activity>
         <activity
             android:name=".activity.UserEditorsActivity"
-            android:theme="@style/CommonViewStyle"
-            android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation"
-            >
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonViewStyle">
         </activity>
         <activity
             android:name=".activity.SettingsActivity"
-            android:theme="@style/CommonViewStyle"
-            android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation"
-            >
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonViewStyle">
         </activity>
         <activity
             android:name=".activity.OffLineMapActivity"
-            android:theme="@style/CommonViewStyle"
-            android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation"
-            >
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonViewStyle">
         </activity>
         <activity
             android:name=".activity.MainAboutActivity"
-            android:theme="@style/CommonViewStyle"
-            android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation"
-            >
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonViewStyle">
         </activity>
         <activity
             android:name=".activity.TellPhoneActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/CommonViewStyle"
-            android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation"
-            >
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonViewStyle">
         </activity>
         <activity
             android:name=".activity.TellPhoneIncomingActivity"
-            android:theme="@style/CommonViewStyle"
-            android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation"
-            >
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonViewStyle">
         </activity>
         <activity
             android:name=".activity.ContactsActivity"
-            android:theme="@style/CommonViewStyle"
-            android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation"
-            >
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonViewStyle">
         </activity>
 
         <service
@@ -104,30 +95,27 @@
 
         <activity
             android:name=".activity.AddContactsActivity"
-            android:theme="@style/CommonViewStyle"
-            android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation"
-            >
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonViewStyle">
         </activity>
         <activity
             android:name=".activity.SendShortMessageActivity"
-            android:theme="@style/CommonViewStyle"
-            android:windowSoftInputMode="stateVisible|adjustResize|stateHidden"
-            android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation"
-            >
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonViewStyle"
+            android:windowSoftInputMode="stateVisible|adjustResize|stateHidden">
         </activity>
         <activity
             android:name=".activity.SelectContactsActivity"
-            android:theme="@style/CommonViewStyle"
-            android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation"
-            >
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonViewStyle">
         </activity>
-        <activity android:name=".activity.DeleteContactsActivity"
-                  android:screenOrientation="portrait"
-                  android:configChanges="keyboardHidden|orientation"
-            >
+        <activity
+            android:name=".activity.DeleteContactsActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait">
         </activity>
 
         <receiver android:name=".receiver.OverallReceiver">
@@ -137,6 +125,15 @@
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
             </intent-filter>
         </receiver>
+
+        <activity android:name=".activity.SosSettingsActivity">
+        </activity>
+
+        <service
+            android:name=".service.TimerService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
     </application>
 
 </manifest>

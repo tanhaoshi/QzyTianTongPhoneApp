@@ -18,7 +18,7 @@ import com.qzy.utils.TimeToolUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.layout.dialpad.InputPwdViewCall;
-import com.tt.qzy.view.presenter.TellPhoneActivityPresenter;
+import com.tt.qzy.view.presenter.activity.TellPhoneActivityPresenter;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;

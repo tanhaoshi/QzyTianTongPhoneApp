@@ -1,4 +1,4 @@
-package com.tt.qzy.view.presenter;
+package com.tt.qzy.view.presenter.fragment;
 
 import android.content.Context;
 import android.content.Intent;

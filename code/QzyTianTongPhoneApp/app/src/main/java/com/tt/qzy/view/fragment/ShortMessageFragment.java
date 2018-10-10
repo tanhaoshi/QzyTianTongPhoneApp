@@ -19,20 +19,15 @@ import com.kaopiz.kprogresshud.KProgressHUD;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.SendShortMessageActivity;
 import com.tt.qzy.view.adapter.ShortMessageAdapter;
-import com.tt.qzy.view.bean.ShortMessageModel;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
 import com.tt.qzy.view.layout.PopShortMessageWindow;
 import com.tt.qzy.view.layout.PopWindow;
-import com.tt.qzy.view.presenter.ShortMessagePresenter;
-import com.tt.qzy.view.utils.DateUtil;
+import com.tt.qzy.view.presenter.fragment.ShortMessagePresenter;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.PinyinUtils;
 import com.tt.qzy.view.view.ShortMessageView;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;

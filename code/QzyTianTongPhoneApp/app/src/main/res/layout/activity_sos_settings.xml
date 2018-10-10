@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <include layout="@layout/status_bar"/>
+
+    <include layout="@layout/toobar_layout"/>
+
+    <include layout="@layout/line_dimens"/>
+
+    <LinearLayout
+        android:layout_marginTop="48dp"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="56dp">
+
+        <ImageView
+            android:src="@drawable/cryhelp_phone"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/cryhelp_phone"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:textSize="12sp"
+            android:textColorHint="#8a8a8a"
+            android:background="@null"
+            android:hint="@string/TMT_please_input_phone"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <include layout="@layout/line_dimens"/>
+
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="56dp">
+
+        <ImageView
+            android:src="@drawable/cryhelp_message"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/cryhelp_message"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:textSize="12sp"
+            android:textColorHint="#8a8a8a"
+            android:background="@null"
+            android:hint="@string/TMT_please_input_shortMessage"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <include layout="@layout/line_dimens"/>
+
+    <LinearLayout
+        android:id="@+id/linLayout"
+        android:focusable="true"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="56dp">
+
+        <ImageView
+            android:src="@drawable/cryhelp_timer"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/cryhelp_timer"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:textSize="12sp"
+            android:textColorHint="#8a8a8a"
+            android:hint="@string/TMT_please_input_timetimer"
+            android:background="@null"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_yes"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginTop="38dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/TMT_yes"
+        />
+
+</LinearLayout>

@@ -2,8 +2,6 @@ package com.tt.qzy.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -16,11 +14,9 @@ import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 import com.qzy.ring.RingManager;
-import com.qzy.utils.TimeToolUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
-import com.tt.qzy.view.layout.dialpad.InputPwdViewCall;
-import com.tt.qzy.view.presenter.TellPhoneActivityPresenter;
+import com.tt.qzy.view.presenter.activity.TellPhoneActivityPresenter;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;

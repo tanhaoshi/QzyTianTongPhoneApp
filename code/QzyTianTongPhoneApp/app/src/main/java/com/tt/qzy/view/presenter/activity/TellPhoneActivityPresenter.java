@@ -1,4 +1,4 @@
-package com.tt.qzy.view.presenter;
+package com.tt.qzy.view.presenter.activity;
 
 import android.content.Context;
 

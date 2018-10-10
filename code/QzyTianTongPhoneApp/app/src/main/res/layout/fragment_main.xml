@@ -50,7 +50,7 @@
 
                         <TextView
                             android:id="@+id/main_latitude"
-                            android:text="30.986N"
+                            android:text=""
                             android:textSize="12sp"
                             android:textColor="@color/white"
                             android:layout_marginLeft="6dp"
@@ -74,7 +74,7 @@
 
                         <TextView
                             android:id="@+id/main_longitude"
-                            android:text="103.364E"
+                            android:text=""
                             android:textSize="12sp"
                             android:textColor="@color/white"
                             android:layout_marginLeft="6dp"
@@ -139,37 +139,38 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp">
 
+                <!--<LinearLayout-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="48dp">-->
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/main_signal_quantity"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:drawablePadding="20dp"-->
+                        <!--android:gravity="center_vertical"-->
+                        <!--android:paddingLeft="16dp"-->
+                        <!--android:textSize="14sp"-->
+                        <!--android:background="@color/white"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:text="@string/TMT_quantity"-->
+                        <!--android:drawableLeft="@drawable/tiantong_signal"/>-->
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/txtv_signal"-->
+                        <!--android:textColor="@color/black"-->
+                        <!--android:paddingRight="@dimen/dimen_dp_17"-->
+                        <!--android:textSize="14sp"-->
+                        <!--android:background="@color/white"-->
+                        <!--android:gravity="center_vertical"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="match_parent"/>-->
+
+                <!--</LinearLayout>-->
+
                 <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp">
-
-                    <TextView
-                        android:id="@+id/main_signal_quantity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:drawablePadding="20dp"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="16dp"
-                        android:textSize="14sp"
-                        android:background="@color/white"
-                        android:layout_weight="1"
-                        android:text="@string/TMT_quantity"
-                        android:drawableLeft="@drawable/tiantong_signal"/>
-
-                    <TextView
-                        android:id="@+id/txtv_signal"
-                        android:textColor="@color/black"
-                        android:paddingRight="@dimen/dimen_dp_17"
-                        android:textSize="14sp"
-                        android:background="@color/white"
-                        android:gravity="center_vertical"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"/>
-
-                </LinearLayout>
-
-                <LinearLayout
+                    android:visibility="gone"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="48dp">
@@ -227,21 +228,47 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/main_location"
-                    android:layout_marginTop="7dp"
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:drawablePadding="20dp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="16dp"
                     android:background="@color/white"
-                    android:drawableRight="@drawable/right_arrow"
-                    android:paddingRight="17dp"
-                    android:text="@string/TMT_location"
-                    android:drawableLeft="@drawable/dingwei"
-                    android:visibility="gone"
-                    />
+                    android:layout_height="48dp"
+                    android:layout_marginTop="7dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:drawablePadding="20dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="16dp"
+                        android:layout_weight="1"
+                        android:text="@string/TMT_location"
+                        android:drawableLeft="@drawable/dingwei"/>
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/main_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="12dp"
+                        android:theme="@style/SwitchComputer"
+                        />
+
+                </LinearLayout>
+
+                <!--<TextView-->
+                    <!--android:id="@+id/main_location"-->
+                    <!--android:layout_marginTop="7dp"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="48dp"-->
+                    <!--android:drawablePadding="20dp"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:paddingLeft="16dp"-->
+                    <!--android:background="@color/white"-->
+                    <!--android:drawableRight="@drawable/right_arrow"-->
+                    <!--android:paddingRight="17dp"-->
+                    <!--android:text="@string/TMT_location"-->
+                    <!--android:drawableLeft="@drawable/dingwei"-->
+                    <!--/>-->
 
                 <TextView
                     android:id="@+id/main_settings"

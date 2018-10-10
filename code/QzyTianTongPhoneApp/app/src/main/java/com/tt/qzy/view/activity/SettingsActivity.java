@@ -40,7 +40,8 @@ public class SettingsActivity extends AppCompatActivity {
     public void onClick(View view){
         switch (view.getId()){
             case R.id.settings_sos:
-                ininDialog();
+//                ininDialog();
+                jumpSosSetting();
                 break;
             case R.id.setting_map:
                 Intent intent = new Intent(SettingsActivity.this,OffLineMapActivity.class);
@@ -54,6 +55,11 @@ public class SettingsActivity extends AppCompatActivity {
                 finish();
                 break;
         }
+    }
+
+    private void jumpSosSetting(){
+        Intent intent = new Intent(SettingsActivity.this,SosSettingsActivity.class);
+        startActivity(intent);
     }
 
     public void ininDialog(){

@@ -1,4 +1,4 @@
-package com.tt.qzy.view.presenter;
+package com.tt.qzy.view.presenter.fragment;
 
 import android.Manifest;
 import android.app.Activity;
@@ -55,8 +55,9 @@ public class MailListFragmentPresenter extends BasePresenter<MailListView>{
                 if(listDaos.size() > 0){
                     e.onNext(mergeData(listDaos,context));
                 }else{
-                    saveInSqlite(context);
-                    e.onNext(MallListUtils.readContacts(context));
+                    List<MallListModel> listModels = MallListUtils.readContacts(context);
+                    saveInSqlite(context,listModels);
+                    e.onNext(listModels);
                 }
             }
         }).subscribeOn(Schedulers.io())
@@ -118,8 +119,7 @@ public class MailListFragmentPresenter extends BasePresenter<MailListView>{
         return removeDuplicate(listModels);
     }
 
-    private void saveInSqlite(Context context){
-        List<MallListModel> list = MallListUtils.readContacts(context);
+    private void saveInSqlite(Context context,List<MallListModel> list){
         List<MailListDao> mailListDaos = new ArrayList<>();
         for(MallListModel mallListModel : list){
             MailListDao mailListDao = new MailListDao();

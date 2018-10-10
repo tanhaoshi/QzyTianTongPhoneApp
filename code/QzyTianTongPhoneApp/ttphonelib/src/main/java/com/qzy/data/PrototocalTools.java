@@ -16,6 +16,8 @@ public class PrototocalTools {
         int call_phone = 102;
         int chang_pcmplayer_db = 104;
         int phone_send_sms = 108;
+        int request_gps_position = 110;
+        int request_open_beidou = 112;
     }
 
     public interface IProtoClientIndex{
@@ -23,8 +25,11 @@ public class PrototocalTools {
         int tt_phone_signal = 103;
         int phone_send_sms_callback = 107;
         int tt_phone_battery = 109;
+        int tt_phone_simcard = 111;
+        int tt_phone_beidoustatus = 113;
+        int tt_gps_position = 115;
+        int tt_beidou_switch = 117;
     }
-
 
     public static boolean readToFour0x5aHeaderByte(ByteBufInputStream stream) throws IOException {
         int repeatTimes = 0;

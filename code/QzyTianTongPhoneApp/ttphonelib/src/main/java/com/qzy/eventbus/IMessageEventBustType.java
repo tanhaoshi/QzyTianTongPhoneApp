@@ -19,5 +19,16 @@ public interface IMessageEventBustType {
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS = "event_bus_type_connect_tiantong_send_sms";
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS_STATE = "event_bus_type_connect_tiantong_send_sms_state";
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_BATTERY = "event_bus_type_connect_tiantong_send_battery";
-
+    // 天通sim卡
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_SIM_CARD = "event_bus_type_connect_tiantong_sim_card";
+    // 天通北斗是否连接上
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_BEIDOU = "event_bus_type_connect_tiantong_beidou";
+    // 请求gps精确位置
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_ACCURACY_POSITION = "event_bus_type_connect_request_accuracy_position";
+    // 返回gps精确位置
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_ACCURACY_POSITION = "event_bus_type_connect_response_accuracy_position";
+    // 打开天通北斗卫星连接开关
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_BEIDOU_SWITCH = "event_bus_type_connect_tiantong_beidou_open";
+    // 关闭天通北斗卫星连接开关
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_BEIDOU_SWITCH = "event_bus_type_connect_tiantong_beidou_close";
 }

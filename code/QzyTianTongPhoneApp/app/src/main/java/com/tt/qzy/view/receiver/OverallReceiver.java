@@ -29,7 +29,7 @@ public class OverallReceiver extends BroadcastReceiver {
         switch (intent.getAction()){
             //wifi的处理
             case WifiManager.NETWORK_STATE_CHANGED_ACTION:
-                wifiState(intent,context);
+                //wifiState(intent,context);
                 break;
             case ConnectivityManager.CONNECTIVITY_ACTION:
                 int status = NetworkUtil.getNetWorkState(context);

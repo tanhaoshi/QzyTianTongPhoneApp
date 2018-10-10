@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -19,12 +18,12 @@ import com.tt.qzy.view.fragment.MailListFragment;
 import com.tt.qzy.view.fragment.MainFragment;
 import com.tt.qzy.view.fragment.ShortMessageFragment;
 import com.tt.qzy.view.layout.BadgeView;
+import com.tt.qzy.view.view.MainActivityView;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends BaseActivity implements ShortMessageFragment.OnKeyDownListener{
+public class MainActivity extends BaseActivity<MainActivityView> implements ShortMessageFragment.OnKeyDownListener{
 
     @BindView(R.id.search_close_btn)
     Button button;
@@ -210,5 +209,25 @@ public class MainActivity extends BaseActivity implements ShortMessageFragment.O
     @Override
     public void setOnkeyDown(boolean isKeyDown) {
          this.isOnkeyDown = isKeyDown;
+    }
+
+    @Override
+    public void showProgress(boolean isTrue) {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
+    public void showError(String msg, boolean pullToRefresh) {
+
+    }
+
+    @Override
+    public void loadData(boolean pullToRefresh) {
+
     }
 }

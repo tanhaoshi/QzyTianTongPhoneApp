@@ -40,6 +40,18 @@ android {
         daoPackage 'com.tt.qzy.view.db'
     }
 
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                //这里修改apk文件名
+                //def fileName = "demo_${variant.productFlavors[0].name}-${defaultConfig.versionCode}-${defaultConfig.versionName}-${releaseTime() }.apk"
+                def fileName = "qzytt_view_new.apk"
+                output.outputFile = new File(outputFile.parent, fileName)
+            }
+        }
+    }
+
 }
 
 dependencies {

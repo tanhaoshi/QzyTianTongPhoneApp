@@ -21,7 +21,7 @@ import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.layout.PopWindow;
 import com.tt.qzy.view.layout.dialpad.InputPwdView;
 import com.tt.qzy.view.layout.dialpad.MyInputPwdUtil;
-import com.tt.qzy.view.presenter.AidlPhoneFragmentPersenter;
+import com.tt.qzy.view.presenter.fragment.AidlPhoneFragmentPersenter;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.view.CallRecordView;
 
@@ -184,6 +184,7 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
 
     @Override
     public void loadData(boolean pullToRefresh) {
+        showProgress(true);
         mPersenter.getCallHistroy();
     }
 }

@@ -4,7 +4,10 @@ package com.tt.qzy.view.utils;
  * Created by qzy009 on 2018/8/28.
  */
 
-public class Constans {
+public interface Constans {
     //QzyTTWifi_Tcp_1
-    public static final String STANDARD_WIFI_NAME = "QzyTt";
+    String STANDARD_WIFI_NAME = "QzyTt";
+    String CRY_HELP_PHONE = "cry_help_phone";
+    String CRY_HELP_SHORTMESSAGE = "cry_help_shortmessage";
+    String CRY_HELP_TIMETIMER = "cry_help_time_timer";
 }

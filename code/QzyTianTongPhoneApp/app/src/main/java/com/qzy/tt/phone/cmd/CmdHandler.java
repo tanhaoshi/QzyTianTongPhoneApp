@@ -10,8 +10,12 @@ import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.data.CallPhoneStateProtos;
+import com.qzy.tt.data.TtBeiDouStatuss;
+import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhoneBatteryProtos;
+import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSignalProtos;
+import com.qzy.tt.data.TtPhoneSimCards;
 import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
@@ -55,7 +59,6 @@ public class CmdHandler {
         }
     }
 
-
     /**
      * 分协议id处理消息
      *
@@ -78,9 +81,6 @@ public class CmdHandler {
                             sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_STATE,protoId, callPhoneState);
                         }
                     }
-
-
-
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_phone_signal:
                     TtPhoneSignalProtos.PhoneSignalStrength phoneSignalStrength = TtPhoneSignalProtos.PhoneSignalStrength.parseDelimitedFrom(inputStream);
@@ -93,6 +93,22 @@ public class CmdHandler {
                 case PrototocalTools.IProtoClientIndex.tt_phone_battery:
                     TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery = TtPhoneBatteryProtos.TtPhoneBattery.parseDelimitedFrom(inputStream);
                     sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_BATTERY,protoId, ttPhoneBattery);
+                    break;
+                case PrototocalTools.IProtoClientIndex.tt_phone_simcard:
+                    TtPhoneSimCards.TtPhoneSimCard ttPhoneSimCard = TtPhoneSimCards.TtPhoneSimCard.parseDelimitedFrom(inputStream);
+                    sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SIM_CARD,protoId,ttPhoneSimCard);
+                    break;
+                case PrototocalTools.IProtoClientIndex.tt_phone_beidoustatus:
+                    TtBeiDouStatuss.TtBeiDouStatus ttBeiDouStatus = TtBeiDouStatuss.TtBeiDouStatus.parseDelimitedFrom(inputStream);
+                    sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_BEIDOU,protoId,ttBeiDouStatus);
+                    break;
+                case PrototocalTools.IProtoClientIndex.tt_gps_position:
+                    TtPhonePositionProtos.TtPhonePosition ttPhonePosition = TtPhonePositionProtos.TtPhonePosition.parseDelimitedFrom(inputStream);
+                    sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_ACCURACY_POSITION,protoId,ttPhonePosition);
+                    break;
+                case PrototocalTools.IProtoClientIndex.tt_beidou_switch:
+                    TtOpenBeiDouProtos.TtOpenBeiDou ttOpenBeiDou = TtOpenBeiDouProtos.TtOpenBeiDou.parseDelimitedFrom(inputStream);
+                    sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_BEIDOU_SWITCH,protoId,ttOpenBeiDou);
                     break;
             }
         } catch (Exception e) {
