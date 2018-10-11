@@ -1,0 +1,13 @@
+syntax="proto3";    // 表明使用protobuf的编译器最新的版本为v3
+
+package phonedata;  // proto自己的包  类似于命名空间
+
+option java_package = "com.qzy.tt.data";            //生成java文件的包名
+option java_outer_classname = "TtPhonePositionProtos";  //生成的类名
+
+message TtPhonePosition{
+    string lat_itude = 1; //纬度
+    string long_itude = 2; //经度
+    bool request_status = 3; //请求状态
+    bool response_status = 4; //响应状态
+}
