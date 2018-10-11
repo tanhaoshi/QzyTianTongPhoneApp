@@ -1,7 +1,8 @@
-package com.qzy.rtptest;
+package com.qzy.tiantong.service.rtptest;
 
-import com.qzy.rtptest.audio.AudioWrapper;
-import com.qzy.rtptest.audio.RtpApp;
+
+import com.qzy.tiantong.service.rtptest.audio.AudioWrapper;
+import com.qzy.tiantong.service.rtptest.audio.RtpApp;
 
 import java.io.IOException;
 import java.net.SocketException;

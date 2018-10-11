@@ -1,8 +1,9 @@
-package com.qzy.rtptest.audio.receiver;
+package com.qzy.tiantong.service.rtptest.audio.receiver;
 
 import android.util.Log;
 
-import com.qzy.rtptest.Global;
+
+import com.qzy.tiantong.service.rtptest.Global;
 
 import java.io.IOException;
 import java.io.InputStream;

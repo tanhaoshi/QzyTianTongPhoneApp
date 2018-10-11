@@ -3,24 +3,28 @@ package com.qzy.tiantong.service.service;
 import android.content.Context;
 import android.content.Intent;
 
-import com.qzy.intercom.IntercomManager;
-import com.qzy.tiantong.netty.NettyServerManager;
-import com.qzy.rtptest.Global;
-import com.qzy.rtptest.RtpManager;
+
 import com.qzy.audiosocket.SocketIntercomManager;
-import com.qzy.intercom.util.Constants;
-import com.qzy.tiantong.lib.localsocket.LocalPcmSocketManager;
+
 import com.qzy.locallib.selfpcm.TtPcmIntercomManager;
+
+import com.qzy.tiantong.lib.localsocket.LocalPcmSocketManager;
+import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tiantong.service.intercom.IntercomManager;
+import com.qzy.tiantong.service.intercom.util.Constants;
+import com.qzy.tiantong.service.netty.NettyServerManager;
 import com.qzy.tiantong.service.netty.PhoneNettyManager;
 import com.qzy.tiantong.service.netty.cmd.CmdHandler;
 import com.qzy.tiantong.service.netty.cmd.TianTongHandler;
 import com.qzy.tiantong.service.phone.BroadcastManager;
 import com.qzy.tiantong.service.phone.QzyPhoneManager;
 import com.qzy.tiantong.service.phone.TtPhoneState;
+import com.qzy.tiantong.service.rtptest.Global;
+import com.qzy.tiantong.service.rtptest.RtpManager;
+import com.qzy.tiantong.service.ttpcm.aidl.ReadPcmManager;
+import com.qzy.tiantong.service.ttpcm.aidl.WritePcmManager;
 import com.qzy.tt.data.TtPhoneSmsProtos;
-import com.qzy.tiantong.ttpcm.aidl.ReadPcmManager;
-import com.qzy.tiantong.ttpcm.aidl.WritePcmManager;
-import com.qzy.tiantong.lib.utils.LogUtils;
+
 
 import io.netty.buffer.ByteBufInputStream;
 

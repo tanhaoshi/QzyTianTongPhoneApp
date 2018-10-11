@@ -4,8 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.qzy.tiantong.service.service.TianTongService;
 import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tiantong.service.service.TianTongService;
 
 /**
  * Created by yj.zhang on 2018/7/9/009.

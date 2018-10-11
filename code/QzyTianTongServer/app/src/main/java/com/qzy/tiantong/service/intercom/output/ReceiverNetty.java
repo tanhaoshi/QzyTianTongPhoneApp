@@ -1,14 +1,14 @@
-package com.qzy.intercom.output;
+package com.qzy.tiantong.service.intercom.output;
 
 import android.os.Handler;
 
-import com.qzy.data.PhoneAudioCmd;
-import com.qzy.data.PrototocalTools;
 import com.qzy.tiantong.lib.eventbus.MessageEvent;
-import com.qzy.intercom.data.AudioData;
-import com.qzy.intercom.data.MessageQueue;
-import com.qzy.intercom.job.JobHandler;
+import com.qzy.tiantong.service.intercom.data.AudioData;
+import com.qzy.tiantong.service.intercom.data.MessageQueue;
+import com.qzy.tiantong.service.intercom.job.JobHandler;
 import com.qzy.tt.data.TtPhoneAudioDataProtos;
+import com.qzy.tt.probuf.lib.data.PhoneAudioCmd;
+import com.qzy.tt.probuf.lib.data.PrototocalTools;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

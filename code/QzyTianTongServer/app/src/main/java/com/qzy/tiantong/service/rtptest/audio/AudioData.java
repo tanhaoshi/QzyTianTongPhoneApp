@@ -1,4 +1,4 @@
-package com.qzy.rtptest.audio;
+package com.qzy.tiantong.service.rtptest.audio;
 
 public class AudioData {
 	int size;

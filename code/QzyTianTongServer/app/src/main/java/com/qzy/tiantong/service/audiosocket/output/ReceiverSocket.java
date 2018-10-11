@@ -3,11 +3,12 @@ package com.qzy.audiosocket.output;
 import android.os.Handler;
 import android.os.Message;
 
-import com.qzy.audiosocket.net.OkioSocketManager;
-import com.qzy.intercom.data.AudioData;
-import com.qzy.intercom.data.MessageQueue;
-import com.qzy.intercom.job.JobHandler;
-import com.qzy.intercom.network.Unicast;
+
+import com.qzy.tiantong.service.audiosocket.net.OkioSocketManager;
+import com.qzy.tiantong.service.intercom.data.AudioData;
+import com.qzy.tiantong.service.intercom.data.MessageQueue;
+import com.qzy.tiantong.service.intercom.job.JobHandler;
+import com.qzy.tiantong.service.intercom.network.Unicast;
 
 import java.net.DatagramPacket;
 

@@ -10,8 +10,9 @@ import android.os.IBinder;
 import android.os.PowerManager;
 
 import com.qzy.tiantong.lib.service.CancelNoticeService;
-import com.qzy.tiantong.service.R;
 import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tiantong.service.R;
+
 
 public class TianTongService extends Service {
     private TianTongServiceManager manager;

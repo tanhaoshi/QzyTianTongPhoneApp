@@ -1,7 +1,8 @@
-package com.qzy.intercom.network;
+package com.qzy.tiantong.service.intercom.network;
 
 
-import com.qzy.intercom.util.Constants;
+
+import com.qzy.tiantong.service.intercom.util.Constants;
 
 import java.net.DatagramSocket;
 import java.net.InetAddress;

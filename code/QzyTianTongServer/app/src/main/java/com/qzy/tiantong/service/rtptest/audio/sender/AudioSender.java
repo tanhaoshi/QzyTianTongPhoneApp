@@ -1,8 +1,9 @@
-package com.qzy.rtptest.audio.sender;
+package com.qzy.tiantong.service.rtptest.audio.sender;
 
-import com.qzy.rtptest.Global;
-import com.qzy.rtptest.audio.AudioData;
+
 import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tiantong.service.rtptest.Global;
+import com.qzy.tiantong.service.rtptest.audio.AudioData;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;

@@ -1,4 +1,4 @@
-package com.qzy.tiantong.ttpcm.aidl;
+package com.qzy.tiantong.service.ttpcm.aidl;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -77,7 +77,7 @@ public class ReadPcmManager {
      */
     private void initBinderPcmRead() {
         Intent intent = new Intent();
-        intent.setComponent(new ComponentName("com.qzy.tiantong.read", "com.qzy.tiantong.lib.service.ReadService"));
+        intent.setComponent(new ComponentName("com.qzy.tiantong.read", "com.qzy.tiantong.service.ReadService"));
         mContext.bindService(intent, mReadConnection, Context.BIND_AUTO_CREATE);
     }
 

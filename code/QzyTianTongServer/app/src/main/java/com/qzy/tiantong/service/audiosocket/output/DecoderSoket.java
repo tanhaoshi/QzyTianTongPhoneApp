@@ -2,12 +2,12 @@ package com.qzy.audiosocket.output;
 
 import android.os.Handler;
 
-import com.qzy.intercom.data.AudioData;
-import com.qzy.intercom.data.MessageQueue;
-import com.qzy.intercom.job.JobHandler;
-import com.qzy.intercom.util.AudioDataUtilDe;
-import com.qzy.intercom.util.SpeexUtils;
 import com.qzy.tiantong.lib.utils.ByteUtils;
+import com.qzy.tiantong.service.intercom.data.AudioData;
+import com.qzy.tiantong.service.intercom.data.MessageQueue;
+import com.qzy.tiantong.service.intercom.job.JobHandler;
+import com.qzy.tiantong.service.intercom.util.AudioDataUtilDe;
+import com.qzy.tiantong.service.intercom.util.SpeexUtils;
 
 
 /**

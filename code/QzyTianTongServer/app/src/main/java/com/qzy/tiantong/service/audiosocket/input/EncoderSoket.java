@@ -1,10 +1,10 @@
-package com.qzy.audiosocket.input;
+package com.qzy.tiantong.service.audiosocket.input;
 
 import android.os.Handler;
 
-import com.qzy.intercom.data.AudioData;
-import com.qzy.intercom.data.MessageQueue;
-import com.qzy.intercom.job.JobHandler;
+import com.qzy.tiantong.service.intercom.data.AudioData;
+import com.qzy.tiantong.service.intercom.data.MessageQueue;
+import com.qzy.tiantong.service.intercom.job.JobHandler;
 
 
 /**

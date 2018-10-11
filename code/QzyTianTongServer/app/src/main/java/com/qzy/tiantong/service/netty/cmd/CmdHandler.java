@@ -3,13 +3,13 @@ package com.qzy.tiantong.service.netty.cmd;
 import android.os.Message;
 
 import com.google.protobuf.GeneratedMessageV3;
-import com.qzy.data.PhoneAudioCmd;
-import com.qzy.data.PrototocalTools;
+import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tt.data.CallPhoneProtos;
 import com.qzy.tt.data.ChangePcmPlayerDbProtos;
 import com.qzy.tt.data.TtPhoneAudioDataProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
-import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tt.probuf.lib.data.PhoneAudioCmd;
+import com.qzy.tt.probuf.lib.data.PrototocalTools;
 
 
 import org.greenrobot.eventbus.EventBus;

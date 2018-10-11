@@ -1,4 +1,4 @@
-package com.qzy.rtptest.crash;
+package com.qzy.tiantong.service.rtptest.crash;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;

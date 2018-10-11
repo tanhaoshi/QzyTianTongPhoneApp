@@ -1,11 +1,12 @@
-package com.qzy.intercom.input;
+package com.qzy.tiantong.service.intercom.input;
 
 import android.os.Handler;
 
-import com.qzy.intercom.data.AudioData;
-import com.qzy.intercom.data.MessageQueue;
-import com.qzy.intercom.job.JobHandler;
-import com.qzy.tiantong.ttpcm.TtAudioRecorder;
+
+import com.qzy.tiantong.service.intercom.data.AudioData;
+import com.qzy.tiantong.service.intercom.data.MessageQueue;
+import com.qzy.tiantong.service.intercom.job.JobHandler;
+import com.qzy.tiantong.service.ttpcm.TtAudioRecorder;
 
 
 /**

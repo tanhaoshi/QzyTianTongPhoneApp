@@ -1,8 +1,8 @@
-package com.qzy.rtptest.audio;
+package com.qzy.tiantong.service.rtptest.audio;
 
-import com.qzy.rtptest.audio.receiver.AudioReceiver;
-import com.qzy.rtptest.audio.sender.AudioRecorder;
 
+import com.qzy.tiantong.service.rtptest.audio.receiver.AudioReceiver;
+import com.qzy.tiantong.service.rtptest.audio.sender.AudioRecorder;
 
 public class AudioWrapper {
 

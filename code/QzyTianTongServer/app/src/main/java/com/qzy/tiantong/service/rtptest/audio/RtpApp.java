@@ -1,11 +1,12 @@
-package com.qzy.rtptest.audio;
+package com.qzy.tiantong.service.rtptest.audio;
 
 import android.net.LocalServerSocket;
 import android.net.LocalSocket;
 import android.net.LocalSocketAddress;
 import android.widget.TextView;
 
-import com.qzy.rtptest.Global;
+
+import com.qzy.tiantong.service.rtptest.Global;
 
 import java.io.IOException;
 import java.net.DatagramSocket;

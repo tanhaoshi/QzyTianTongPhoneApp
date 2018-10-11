@@ -1,4 +1,4 @@
-package com.qzy.intercom.job;
+package com.qzy.tiantong.service.intercom.job;
 
 import android.os.Handler;
 

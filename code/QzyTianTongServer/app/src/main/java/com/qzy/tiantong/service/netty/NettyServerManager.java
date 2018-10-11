@@ -1,11 +1,13 @@
-package com.qzy.tiantong.netty;
+package com.qzy.tiantong.service.netty;
 
 import com.google.protobuf.Message;
-import com.qzy.data.PhoneAudioCmd;
-import com.qzy.data.PhoneCmd;
-import com.qzy.data.PrototocalTools;
+
+import com.qzy.tiantong.lib.service.netty.NettyServer;
 import com.qzy.tiantong.lib.utils.ByteUtils;
 import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tt.probuf.lib.data.PhoneAudioCmd;
+import com.qzy.tt.probuf.lib.data.PhoneCmd;
+import com.qzy.tt.probuf.lib.data.PrototocalTools;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;

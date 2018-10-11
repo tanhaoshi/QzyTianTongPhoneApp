@@ -1,4 +1,4 @@
-package com.qzy.tiantong.ttpcm;
+package com.qzy.tiantong.service.ttpcm;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.voice.VoiceManager;

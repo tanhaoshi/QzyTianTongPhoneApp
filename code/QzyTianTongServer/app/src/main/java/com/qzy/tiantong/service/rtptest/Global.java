@@ -1,4 +1,4 @@
-package com.qzy.rtptest;
+package com.qzy.tiantong.service.rtptest;
 
 public class Global {
     public static boolean sendToSelf = false;

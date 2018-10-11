@@ -1,7 +1,8 @@
-package com.qzy.audiosocket.net;
+package com.qzy.tiantong.service.audiosocket.net;
 
-import com.qzy.intercom.util.Constants;
+
 import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tiantong.service.intercom.util.Constants;
 
 import java.io.IOException;
 import java.net.ServerSocket;

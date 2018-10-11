@@ -7,9 +7,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 
-import com.qzy.intercom.IntercomManager;
-import com.qzy.intercom.util.Constants;
 import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tiantong.service.intercom.IntercomManager;
+import com.qzy.tiantong.service.intercom.util.Constants;
+
 
 public class PcmServices extends Service {
 

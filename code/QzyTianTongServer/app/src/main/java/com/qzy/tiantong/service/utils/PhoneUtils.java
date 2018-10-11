@@ -44,4 +44,26 @@ public class PhoneUtils {
         }
         return false;
     }
+
+    /**
+     * 检查是否有sim卡
+     * @param context
+     * @return
+     */
+    public static boolean ishasSimCard(Context context) {
+        TelephonyManager telMgr = (TelephonyManager)
+                context.getSystemService(Context.TELEPHONY_SERVICE);
+        int simState = telMgr.getSimState();
+        boolean result = true;
+        switch (simState) {
+            case TelephonyManager.SIM_STATE_ABSENT:
+                result = false; // 没有SIM卡
+                break;
+            case TelephonyManager.SIM_STATE_UNKNOWN:
+                result = false;
+                break;
+        }
+        return result;
+    }
+
 }

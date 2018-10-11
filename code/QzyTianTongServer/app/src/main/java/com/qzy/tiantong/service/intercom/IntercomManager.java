@@ -1,16 +1,17 @@
-package com.qzy.intercom;
+package com.qzy.tiantong.service.intercom;
 
 import android.os.Handler;
 import android.os.Message;
 
-import com.qzy.intercom.data.MessageQueue;
-import com.qzy.intercom.input.Encoder;
-import com.qzy.intercom.input.Recorder;
-import com.qzy.intercom.input.Sender;
-import com.qzy.intercom.output.Decoder;
-import com.qzy.intercom.output.Receiver;
-import com.qzy.intercom.output.Tracker;
-import com.qzy.intercom.util.SpeexUtils;
+
+import com.qzy.tiantong.service.intercom.data.MessageQueue;
+import com.qzy.tiantong.service.intercom.input.Encoder;
+import com.qzy.tiantong.service.intercom.input.Recorder;
+import com.qzy.tiantong.service.intercom.input.Sender;
+import com.qzy.tiantong.service.intercom.output.Decoder;
+import com.qzy.tiantong.service.intercom.output.Receiver;
+import com.qzy.tiantong.service.intercom.output.Tracker;
+import com.qzy.tiantong.service.intercom.util.SpeexUtils;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

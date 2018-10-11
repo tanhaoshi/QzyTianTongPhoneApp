@@ -3,14 +3,14 @@ package com.qzy.audiosocket;
 import android.os.Handler;
 import android.os.Message;
 
-import com.qzy.audiosocket.input.EncoderSoket;
-import com.qzy.audiosocket.input.RecorderSocket;
-import com.qzy.audiosocket.input.SenderSoket;
 import com.qzy.audiosocket.output.DecoderSoket;
 import com.qzy.audiosocket.output.ReceiverSocket;
 import com.qzy.audiosocket.output.TrackerSoket;
-import com.qzy.intercom.data.MessageQueue;
-import com.qzy.intercom.util.SpeexUtils;
+import com.qzy.tiantong.service.audiosocket.input.EncoderSoket;
+import com.qzy.tiantong.service.audiosocket.input.RecorderSocket;
+import com.qzy.tiantong.service.audiosocket.input.SenderSoket;
+import com.qzy.tiantong.service.intercom.data.MessageQueue;
+import com.qzy.tiantong.service.intercom.util.SpeexUtils;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

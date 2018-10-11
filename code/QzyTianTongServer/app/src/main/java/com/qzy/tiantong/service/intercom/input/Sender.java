@@ -1,13 +1,14 @@
-package com.qzy.intercom.input;
+package com.qzy.tiantong.service.intercom.input;
 
 import android.os.Handler;
 
-import com.qzy.intercom.data.AudioData;
-import com.qzy.intercom.data.MessageQueue;
-import com.qzy.intercom.job.JobHandler;
-import com.qzy.intercom.network.Unicast;
-import com.qzy.intercom.util.Constants;
+
 import com.qzy.tiantong.lib.utils.ByteUtils;
+import com.qzy.tiantong.service.intercom.data.AudioData;
+import com.qzy.tiantong.service.intercom.data.MessageQueue;
+import com.qzy.tiantong.service.intercom.job.JobHandler;
+import com.qzy.tiantong.service.intercom.network.Unicast;
+import com.qzy.tiantong.service.intercom.util.Constants;
 
 import java.net.DatagramPacket;
 

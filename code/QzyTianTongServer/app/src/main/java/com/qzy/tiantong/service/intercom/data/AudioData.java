@@ -1,4 +1,4 @@
-package com.qzy.intercom.data;
+package com.qzy.tiantong.service.intercom.data;
 
 /**
  * Created by yanghao1 on 2017/4/25.

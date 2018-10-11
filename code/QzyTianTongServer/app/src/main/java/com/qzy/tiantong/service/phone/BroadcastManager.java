@@ -6,8 +6,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.text.TextUtils;
 
-import com.qzy.tiantong.service.service.ITianTongServer;
 import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tiantong.service.service.ITianTongServer;
+
 
 /**
  * Created by yj.zhang on 2018/8/3/003.

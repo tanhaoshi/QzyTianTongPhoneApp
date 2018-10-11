@@ -1,4 +1,4 @@
-package com.qzy.intercom.util;
+package com.qzy.tiantong.service.intercom.util;
 
 import android.media.AudioFormat;
 import android.media.AudioManager;

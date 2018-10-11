@@ -1,4 +1,4 @@
-package com.qzy.intercom.util;
+package com.qzy.tiantong.service.intercom.util;
 
 /**
  * Created by jnq on 2016/11/15.

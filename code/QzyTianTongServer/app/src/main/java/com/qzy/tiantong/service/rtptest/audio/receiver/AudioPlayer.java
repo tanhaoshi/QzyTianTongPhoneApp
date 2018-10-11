@@ -1,8 +1,8 @@
-package com.qzy.rtptest.audio.receiver;
+package com.qzy.tiantong.service.rtptest.audio.receiver;
 
 import android.util.Log;
 
-import com.qzy.rtptest.audio.AudioData;
+import com.qzy.tiantong.service.rtptest.audio.AudioData;
 import com.qzy.voice.VoiceManager;
 
 import java.util.concurrent.LinkedBlockingQueue;

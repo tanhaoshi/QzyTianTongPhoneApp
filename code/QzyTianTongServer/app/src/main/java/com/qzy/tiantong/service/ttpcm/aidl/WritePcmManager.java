@@ -1,4 +1,4 @@
-package com.qzy.tiantong.ttpcm.aidl;
+package com.qzy.tiantong.service.ttpcm.aidl;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -77,7 +77,7 @@ public class WritePcmManager {
      */
     private void initBinderPcmWrite() {
         Intent intent = new Intent();
-        intent.setComponent(new ComponentName("com.qzy.tiantong.write", "com.qzy.tiantong.lib.service.WriteService"));
+        intent.setComponent(new ComponentName("com.qzy.tiantong.write", "com.qzy.tiantong.service.WriteService"));
         mContext.bindService(intent, mWriteConnection, Context.BIND_AUTO_CREATE);
     }
 

@@ -2,12 +2,9 @@ package com.qzy.tiantong.service.netty;
 
 import android.content.Context;
 
-import com.qzy.data.PhoneAudioCmd;
-import com.qzy.data.PhoneCmd;
-import com.qzy.data.PrototocalTools;
-import com.qzy.tiantong.lib.eventbus.MessageEvent;
 import com.qzy.led.Netled;
-import com.qzy.tiantong.netty.NettyServerManager;
+import com.qzy.tiantong.lib.eventbus.MessageEvent;
+import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.phone.BatteryManager;
 import com.qzy.tiantong.service.phone.SmsPhoneManager;
 import com.qzy.tiantong.service.phone.TtPhoneState;
@@ -15,7 +12,9 @@ import com.qzy.tt.data.CallPhoneStateProtos;
 import com.qzy.tt.data.TtPhoneBatteryProtos;
 import com.qzy.tt.data.TtPhoneSignalProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
-import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tt.probuf.lib.data.PhoneAudioCmd;
+import com.qzy.tt.probuf.lib.data.PhoneCmd;
+import com.qzy.tt.probuf.lib.data.PrototocalTools;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -68,11 +67,11 @@ public class PhoneNettyManager {
     /**
      * 初始化电量管理
      */
-    private void initBattery(){
+    private void initBattery() {
         mBatteryManager = new BatteryManager(mContext, new BatteryManager.onBatteryListenr() {
             @Override
             public void onBattery(int level, int scal) {
-                if(ttPhoneBattery == null) {
+                if (ttPhoneBattery == null) {
                     ttPhoneBattery = TtPhoneBatteryProtos.TtPhoneBattery.newBuilder()
                             .setLevel(level)
                             .setScale(scal)
@@ -83,11 +82,10 @@ public class PhoneNettyManager {
     }
 
 
-
     /**
      * 初始化发送线程
      */
-    private void initSendThread(){
+    private void initSendThread() {
         mStateThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -109,6 +107,20 @@ public class PhoneNettyManager {
             }
         });
         mStateThread.start();
+    }
+
+
+    /**
+     * 检查netty管理类是否为空
+     *
+     * @return
+     */
+    private boolean checkNettManagerIsNull() {
+        if (mNettyServerManager == null) {
+            LogUtils.e("mNettyServerManager is null ..");
+            return true;
+        }
+        return false;
     }
 
 
@@ -165,13 +177,13 @@ public class PhoneNettyManager {
      * @param phoneState
      */
     private void sendTtCallPhoneStateToClient(CallPhoneStateProtos.CallPhoneState.PhoneState phoneState, String phoneNumber) {
-        if (mNettyServerManager != null) {
-            CallPhoneStateProtos.CallPhoneState callPhoneState = CallPhoneStateProtos.CallPhoneState.newBuilder()
-                    .setPhoneState(phoneState)
-                    .setPhoneNumber(phoneNumber)
-                    .build();
-            mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
-        }
+        if (checkNettManagerIsNull()) return;
+        CallPhoneStateProtos.CallPhoneState callPhoneState = CallPhoneStateProtos.CallPhoneState.newBuilder()
+                .setPhoneState(phoneState)
+                .setPhoneNumber(phoneNumber)
+                .build();
+        mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
+
     }
 
     /**
@@ -187,10 +199,10 @@ public class PhoneNettyManager {
 
     /**
      * 发送电池电量
-     *
      */
     public void sendTtPhoneBatteryToClient() {
-        if (mNettyServerManager != null && ttPhoneBattery != null) {
+        if (checkNettManagerIsNull()) return;
+        if (ttPhoneBattery != null) {
             mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_phone_battery, ttPhoneBattery));
         }
     }
@@ -202,12 +214,19 @@ public class PhoneNettyManager {
      * @param value
      */
     private void sendSignalToPhoneClient(int value) {
-        if (mNettyServerManager != null) {
+        if (checkNettManagerIsNull()) return;
             TtPhoneSignalProtos.PhoneSignalStrength signalStrength = TtPhoneSignalProtos.PhoneSignalStrength.newBuilder()
                     .setSignalStrength(value)
                     .build();
             mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_phone_signal, signalStrength));
-        }
+    }
+
+    /**
+     * 发送sim状态
+     */
+    private void sendSimState() {
+        if (checkNettManagerIsNull()) return;
+
     }
 
 
@@ -227,7 +246,7 @@ public class PhoneNettyManager {
     private SmsPhoneManager.IOnSMSCallback iOnSMSCallback = new SmsPhoneManager.IOnSMSCallback() {
         @Override
         public void onSendSuccess(String ip, String phoneNumber) {
-            if (mNettyServerManager != null) {
+            if (checkNettManagerIsNull()) return;
                 TtPhoneSmsProtos.TtPhoneSms tt = TtPhoneSmsProtos.TtPhoneSms.newBuilder()
                         .setIp(ip)
                         .setPhoneNumber(phoneNumber)
@@ -236,12 +255,11 @@ public class PhoneNettyManager {
                         .setIsReceiverSuccess(false)
                         .build();
                 mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.phone_send_sms_callback, tt));
-            }
         }
 
         @Override
         public void onSendFailed(String ip, String phoneNumber) {
-            if (mNettyServerManager != null) {
+            if (checkNettManagerIsNull()) return;
                 TtPhoneSmsProtos.TtPhoneSms tt = TtPhoneSmsProtos.TtPhoneSms.newBuilder()
                         .setIp(ip)
                         .setPhoneNumber(phoneNumber)
@@ -250,12 +268,11 @@ public class PhoneNettyManager {
                         .setIsReceiverSuccess(false)
                         .build();
                 mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.phone_send_sms_callback, tt));
-            }
         }
 
         @Override
         public void onReceiveSuccess(String ip, String phoneNumber) {
-            if (mNettyServerManager != null) {
+            if (checkNettManagerIsNull()) return;
                 TtPhoneSmsProtos.TtPhoneSms tt = TtPhoneSmsProtos.TtPhoneSms.newBuilder()
                         .setIp(ip)
                         .setPhoneNumber(phoneNumber)
@@ -264,12 +281,11 @@ public class PhoneNettyManager {
                         .setIsReceiverSuccess(true)
                         .build();
                 mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.phone_send_sms_callback, tt));
-            }
         }
 
         @Override
         public void onReceiveFailed(String ip, String phoneNumber) {
-            if (mNettyServerManager != null) {
+            if (checkNettManagerIsNull()) return;
                 TtPhoneSmsProtos.TtPhoneSms tt = TtPhoneSmsProtos.TtPhoneSms.newBuilder()
                         .setIp(ip)
                         .setPhoneNumber(phoneNumber)
@@ -278,7 +294,6 @@ public class PhoneNettyManager {
                         .setIsReceiverSuccess(false)
                         .build();
                 mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.phone_send_sms_callback, tt));
-            }
         }
     };
 
@@ -300,6 +315,7 @@ public class PhoneNettyManager {
             Netled.setNetledFlash(false);
         }
     }
+
 
     /**
      * 是否控制信号灯

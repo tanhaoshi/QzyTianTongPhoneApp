@@ -1,12 +1,12 @@
-package com.qzy.intercom.output;
+package com.qzy.tiantong.service.intercom.output;
 
 import android.os.Handler;
 import android.os.Message;
 
-import com.qzy.intercom.job.JobHandler;
-import com.qzy.intercom.network.Unicast;
-import com.qzy.intercom.util.Command;
-import com.qzy.tiantong.ttpcm.TtAudioTrack;
+import com.qzy.tiantong.service.intercom.job.JobHandler;
+import com.qzy.tiantong.service.intercom.network.Unicast;
+import com.qzy.tiantong.service.intercom.util.Command;
+import com.qzy.tiantong.service.ttpcm.TtAudioTrack;
 
 import java.net.DatagramPacket;
 

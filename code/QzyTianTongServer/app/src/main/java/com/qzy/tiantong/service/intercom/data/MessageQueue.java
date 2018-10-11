@@ -1,4 +1,4 @@
-package com.qzy.intercom.data;
+package com.qzy.tiantong.service.intercom.data;
 
 import android.support.annotation.IntDef;
 
