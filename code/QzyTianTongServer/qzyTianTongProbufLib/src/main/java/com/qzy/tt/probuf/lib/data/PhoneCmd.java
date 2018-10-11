@@ -1,27 +1,26 @@
-package com.qzy.data;
+package com.qzy.tt.probuf.lib.data;
 
 import com.google.protobuf.GeneratedMessageV3;
-import com.qzy.tiantong.lib.eventbus.MessageEvent;
 
 /**
  * Created by yj.zhang on 2018/7/31/031.
  */
 
-public class PhoneAudioCmd extends MessageEvent{
+public class PhoneCmd {
 
     private int protoId = -1;  // 协议id
 
     private GeneratedMessageV3 message;
 
-    private PhoneAudioCmd() {
+    private PhoneCmd() {
 
     }
 
-    private PhoneAudioCmd(int protoId) {
+    private PhoneCmd(int protoId) {
         this.protoId = protoId;
     }
 
-    private PhoneAudioCmd(int protoId, GeneratedMessageV3 msg) {
+    private PhoneCmd(int protoId, GeneratedMessageV3 msg) {
         this.protoId = protoId;
         message = msg;
     }
@@ -42,12 +41,12 @@ public class PhoneAudioCmd extends MessageEvent{
         this.message = message;
     }
 
-    public static final PhoneAudioCmd getPhoneAudioCmd(int protoId) {
-        return new PhoneAudioCmd(protoId);
+    public static final PhoneCmd getPhoneCmd(int protoId) {
+        return new PhoneCmd(protoId);
     }
 
-    public static final PhoneAudioCmd getPhoneAudioCmd(int protoId, GeneratedMessageV3 msg) {
-        return new PhoneAudioCmd(protoId, msg);
+    public static final PhoneCmd getPhoneCmd(int protoId, GeneratedMessageV3 msg) {
+        return new PhoneCmd(protoId, msg);
     }
 
 }

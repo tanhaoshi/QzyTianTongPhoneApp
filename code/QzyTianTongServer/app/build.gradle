@@ -41,6 +41,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.squareup.okio:okio:1.9.0'
     compile project(':qzyTianTongProbufLib')
-    compile project(':qzytiantonglocallib')
     compile project(':rtptest')
+    compile project(':qzytiantonglocallib')
 }

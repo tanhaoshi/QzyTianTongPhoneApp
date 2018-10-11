@@ -1,4 +1,4 @@
-package com.qzy.data;
+package com.qzy.tt.probuf.lib.data;
 
 import java.io.IOException;
 

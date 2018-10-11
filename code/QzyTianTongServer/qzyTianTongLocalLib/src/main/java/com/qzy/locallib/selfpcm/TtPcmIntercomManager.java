@@ -3,7 +3,7 @@ package com.qzy.locallib.selfpcm;
 import com.qzy.locallib.selfpcm.jni.LocalPcmManager;
 import com.qzy.locallib.selfpcm.udp.UdpServiceManagerSpexx;
 import com.qzy.locallib.selfpcm.voice.VoiceReaderSpexx;
-import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.lib.utils.LogUtils;
 
 /**
  * Created by yj.zhang on 2018/8/10.
