@@ -9,4 +9,6 @@ public interface MainFragmentView extends BaseView{
     void getTtPhonePosition(TtPhonePositionProtos.TtPhonePosition ttPhonePosition);
 
     void getTtBeiDouSwitch(TtOpenBeiDouProtos.TtOpenBeiDou ttOpenBeiDou);
+
+    void updateConnectedState(boolean isConnected);
 }

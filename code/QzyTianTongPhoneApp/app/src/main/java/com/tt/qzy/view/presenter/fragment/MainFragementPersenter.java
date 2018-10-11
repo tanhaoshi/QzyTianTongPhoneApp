@@ -10,6 +10,7 @@ import com.qzy.data.PhoneCmd;
 import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
+import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhoneBatteryProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
@@ -30,6 +31,8 @@ import com.tt.qzy.view.view.MainFragmentView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
 
 /**
  * Created by yj.zhang on 2018/9/17.
@@ -109,7 +112,6 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
                 TtBeidouOpenBean(isSwitch)));
     }
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
@@ -118,6 +120,12 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_BEIDOU_SWITCH:
                 parseBeiDouSwitch(event.getObject());
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SUCCESS:
+                mView.get().updateConnectedState(true);
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_FAILED:
+                mView.get().updateConnectedState(false);
                 break;
         }
     }
@@ -132,6 +140,10 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
         mView.get().getTtPhonePosition(ttPhonePosition);
     }
 
+    /**
+     * 解析天通猫北斗开关是否打开
+     * @param object
+     */
     private void parseBeiDouSwitch(Object object){
         PhoneCmd cmd = (PhoneCmd)object;
         TtOpenBeiDouProtos.TtOpenBeiDou ttOpenBeiDou = (TtOpenBeiDouProtos.TtOpenBeiDou)cmd.getMessage();
@@ -158,8 +170,6 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
         intent.putExtra("diapadNumber", phoneNumber);
         mContext.startActivity(intent);
     }
-
-
 
     public void release(){
         EventBus.getDefault().unregister(this);

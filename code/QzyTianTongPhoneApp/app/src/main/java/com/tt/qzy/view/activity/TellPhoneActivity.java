@@ -14,6 +14,7 @@ import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 
+import com.qzy.utils.LogUtils;
 import com.qzy.utils.TimeToolUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
@@ -70,6 +71,8 @@ public class TellPhoneActivity extends AppCompatActivity {
             }
         });
 
+        countTime();
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -120,6 +123,12 @@ public class TellPhoneActivity extends AppCompatActivity {
         }
     };
 
+    long startTime = 0;
+    int count = 5;
+    private void countTime(){
+        startTime = System.currentTimeMillis();
+    }
+
 
     /**
      * 通话状态
@@ -144,16 +153,37 @@ public class TellPhoneActivity extends AppCompatActivity {
      */
     private void updatePhoneState(PhoneCmd cmd) {
         KLog.i("phone state = " + PhoneStateUtils.getTtPhoneState(cmd).ordinal());
+
         switch (PhoneStateUtils.getTtPhoneState(cmd)) {
             case NOCALL:
+                long timeDuration1 = System.currentTimeMillis() - startTime;
+                LogUtils.e("timeDuration1 = " + timeDuration1 + " count = " + count);
+                if(timeDuration1 < 5 * 1000 && count > 0){
+                    EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber.getText().toString()));
+                    count --;
+                    countTime();
+                    break;
+                }
                 onEndCallState();
                 break;
             case RING:
                 break;
             case CALL:
+                long timeDuration = System.currentTimeMillis() - startTime;
+                if(timeDuration < 5 * 1000){
+                    break;
+                }
                 onCallingState();
                 break;
             case HUANGUP:
+                long timeDuration2 = System.currentTimeMillis() - startTime;
+                LogUtils.e("timeDuration2 = " + timeDuration2 + " count = " + count);
+                if(timeDuration2 < 5 * 1000 && count > 0){
+                    EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber.getText().toString()));
+                    count --;
+                    countTime();
+                    break;
+                }
                 onEndCallState();
                 break;
             case INCOMING:

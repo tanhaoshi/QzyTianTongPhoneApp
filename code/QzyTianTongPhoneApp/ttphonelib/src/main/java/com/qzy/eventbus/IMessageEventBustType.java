@@ -31,4 +31,8 @@ public interface IMessageEventBustType {
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_BEIDOU_SWITCH = "event_bus_type_connect_tiantong_beidou_open";
     // 关闭天通北斗卫星连接开关
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_BEIDOU_SWITCH = "event_bus_type_connect_tiantong_beidou_close";
+    // 请求天通猫通话记录
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_CALL_RECORD = "event_bus_type_connect_tiantong_request_call_record";
+    // 返回天通猫通话记录
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_CALL_RECORD = "event_bus_type_connect_tiantong_response_call_record";
 }

@@ -11,6 +11,7 @@ import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.data.CallPhoneStateProtos;
 import com.qzy.tt.data.TtBeiDouStatuss;
+import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhoneBatteryProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
@@ -109,6 +110,10 @@ public class CmdHandler {
                 case PrototocalTools.IProtoClientIndex.tt_beidou_switch:
                     TtOpenBeiDouProtos.TtOpenBeiDou ttOpenBeiDou = TtOpenBeiDouProtos.TtOpenBeiDou.parseDelimitedFrom(inputStream);
                     sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_BEIDOU_SWITCH,protoId,ttOpenBeiDou);
+                    break;
+                case PrototocalTools.IProtoClientIndex.tt_call_record:
+                    TtCallRecordProtos.TtCallRecordProto ttCallRecordProto = TtCallRecordProtos.TtCallRecordProto.parseDelimitedFrom(inputStream);
+                    sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_CALL_RECORD,protoId,ttCallRecordProto);
                     break;
             }
         } catch (Exception e) {

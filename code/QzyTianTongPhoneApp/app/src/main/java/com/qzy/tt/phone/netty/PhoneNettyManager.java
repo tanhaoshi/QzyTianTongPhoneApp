@@ -9,6 +9,7 @@ import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 import com.qzy.netty.NettyClientManager;
 import com.qzy.tt.data.CallPhoneProtos;
+import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
@@ -147,6 +148,16 @@ public class PhoneNettyManager {
         sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_open_beidou,ttOpenBeiDou));
     }
 
+    /**
+     * 请求通话记录
+     */
+    private void requestCallRecord(){
+        TtCallRecordProtos.TtCallRecordProto ttCallRecordProto = TtCallRecordProtos.TtCallRecordProto.newBuilder()
+                .setRequest(true)
+                .build();
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_call_record,ttCallRecordProto));
+    }
+
     private NettyClientManager.INettyListener nettyListener = new NettyClientManager.INettyListener() {
         @Override
         public void onReceiveData(ByteBufInputStream inputStream) {
@@ -203,6 +214,9 @@ public class PhoneNettyManager {
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_BEIDOU_SWITCH:
                 openBeidou(event.getObject());
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_CALL_RECORD:
+                requestCallRecord();
                 break;
         }
     }

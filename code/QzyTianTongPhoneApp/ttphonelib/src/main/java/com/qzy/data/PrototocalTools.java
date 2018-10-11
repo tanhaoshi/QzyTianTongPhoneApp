@@ -18,6 +18,7 @@ public class PrototocalTools {
         int phone_send_sms = 108;
         int request_gps_position = 110;
         int request_open_beidou = 112;
+        int request_call_record = 114;
     }
 
     public interface IProtoClientIndex{
@@ -29,6 +30,7 @@ public class PrototocalTools {
         int tt_phone_beidoustatus = 113;
         int tt_gps_position = 115;
         int tt_beidou_switch = 117;
+        int tt_call_record = 119;
     }
 
     public static boolean readToFour0x5aHeaderByte(ByteBufInputStream stream) throws IOException {

@@ -91,6 +91,7 @@ public class MailListFragment extends Fragment implements PopWindow.OnDismissLis
         ButterKnife.bind(this, view);
         initView();
         initAdapter();
+        loadData(true);
         return view;
     }
 
@@ -197,12 +198,11 @@ public class MailListFragment extends Fragment implements PopWindow.OnDismissLis
     @Override
     public void onStart() {
         super.onStart();
-        showProgress(true);
-        loadData(true);
     }
 
     @Override
     public void loadData(boolean pullToRefresh) {
+        showProgress(true);
         mPresenter.getMallList(getActivity());
     }
 

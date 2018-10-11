@@ -184,7 +184,13 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
 
     @Override
     public void loadData(boolean pullToRefresh) {
-        showProgress(true);
-        mPersenter.getCallHistroy();
+        //showProgress(true);
+        mPersenter.requestCallRecord();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mPersenter.release();
     }
 }

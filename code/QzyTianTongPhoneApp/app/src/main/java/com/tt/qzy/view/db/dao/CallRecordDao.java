@@ -1,5 +1,8 @@
 package com.tt.qzy.view.db.dao;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
@@ -37,6 +40,17 @@ public class CallRecordDao {
         this.date = date;
         this.isTitle = isTitle;
         this.titleName = titleName;
+        this.isTitle = 0;
+        this.titleName = "";
+    }
+
+    public CallRecordDao(String phoneNumber, String name, String address,
+                         String state, String date){
+        this.phoneNumber = phoneNumber;
+        this.name = name;
+        this.address = address;
+        this.state = state;
+        this.date = date;
     }
 
     @Generated(hash = 1511194593)

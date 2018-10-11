@@ -17,6 +17,7 @@ import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.SettingsActivity;
 import com.tt.qzy.view.presenter.fragment.MainFragementPersenter;
+import com.tt.qzy.view.service.TimerService;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.NetworkUtil;
@@ -51,6 +52,8 @@ public class MainFragment extends Fragment implements MainFragmentView{
 
     private MainFragementPersenter mPresneter;
     private MainActivity mainActivity;
+
+    private Intent mIntent;
 
     public MainFragment() {
     }
@@ -98,7 +101,6 @@ public class MainFragment extends Fragment implements MainFragmentView{
 
         if(mainActivity.isConnectStatus()){
             loadData(true);
-
             if(mainActivity.isConnectBeiDou()){
                 main_location.setChecked(true);
             }else{
@@ -110,37 +112,40 @@ public class MainFragment extends Fragment implements MainFragmentView{
     }
 
     private void initListener(){
-        main_location.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(mainActivity.isConnectStatus()){
-                    if(isChecked){
-                        mPresneter.openTianTongBeidou(true);
-                    }else{
-                        mPresneter.openTianTongBeidou(false);
-                    }
-                }else{
-                    NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
-                }
-            }
-        });
-        sc_settin_testxinlv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(!SPUtils.containsShare(getActivity(), Constans.CRY_HELP_PHONE)){
-                    NToast.shortToast(getActivity(),getString(R.string.TMT_remind));
-                }
-                if(mainActivity.isConnectStatus()){
-                    if(isChecked){
-                        mPresneter.dialPhone(SPUtils.getShare(getActivity(),Constans.CRY_HELP_PHONE,"").toString());
-                    }else{
-                        //关闭的话,要干嘛呢 把服务关闭
-                    }
-                }else{
-                    NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
-                }
-            }
-        });
+//        main_location.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if(mainActivity.isConnectStatus()){
+//                    if(isChecked){
+//                        mPresneter.openTianTongBeidou(true);
+//                    }else{
+//                        mPresneter.openTianTongBeidou(false);
+//                    }
+//                }else{
+//                    NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
+//                }
+//            }
+//        });
+//        sc_settin_testxinlv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if(!SPUtils.containsShare(getActivity(), Constans.CRY_HELP_PHONE)){
+//                    NToast.shortToast(getActivity(),getString(R.string.TMT_remind));
+//                    return;
+//                }
+//                if(mainActivity.isConnectStatus()){
+//                    if(isChecked){
+//                        mPresneter.dialPhone(SPUtils.getShare(getActivity(),Constans.CRY_HELP_PHONE,"").toString());
+//                        mIntent = new Intent(getActivity(),TimerService.class);
+//                        getActivity().startService(mIntent);
+//                    }else{
+//                        getActivity().stopService(mIntent);
+//                    }
+//                }else{
+//                    NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
+//                }
+//            }
+//        });
     }
 
     @OnClick({R.id.main_editors, R.id.main_settings, R.id.tmt_noEntry})
@@ -160,7 +165,6 @@ public class MainFragment extends Fragment implements MainFragmentView{
 
     /**
      * 设置连接天通状态显示
-     *
      * @param isConnected
      */
     private void setConnectStateView(boolean isConnected) {
@@ -207,6 +211,11 @@ public class MainFragment extends Fragment implements MainFragmentView{
         }else{
             main_location.setChecked(false);
         }
+    }
+
+    @Override
+    public void updateConnectedState(boolean isConnected) {
+        setConnectStateView(isConnected);
     }
 
     @Override

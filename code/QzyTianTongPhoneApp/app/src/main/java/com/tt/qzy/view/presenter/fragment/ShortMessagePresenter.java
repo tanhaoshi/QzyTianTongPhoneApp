@@ -78,17 +78,17 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
 
     public List<ShortMessageDao> arrangementData(List<ShortMessageDao> list){
         List<ShortMessageDao> mModelList = new ArrayList<>();
-        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-28 14:33:24",0,""));
-        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-25 14:33:24",0,""));
-        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-20 14:33:24",0,""));
-        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-30 9:33:24",0,""));
-        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-29 14:33:24",0,""));
-        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-29 18:33:24",0,""));
-        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-27 14:33:24",0,""));
-        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-23 14:33:24",0,""));
-        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-24 14:33:24",0,""));
-        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-20 14:33:24",0,""));
-        if(list.size()>=0){
+//        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-28 14:33:24",0,""));
+//        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-25 14:33:24",0,""));
+//        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-20 14:33:24",0,""));
+//        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-30 9:33:24",0,""));
+//        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-29 14:33:24",0,""));
+//        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-29 18:33:24",0,""));
+//        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-27 14:33:24",0,""));
+//        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-23 14:33:24",0,""));
+//        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-24 14:33:24",0,""));
+//        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-20 14:33:24",0,""));
+        if(list.size()>0){
             sortData(list);
             mModelList.add(new ShortMessageDao("","","",1,"今天"));
             for(ShortMessageDao shortMessageModel : list){
