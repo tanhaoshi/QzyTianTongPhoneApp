@@ -1,0 +1,18 @@
+syntax = "proto3"; // 表明使用protobuf的编译器最新的版本为v3
+
+package phonedata; // proto自己的包  类似于命名空间
+
+option java_package = "com.qzy.tt.data"; //生成java文件的包名
+option java_outer_classname = "TtPhoneSmsProtos"; //生成的类名
+
+message TtPhoneSms {
+    string ip = 1;
+    string phoneNumber = 2;
+    bool isSend = 3; //是否是发送  否为返回
+    bool isSendSuccess = 4;
+    bool isReceiverSuccess = 5; //对方是否成功接收短信
+    string messageText = 6;
+
+
+}
+

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 
+import com.qzy.tiantong.lib.utils.LogUtils;
+
 import java.lang.reflect.Method;
 
 /**
@@ -12,7 +14,7 @@ import java.lang.reflect.Method;
 
 public class WifiUtils {
     // wifi热点开关
-    public static boolean setWifiApEnabled(Context context, boolean enabled) {
+    public static boolean setWifiApEnabled(Context context, String ssid, String passwd, boolean enabled) {
         try {
             WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
             if (enabled) { // disable WiFi in any case
@@ -23,9 +25,10 @@ public class WifiUtils {
             //热点的配置类
             WifiConfiguration apConfig = new WifiConfiguration();
             //配置热点的名称(可以在名字后面加点随机数什么的)
-            apConfig.SSID = "QzyTTWifi_zyj";
+            apConfig.SSID = ssid;
             //配置热点的密码
-            apConfig.preSharedKey = "12345678";
+            apConfig.preSharedKey = passwd;
+            LogUtils.e("ssid = " + ssid + " passwd = " + passwd);
             apConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
             //通过反射调用设置热点
             Method method = wifiManager.getClass().getMethod("setWifiApEnabled", WifiConfiguration.class, Boolean.TYPE);

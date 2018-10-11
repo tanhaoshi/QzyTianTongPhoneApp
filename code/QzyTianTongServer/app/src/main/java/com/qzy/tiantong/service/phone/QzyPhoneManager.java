@@ -3,19 +3,24 @@ package com.qzy.tiantong.service.phone;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 
 import com.android.internal.telephony.ITelephony;
+import com.qzy.tiantong.service.contants.QzyTtContants;
 import com.qzy.tiantong.service.service.ITianTongServer;
 import com.qzy.tiantong.service.utils.PhoneUtils;
 import com.qzy.tiantong.service.utils.WifiUtils;
-import com.qzy.utils.LogUtils;
+import com.qzy.tiantong.lib.utils.LogUtils;
 
 import java.lang.reflect.Method;
+import java.util.UUID;
 
 /**
  * Created by yj.zhang on 2018/8/3/003.
@@ -31,9 +36,29 @@ public class QzyPhoneManager {
         mServer = server;
 
         //打开WiFi
-        WifiUtils.setWifiApEnabled(context, true);
+        WifiUtils.setWifiApEnabled(context, getSsidName(), QzyTtContants.WIFI_PASSWD, true);
 
         setPhoneListener();
+    }
+
+    private String getSsidName() {
+        String ssid = getSsidToSharedpref();
+        if (TextUtils.isEmpty(ssid)) {
+            ssid = QzyTtContants.WIFI_SSID + UUID.randomUUID().toString().substring(0, 6);
+            setSsidToSharedpref(ssid);
+        }
+        return ssid;
+    }
+
+    private void setSsidToSharedpref(String ssid) {
+        SharedPreferences sp = mContext.getSharedPreferences("tt_server_config", Context.MODE_PRIVATE);
+        sp.edit().putString("wifi_ssid", ssid).commit();
+    }
+
+    private String getSsidToSharedpref() {
+        SharedPreferences sp = mContext.getSharedPreferences("tt_server_config", Context.MODE_PRIVATE);
+        String ssid = sp.getString("wifi_ssid", "");
+        return ssid;
     }
 
     /**
@@ -68,6 +93,21 @@ public class QzyPhoneManager {
         endCall();
     }
 
+    /**
+     * 接听电话
+     */
+    public void acceptCalling() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean state = answerRingCall();
+            }
+        }).start();
+
+        sendPhoneCalling();
+    }
+
+
     private void endCall() {
         // IBinder iBinder = ServiceManager.getService(TELEPHONY_SERVICE);
         // ServiceManager 是被系统隐藏掉了 所以只能用反射的方法获取
@@ -77,21 +117,71 @@ public class QzyPhoneManager {
             ITelephony telephony = ITelephony.Stub.asInterface(binder);
             telephony.endCall();
             LogUtils.d("endcall .....");
+            sendPhonehangup();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void answerRingCall() {
+    private boolean answerRingCall() {
         // IBinder iBinder = ServiceManager.getService(TELEPHONY_SERVICE);
         // ServiceManager 是被系统隐藏掉了 所以只能用反射的方法获取
+        LogUtils.d("answerRingCall start ..");
+
         try {
             Method method = Class.forName("android.os.ServiceManager").getMethod("getService", String.class);
             IBinder binder = (IBinder) method.invoke(null, new Object[]{Context.TELEPHONY_SERVICE});
             ITelephony telephony = ITelephony.Stub.asInterface(binder);
-            telephony.endCall();
+            telephony.answerRingingCall();
+            LogUtils.d("answerRingCall .....");
+            return true;
+
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtils.e("Sandy", e);
+            try {
+                LogUtils.e("Sandy", e);
+                Intent intent = new Intent("android.intent.action.MEDIA_BUTTON");
+                KeyEvent keyEvent = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_HEADSETHOOK);
+                intent.putExtra("android.intent.extra.KEY_EVENT", keyEvent);
+                mContext.sendOrderedBroadcast(intent, "android.permission.CALL_PRIVILEGED");
+                return true;
+            } catch (Exception e2) {
+
+                try {
+                    LogUtils.e("Sandy", e2);
+                    Intent meidaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
+                    KeyEvent keyEvent = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_HEADSETHOOK);
+                    meidaButtonIntent.putExtra(Intent.EXTRA_KEY_EVENT, keyEvent);
+                    mContext.sendOrderedBroadcast(meidaButtonIntent, null);
+                    return true;
+                } catch (Exception e3) {
+                    e3.printStackTrace();
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 发送接通
+     */
+    private void sendPhoneCalling() {
+        Intent intent = new Intent("com.qzy.phone.state");
+        intent.putExtra("phone_state", "2");
+        mContext.sendBroadcast(intent);
+        LogUtils.d("sendPhonehangup send phone state = 2");
+    }
+
+    /**
+     * 发送挂断
+     */
+    private void sendPhonehangup() {
+        Intent intent = new Intent("com.qzy.phone.state");
+        intent.putExtra("phone_state", "0");
+        mContext.sendBroadcast(intent);
+        LogUtils.d("sendPhonehangup send phone state = 0");
+        if (mServer != null) {
+            mServer.onPhoneStateChange(TtPhoneState.HUANGUP);
         }
     }
 
@@ -107,6 +197,7 @@ public class QzyPhoneManager {
                     //等待接听状态
                     String mIncomingNumber = incomingNumber;
                     LogUtils.e("=====RINGING :" + mIncomingNumber + "=========");
+                    mServer.onPhoneIncoming(TtPhoneState.INCOMING, mIncomingNumber);
                     break;
                 case TelephonyManager.CALL_STATE_OFFHOOK:
                     LogUtils.e("======get call======== ");

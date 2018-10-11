@@ -1,17 +1,26 @@
 package com.qzy.tiantong.service.service;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.qzy.intercom.IntercomManager;
+import com.qzy.tiantong.netty.NettyServerManager;
+import com.qzy.rtptest.Global;
+import com.qzy.rtptest.RtpManager;
+import com.qzy.audiosocket.SocketIntercomManager;
 import com.qzy.intercom.util.Constants;
-import com.qzy.netty.NettyServerManager;
+import com.qzy.tiantong.lib.localsocket.LocalPcmSocketManager;
+import com.qzy.locallib.selfpcm.TtPcmIntercomManager;
 import com.qzy.tiantong.service.netty.PhoneNettyManager;
 import com.qzy.tiantong.service.netty.cmd.CmdHandler;
 import com.qzy.tiantong.service.netty.cmd.TianTongHandler;
 import com.qzy.tiantong.service.phone.BroadcastManager;
 import com.qzy.tiantong.service.phone.QzyPhoneManager;
 import com.qzy.tiantong.service.phone.TtPhoneState;
-import com.qzy.utils.LogUtils;
+import com.qzy.tt.data.TtPhoneSmsProtos;
+import com.qzy.tiantong.ttpcm.aidl.ReadPcmManager;
+import com.qzy.tiantong.ttpcm.aidl.WritePcmManager;
+import com.qzy.tiantong.lib.utils.LogUtils;
 
 import io.netty.buffer.ByteBufInputStream;
 
@@ -22,6 +31,13 @@ import io.netty.buffer.ByteBufInputStream;
 public class TianTongServiceManager implements ITianTongServer {
     private Context mContext;
 
+    // 1 :loca pcm  2: udb  3: rtp 4: tcp/ip
+    private int useProtocalIndex = 0;
+
+    private boolean isUseAidl = false;
+
+    private boolean isUsePmcServer = false;
+
     /**
      * netty连接管理
      **/
@@ -30,6 +46,13 @@ public class TianTongServiceManager implements ITianTongServer {
      * 底层pcm连接管理
      **/
     private IntercomManager mIntercomManager;
+
+    private RtpManager mRtpManager;
+
+    private SocketIntercomManager mSocketIntercomManager;
+
+    private TtPcmIntercomManager mTtPcmIntercomManager;
+
     /**
      * 广播管理
      **/
@@ -46,6 +69,11 @@ public class TianTongServiceManager implements ITianTongServer {
     //管理server与phone端通讯命令
     private PhoneNettyManager mPhoneNettyManager;
 
+
+    private boolean isUdpPcmLocal = true;
+    private LocalPcmSocketManager mLocalPcmSocketManager;
+
+
     public TianTongServiceManager(Context context) {
         mContext = context;
 
@@ -54,8 +82,23 @@ public class TianTongServiceManager implements ITianTongServer {
         mCmdHandler = new CmdHandler(mTianTongHandler);
 
         initNettyServer();
+        initPhoneNettyManager();
 
         initBroadcast();
+
+        if (isUseAidl) {
+            ReadPcmManager.init(context);
+            WritePcmManager.init(context);
+        }
+
+        if (isUsePmcServer) {
+            mContext.startService(new Intent(mContext, PcmServices.class));
+        }
+
+        if(isUdpPcmLocal){
+            mLocalPcmSocketManager = new LocalPcmSocketManager(context);
+        }
+
     }
 
 
@@ -72,8 +115,20 @@ public class TianTongServiceManager implements ITianTongServer {
 
             @Override
             public void onConnected(String ip) {
-                initPhoneNettyManager();
-                Constants.UNICAST_BROADCAST_IP = ip;
+
+                if(isUsePmcServer) {
+                    Intent intent = new Intent(PcmServices.action_set_ip);
+                    intent.putExtra(PcmServices.extra_ip,ip);
+                    mContext.sendBroadcast(intent);
+                }else{
+                    Constants.UNICAST_BROADCAST_IP = ip;
+                }
+                Global.IP = ip;
+
+                if (mLocalPcmSocketManager != null) {
+                    mLocalPcmSocketManager.setPhoneIpAndPort(ip, Constants.UNICAST_PORT);
+                }
+
             }
 
             @Override
@@ -98,7 +153,7 @@ public class TianTongServiceManager implements ITianTongServer {
      * 初始化 Phone客户端管理工具
      */
     private void initPhoneNettyManager() {
-        mPhoneNettyManager = new PhoneNettyManager(mNettyServerManager);
+        mPhoneNettyManager = new PhoneNettyManager(mContext,mNettyServerManager);
     }
 
 
@@ -106,16 +161,43 @@ public class TianTongServiceManager implements ITianTongServer {
      * 释放资源
      */
     public void release() {
+
+        freeTtPcmDevice();
+
         if (mNettyServerManager != null) {
             mNettyServerManager.release();
         }
 
-        if (mIntercomManager != null) {
+       /* if (mIntercomManager != null) {
             mIntercomManager.release();
-        }
+        }*/
 
         if (mBroadcastManager != null) {
             mBroadcastManager.release();
+        }
+
+        if (mPhoneNettyManager != null) {
+            mPhoneNettyManager.free();
+        }
+
+        if (isUseAidl) {
+            if (ReadPcmManager.getInstance() != null) {
+                ReadPcmManager.getInstance().free();
+            }
+
+            if (WritePcmManager.getInstance() != null) {
+                WritePcmManager.getInstance().free();
+            }
+        }
+
+
+
+        if (isUsePmcServer) {
+            mContext.sendBroadcast(new Intent(PcmServices.action_stop));
+        }
+
+        if (mLocalPcmSocketManager != null) {
+            mLocalPcmSocketManager.release();
         }
 
     }
@@ -130,7 +212,14 @@ public class TianTongServiceManager implements ITianTongServer {
     public void onPhoneStateChange(TtPhoneState state) {
 
         if (mPhoneNettyManager != null) {
-            mPhoneNettyManager.updateTtCallPhoneState(state);
+            mPhoneNettyManager.updateTtCallPhoneState(state,"");
+        }
+    }
+
+    @Override
+    public void onPhoneIncoming(TtPhoneState state, String phoneNumber) {
+        if (mPhoneNettyManager != null) {
+            mPhoneNettyManager.updateTtCallPhoneState(state,phoneNumber);
         }
     }
 
@@ -144,16 +233,77 @@ public class TianTongServiceManager implements ITianTongServer {
     @Override
     public void initTtPcmDevice() {
         LogUtils.e("initTtPcmDevice");
-        if (mIntercomManager == null) {
-            mIntercomManager = new IntercomManager();
+
+        if (mLocalPcmSocketManager != null) {
+            mLocalPcmSocketManager.setPhoneCalling();
+            return;
+        }
+
+        if (useProtocalIndex == 1) {
+            if (mTtPcmIntercomManager == null) {
+                mTtPcmIntercomManager = new TtPcmIntercomManager();
+            }
+        } else if (useProtocalIndex == 2) {
+            if (isUsePmcServer) {
+               mContext.sendBroadcast(new Intent(PcmServices.action_start_pcm));
+            } else {
+                if (mIntercomManager == null) {
+                    mIntercomManager = new IntercomManager();
+                }
+            }
+
+
+        } else if (useProtocalIndex == 3) {
+            if (mRtpManager == null) {
+                mRtpManager = new RtpManager();
+            }
+        } else if (useProtocalIndex == 4) {
+            if (mSocketIntercomManager == null) {
+                mSocketIntercomManager = new SocketIntercomManager();
+            }
         }
     }
 
     @Override
     public void freeTtPcmDevice() {
-        if (mIntercomManager != null) {
-            mIntercomManager.release();
-            mIntercomManager = null;
+        LogUtils.e("freeTtPcmDevice");
+        if (mLocalPcmSocketManager != null) {
+            mLocalPcmSocketManager.setPhoneHangup();
+            return;
+        }
+
+        if (useProtocalIndex == 1) {
+            if (mTtPcmIntercomManager != null) {
+                mTtPcmIntercomManager.release();
+                mTtPcmIntercomManager = null;
+            }
+        } else if (useProtocalIndex == 2) {
+            if (isUsePmcServer) {
+                mContext.sendBroadcast(new Intent(PcmServices.action_stop_pcm));
+            } else {
+                if (mIntercomManager != null) {
+                    mIntercomManager.release();
+                    mIntercomManager = null;
+                }
+            }
+        } else if (useProtocalIndex == 3) {
+            if (mRtpManager != null) {
+                mRtpManager.free();
+                mRtpManager = null;
+            }
+        } else if (useProtocalIndex == 4) {
+            if (mSocketIntercomManager == null) {
+                mSocketIntercomManager.release();
+                mSocketIntercomManager = null;
+            }
+        }
+
+    }
+
+    @Override
+    public void sendSms(TtPhoneSmsProtos.TtPhoneSms ttPhoneSms) {
+        if(mPhoneNettyManager != null){
+            mPhoneNettyManager.senSms(ttPhoneSms);
         }
     }
 

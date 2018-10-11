@@ -4,9 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.text.TextUtils;
 
 import com.qzy.tiantong.service.service.ITianTongServer;
-import com.qzy.utils.LogUtils;
+import com.qzy.tiantong.lib.utils.LogUtils;
 
 /**
  * Created by yj.zhang on 2018/8/3/003.
@@ -29,6 +30,7 @@ public class BroadcastManager {
      */
     public void registerReceiver() {
         IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.test.incoming");
         intentFilter.addAction("com.test");
         intentFilter.addAction("com.test.close");
         intentFilter.addAction("com.qzy.phone.state");
@@ -43,7 +45,13 @@ public class BroadcastManager {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             LogUtils.d("action = " + action);
-            if (action.equals("com.test")) {
+            if (action.equals("com.test.incoming")) {
+                String number = intent.getStringExtra("phone_number");
+                if(!TextUtils.isEmpty(number)){
+                    mServer.onPhoneIncoming(TtPhoneState.INCOMING, number);
+                }
+
+            } else if (action.equals("com.test")) {
                 //打开设备
                 //mServer.startRecorder();
                 //mServer.startPlayer();

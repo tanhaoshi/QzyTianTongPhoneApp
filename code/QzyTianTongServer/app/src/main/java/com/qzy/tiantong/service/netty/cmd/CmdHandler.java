@@ -2,11 +2,17 @@ package com.qzy.tiantong.service.netty.cmd;
 
 import android.os.Message;
 
+import com.google.protobuf.GeneratedMessageV3;
+import com.qzy.data.PhoneAudioCmd;
 import com.qzy.data.PrototocalTools;
 import com.qzy.tt.data.CallPhoneProtos;
 import com.qzy.tt.data.ChangePcmPlayerDbProtos;
-import com.qzy.utils.LogUtils;
+import com.qzy.tt.data.TtPhoneAudioDataProtos;
+import com.qzy.tt.data.TtPhoneSmsProtos;
+import com.qzy.tiantong.lib.utils.LogUtils;
 
+
+import org.greenrobot.eventbus.EventBus;
 
 import io.netty.buffer.ByteBufInputStream;
 
@@ -60,6 +66,14 @@ public class CmdHandler {
                     ChangePcmPlayerDbProtos.ChangePcmPlayerDb changePcmPlayerDb = ChangePcmPlayerDbProtos.ChangePcmPlayerDb.parseDelimitedFrom(inputStream);
                     senMsg(protoId,changePcmPlayerDb);
                     break;
+                case PrototocalTools.IProtoServerIndex.phone_audio:
+                    TtPhoneAudioDataProtos.PhoneAudioData audioData = TtPhoneAudioDataProtos.PhoneAudioData.parseDelimitedFrom(inputStream);
+                    senAudioData(protoId,audioData);
+                    break;
+                case PrototocalTools.IProtoServerIndex.phone_send_sms:
+                    TtPhoneSmsProtos.TtPhoneSms ttPhoneSms = TtPhoneSmsProtos.TtPhoneSms.parseDelimitedFrom(inputStream);
+                    senMsg(protoId,ttPhoneSms);
+                    break;
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -72,6 +86,10 @@ public class CmdHandler {
         msg.what = what;
         msg.obj = obj;
         mHandler.sendMessage(msg);
+    }
+
+    private void senAudioData(int protoId,GeneratedMessageV3 messageV3){
+        EventBus.getDefault().post(PhoneAudioCmd.getPhoneAudioCmd(protoId,messageV3));
     }
 
 }

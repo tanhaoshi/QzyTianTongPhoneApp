@@ -24,7 +24,7 @@ android {
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
                 //这里修改apk文件名
                 //def fileName = "demo_${variant.productFlavors[0].name}-${defaultConfig.versionCode}-${defaultConfig.versionName}-${releaseTime() }.apk"
-                def fileName = "qzytt.apk"
+                def fileName = "qzytt_server.apk"
                 output.outputFile = new File(outputFile.parent, fileName)
             }
         }
@@ -39,5 +39,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
-    compile project(':mylib')
+    compile 'com.squareup.okio:okio:1.9.0'
+    compile project(':qzyTianTongProbufLib')
+    compile project(':qzytiantonglocallib')
+    compile project(':rtptest')
 }

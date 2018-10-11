@@ -22,4 +22,6 @@ public enum TtPhoneState {
      */
     HUANGUP,
 
+    INCOMING
+
 }
