@@ -3,7 +3,7 @@ package com.qzy.locallib.selfpcm;
 import com.qzy.locallib.selfpcm.jni.LocalPcmManager;
 import com.qzy.locallib.selfpcm.udp.UdpServiceManagerSpexx;
 import com.qzy.locallib.selfpcm.voice.VoiceReaderSpexx;
-import com.qzy.lib.utils.LogUtils;
+import com.qzy.tiantong.lib.utils.LogUtils;
 
 /**
  * Created by yj.zhang on 2018/8/10.
@@ -15,7 +15,7 @@ public class TtPcmIntercomManager {
 
     private UdpServiceManagerSpexx udpServiceManager;
 
-    public TtPcmIntercomManager(){
+    public TtPcmIntercomManager() {
         initPcmManager();
         initUdpFunction();
 
@@ -25,7 +25,7 @@ public class TtPcmIntercomManager {
     /**
      * 底层pcm管理类
      */
-    private void initPcmManager(){
+    private void initPcmManager() {
         localPcmManager = new LocalPcmManager(new LocalPcmManager.IReadPcmData() {
 
             private int index = 0;
@@ -74,7 +74,7 @@ public class TtPcmIntercomManager {
     private VoiceReaderSpexx.IReaderData readerUdpDataListener = new VoiceReaderSpexx.IReaderData() {
         @Override
         public void onReadData(byte[] data) {
-            if(localPcmManager != null){
+            if (localPcmManager != null) {
                 localPcmManager.setPcmData(data);
             }
 
@@ -86,16 +86,15 @@ public class TtPcmIntercomManager {
         }
     };
 
-    public void release(){
-        if(localPcmManager != null){
+    public void release() {
+        if (localPcmManager != null) {
             localPcmManager.release();
         }
 
-        if(udpServiceManager != null){
+        if (udpServiceManager != null) {
             udpServiceManager.release();
         }
     }
-
 
 
 }

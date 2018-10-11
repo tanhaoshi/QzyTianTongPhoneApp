@@ -3,9 +3,9 @@ package com.qzy.tiantong.lib.localsocket;
 import android.content.Context;
 import android.os.RemoteException;
 
-import com.qzy.lib.localsocket.pcm.PcmProtocolUtils;
-import com.qzy.lib.utils.ByteUtils;
-import com.qzy.lib.utils.LogUtils;
+import com.qzy.tiantong.lib.localsocket.pcm.PcmProtocolUtils;
+import com.qzy.tiantong.lib.utils.ByteUtils;
+import com.qzy.tiantong.lib.utils.LogUtils;
 
 
 /**

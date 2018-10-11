@@ -3,9 +3,9 @@ package com.qzy.locallib.selfpcm.voice;
 import android.os.Process;
 import android.util.Log;
 
-import com.qzy.lib.buffer.MyBuffer;
 import com.qzy.locallib.util.LocalConstants;
-import com.qzy.lib.utils.ByteUtils;
+import com.qzy.tiantong.lib.buffer.MyBuffer;
+import com.qzy.tiantong.lib.utils.ByteUtils;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;

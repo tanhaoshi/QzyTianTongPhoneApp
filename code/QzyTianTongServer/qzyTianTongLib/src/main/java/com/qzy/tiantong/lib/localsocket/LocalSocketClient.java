@@ -3,8 +3,9 @@ package com.qzy.tiantong.lib.localsocket;
 import android.net.LocalSocket;
 import android.net.LocalSocketAddress;
 
-import com.qzy.lib.utils.ByteUtils;
-import com.qzy.lib.utils.LogUtils;
+
+import com.qzy.tiantong.lib.utils.ByteUtils;
+import com.qzy.tiantong.lib.utils.LogUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

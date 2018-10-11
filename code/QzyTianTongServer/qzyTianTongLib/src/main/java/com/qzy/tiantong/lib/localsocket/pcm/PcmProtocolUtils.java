@@ -1,7 +1,7 @@
 package com.qzy.tiantong.lib.localsocket.pcm;
 
 
-import com.qzy.lib.utils.ByteUtils;
+import com.qzy.tiantong.lib.utils.ByteUtils;
 
 public class PcmProtocolUtils {
 

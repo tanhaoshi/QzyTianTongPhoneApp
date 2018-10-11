@@ -1,7 +1,7 @@
 package com.qzy.locallib.selfpcm.jni;
 
-import com.qzy.lib.buffer.MyBuffer;
-import com.qzy.lib.utils.LogUtils;
+import com.qzy.tiantong.lib.buffer.MyBuffer;
+import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.voice.VoiceManager;
 
 import java.util.ArrayList;
