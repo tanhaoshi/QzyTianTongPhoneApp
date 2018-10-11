@@ -6,7 +6,7 @@ package com.tt.qzy.view.utils;
 
 public interface Constans {
     //QzyTTWifi_Tcp_1
-    String STANDARD_WIFI_NAME = "QzyTt";
+    String STANDARD_WIFI_NAME = "HWA_6200_";
     String CRY_HELP_PHONE = "cry_help_phone";
     String CRY_HELP_SHORTMESSAGE = "cry_help_shortmessage";
     String CRY_HELP_TIMETIMER = "cry_help_time_timer";

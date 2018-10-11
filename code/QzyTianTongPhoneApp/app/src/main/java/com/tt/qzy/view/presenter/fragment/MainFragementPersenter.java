@@ -87,7 +87,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
 
         //判断是否连接着天通指定的wifi
         String ssid = NetworkUtil.getConnectWifiSsid(mContext);
-        if(TextUtils.isEmpty(ssid) || ssid.length() < 6 || !Constans.STANDARD_WIFI_NAME.equals(ssid.substring(1, 6))){
+        if(TextUtils.isEmpty(ssid) || ssid.length() < 6 || !ssid.contains(Constans.STANDARD_WIFI_NAME)){
             NToast.shortToast(mContext, mContext.getString(R.string.TMT_connect_tiantong_please));
             Intent intent = new Intent("android.settings.WIFI_SETTINGS");
             mContext.startActivity(intent);
