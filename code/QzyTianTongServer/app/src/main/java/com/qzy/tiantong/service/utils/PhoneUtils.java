@@ -47,6 +47,7 @@ public class PhoneUtils {
 
     /**
      * 检查是否有sim卡
+     *
      * @param context
      * @return
      */
@@ -54,12 +55,17 @@ public class PhoneUtils {
         TelephonyManager telMgr = (TelephonyManager)
                 context.getSystemService(Context.TELEPHONY_SERVICE);
         int simState = telMgr.getSimState();
-        boolean result = true;
+        boolean result = false;
         switch (simState) {
-            case TelephonyManager.SIM_STATE_ABSENT:
-                result = false; // 没有SIM卡
+            case TelephonyManager.SIM_STATE_READY:
+                result = true;
                 break;
             case TelephonyManager.SIM_STATE_UNKNOWN:
+            case TelephonyManager.SIM_STATE_ABSENT:
+            case TelephonyManager.SIM_STATE_PIN_REQUIRED:
+            case TelephonyManager.SIM_STATE_PUK_REQUIRED:
+            case TelephonyManager.SIM_STATE_NETWORK_LOCKED:
+            default:
                 result = false;
                 break;
         }

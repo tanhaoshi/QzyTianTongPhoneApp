@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.qzy.tiantong.service"
-          android:sharedUserId="android.uid.system"
-    >
+    package="com.qzy.tiantong.service"
+    android:sharedUserId="android.uid.system">
 
     <!-- 打电话广播 -->
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
-    <uses-permission android:name="android.permission.ACCESS_CHECKIN_PROPERTIES"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.ACCESS_CHECKIN_PROPERTIES" />
 
     <!-- 监听电话状态 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-permission android:name="android.permission.READ_SMS"></uses-permission>
     <uses-permission android:name="android.permission.SEND_SMS"></uses-permission>
@@ -32,30 +31,32 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <receiver android:name=".boot.BootReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED">
-                </action>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
             </intent-filter>
         </receiver>
 
         <service
             android:name=".service.TianTongService"
             android:enabled="true"
-            android:exported="true">
-        </service>
+            android:exported="true"></service>
+        <service
+            android:name="com.qzy.tiantong.lib.service.CancelNoticeService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <service
             android:name=".service.PcmServices"
-            android:process=":pcmsevice"
             android:enabled="true"
-            android:exported="true">
-        </service>
+            android:exported="true"
+            android:process=":pcmsevice"></service>
     </application>
 
 </manifest>

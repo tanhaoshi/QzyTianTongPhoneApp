@@ -8,9 +8,11 @@ import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.phone.BatteryManager;
 import com.qzy.tiantong.service.phone.SmsPhoneManager;
 import com.qzy.tiantong.service.phone.TtPhoneState;
+import com.qzy.tiantong.service.utils.PhoneUtils;
 import com.qzy.tt.data.CallPhoneStateProtos;
 import com.qzy.tt.data.TtPhoneBatteryProtos;
 import com.qzy.tt.data.TtPhoneSignalProtos;
+import com.qzy.tt.data.TtPhoneSimCards;
 import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.probuf.lib.data.PhoneAudioCmd;
 import com.qzy.tt.probuf.lib.data.PhoneCmd;
@@ -57,7 +59,7 @@ public class PhoneNettyManager {
 
         EventBus.getDefault().register(this);
 
-        initSignal();
+        //initSignal();
 
         initSendThread();
 
@@ -99,6 +101,8 @@ public class PhoneNettyManager {
                         sendSignalToPhoneClient(currentSignalValue);
                         //发送电量
                         sendTtPhoneBatteryToClient();
+                        //sim 卡是否插入
+                        sendSimStateToPhoneClient();
                     }
 
                 } catch (Exception e) {
@@ -193,7 +197,7 @@ public class PhoneNettyManager {
      */
     public void sendTtCallPhoneSignalToClient(int value) {
         currentSignalValue = value;
-        controlSignal(value);
+        //controlSignal(value);
         sendSignalToPhoneClient(value);
     }
 
@@ -215,18 +219,23 @@ public class PhoneNettyManager {
      */
     private void sendSignalToPhoneClient(int value) {
         if (checkNettManagerIsNull()) return;
-            TtPhoneSignalProtos.PhoneSignalStrength signalStrength = TtPhoneSignalProtos.PhoneSignalStrength.newBuilder()
-                    .setSignalStrength(value)
-                    .build();
-            mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_phone_signal, signalStrength));
+        TtPhoneSignalProtos.PhoneSignalStrength signalStrength = TtPhoneSignalProtos.PhoneSignalStrength.newBuilder()
+                .setSignalStrength(value)
+                .build();
+        mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_phone_signal, signalStrength));
     }
 
     /**
      * 发送sim状态
      */
-    private void sendSimState() {
+    private void sendSimStateToPhoneClient() {
         if (checkNettManagerIsNull()) return;
-
+        boolean hasSim = PhoneUtils.ishasSimCard(mContext);
+        LogUtils.d("hasSim = " + hasSim);
+        TtPhoneSimCards.TtPhoneSimCard simCard = TtPhoneSimCards.TtPhoneSimCard.newBuilder()
+                .setIsSimCard(hasSim)
+                .build();
+        mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_phone_simcard, simCard));
     }
 
 
@@ -247,53 +256,53 @@ public class PhoneNettyManager {
         @Override
         public void onSendSuccess(String ip, String phoneNumber) {
             if (checkNettManagerIsNull()) return;
-                TtPhoneSmsProtos.TtPhoneSms tt = TtPhoneSmsProtos.TtPhoneSms.newBuilder()
-                        .setIp(ip)
-                        .setPhoneNumber(phoneNumber)
-                        .setIsSend(false)
-                        .setIsSendSuccess(true)
-                        .setIsReceiverSuccess(false)
-                        .build();
-                mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.phone_send_sms_callback, tt));
+            TtPhoneSmsProtos.TtPhoneSms tt = TtPhoneSmsProtos.TtPhoneSms.newBuilder()
+                    .setIp(ip)
+                    .setPhoneNumber(phoneNumber)
+                    .setIsSend(false)
+                    .setIsSendSuccess(true)
+                    .setIsReceiverSuccess(false)
+                    .build();
+            mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.phone_send_sms_callback, tt));
         }
 
         @Override
         public void onSendFailed(String ip, String phoneNumber) {
             if (checkNettManagerIsNull()) return;
-                TtPhoneSmsProtos.TtPhoneSms tt = TtPhoneSmsProtos.TtPhoneSms.newBuilder()
-                        .setIp(ip)
-                        .setPhoneNumber(phoneNumber)
-                        .setIsSend(false)
-                        .setIsSendSuccess(false)
-                        .setIsReceiverSuccess(false)
-                        .build();
-                mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.phone_send_sms_callback, tt));
+            TtPhoneSmsProtos.TtPhoneSms tt = TtPhoneSmsProtos.TtPhoneSms.newBuilder()
+                    .setIp(ip)
+                    .setPhoneNumber(phoneNumber)
+                    .setIsSend(false)
+                    .setIsSendSuccess(false)
+                    .setIsReceiverSuccess(false)
+                    .build();
+            mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.phone_send_sms_callback, tt));
         }
 
         @Override
         public void onReceiveSuccess(String ip, String phoneNumber) {
             if (checkNettManagerIsNull()) return;
-                TtPhoneSmsProtos.TtPhoneSms tt = TtPhoneSmsProtos.TtPhoneSms.newBuilder()
-                        .setIp(ip)
-                        .setPhoneNumber(phoneNumber)
-                        .setIsSend(false)
-                        .setIsSendSuccess(false)
-                        .setIsReceiverSuccess(true)
-                        .build();
-                mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.phone_send_sms_callback, tt));
+            TtPhoneSmsProtos.TtPhoneSms tt = TtPhoneSmsProtos.TtPhoneSms.newBuilder()
+                    .setIp(ip)
+                    .setPhoneNumber(phoneNumber)
+                    .setIsSend(false)
+                    .setIsSendSuccess(false)
+                    .setIsReceiverSuccess(true)
+                    .build();
+            mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.phone_send_sms_callback, tt));
         }
 
         @Override
         public void onReceiveFailed(String ip, String phoneNumber) {
             if (checkNettManagerIsNull()) return;
-                TtPhoneSmsProtos.TtPhoneSms tt = TtPhoneSmsProtos.TtPhoneSms.newBuilder()
-                        .setIp(ip)
-                        .setPhoneNumber(phoneNumber)
-                        .setIsSend(false)
-                        .setIsSendSuccess(false)
-                        .setIsReceiverSuccess(false)
-                        .build();
-                mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.phone_send_sms_callback, tt));
+            TtPhoneSmsProtos.TtPhoneSms tt = TtPhoneSmsProtos.TtPhoneSms.newBuilder()
+                    .setIp(ip)
+                    .setPhoneNumber(phoneNumber)
+                    .setIsSend(false)
+                    .setIsSendSuccess(false)
+                    .setIsReceiverSuccess(false)
+                    .build();
+            mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.phone_send_sms_callback, tt));
         }
     };
 
