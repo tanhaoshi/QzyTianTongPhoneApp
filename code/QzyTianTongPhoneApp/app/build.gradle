@@ -35,7 +35,7 @@ android {
     }
 
     greendao {
-        schemaVersion 3
+        schemaVersion 4
         targetGenDir 'src/main/java'
         daoPackage 'com.tt.qzy.view.db'
     }
@@ -78,6 +78,7 @@ dependencies {
     compile 'com.kaopiz:kprogresshud:1.0.2'
     compile 'io.reactivex.rxjava2:rxjava:2.0.1'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'com.alibaba:fastjson:1.2.10'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'

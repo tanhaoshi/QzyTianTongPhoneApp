@@ -30,8 +30,9 @@ public class CallRecordDaoDao extends AbstractDao<CallRecordDao, Long> {
         public final static Property Address = new Property(3, String.class, "address", false, "ADDRESS");
         public final static Property State = new Property(4, String.class, "state", false, "STATE");
         public final static Property Date = new Property(5, String.class, "date", false, "DATE");
-        public final static Property IsTitle = new Property(6, int.class, "isTitle", false, "IS_TITLE");
-        public final static Property TitleName = new Property(7, String.class, "titleName", false, "TITLE_NAME");
+        public final static Property Duration = new Property(6, long.class, "duration", false, "DURATION");
+        public final static Property IsTitle = new Property(7, int.class, "isTitle", false, "IS_TITLE");
+        public final static Property TitleName = new Property(8, String.class, "titleName", false, "TITLE_NAME");
     }
 
 
@@ -53,8 +54,9 @@ public class CallRecordDaoDao extends AbstractDao<CallRecordDao, Long> {
                 "\"ADDRESS\" TEXT," + // 3: address
                 "\"STATE\" TEXT," + // 4: state
                 "\"DATE\" TEXT," + // 5: date
-                "\"IS_TITLE\" INTEGER NOT NULL ," + // 6: isTitle
-                "\"TITLE_NAME\" TEXT);"); // 7: titleName
+                "\"DURATION\" INTEGER NOT NULL ," + // 6: duration
+                "\"IS_TITLE\" INTEGER NOT NULL ," + // 7: isTitle
+                "\"TITLE_NAME\" TEXT);"); // 8: titleName
     }
 
     /** Drops the underlying database table. */
@@ -96,11 +98,12 @@ public class CallRecordDaoDao extends AbstractDao<CallRecordDao, Long> {
         if (date != null) {
             stmt.bindString(6, date);
         }
-        stmt.bindLong(7, entity.getIsTitle());
+        stmt.bindLong(7, entity.getDuration());
+        stmt.bindLong(8, entity.getIsTitle());
  
         String titleName = entity.getTitleName();
         if (titleName != null) {
-            stmt.bindString(8, titleName);
+            stmt.bindString(9, titleName);
         }
     }
 
@@ -137,11 +140,12 @@ public class CallRecordDaoDao extends AbstractDao<CallRecordDao, Long> {
         if (date != null) {
             stmt.bindString(6, date);
         }
-        stmt.bindLong(7, entity.getIsTitle());
+        stmt.bindLong(7, entity.getDuration());
+        stmt.bindLong(8, entity.getIsTitle());
  
         String titleName = entity.getTitleName();
         if (titleName != null) {
-            stmt.bindString(8, titleName);
+            stmt.bindString(9, titleName);
         }
     }
 
@@ -159,8 +163,9 @@ public class CallRecordDaoDao extends AbstractDao<CallRecordDao, Long> {
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // address
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // state
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // date
-            cursor.getInt(offset + 6), // isTitle
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7) // titleName
+            cursor.getLong(offset + 6), // duration
+            cursor.getInt(offset + 7), // isTitle
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8) // titleName
         );
         return entity;
     }
@@ -173,8 +178,9 @@ public class CallRecordDaoDao extends AbstractDao<CallRecordDao, Long> {
         entity.setAddress(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setState(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setDate(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setIsTitle(cursor.getInt(offset + 6));
-        entity.setTitleName(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setDuration(cursor.getLong(offset + 6));
+        entity.setIsTitle(cursor.getInt(offset + 7));
+        entity.setTitleName(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
      }
     
     @Override

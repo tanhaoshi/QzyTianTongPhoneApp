@@ -56,14 +56,14 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
         EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SHORT_MESSGAE));
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MessageEventBus event) {
-        switch (event.getType()) {
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SHORT_MESSAGE:
-                parseShortMessage(event.getObject());
-                break;
-        }
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onMessageEvent(MessageEventBus event) {
+//        switch (event.getType()) {
+//            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SHORT_MESSAGE:
+//                parseShortMessage(event.getObject());
+//                break;
+//        }
+//    }
 
     /**
      * 解析与处理 协议数据
@@ -71,14 +71,15 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
     private void parseShortMessage(Object o){
         PhoneCmd cmd = (PhoneCmd) o;
         TtShortMessageProtos.TtShortMessage ttShortMessage = (TtShortMessageProtos.TtShortMessage)cmd.getMessage();
-        getShortMessageData(ttShortMessage.getShortMessageList());
+//        getShortMessageData(ttShortMessage.getShortMessageList());
     }
 
-    public void getShortMessageData(final List<TtShortMessageProtos.TtShortMessage.ShortMessage> list){
+    public void getShortMessageData(){
         Observable.create(new ObservableOnSubscribe<List<ShortMessageDao>>() {
             @Override
             public void subscribe(ObservableEmitter<List<ShortMessageDao>> e){
-                e.onNext(dataMerging(list));
+                List<ShortMessageDao> messageDaoList = ShortMessageManager.getInstance(mContext).queryShortMessageList();
+                e.onNext(arrangementData(messageDaoList));
             }
         })
                 .subscribeOn(Schedulers.io())
@@ -148,7 +149,7 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
         if(list.size() > 0){
             for(TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage : list){
                 shortMessageDaos.add(new ShortMessageDao(shortMessage.getNumberPhone(),shortMessage.getMessage(),
-                        shortMessage.getTime(),shortMessage.getState(),shortMessage.getName()));
+                        shortMessage.getTime(),String.valueOf(shortMessage.getType()),shortMessage.getName()));
             }
         }
         return shortMessageDaos;

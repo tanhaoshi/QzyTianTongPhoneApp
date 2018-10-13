@@ -9,8 +9,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.db.dao.CallRecordDao;
+import com.tt.qzy.view.utils.DateUtil;
 
 import java.util.List;
 
@@ -63,7 +65,7 @@ public class CallRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 CallRecordViewHolder callRecordViewHolder = (CallRecordViewHolder)holder;
                 callRecordViewHolder.phoneNumber.setText(mModelList.get(position).getPhoneNumber());
                 callRecordViewHolder.address.setText(mModelList.get(position).getAddress());
-                callRecordViewHolder.state.setText(mModelList.get(position).getState());
+                callRecordViewHolder.duration.setText("通话时长:"+DateUtil.secondToDate(mModelList.get(position).getDuration(),"mm:ss"));
                 callRecordViewHolder.date.setText(mModelList.get(position).getDate());
                 callRecordViewHolder.see_detail.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -97,7 +99,7 @@ public class CallRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         LinearLayout mobile;
         TextView phoneNumber;
         TextView address;
-        TextView state;
+        TextView duration;
         TextView date;
         LinearLayout see_detail;
 
@@ -106,7 +108,7 @@ public class CallRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mobile = (LinearLayout)view.findViewById(R.id.mobile);
             phoneNumber = (TextView)view.findViewById(R.id.phoneNumber);
             address = (TextView)view.findViewById(R.id.address);
-            state = (TextView)view.findViewById(R.id.state);
+            duration = (TextView)view.findViewById(R.id.duration);
             date = (TextView)view.findViewById(R.id.date);
             see_detail = (LinearLayout) view.findViewById(R.id.see_detail);
         }

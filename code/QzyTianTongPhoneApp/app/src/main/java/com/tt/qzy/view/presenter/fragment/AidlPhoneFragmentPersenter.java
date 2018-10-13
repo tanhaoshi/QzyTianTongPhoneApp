@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.alibaba.fastjson.JSON;
 import com.qzy.data.PhoneCmd;
 import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.phone.common.CommonData;
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.db.dao.CallRecordDao;
@@ -53,7 +55,7 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
 
     public AidlPhoneFragmentPersenter(Context context) {
         mContext = context;
-        EventBus.getDefault().register(this);
+        //EventBus.getDefault().register(this);
     }
 
     /**
@@ -86,14 +88,14 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
         EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_CALL_RECORD));
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MessageEventBus event) {
-        switch (event.getType()) {
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_CALL_RECORD:
-                parseCallRecord(event.getObject());
-                break;
-        }
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onMessageEvent(MessageEventBus event) {
+//        switch (event.getType()) {
+//            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_CALL_RECORD:
+//                parseCallRecord(event.getObject());
+//                break;
+//        }
+//    }
 
     /**
      * 解析与处理 协议数据
@@ -102,14 +104,14 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
     private void parseCallRecord(Object o){
         PhoneCmd cmd = (PhoneCmd) o;
         TtCallRecordProtos.TtCallRecordProto ttCallRecordProto = (TtCallRecordProtos.TtCallRecordProto)cmd.getMessage();
-        getCallHistroy(ttCallRecordProto.getCallRecordList());
     }
 
-    public void getCallHistroy(final List<TtCallRecordProtos.TtCallRecordProto.CallRecord> list){
+    public void getCallHistroy(){
         Observable.create(new ObservableOnSubscribe<List<CallRecordDao>>() {
             @Override
             public void subscribe(ObservableEmitter<List<CallRecordDao>> e){
-                e.onNext(dataMerging(list));
+                List<CallRecordDao> listDao = CallRecordManager.getInstance(mContext).queryCallRecordList();
+                e.onNext(arrangementData(listDao));
             }
         })
             .subscribeOn(Schedulers.io())
@@ -128,6 +130,7 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
 
                 @Override
                 public void onError(Throwable e) {
+                    KLog.i("look at error : " +e.getMessage().toString());
                     mView.get().showError(e.getMessage().toString(),true);
                 }
 
@@ -179,7 +182,7 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
         if(list.size() > 0){
             for(TtCallRecordProtos.TtCallRecordProto.CallRecord callRecord : list){
                 callRecordDaos.add(new CallRecordDao(callRecord.getPhoneNumber(),callRecord.getName(),
-                        callRecord.getAddress(),callRecord.getState(),callRecord.getDate()));
+                        callRecord.getAddress(),String.valueOf(callRecord.getType()),callRecord.getDate(),callRecord.getDuration()));
             }
         }
         return callRecordDaos;
@@ -231,7 +234,7 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
     }
 
     public void release(){
-        EventBus.getDefault().unregister(this);
+        //EventBus.getDefault().unregister(this);
     }
 
 }

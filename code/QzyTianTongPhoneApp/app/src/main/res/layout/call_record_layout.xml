@@ -37,6 +37,7 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_weight="1"
+                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -54,15 +55,17 @@
                     android:layout_height="14dp">
 
                     <TextView
+                        android:visibility="gone"
                         android:id="@+id/address"
-                        android:text="广东深圳"
-                        android:textSize="10sp"
+                        android:text="通话时长:"
+                        android:textSize="12sp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginTop="2dp"
                         android:layout_width="wrap_content"
                         android:layout_height="14dp"/>
 
                     <TextView
+                        android:visibility="gone"
                         android:layout_width="0.8dp"
                         android:layout_marginTop="1dp"
                         android:layout_gravity="center_vertical"
@@ -71,10 +74,9 @@
                         android:layout_height="10dp"/>
 
                     <TextView
-                        android:id="@+id/state"
-                        android:text="响铃9秒"
+                        android:id="@+id/duration"
                         android:textSize="10sp"
-                        android:layout_marginLeft="7dp"
+                        android:text="通话时长:"
                         android:layout_marginTop="2dp"
                         android:layout_gravity="center_vertical"
                         android:layout_width="wrap_content"

@@ -2,12 +2,9 @@ package com.tt.qzy.view.presenter.manager;
 
 import android.content.Context;
 
-import com.google.protobuf.GeneratedMessageV3;
-import com.qzy.data.PhoneCmd;
-import com.qzy.eventbus.EventBusUtils;
-import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
+import com.socks.library.KLog;
 import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
 import com.tt.qzy.view.db.manager.CallRecordManager;
@@ -15,8 +12,6 @@ import com.tt.qzy.view.db.manager.ShortMessageManager;
 import com.tt.qzy.view.utils.DateUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -42,6 +37,10 @@ public class SyncManager {
 
     public void syncShortMessage(TtShortMessageProtos.TtShortMessage ttShortMessage){
         handleShortMessage(ttShortMessage.getShortMessageList());
+    }
+
+    public void syncShortMessageSignal(TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessage){
+        handleShortMessageSignal(ttShortMessage);
     }
 
     private void handleCallRecord(final List<TtCallRecordProtos.TtCallRecordProto.CallRecord> list){
@@ -81,7 +80,7 @@ public class SyncManager {
         if(list.size() > 0){
             for(TtCallRecordProtos.TtCallRecordProto.CallRecord callRecord : list){
                 callRecordDaos.add(new CallRecordDao(callRecord.getPhoneNumber(),callRecord.getName(),
-                        callRecord.getAddress(),callRecord.getState(),callRecord.getDate()));
+                        callRecord.getAddress(),String.valueOf(callRecord.getType()),callRecord.getDate(),callRecord.getDuration()));
             }
         }
         return callRecordDaos;
@@ -124,9 +123,50 @@ public class SyncManager {
         if(list.size() > 0){
             for(TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage : list){
                 shortMessageDaos.add(new ShortMessageDao(shortMessage.getNumberPhone(),shortMessage.getMessage(),
-                        shortMessage.getTime(),shortMessage.getState(),shortMessage.getName()));
+                        shortMessage.getTime(),String.valueOf(shortMessage.getType()),shortMessage.getName()));
             }
         }
         return shortMessageDaos;
+    }
+
+    private void handleShortMessageSignal(final TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessage){
+       Observable.create(new ObservableOnSubscribe<ShortMessageDao>() {
+           @Override
+           public void subscribe(ObservableEmitter<ShortMessageDao> e) throws Exception {
+               ShortMessageManager.getInstance(mContext).insertShortMessage(meragingShortMessage(ttShortMessage),mContext);
+           }
+       }).subscribeOn(Schedulers.io())
+         .unsubscribeOn(Schedulers.io())
+               .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Observer<ShortMessageDao>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(ShortMessageDao value) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
+
+    private ShortMessageDao meragingShortMessage(TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage){
+        KLog.i("look at shortMessage : " + shortMessage.getMessage());
+        KLog.i("look at name : " + shortMessage.getName());
+        KLog.i("look at numberPhone : " + shortMessage.getNumberPhone());
+        ShortMessageDao shortMessageDao = new ShortMessageDao(shortMessage.getNumberPhone(),shortMessage.getMessage(),
+                DateUtil.backTimeFomat(new Date()),String.valueOf(shortMessage.getType()),shortMessage.getName());
+        return shortMessageDao;
     }
 }

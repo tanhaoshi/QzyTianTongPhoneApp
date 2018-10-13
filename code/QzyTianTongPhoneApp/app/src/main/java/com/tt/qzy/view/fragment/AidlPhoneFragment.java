@@ -13,7 +13,9 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.ContactsActivity;
 import com.tt.qzy.view.adapter.CallRecordAdapter;
@@ -184,8 +186,8 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
 
     @Override
     public void loadData(boolean pullToRefresh) {
-        //showProgress(true);
-        //mPersenter.requestCallRecord();
+        showProgress(true);
+        mPersenter.getCallHistroy();
     }
 
     @Override

@@ -55,4 +55,14 @@ public class ShortMessageManager {
         ShortMessageDaoDao shortMessageDaoDao = daoSession.getShortMessageDaoDao();
         shortMessageDaoDao.insertInTx(shortMessageDaos);
     }
+
+    public void insertShortMessage(ShortMessageDao shortMessageDao,Context context){
+        if (shortMessageDao == null) {
+            return;
+        }
+        DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
+        DaoSession daoSession = daoMaster.newSession();
+        ShortMessageDaoDao shortMessageDaoDao = daoSession.getShortMessageDaoDao();
+        shortMessageDaoDao.insert(shortMessageDao);
+    }
 }

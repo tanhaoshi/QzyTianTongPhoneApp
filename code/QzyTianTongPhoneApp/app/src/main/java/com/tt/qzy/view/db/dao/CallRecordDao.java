@@ -16,17 +16,20 @@ public class CallRecordDao {
     private String address;
     private String state;
     private String date;
+    private long duration;
     private int isTitle;
     private String titleName;
-    @Generated(hash = 977880528)
+    @Generated(hash = 175154190)
     public CallRecordDao(Long id, String phoneNumber, String name, String address,
-            String state, String date, int isTitle, String titleName) {
+            String state, String date, long duration, int isTitle,
+            String titleName) {
         this.id = id;
         this.phoneNumber = phoneNumber;
         this.name = name;
         this.address = address;
         this.state = state;
         this.date = date;
+        this.duration = duration;
         this.isTitle = isTitle;
         this.titleName = titleName;
     }
@@ -40,12 +43,10 @@ public class CallRecordDao {
         this.date = date;
         this.isTitle = isTitle;
         this.titleName = titleName;
-        this.isTitle = 0;
-        this.titleName = "";
     }
 
     public CallRecordDao(String phoneNumber, String name, String address,
-                         String state, String date){
+                         String state, String date,long duration){
         this.phoneNumber = phoneNumber;
         this.name = name;
         this.address = address;
@@ -53,6 +54,7 @@ public class CallRecordDao {
         this.date = date;
         this.isTitle = 0;
         this.titleName = "";
+        this.duration = duration;
     }
 
     @Generated(hash = 1511194593)
@@ -105,5 +107,13 @@ public class CallRecordDao {
     }
     public void setTitleName(String titleName) {
         this.titleName = titleName;
+    }
+
+    public long getDuration() {
+        return this.duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
     }
 }
