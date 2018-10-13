@@ -36,7 +36,7 @@ public final class TtCallRecordProtos {
     /**
      * <code>repeated .phonedata.TtCallRecordProto.CallRecord callRecord = 4;</code>
      */
-    com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord getCallRecord(int index);
+    TtCallRecordProto.CallRecord getCallRecord(int index);
     /**
      * <code>repeated .phonedata.TtCallRecordProto.CallRecord callRecord = 4;</code>
      */
@@ -49,7 +49,7 @@ public final class TtCallRecordProtos {
     /**
      * <code>repeated .phonedata.TtCallRecordProto.CallRecord callRecord = 4;</code>
      */
-    com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecordOrBuilder getCallRecordOrBuilder(
+    TtCallRecordProto.CallRecordOrBuilder getCallRecordOrBuilder(
             int index);
   }
   /**
@@ -110,7 +110,7 @@ public final class TtCallRecordProtos {
                 mutable_bitField0_ |= 0x00000004;
               }
               callRecord_.add(
-                  input.readMessage(com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord.parser(), extensionRegistry));
+                  input.readMessage(CallRecord.parser(), extensionRegistry));
               break;
             }
           }
@@ -129,14 +129,14 @@ public final class TtCallRecordProtos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.qzy.tt.data.TtCallRecordProtos.internal_static_phonedata_TtCallRecordProto_descriptor;
+      return TtCallRecordProtos.internal_static_phonedata_TtCallRecordProto_descriptor;
     }
 
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.qzy.tt.data.TtCallRecordProtos.internal_static_phonedata_TtCallRecordProto_fieldAccessorTable
+      return TtCallRecordProtos.internal_static_phonedata_TtCallRecordProto_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.class, com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.Builder.class);
+              TtCallRecordProto.class, Builder.class);
     }
 
     public interface CallRecordOrBuilder extends
@@ -174,14 +174,13 @@ public final class TtCallRecordProtos {
           getAddressBytes();
 
       /**
-       * <code>optional string state = 4;</code>
+       * <pre>
+       * 来电:1，拨出:2,未接:3
+       * </pre>
+       *
+       * <code>optional int32 type = 4;</code>
        */
-      String getState();
-      /**
-       * <code>optional string state = 4;</code>
-       */
-      com.google.protobuf.ByteString
-          getStateBytes();
+      int getType();
 
       /**
        * <code>optional string date = 5;</code>
@@ -192,6 +191,11 @@ public final class TtCallRecordProtos {
        */
       com.google.protobuf.ByteString
           getDateBytes();
+
+      /**
+       * <code>optional int64 duration = 6;</code>
+       */
+      long getDuration();
     }
     /**
      * Protobuf type {@code phonedata.TtCallRecordProto.CallRecord}
@@ -208,8 +212,9 @@ public final class TtCallRecordProtos {
         phoneNumber_ = "";
         name_ = "";
         address_ = "";
-        state_ = "";
+        type_ = 0;
         date_ = "";
+        duration_ = 0L;
       }
 
       @Override
@@ -255,16 +260,20 @@ public final class TtCallRecordProtos {
                 address_ = s;
                 break;
               }
-              case 34: {
-                String s = input.readStringRequireUtf8();
+              case 32: {
 
-                state_ = s;
+                type_ = input.readInt32();
                 break;
               }
               case 42: {
                 String s = input.readStringRequireUtf8();
 
                 date_ = s;
+                break;
+              }
+              case 48: {
+
+                duration_ = input.readInt64();
                 break;
               }
             }
@@ -280,14 +289,14 @@ public final class TtCallRecordProtos {
       }
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.qzy.tt.data.TtCallRecordProtos.internal_static_phonedata_TtCallRecordProto_CallRecord_descriptor;
+        return TtCallRecordProtos.internal_static_phonedata_TtCallRecordProto_CallRecord_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.qzy.tt.data.TtCallRecordProtos.internal_static_phonedata_TtCallRecordProto_CallRecord_fieldAccessorTable
+        return TtCallRecordProtos.internal_static_phonedata_TtCallRecordProto_CallRecord_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord.class, com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord.Builder.class);
+                CallRecord.class, Builder.class);
       }
 
       public static final int PHONENUMBER_FIELD_NUMBER = 1;
@@ -300,7 +309,7 @@ public final class TtCallRecordProtos {
         if (ref instanceof String) {
           return (String) ref;
         } else {
-          com.google.protobuf.ByteString bs =
+          com.google.protobuf.ByteString bs = 
               (com.google.protobuf.ByteString) ref;
           String s = bs.toStringUtf8();
           phoneNumber_ = s;
@@ -314,7 +323,7 @@ public final class TtCallRecordProtos {
           getPhoneNumberBytes() {
         Object ref = phoneNumber_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           phoneNumber_ = b;
@@ -334,7 +343,7 @@ public final class TtCallRecordProtos {
         if (ref instanceof String) {
           return (String) ref;
         } else {
-          com.google.protobuf.ByteString bs =
+          com.google.protobuf.ByteString bs = 
               (com.google.protobuf.ByteString) ref;
           String s = bs.toStringUtf8();
           name_ = s;
@@ -348,7 +357,7 @@ public final class TtCallRecordProtos {
           getNameBytes() {
         Object ref = name_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           name_ = b;
@@ -368,7 +377,7 @@ public final class TtCallRecordProtos {
         if (ref instanceof String) {
           return (String) ref;
         } else {
-          com.google.protobuf.ByteString bs =
+          com.google.protobuf.ByteString bs = 
               (com.google.protobuf.ByteString) ref;
           String s = bs.toStringUtf8();
           address_ = s;
@@ -382,7 +391,7 @@ public final class TtCallRecordProtos {
           getAddressBytes() {
         Object ref = address_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           address_ = b;
@@ -392,38 +401,17 @@ public final class TtCallRecordProtos {
         }
       }
 
-      public static final int STATE_FIELD_NUMBER = 4;
-      private volatile Object state_;
+      public static final int TYPE_FIELD_NUMBER = 4;
+      private int type_;
       /**
-       * <code>optional string state = 4;</code>
+       * <pre>
+       * 来电:1，拨出:2,未接:3
+       * </pre>
+       *
+       * <code>optional int32 type = 4;</code>
        */
-      public String getState() {
-        Object ref = state_;
-        if (ref instanceof String) {
-          return (String) ref;
-        } else {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          String s = bs.toStringUtf8();
-          state_ = s;
-          return s;
-        }
-      }
-      /**
-       * <code>optional string state = 4;</code>
-       */
-      public com.google.protobuf.ByteString
-          getStateBytes() {
-        Object ref = state_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (String) ref);
-          state_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
+      public int getType() {
+        return type_;
       }
 
       public static final int DATE_FIELD_NUMBER = 5;
@@ -436,7 +424,7 @@ public final class TtCallRecordProtos {
         if (ref instanceof String) {
           return (String) ref;
         } else {
-          com.google.protobuf.ByteString bs =
+          com.google.protobuf.ByteString bs = 
               (com.google.protobuf.ByteString) ref;
           String s = bs.toStringUtf8();
           date_ = s;
@@ -450,7 +438,7 @@ public final class TtCallRecordProtos {
           getDateBytes() {
         Object ref = date_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           date_ = b;
@@ -458,6 +446,15 @@ public final class TtCallRecordProtos {
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
+      }
+
+      public static final int DURATION_FIELD_NUMBER = 6;
+      private long duration_;
+      /**
+       * <code>optional int64 duration = 6;</code>
+       */
+      public long getDuration() {
+        return duration_;
       }
 
       private byte memoizedIsInitialized = -1;
@@ -481,11 +478,14 @@ public final class TtCallRecordProtos {
         if (!getAddressBytes().isEmpty()) {
           com.google.protobuf.GeneratedMessageV3.writeString(output, 3, address_);
         }
-        if (!getStateBytes().isEmpty()) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 4, state_);
+        if (type_ != 0) {
+          output.writeInt32(4, type_);
         }
         if (!getDateBytes().isEmpty()) {
           com.google.protobuf.GeneratedMessageV3.writeString(output, 5, date_);
+        }
+        if (duration_ != 0L) {
+          output.writeInt64(6, duration_);
         }
       }
 
@@ -503,11 +503,16 @@ public final class TtCallRecordProtos {
         if (!getAddressBytes().isEmpty()) {
           size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, address_);
         }
-        if (!getStateBytes().isEmpty()) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, state_);
+        if (type_ != 0) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeInt32Size(4, type_);
         }
         if (!getDateBytes().isEmpty()) {
           size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, date_);
+        }
+        if (duration_ != 0L) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeInt64Size(6, duration_);
         }
         memoizedSize = size;
         return size;
@@ -519,10 +524,10 @@ public final class TtCallRecordProtos {
         if (obj == this) {
          return true;
         }
-        if (!(obj instanceof com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord)) {
+        if (!(obj instanceof CallRecord)) {
           return super.equals(obj);
         }
-        com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord other = (com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord) obj;
+        CallRecord other = (CallRecord) obj;
 
         boolean result = true;
         result = result && getPhoneNumber()
@@ -531,10 +536,12 @@ public final class TtCallRecordProtos {
             .equals(other.getName());
         result = result && getAddress()
             .equals(other.getAddress());
-        result = result && getState()
-            .equals(other.getState());
+        result = result && (getType()
+            == other.getType());
         result = result && getDate()
             .equals(other.getDate());
+        result = result && (getDuration()
+            == other.getDuration());
         return result;
       }
 
@@ -551,67 +558,70 @@ public final class TtCallRecordProtos {
         hash = (53 * hash) + getName().hashCode();
         hash = (37 * hash) + ADDRESS_FIELD_NUMBER;
         hash = (53 * hash) + getAddress().hashCode();
-        hash = (37 * hash) + STATE_FIELD_NUMBER;
-        hash = (53 * hash) + getState().hashCode();
+        hash = (37 * hash) + TYPE_FIELD_NUMBER;
+        hash = (53 * hash) + getType();
         hash = (37 * hash) + DATE_FIELD_NUMBER;
         hash = (53 * hash) + getDate().hashCode();
+        hash = (37 * hash) + DURATION_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getDuration());
         hash = (29 * hash) + unknownFields.hashCode();
         memoizedHashCode = hash;
         return hash;
       }
 
-      public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord parseFrom(
+      public static CallRecord parseFrom(
           com.google.protobuf.ByteString data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord parseFrom(
+      public static CallRecord parseFrom(
           com.google.protobuf.ByteString data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord parseFrom(byte[] data)
+      public static CallRecord parseFrom(byte[] data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord parseFrom(
+      public static CallRecord parseFrom(
           byte[] data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord parseFrom(java.io.InputStream input)
+      public static CallRecord parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
-      public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord parseFrom(
+      public static CallRecord parseFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
-      public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord parseDelimitedFrom(java.io.InputStream input)
+      public static CallRecord parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
-      public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord parseDelimitedFrom(
+      public static CallRecord parseDelimitedFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
-      public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord parseFrom(
+      public static CallRecord parseFrom(
           com.google.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
-      public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord parseFrom(
+      public static CallRecord parseFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -623,7 +633,7 @@ public final class TtCallRecordProtos {
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
-      public static Builder newBuilder(com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord prototype) {
+      public static Builder newBuilder(CallRecord prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
       public Builder toBuilder() {
@@ -643,17 +653,17 @@ public final class TtCallRecordProtos {
       public static final class Builder extends
           com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
           // @@protoc_insertion_point(builder_implements:phonedata.TtCallRecordProto.CallRecord)
-          com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecordOrBuilder {
+          CallRecordOrBuilder {
         public static final com.google.protobuf.Descriptors.Descriptor
             getDescriptor() {
-          return com.qzy.tt.data.TtCallRecordProtos.internal_static_phonedata_TtCallRecordProto_CallRecord_descriptor;
+          return TtCallRecordProtos.internal_static_phonedata_TtCallRecordProto_CallRecord_descriptor;
         }
 
         protected FieldAccessorTable
             internalGetFieldAccessorTable() {
-          return com.qzy.tt.data.TtCallRecordProtos.internal_static_phonedata_TtCallRecordProto_CallRecord_fieldAccessorTable
+          return TtCallRecordProtos.internal_static_phonedata_TtCallRecordProto_CallRecord_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
-                  com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord.class, com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord.Builder.class);
+                  CallRecord.class, Builder.class);
         }
 
         // Construct using com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord.newBuilder()
@@ -679,37 +689,40 @@ public final class TtCallRecordProtos {
 
           address_ = "";
 
-          state_ = "";
+          type_ = 0;
 
           date_ = "";
+
+          duration_ = 0L;
 
           return this;
         }
 
         public com.google.protobuf.Descriptors.Descriptor
             getDescriptorForType() {
-          return com.qzy.tt.data.TtCallRecordProtos.internal_static_phonedata_TtCallRecordProto_CallRecord_descriptor;
+          return TtCallRecordProtos.internal_static_phonedata_TtCallRecordProto_CallRecord_descriptor;
         }
 
-        public com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord getDefaultInstanceForType() {
-          return com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord.getDefaultInstance();
+        public CallRecord getDefaultInstanceForType() {
+          return CallRecord.getDefaultInstance();
         }
 
-        public com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord build() {
-          com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord result = buildPartial();
+        public CallRecord build() {
+          CallRecord result = buildPartial();
           if (!result.isInitialized()) {
             throw newUninitializedMessageException(result);
           }
           return result;
         }
 
-        public com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord buildPartial() {
-          com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord result = new com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord(this);
+        public CallRecord buildPartial() {
+          CallRecord result = new CallRecord(this);
           result.phoneNumber_ = phoneNumber_;
           result.name_ = name_;
           result.address_ = address_;
-          result.state_ = state_;
+          result.type_ = type_;
           result.date_ = date_;
+          result.duration_ = duration_;
           onBuilt();
           return result;
         }
@@ -741,16 +754,16 @@ public final class TtCallRecordProtos {
           return (Builder) super.addRepeatedField(field, value);
         }
         public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord) {
-            return mergeFrom((com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord)other);
+          if (other instanceof CallRecord) {
+            return mergeFrom((CallRecord)other);
           } else {
             super.mergeFrom(other);
             return this;
           }
         }
 
-        public Builder mergeFrom(com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord other) {
-          if (other == com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord.getDefaultInstance()) return this;
+        public Builder mergeFrom(CallRecord other) {
+          if (other == CallRecord.getDefaultInstance()) return this;
           if (!other.getPhoneNumber().isEmpty()) {
             phoneNumber_ = other.phoneNumber_;
             onChanged();
@@ -763,13 +776,15 @@ public final class TtCallRecordProtos {
             address_ = other.address_;
             onChanged();
           }
-          if (!other.getState().isEmpty()) {
-            state_ = other.state_;
-            onChanged();
+          if (other.getType() != 0) {
+            setType(other.getType());
           }
           if (!other.getDate().isEmpty()) {
             date_ = other.date_;
             onChanged();
+          }
+          if (other.getDuration() != 0L) {
+            setDuration(other.getDuration());
           }
           onChanged();
           return this;
@@ -783,11 +798,11 @@ public final class TtCallRecordProtos {
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-          com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord parsedMessage = null;
+          CallRecord parsedMessage = null;
           try {
             parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
           } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            parsedMessage = (com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord) e.getUnfinishedMessage();
+            parsedMessage = (CallRecord) e.getUnfinishedMessage();
             throw e.unwrapIOException();
           } finally {
             if (parsedMessage != null) {
@@ -820,7 +835,7 @@ public final class TtCallRecordProtos {
             getPhoneNumberBytes() {
           Object ref = phoneNumber_;
           if (ref instanceof String) {
-            com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString b = 
                 com.google.protobuf.ByteString.copyFromUtf8(
                     (String) ref);
             phoneNumber_ = b;
@@ -837,7 +852,7 @@ public final class TtCallRecordProtos {
           if (value == null) {
     throw new NullPointerException();
   }
-
+  
           phoneNumber_ = value;
           onChanged();
           return this;
@@ -846,7 +861,7 @@ public final class TtCallRecordProtos {
          * <code>optional string phoneNumber = 1;</code>
          */
         public Builder clearPhoneNumber() {
-
+          
           phoneNumber_ = getDefaultInstance().getPhoneNumber();
           onChanged();
           return this;
@@ -860,7 +875,7 @@ public final class TtCallRecordProtos {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+          
           phoneNumber_ = value;
           onChanged();
           return this;
@@ -889,7 +904,7 @@ public final class TtCallRecordProtos {
             getNameBytes() {
           Object ref = name_;
           if (ref instanceof String) {
-            com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString b = 
                 com.google.protobuf.ByteString.copyFromUtf8(
                     (String) ref);
             name_ = b;
@@ -906,7 +921,7 @@ public final class TtCallRecordProtos {
           if (value == null) {
     throw new NullPointerException();
   }
-
+  
           name_ = value;
           onChanged();
           return this;
@@ -915,7 +930,7 @@ public final class TtCallRecordProtos {
          * <code>optional string name = 2;</code>
          */
         public Builder clearName() {
-
+          
           name_ = getDefaultInstance().getName();
           onChanged();
           return this;
@@ -929,7 +944,7 @@ public final class TtCallRecordProtos {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+          
           name_ = value;
           onChanged();
           return this;
@@ -958,7 +973,7 @@ public final class TtCallRecordProtos {
             getAddressBytes() {
           Object ref = address_;
           if (ref instanceof String) {
-            com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString b = 
                 com.google.protobuf.ByteString.copyFromUtf8(
                     (String) ref);
             address_ = b;
@@ -975,7 +990,7 @@ public final class TtCallRecordProtos {
           if (value == null) {
     throw new NullPointerException();
   }
-
+  
           address_ = value;
           onChanged();
           return this;
@@ -984,7 +999,7 @@ public final class TtCallRecordProtos {
          * <code>optional string address = 3;</code>
          */
         public Builder clearAddress() {
-
+          
           address_ = getDefaultInstance().getAddress();
           onChanged();
           return this;
@@ -998,77 +1013,46 @@ public final class TtCallRecordProtos {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+          
           address_ = value;
           onChanged();
           return this;
         }
 
-        private Object state_ = "";
+        private int type_ ;
         /**
-         * <code>optional string state = 4;</code>
+         * <pre>
+         * 来电:1，拨出:2,未接:3
+         * </pre>
+         *
+         * <code>optional int32 type = 4;</code>
          */
-        public String getState() {
-          Object ref = state_;
-          if (!(ref instanceof String)) {
-            com.google.protobuf.ByteString bs =
-                (com.google.protobuf.ByteString) ref;
-            String s = bs.toStringUtf8();
-            state_ = s;
-            return s;
-          } else {
-            return (String) ref;
-          }
+        public int getType() {
+          return type_;
         }
         /**
-         * <code>optional string state = 4;</code>
+         * <pre>
+         * 来电:1，拨出:2,未接:3
+         * </pre>
+         *
+         * <code>optional int32 type = 4;</code>
          */
-        public com.google.protobuf.ByteString
-            getStateBytes() {
-          Object ref = state_;
-          if (ref instanceof String) {
-            com.google.protobuf.ByteString b =
-                com.google.protobuf.ByteString.copyFromUtf8(
-                    (String) ref);
-            state_ = b;
-            return b;
-          } else {
-            return (com.google.protobuf.ByteString) ref;
-          }
-        }
-        /**
-         * <code>optional string state = 4;</code>
-         */
-        public Builder setState(
-            String value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-
-          state_ = value;
+        public Builder setType(int value) {
+          
+          type_ = value;
           onChanged();
           return this;
         }
         /**
-         * <code>optional string state = 4;</code>
+         * <pre>
+         * 来电:1，拨出:2,未接:3
+         * </pre>
+         *
+         * <code>optional int32 type = 4;</code>
          */
-        public Builder clearState() {
-
-          state_ = getDefaultInstance().getState();
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>optional string state = 4;</code>
-         */
-        public Builder setStateBytes(
-            com.google.protobuf.ByteString value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-
-          state_ = value;
+        public Builder clearType() {
+          
+          type_ = 0;
           onChanged();
           return this;
         }
@@ -1096,7 +1080,7 @@ public final class TtCallRecordProtos {
             getDateBytes() {
           Object ref = date_;
           if (ref instanceof String) {
-            com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString b = 
                 com.google.protobuf.ByteString.copyFromUtf8(
                     (String) ref);
             date_ = b;
@@ -1113,7 +1097,7 @@ public final class TtCallRecordProtos {
           if (value == null) {
     throw new NullPointerException();
   }
-
+  
           date_ = value;
           onChanged();
           return this;
@@ -1122,7 +1106,7 @@ public final class TtCallRecordProtos {
          * <code>optional string date = 5;</code>
          */
         public Builder clearDate() {
-
+          
           date_ = getDefaultInstance().getDate();
           onChanged();
           return this;
@@ -1136,8 +1120,34 @@ public final class TtCallRecordProtos {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+          
           date_ = value;
+          onChanged();
+          return this;
+        }
+
+        private long duration_ ;
+        /**
+         * <code>optional int64 duration = 6;</code>
+         */
+        public long getDuration() {
+          return duration_;
+        }
+        /**
+         * <code>optional int64 duration = 6;</code>
+         */
+        public Builder setDuration(long value) {
+          
+          duration_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional int64 duration = 6;</code>
+         */
+        public Builder clearDuration() {
+          
+          duration_ = 0L;
           onChanged();
           return this;
         }
@@ -1156,12 +1166,12 @@ public final class TtCallRecordProtos {
       }
 
       // @@protoc_insertion_point(class_scope:phonedata.TtCallRecordProto.CallRecord)
-      private static final com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord DEFAULT_INSTANCE;
+      private static final CallRecord DEFAULT_INSTANCE;
       static {
-        DEFAULT_INSTANCE = new com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord();
+        DEFAULT_INSTANCE = new CallRecord();
       }
 
-      public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord getDefaultInstance() {
+      public static CallRecord getDefaultInstance() {
         return DEFAULT_INSTANCE;
       }
 
@@ -1184,7 +1194,7 @@ public final class TtCallRecordProtos {
         return PARSER;
       }
 
-      public com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord getDefaultInstanceForType() {
+      public CallRecord getDefaultInstanceForType() {
         return DEFAULT_INSTANCE;
       }
 
@@ -1233,13 +1243,13 @@ public final class TtCallRecordProtos {
     /**
      * <code>repeated .phonedata.TtCallRecordProto.CallRecord callRecord = 4;</code>
      */
-    public com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord getCallRecord(int index) {
+    public CallRecord getCallRecord(int index) {
       return callRecord_.get(index);
     }
     /**
      * <code>repeated .phonedata.TtCallRecordProto.CallRecord callRecord = 4;</code>
      */
-    public com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecordOrBuilder getCallRecordOrBuilder(
+    public CallRecordOrBuilder getCallRecordOrBuilder(
         int index) {
       return callRecord_.get(index);
     }
@@ -1294,10 +1304,10 @@ public final class TtCallRecordProtos {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto)) {
+      if (!(obj instanceof TtCallRecordProto)) {
         return super.equals(obj);
       }
-      com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto other = (com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto) obj;
+      TtCallRecordProto other = (TtCallRecordProto) obj;
 
       boolean result = true;
       result = result && (getRequest()
@@ -1331,58 +1341,58 @@ public final class TtCallRecordProtos {
       return hash;
     }
 
-    public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto parseFrom(
+    public static TtCallRecordProto parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto parseFrom(
+    public static TtCallRecordProto parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto parseFrom(byte[] data)
+    public static TtCallRecordProto parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto parseFrom(
+    public static TtCallRecordProto parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto parseFrom(java.io.InputStream input)
+    public static TtCallRecordProto parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto parseFrom(
+    public static TtCallRecordProto parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto parseDelimitedFrom(java.io.InputStream input)
+    public static TtCallRecordProto parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto parseDelimitedFrom(
+    public static TtCallRecordProto parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto parseFrom(
+    public static TtCallRecordProto parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto parseFrom(
+    public static TtCallRecordProto parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1394,7 +1404,7 @@ public final class TtCallRecordProtos {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto prototype) {
+    public static Builder newBuilder(TtCallRecordProto prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -1414,17 +1424,17 @@ public final class TtCallRecordProtos {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:phonedata.TtCallRecordProto)
-        com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProtoOrBuilder {
+        TtCallRecordProtoOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.qzy.tt.data.TtCallRecordProtos.internal_static_phonedata_TtCallRecordProto_descriptor;
+        return TtCallRecordProtos.internal_static_phonedata_TtCallRecordProto_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.qzy.tt.data.TtCallRecordProtos.internal_static_phonedata_TtCallRecordProto_fieldAccessorTable
+        return TtCallRecordProtos.internal_static_phonedata_TtCallRecordProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.class, com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.Builder.class);
+                TtCallRecordProto.class, Builder.class);
       }
 
       // Construct using com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.newBuilder()
@@ -1460,23 +1470,23 @@ public final class TtCallRecordProtos {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.qzy.tt.data.TtCallRecordProtos.internal_static_phonedata_TtCallRecordProto_descriptor;
+        return TtCallRecordProtos.internal_static_phonedata_TtCallRecordProto_descriptor;
       }
 
-      public com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto getDefaultInstanceForType() {
-        return com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.getDefaultInstance();
+      public TtCallRecordProto getDefaultInstanceForType() {
+        return TtCallRecordProto.getDefaultInstance();
       }
 
-      public com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto build() {
-        com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto result = buildPartial();
+      public TtCallRecordProto build() {
+        TtCallRecordProto result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto buildPartial() {
-        com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto result = new com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto(this);
+      public TtCallRecordProto buildPartial() {
+        TtCallRecordProto result = new TtCallRecordProto(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         result.request_ = request_;
@@ -1522,16 +1532,16 @@ public final class TtCallRecordProtos {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto) {
-          return mergeFrom((com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto)other);
+        if (other instanceof TtCallRecordProto) {
+          return mergeFrom((TtCallRecordProto)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto other) {
-        if (other == com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.getDefaultInstance()) return this;
+      public Builder mergeFrom(TtCallRecordProto other) {
+        if (other == TtCallRecordProto.getDefaultInstance()) return this;
         if (other.getRequest() != false) {
           setRequest(other.getRequest());
         }
@@ -1556,7 +1566,7 @@ public final class TtCallRecordProtos {
               callRecordBuilder_ = null;
               callRecord_ = other.callRecord_;
               bitField0_ = (bitField0_ & ~0x00000004);
-              callRecordBuilder_ =
+              callRecordBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getCallRecordFieldBuilder() : null;
             } else {
@@ -1576,11 +1586,11 @@ public final class TtCallRecordProtos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto parsedMessage = null;
+        TtCallRecordProto parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto) e.getUnfinishedMessage();
+          parsedMessage = (TtCallRecordProto) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -1602,7 +1612,7 @@ public final class TtCallRecordProtos {
        * <code>optional bool request = 1;</code>
        */
       public Builder setRequest(boolean value) {
-
+        
         request_ = value;
         onChanged();
         return this;
@@ -1611,7 +1621,7 @@ public final class TtCallRecordProtos {
        * <code>optional bool request = 1;</code>
        */
       public Builder clearRequest() {
-
+        
         request_ = false;
         onChanged();
         return this;
@@ -1628,7 +1638,7 @@ public final class TtCallRecordProtos {
        * <code>optional bool response = 2;</code>
        */
       public Builder setResponse(boolean value) {
-
+        
         response_ = value;
         onChanged();
         return this;
@@ -1637,7 +1647,7 @@ public final class TtCallRecordProtos {
        * <code>optional bool response = 2;</code>
        */
       public Builder clearResponse() {
-
+        
         response_ = false;
         onChanged();
         return this;
@@ -1678,7 +1688,7 @@ public final class TtCallRecordProtos {
       /**
        * <code>repeated .phonedata.TtCallRecordProto.CallRecord callRecord = 4;</code>
        */
-      public com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord getCallRecord(int index) {
+      public CallRecord getCallRecord(int index) {
         if (callRecordBuilder_ == null) {
           return callRecord_.get(index);
         } else {
@@ -1689,7 +1699,7 @@ public final class TtCallRecordProtos {
        * <code>repeated .phonedata.TtCallRecordProto.CallRecord callRecord = 4;</code>
        */
       public Builder setCallRecord(
-          int index, com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord value) {
+          int index, CallRecord value) {
         if (callRecordBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1706,7 +1716,7 @@ public final class TtCallRecordProtos {
        * <code>repeated .phonedata.TtCallRecordProto.CallRecord callRecord = 4;</code>
        */
       public Builder setCallRecord(
-          int index, com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord.Builder builderForValue) {
+          int index, CallRecord.Builder builderForValue) {
         if (callRecordBuilder_ == null) {
           ensureCallRecordIsMutable();
           callRecord_.set(index, builderForValue.build());
@@ -1719,7 +1729,7 @@ public final class TtCallRecordProtos {
       /**
        * <code>repeated .phonedata.TtCallRecordProto.CallRecord callRecord = 4;</code>
        */
-      public Builder addCallRecord(com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord value) {
+      public Builder addCallRecord(CallRecord value) {
         if (callRecordBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1736,7 +1746,7 @@ public final class TtCallRecordProtos {
        * <code>repeated .phonedata.TtCallRecordProto.CallRecord callRecord = 4;</code>
        */
       public Builder addCallRecord(
-          int index, com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord value) {
+          int index, CallRecord value) {
         if (callRecordBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1753,7 +1763,7 @@ public final class TtCallRecordProtos {
        * <code>repeated .phonedata.TtCallRecordProto.CallRecord callRecord = 4;</code>
        */
       public Builder addCallRecord(
-          com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord.Builder builderForValue) {
+          CallRecord.Builder builderForValue) {
         if (callRecordBuilder_ == null) {
           ensureCallRecordIsMutable();
           callRecord_.add(builderForValue.build());
@@ -1767,7 +1777,7 @@ public final class TtCallRecordProtos {
        * <code>repeated .phonedata.TtCallRecordProto.CallRecord callRecord = 4;</code>
        */
       public Builder addCallRecord(
-          int index, com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord.Builder builderForValue) {
+          int index, CallRecord.Builder builderForValue) {
         if (callRecordBuilder_ == null) {
           ensureCallRecordIsMutable();
           callRecord_.add(index, builderForValue.build());
@@ -1821,14 +1831,14 @@ public final class TtCallRecordProtos {
       /**
        * <code>repeated .phonedata.TtCallRecordProto.CallRecord callRecord = 4;</code>
        */
-      public com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord.Builder getCallRecordBuilder(
+      public CallRecord.Builder getCallRecordBuilder(
           int index) {
         return getCallRecordFieldBuilder().getBuilder(index);
       }
       /**
        * <code>repeated .phonedata.TtCallRecordProto.CallRecord callRecord = 4;</code>
        */
-      public com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecordOrBuilder getCallRecordOrBuilder(
+      public CallRecordOrBuilder getCallRecordOrBuilder(
           int index) {
         if (callRecordBuilder_ == null) {
           return callRecord_.get(index);  } else {
@@ -1849,17 +1859,17 @@ public final class TtCallRecordProtos {
       /**
        * <code>repeated .phonedata.TtCallRecordProto.CallRecord callRecord = 4;</code>
        */
-      public com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord.Builder addCallRecordBuilder() {
+      public CallRecord.Builder addCallRecordBuilder() {
         return getCallRecordFieldBuilder().addBuilder(
-            com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord.getDefaultInstance());
+            CallRecord.getDefaultInstance());
       }
       /**
        * <code>repeated .phonedata.TtCallRecordProto.CallRecord callRecord = 4;</code>
        */
-      public com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord.Builder addCallRecordBuilder(
+      public CallRecord.Builder addCallRecordBuilder(
           int index) {
         return getCallRecordFieldBuilder().addBuilder(
-            index, com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord.getDefaultInstance());
+            index, CallRecord.getDefaultInstance());
       }
       /**
        * <code>repeated .phonedata.TtCallRecordProto.CallRecord callRecord = 4;</code>
@@ -1897,12 +1907,12 @@ public final class TtCallRecordProtos {
     }
 
     // @@protoc_insertion_point(class_scope:phonedata.TtCallRecordProto)
-    private static final com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto DEFAULT_INSTANCE;
+    private static final TtCallRecordProto DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto();
+      DEFAULT_INSTANCE = new TtCallRecordProto();
     }
 
-    public static com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto getDefaultInstance() {
+    public static TtCallRecordProto getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -1925,7 +1935,7 @@ public final class TtCallRecordProtos {
       return PARSER;
     }
 
-    public com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto getDefaultInstanceForType() {
+    public TtCallRecordProto getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -1933,12 +1943,12 @@ public final class TtCallRecordProtos {
 
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_phonedata_TtCallRecordProto_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_phonedata_TtCallRecordProto_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_phonedata_TtCallRecordProto_CallRecord_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_phonedata_TtCallRecordProto_CallRecord_fieldAccessorTable;
 
@@ -1950,14 +1960,14 @@ public final class TtCallRecordProtos {
       descriptor;
   static {
     String[] descriptorData = {
-      "\n\022TtCallRecord.proto\022\tphonedata\"\322\001\n\021TtCa" +
+      "\n\022TtCallRecord.proto\022\tphonedata\"\343\001\n\021TtCa" +
       "llRecordProto\022\017\n\007request\030\001 \001(\010\022\020\n\010respon" +
       "se\030\002 \001(\010\022;\n\ncallRecord\030\004 \003(\0132\'.phonedata" +
-      ".TtCallRecordProto.CallRecord\032]\n\nCallRec" +
+      ".TtCallRecordProto.CallRecord\032n\n\nCallRec" +
       "ord\022\023\n\013phoneNumber\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\017" +
-      "\n\007address\030\003 \001(\t\022\r\n\005state\030\004 \001(\t\022\014\n\004date\030\005" +
-      " \001(\tB%\n\017com.qzy.tt.dataB\022TtCallRecordPro" +
-      "tosb\006proto3"
+      "\n\007address\030\003 \001(\t\022\014\n\004type\030\004 \001(\005\022\014\n\004date\030\005 " +
+      "\001(\t\022\020\n\010duration\030\006 \001(\003B%\n\017com.qzy.tt.data" +
+      "B\022TtCallRecordProtosb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1982,7 +1992,7 @@ public final class TtCallRecordProtos {
     internal_static_phonedata_TtCallRecordProto_CallRecord_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_phonedata_TtCallRecordProto_CallRecord_descriptor,
-        new String[] { "PhoneNumber", "Name", "Address", "State", "Date", });
+        new String[] { "PhoneNumber", "Name", "Address", "Type", "Date", "Duration", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

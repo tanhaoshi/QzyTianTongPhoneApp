@@ -81,14 +81,14 @@ public final class TtPhoneDataProtos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.qzy.tt.data.TtPhoneDataProtos.internal_static_phonedata_PhoneData_descriptor;
+      return TtPhoneDataProtos.internal_static_phonedata_PhoneData_descriptor;
     }
 
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.qzy.tt.data.TtPhoneDataProtos.internal_static_phonedata_PhoneData_fieldAccessorTable
+      return TtPhoneDataProtos.internal_static_phonedata_PhoneData_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.qzy.tt.data.TtPhoneDataProtos.PhoneData.class, com.qzy.tt.data.TtPhoneDataProtos.PhoneData.Builder.class);
+              PhoneData.class, Builder.class);
     }
 
     public static final int PROTOINDEX_FIELD_NUMBER = 1;
@@ -136,10 +136,10 @@ public final class TtPhoneDataProtos {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.qzy.tt.data.TtPhoneDataProtos.PhoneData)) {
+      if (!(obj instanceof PhoneData)) {
         return super.equals(obj);
       }
-      com.qzy.tt.data.TtPhoneDataProtos.PhoneData other = (com.qzy.tt.data.TtPhoneDataProtos.PhoneData) obj;
+      PhoneData other = (PhoneData) obj;
 
       boolean result = true;
       result = result && (getProtoIndex()
@@ -161,58 +161,58 @@ public final class TtPhoneDataProtos {
       return hash;
     }
 
-    public static com.qzy.tt.data.TtPhoneDataProtos.PhoneData parseFrom(
+    public static PhoneData parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.qzy.tt.data.TtPhoneDataProtos.PhoneData parseFrom(
+    public static PhoneData parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.qzy.tt.data.TtPhoneDataProtos.PhoneData parseFrom(byte[] data)
+    public static PhoneData parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.qzy.tt.data.TtPhoneDataProtos.PhoneData parseFrom(
+    public static PhoneData parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.qzy.tt.data.TtPhoneDataProtos.PhoneData parseFrom(java.io.InputStream input)
+    public static PhoneData parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.qzy.tt.data.TtPhoneDataProtos.PhoneData parseFrom(
+    public static PhoneData parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.qzy.tt.data.TtPhoneDataProtos.PhoneData parseDelimitedFrom(java.io.InputStream input)
+    public static PhoneData parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.qzy.tt.data.TtPhoneDataProtos.PhoneData parseDelimitedFrom(
+    public static PhoneData parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.qzy.tt.data.TtPhoneDataProtos.PhoneData parseFrom(
+    public static PhoneData parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.qzy.tt.data.TtPhoneDataProtos.PhoneData parseFrom(
+    public static PhoneData parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -224,7 +224,7 @@ public final class TtPhoneDataProtos {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.qzy.tt.data.TtPhoneDataProtos.PhoneData prototype) {
+    public static Builder newBuilder(PhoneData prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -244,17 +244,17 @@ public final class TtPhoneDataProtos {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:phonedata.PhoneData)
-        com.qzy.tt.data.TtPhoneDataProtos.PhoneDataOrBuilder {
+        PhoneDataOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.qzy.tt.data.TtPhoneDataProtos.internal_static_phonedata_PhoneData_descriptor;
+        return TtPhoneDataProtos.internal_static_phonedata_PhoneData_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.qzy.tt.data.TtPhoneDataProtos.internal_static_phonedata_PhoneData_fieldAccessorTable
+        return TtPhoneDataProtos.internal_static_phonedata_PhoneData_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.qzy.tt.data.TtPhoneDataProtos.PhoneData.class, com.qzy.tt.data.TtPhoneDataProtos.PhoneData.Builder.class);
+                PhoneData.class, Builder.class);
       }
 
       // Construct using com.qzy.tt.data.TtPhoneDataProtos.PhoneData.newBuilder()
@@ -281,23 +281,23 @@ public final class TtPhoneDataProtos {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.qzy.tt.data.TtPhoneDataProtos.internal_static_phonedata_PhoneData_descriptor;
+        return TtPhoneDataProtos.internal_static_phonedata_PhoneData_descriptor;
       }
 
-      public com.qzy.tt.data.TtPhoneDataProtos.PhoneData getDefaultInstanceForType() {
-        return com.qzy.tt.data.TtPhoneDataProtos.PhoneData.getDefaultInstance();
+      public PhoneData getDefaultInstanceForType() {
+        return PhoneData.getDefaultInstance();
       }
 
-      public com.qzy.tt.data.TtPhoneDataProtos.PhoneData build() {
-        com.qzy.tt.data.TtPhoneDataProtos.PhoneData result = buildPartial();
+      public PhoneData build() {
+        PhoneData result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public com.qzy.tt.data.TtPhoneDataProtos.PhoneData buildPartial() {
-        com.qzy.tt.data.TtPhoneDataProtos.PhoneData result = new com.qzy.tt.data.TtPhoneDataProtos.PhoneData(this);
+      public PhoneData buildPartial() {
+        PhoneData result = new PhoneData(this);
         result.protoIndex_ = protoIndex_;
         onBuilt();
         return result;
@@ -330,16 +330,16 @@ public final class TtPhoneDataProtos {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.qzy.tt.data.TtPhoneDataProtos.PhoneData) {
-          return mergeFrom((com.qzy.tt.data.TtPhoneDataProtos.PhoneData)other);
+        if (other instanceof PhoneData) {
+          return mergeFrom((PhoneData)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.qzy.tt.data.TtPhoneDataProtos.PhoneData other) {
-        if (other == com.qzy.tt.data.TtPhoneDataProtos.PhoneData.getDefaultInstance()) return this;
+      public Builder mergeFrom(PhoneData other) {
+        if (other == PhoneData.getDefaultInstance()) return this;
         if (other.getProtoIndex() != 0) {
           setProtoIndex(other.getProtoIndex());
         }
@@ -355,11 +355,11 @@ public final class TtPhoneDataProtos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.qzy.tt.data.TtPhoneDataProtos.PhoneData parsedMessage = null;
+        PhoneData parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.qzy.tt.data.TtPhoneDataProtos.PhoneData) e.getUnfinishedMessage();
+          parsedMessage = (PhoneData) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -380,7 +380,7 @@ public final class TtPhoneDataProtos {
        * <code>optional int32 protoIndex = 1;</code>
        */
       public Builder setProtoIndex(int value) {
-
+        
         protoIndex_ = value;
         onChanged();
         return this;
@@ -389,7 +389,7 @@ public final class TtPhoneDataProtos {
        * <code>optional int32 protoIndex = 1;</code>
        */
       public Builder clearProtoIndex() {
-
+        
         protoIndex_ = 0;
         onChanged();
         return this;
@@ -409,12 +409,12 @@ public final class TtPhoneDataProtos {
     }
 
     // @@protoc_insertion_point(class_scope:phonedata.PhoneData)
-    private static final com.qzy.tt.data.TtPhoneDataProtos.PhoneData DEFAULT_INSTANCE;
+    private static final PhoneData DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.qzy.tt.data.TtPhoneDataProtos.PhoneData();
+      DEFAULT_INSTANCE = new PhoneData();
     }
 
-    public static com.qzy.tt.data.TtPhoneDataProtos.PhoneData getDefaultInstance() {
+    public static PhoneData getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -437,7 +437,7 @@ public final class TtPhoneDataProtos {
       return PARSER;
     }
 
-    public com.qzy.tt.data.TtPhoneDataProtos.PhoneData getDefaultInstanceForType() {
+    public PhoneData getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -445,7 +445,7 @@ public final class TtPhoneDataProtos {
 
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_phonedata_PhoneData_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_phonedata_PhoneData_fieldAccessorTable;
 

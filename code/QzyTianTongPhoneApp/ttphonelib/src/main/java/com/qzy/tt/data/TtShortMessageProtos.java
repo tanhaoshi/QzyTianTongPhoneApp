@@ -36,7 +36,7 @@ public final class TtShortMessageProtos {
     /**
      * <code>repeated .phonedata.TtShortMessage.ShortMessage shortMessage = 4;</code>
      */
-    com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage getShortMessage(int index);
+    TtShortMessage.ShortMessage getShortMessage(int index);
     /**
      * <code>repeated .phonedata.TtShortMessage.ShortMessage shortMessage = 4;</code>
      */
@@ -49,7 +49,7 @@ public final class TtShortMessageProtos {
     /**
      * <code>repeated .phonedata.TtShortMessage.ShortMessage shortMessage = 4;</code>
      */
-    com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessageOrBuilder getShortMessageOrBuilder(
+    TtShortMessage.ShortMessageOrBuilder getShortMessageOrBuilder(
             int index);
   }
   /**
@@ -110,7 +110,7 @@ public final class TtShortMessageProtos {
                 mutable_bitField0_ |= 0x00000004;
               }
               shortMessage_.add(
-                  input.readMessage(com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage.parser(), extensionRegistry));
+                  input.readMessage(ShortMessage.parser(), extensionRegistry));
               break;
             }
           }
@@ -129,14 +129,14 @@ public final class TtShortMessageProtos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.qzy.tt.data.TtShortMessageProtos.internal_static_phonedata_TtShortMessage_descriptor;
+      return TtShortMessageProtos.internal_static_phonedata_TtShortMessage_descriptor;
     }
 
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.qzy.tt.data.TtShortMessageProtos.internal_static_phonedata_TtShortMessage_fieldAccessorTable
+      return TtShortMessageProtos.internal_static_phonedata_TtShortMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.class, com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.Builder.class);
+              TtShortMessage.class, Builder.class);
     }
 
     public interface ShortMessageOrBuilder extends
@@ -280,14 +280,14 @@ public final class TtShortMessageProtos {
       }
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.qzy.tt.data.TtShortMessageProtos.internal_static_phonedata_TtShortMessage_ShortMessage_descriptor;
+        return TtShortMessageProtos.internal_static_phonedata_TtShortMessage_ShortMessage_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.qzy.tt.data.TtShortMessageProtos.internal_static_phonedata_TtShortMessage_ShortMessage_fieldAccessorTable
+        return TtShortMessageProtos.internal_static_phonedata_TtShortMessage_ShortMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage.class, com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage.Builder.class);
+                ShortMessage.class, Builder.class);
       }
 
       public static final int NUMBERPHONE_FIELD_NUMBER = 1;
@@ -300,7 +300,7 @@ public final class TtShortMessageProtos {
         if (ref instanceof String) {
           return (String) ref;
         } else {
-          com.google.protobuf.ByteString bs =
+          com.google.protobuf.ByteString bs = 
               (com.google.protobuf.ByteString) ref;
           String s = bs.toStringUtf8();
           numberPhone_ = s;
@@ -314,7 +314,7 @@ public final class TtShortMessageProtos {
           getNumberPhoneBytes() {
         Object ref = numberPhone_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           numberPhone_ = b;
@@ -334,7 +334,7 @@ public final class TtShortMessageProtos {
         if (ref instanceof String) {
           return (String) ref;
         } else {
-          com.google.protobuf.ByteString bs =
+          com.google.protobuf.ByteString bs = 
               (com.google.protobuf.ByteString) ref;
           String s = bs.toStringUtf8();
           message_ = s;
@@ -348,7 +348,7 @@ public final class TtShortMessageProtos {
           getMessageBytes() {
         Object ref = message_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           message_ = b;
@@ -368,7 +368,7 @@ public final class TtShortMessageProtos {
         if (ref instanceof String) {
           return (String) ref;
         } else {
-          com.google.protobuf.ByteString bs =
+          com.google.protobuf.ByteString bs = 
               (com.google.protobuf.ByteString) ref;
           String s = bs.toStringUtf8();
           time_ = s;
@@ -382,7 +382,7 @@ public final class TtShortMessageProtos {
           getTimeBytes() {
         Object ref = time_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           time_ = b;
@@ -402,7 +402,7 @@ public final class TtShortMessageProtos {
         if (ref instanceof String) {
           return (String) ref;
         } else {
-          com.google.protobuf.ByteString bs =
+          com.google.protobuf.ByteString bs = 
               (com.google.protobuf.ByteString) ref;
           String s = bs.toStringUtf8();
           state_ = s;
@@ -416,7 +416,7 @@ public final class TtShortMessageProtos {
           getStateBytes() {
         Object ref = state_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           state_ = b;
@@ -436,7 +436,7 @@ public final class TtShortMessageProtos {
         if (ref instanceof String) {
           return (String) ref;
         } else {
-          com.google.protobuf.ByteString bs =
+          com.google.protobuf.ByteString bs = 
               (com.google.protobuf.ByteString) ref;
           String s = bs.toStringUtf8();
           name_ = s;
@@ -450,7 +450,7 @@ public final class TtShortMessageProtos {
           getNameBytes() {
         Object ref = name_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           name_ = b;
@@ -519,10 +519,10 @@ public final class TtShortMessageProtos {
         if (obj == this) {
          return true;
         }
-        if (!(obj instanceof com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage)) {
+        if (!(obj instanceof ShortMessage)) {
           return super.equals(obj);
         }
-        com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage other = (com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage) obj;
+        ShortMessage other = (ShortMessage) obj;
 
         boolean result = true;
         result = result && getNumberPhone()
@@ -560,58 +560,58 @@ public final class TtShortMessageProtos {
         return hash;
       }
 
-      public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage parseFrom(
+      public static ShortMessage parseFrom(
           com.google.protobuf.ByteString data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage parseFrom(
+      public static ShortMessage parseFrom(
           com.google.protobuf.ByteString data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage parseFrom(byte[] data)
+      public static ShortMessage parseFrom(byte[] data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage parseFrom(
+      public static ShortMessage parseFrom(
           byte[] data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage parseFrom(java.io.InputStream input)
+      public static ShortMessage parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
-      public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage parseFrom(
+      public static ShortMessage parseFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
-      public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage parseDelimitedFrom(java.io.InputStream input)
+      public static ShortMessage parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
-      public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage parseDelimitedFrom(
+      public static ShortMessage parseDelimitedFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
-      public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage parseFrom(
+      public static ShortMessage parseFrom(
           com.google.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
-      public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage parseFrom(
+      public static ShortMessage parseFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -623,7 +623,7 @@ public final class TtShortMessageProtos {
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
-      public static Builder newBuilder(com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage prototype) {
+      public static Builder newBuilder(ShortMessage prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
       public Builder toBuilder() {
@@ -643,17 +643,17 @@ public final class TtShortMessageProtos {
       public static final class Builder extends
           com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
           // @@protoc_insertion_point(builder_implements:phonedata.TtShortMessage.ShortMessage)
-          com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessageOrBuilder {
+          ShortMessageOrBuilder {
         public static final com.google.protobuf.Descriptors.Descriptor
             getDescriptor() {
-          return com.qzy.tt.data.TtShortMessageProtos.internal_static_phonedata_TtShortMessage_ShortMessage_descriptor;
+          return TtShortMessageProtos.internal_static_phonedata_TtShortMessage_ShortMessage_descriptor;
         }
 
         protected FieldAccessorTable
             internalGetFieldAccessorTable() {
-          return com.qzy.tt.data.TtShortMessageProtos.internal_static_phonedata_TtShortMessage_ShortMessage_fieldAccessorTable
+          return TtShortMessageProtos.internal_static_phonedata_TtShortMessage_ShortMessage_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
-                  com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage.class, com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage.Builder.class);
+                  ShortMessage.class, Builder.class);
         }
 
         // Construct using com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage.newBuilder()
@@ -688,23 +688,23 @@ public final class TtShortMessageProtos {
 
         public com.google.protobuf.Descriptors.Descriptor
             getDescriptorForType() {
-          return com.qzy.tt.data.TtShortMessageProtos.internal_static_phonedata_TtShortMessage_ShortMessage_descriptor;
+          return TtShortMessageProtos.internal_static_phonedata_TtShortMessage_ShortMessage_descriptor;
         }
 
-        public com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage getDefaultInstanceForType() {
-          return com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage.getDefaultInstance();
+        public ShortMessage getDefaultInstanceForType() {
+          return ShortMessage.getDefaultInstance();
         }
 
-        public com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage build() {
-          com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage result = buildPartial();
+        public ShortMessage build() {
+          ShortMessage result = buildPartial();
           if (!result.isInitialized()) {
             throw newUninitializedMessageException(result);
           }
           return result;
         }
 
-        public com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage buildPartial() {
-          com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage result = new com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage(this);
+        public ShortMessage buildPartial() {
+          ShortMessage result = new ShortMessage(this);
           result.numberPhone_ = numberPhone_;
           result.message_ = message_;
           result.time_ = time_;
@@ -741,16 +741,16 @@ public final class TtShortMessageProtos {
           return (Builder) super.addRepeatedField(field, value);
         }
         public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage) {
-            return mergeFrom((com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage)other);
+          if (other instanceof ShortMessage) {
+            return mergeFrom((ShortMessage)other);
           } else {
             super.mergeFrom(other);
             return this;
           }
         }
 
-        public Builder mergeFrom(com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage other) {
-          if (other == com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage.getDefaultInstance()) return this;
+        public Builder mergeFrom(ShortMessage other) {
+          if (other == ShortMessage.getDefaultInstance()) return this;
           if (!other.getNumberPhone().isEmpty()) {
             numberPhone_ = other.numberPhone_;
             onChanged();
@@ -783,11 +783,11 @@ public final class TtShortMessageProtos {
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-          com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage parsedMessage = null;
+          ShortMessage parsedMessage = null;
           try {
             parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
           } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            parsedMessage = (com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage) e.getUnfinishedMessage();
+            parsedMessage = (ShortMessage) e.getUnfinishedMessage();
             throw e.unwrapIOException();
           } finally {
             if (parsedMessage != null) {
@@ -820,7 +820,7 @@ public final class TtShortMessageProtos {
             getNumberPhoneBytes() {
           Object ref = numberPhone_;
           if (ref instanceof String) {
-            com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString b = 
                 com.google.protobuf.ByteString.copyFromUtf8(
                     (String) ref);
             numberPhone_ = b;
@@ -837,7 +837,7 @@ public final class TtShortMessageProtos {
           if (value == null) {
     throw new NullPointerException();
   }
-
+  
           numberPhone_ = value;
           onChanged();
           return this;
@@ -846,7 +846,7 @@ public final class TtShortMessageProtos {
          * <code>optional string numberPhone = 1;</code>
          */
         public Builder clearNumberPhone() {
-
+          
           numberPhone_ = getDefaultInstance().getNumberPhone();
           onChanged();
           return this;
@@ -860,7 +860,7 @@ public final class TtShortMessageProtos {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+          
           numberPhone_ = value;
           onChanged();
           return this;
@@ -889,7 +889,7 @@ public final class TtShortMessageProtos {
             getMessageBytes() {
           Object ref = message_;
           if (ref instanceof String) {
-            com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString b = 
                 com.google.protobuf.ByteString.copyFromUtf8(
                     (String) ref);
             message_ = b;
@@ -906,7 +906,7 @@ public final class TtShortMessageProtos {
           if (value == null) {
     throw new NullPointerException();
   }
-
+  
           message_ = value;
           onChanged();
           return this;
@@ -915,7 +915,7 @@ public final class TtShortMessageProtos {
          * <code>optional string message = 2;</code>
          */
         public Builder clearMessage() {
-
+          
           message_ = getDefaultInstance().getMessage();
           onChanged();
           return this;
@@ -929,7 +929,7 @@ public final class TtShortMessageProtos {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+          
           message_ = value;
           onChanged();
           return this;
@@ -958,7 +958,7 @@ public final class TtShortMessageProtos {
             getTimeBytes() {
           Object ref = time_;
           if (ref instanceof String) {
-            com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString b = 
                 com.google.protobuf.ByteString.copyFromUtf8(
                     (String) ref);
             time_ = b;
@@ -975,7 +975,7 @@ public final class TtShortMessageProtos {
           if (value == null) {
     throw new NullPointerException();
   }
-
+  
           time_ = value;
           onChanged();
           return this;
@@ -984,7 +984,7 @@ public final class TtShortMessageProtos {
          * <code>optional string time = 3;</code>
          */
         public Builder clearTime() {
-
+          
           time_ = getDefaultInstance().getTime();
           onChanged();
           return this;
@@ -998,7 +998,7 @@ public final class TtShortMessageProtos {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+          
           time_ = value;
           onChanged();
           return this;
@@ -1027,7 +1027,7 @@ public final class TtShortMessageProtos {
             getStateBytes() {
           Object ref = state_;
           if (ref instanceof String) {
-            com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString b = 
                 com.google.protobuf.ByteString.copyFromUtf8(
                     (String) ref);
             state_ = b;
@@ -1044,7 +1044,7 @@ public final class TtShortMessageProtos {
           if (value == null) {
     throw new NullPointerException();
   }
-
+  
           state_ = value;
           onChanged();
           return this;
@@ -1053,7 +1053,7 @@ public final class TtShortMessageProtos {
          * <code>optional string state = 4;</code>
          */
         public Builder clearState() {
-
+          
           state_ = getDefaultInstance().getState();
           onChanged();
           return this;
@@ -1067,7 +1067,7 @@ public final class TtShortMessageProtos {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+          
           state_ = value;
           onChanged();
           return this;
@@ -1096,7 +1096,7 @@ public final class TtShortMessageProtos {
             getNameBytes() {
           Object ref = name_;
           if (ref instanceof String) {
-            com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString b = 
                 com.google.protobuf.ByteString.copyFromUtf8(
                     (String) ref);
             name_ = b;
@@ -1113,7 +1113,7 @@ public final class TtShortMessageProtos {
           if (value == null) {
     throw new NullPointerException();
   }
-
+  
           name_ = value;
           onChanged();
           return this;
@@ -1122,7 +1122,7 @@ public final class TtShortMessageProtos {
          * <code>optional string name = 5;</code>
          */
         public Builder clearName() {
-
+          
           name_ = getDefaultInstance().getName();
           onChanged();
           return this;
@@ -1136,7 +1136,7 @@ public final class TtShortMessageProtos {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+          
           name_ = value;
           onChanged();
           return this;
@@ -1156,12 +1156,12 @@ public final class TtShortMessageProtos {
       }
 
       // @@protoc_insertion_point(class_scope:phonedata.TtShortMessage.ShortMessage)
-      private static final com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage DEFAULT_INSTANCE;
+      private static final ShortMessage DEFAULT_INSTANCE;
       static {
-        DEFAULT_INSTANCE = new com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage();
+        DEFAULT_INSTANCE = new ShortMessage();
       }
 
-      public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage getDefaultInstance() {
+      public static ShortMessage getDefaultInstance() {
         return DEFAULT_INSTANCE;
       }
 
@@ -1184,7 +1184,7 @@ public final class TtShortMessageProtos {
         return PARSER;
       }
 
-      public com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage getDefaultInstanceForType() {
+      public ShortMessage getDefaultInstanceForType() {
         return DEFAULT_INSTANCE;
       }
 
@@ -1233,13 +1233,13 @@ public final class TtShortMessageProtos {
     /**
      * <code>repeated .phonedata.TtShortMessage.ShortMessage shortMessage = 4;</code>
      */
-    public com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage getShortMessage(int index) {
+    public ShortMessage getShortMessage(int index) {
       return shortMessage_.get(index);
     }
     /**
      * <code>repeated .phonedata.TtShortMessage.ShortMessage shortMessage = 4;</code>
      */
-    public com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessageOrBuilder getShortMessageOrBuilder(
+    public ShortMessageOrBuilder getShortMessageOrBuilder(
         int index) {
       return shortMessage_.get(index);
     }
@@ -1294,10 +1294,10 @@ public final class TtShortMessageProtos {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.qzy.tt.data.TtShortMessageProtos.TtShortMessage)) {
+      if (!(obj instanceof TtShortMessage)) {
         return super.equals(obj);
       }
-      com.qzy.tt.data.TtShortMessageProtos.TtShortMessage other = (com.qzy.tt.data.TtShortMessageProtos.TtShortMessage) obj;
+      TtShortMessage other = (TtShortMessage) obj;
 
       boolean result = true;
       result = result && (getRequest()
@@ -1331,58 +1331,58 @@ public final class TtShortMessageProtos {
       return hash;
     }
 
-    public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage parseFrom(
+    public static TtShortMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage parseFrom(
+    public static TtShortMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage parseFrom(byte[] data)
+    public static TtShortMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage parseFrom(
+    public static TtShortMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage parseFrom(java.io.InputStream input)
+    public static TtShortMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage parseFrom(
+    public static TtShortMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage parseDelimitedFrom(java.io.InputStream input)
+    public static TtShortMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage parseDelimitedFrom(
+    public static TtShortMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage parseFrom(
+    public static TtShortMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage parseFrom(
+    public static TtShortMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1394,7 +1394,7 @@ public final class TtShortMessageProtos {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.qzy.tt.data.TtShortMessageProtos.TtShortMessage prototype) {
+    public static Builder newBuilder(TtShortMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -1414,17 +1414,17 @@ public final class TtShortMessageProtos {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:phonedata.TtShortMessage)
-        com.qzy.tt.data.TtShortMessageProtos.TtShortMessageOrBuilder {
+        TtShortMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.qzy.tt.data.TtShortMessageProtos.internal_static_phonedata_TtShortMessage_descriptor;
+        return TtShortMessageProtos.internal_static_phonedata_TtShortMessage_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.qzy.tt.data.TtShortMessageProtos.internal_static_phonedata_TtShortMessage_fieldAccessorTable
+        return TtShortMessageProtos.internal_static_phonedata_TtShortMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.class, com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.Builder.class);
+                TtShortMessage.class, Builder.class);
       }
 
       // Construct using com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.newBuilder()
@@ -1460,23 +1460,23 @@ public final class TtShortMessageProtos {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.qzy.tt.data.TtShortMessageProtos.internal_static_phonedata_TtShortMessage_descriptor;
+        return TtShortMessageProtos.internal_static_phonedata_TtShortMessage_descriptor;
       }
 
-      public com.qzy.tt.data.TtShortMessageProtos.TtShortMessage getDefaultInstanceForType() {
-        return com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.getDefaultInstance();
+      public TtShortMessage getDefaultInstanceForType() {
+        return TtShortMessage.getDefaultInstance();
       }
 
-      public com.qzy.tt.data.TtShortMessageProtos.TtShortMessage build() {
-        com.qzy.tt.data.TtShortMessageProtos.TtShortMessage result = buildPartial();
+      public TtShortMessage build() {
+        TtShortMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public com.qzy.tt.data.TtShortMessageProtos.TtShortMessage buildPartial() {
-        com.qzy.tt.data.TtShortMessageProtos.TtShortMessage result = new com.qzy.tt.data.TtShortMessageProtos.TtShortMessage(this);
+      public TtShortMessage buildPartial() {
+        TtShortMessage result = new TtShortMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         result.request_ = request_;
@@ -1522,16 +1522,16 @@ public final class TtShortMessageProtos {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.qzy.tt.data.TtShortMessageProtos.TtShortMessage) {
-          return mergeFrom((com.qzy.tt.data.TtShortMessageProtos.TtShortMessage)other);
+        if (other instanceof TtShortMessage) {
+          return mergeFrom((TtShortMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.qzy.tt.data.TtShortMessageProtos.TtShortMessage other) {
-        if (other == com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(TtShortMessage other) {
+        if (other == TtShortMessage.getDefaultInstance()) return this;
         if (other.getRequest() != false) {
           setRequest(other.getRequest());
         }
@@ -1556,7 +1556,7 @@ public final class TtShortMessageProtos {
               shortMessageBuilder_ = null;
               shortMessage_ = other.shortMessage_;
               bitField0_ = (bitField0_ & ~0x00000004);
-              shortMessageBuilder_ =
+              shortMessageBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getShortMessageFieldBuilder() : null;
             } else {
@@ -1576,11 +1576,11 @@ public final class TtShortMessageProtos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.qzy.tt.data.TtShortMessageProtos.TtShortMessage parsedMessage = null;
+        TtShortMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.qzy.tt.data.TtShortMessageProtos.TtShortMessage) e.getUnfinishedMessage();
+          parsedMessage = (TtShortMessage) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -1602,7 +1602,7 @@ public final class TtShortMessageProtos {
        * <code>optional bool request = 1;</code>
        */
       public Builder setRequest(boolean value) {
-
+        
         request_ = value;
         onChanged();
         return this;
@@ -1611,7 +1611,7 @@ public final class TtShortMessageProtos {
        * <code>optional bool request = 1;</code>
        */
       public Builder clearRequest() {
-
+        
         request_ = false;
         onChanged();
         return this;
@@ -1628,7 +1628,7 @@ public final class TtShortMessageProtos {
        * <code>optional bool response = 2;</code>
        */
       public Builder setResponse(boolean value) {
-
+        
         response_ = value;
         onChanged();
         return this;
@@ -1637,7 +1637,7 @@ public final class TtShortMessageProtos {
        * <code>optional bool response = 2;</code>
        */
       public Builder clearResponse() {
-
+        
         response_ = false;
         onChanged();
         return this;
@@ -1678,7 +1678,7 @@ public final class TtShortMessageProtos {
       /**
        * <code>repeated .phonedata.TtShortMessage.ShortMessage shortMessage = 4;</code>
        */
-      public com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage getShortMessage(int index) {
+      public ShortMessage getShortMessage(int index) {
         if (shortMessageBuilder_ == null) {
           return shortMessage_.get(index);
         } else {
@@ -1689,7 +1689,7 @@ public final class TtShortMessageProtos {
        * <code>repeated .phonedata.TtShortMessage.ShortMessage shortMessage = 4;</code>
        */
       public Builder setShortMessage(
-          int index, com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage value) {
+          int index, ShortMessage value) {
         if (shortMessageBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1706,7 +1706,7 @@ public final class TtShortMessageProtos {
        * <code>repeated .phonedata.TtShortMessage.ShortMessage shortMessage = 4;</code>
        */
       public Builder setShortMessage(
-          int index, com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage.Builder builderForValue) {
+          int index, ShortMessage.Builder builderForValue) {
         if (shortMessageBuilder_ == null) {
           ensureShortMessageIsMutable();
           shortMessage_.set(index, builderForValue.build());
@@ -1719,7 +1719,7 @@ public final class TtShortMessageProtos {
       /**
        * <code>repeated .phonedata.TtShortMessage.ShortMessage shortMessage = 4;</code>
        */
-      public Builder addShortMessage(com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage value) {
+      public Builder addShortMessage(ShortMessage value) {
         if (shortMessageBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1736,7 +1736,7 @@ public final class TtShortMessageProtos {
        * <code>repeated .phonedata.TtShortMessage.ShortMessage shortMessage = 4;</code>
        */
       public Builder addShortMessage(
-          int index, com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage value) {
+          int index, ShortMessage value) {
         if (shortMessageBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1753,7 +1753,7 @@ public final class TtShortMessageProtos {
        * <code>repeated .phonedata.TtShortMessage.ShortMessage shortMessage = 4;</code>
        */
       public Builder addShortMessage(
-          com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage.Builder builderForValue) {
+          ShortMessage.Builder builderForValue) {
         if (shortMessageBuilder_ == null) {
           ensureShortMessageIsMutable();
           shortMessage_.add(builderForValue.build());
@@ -1767,7 +1767,7 @@ public final class TtShortMessageProtos {
        * <code>repeated .phonedata.TtShortMessage.ShortMessage shortMessage = 4;</code>
        */
       public Builder addShortMessage(
-          int index, com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage.Builder builderForValue) {
+          int index, ShortMessage.Builder builderForValue) {
         if (shortMessageBuilder_ == null) {
           ensureShortMessageIsMutable();
           shortMessage_.add(index, builderForValue.build());
@@ -1821,14 +1821,14 @@ public final class TtShortMessageProtos {
       /**
        * <code>repeated .phonedata.TtShortMessage.ShortMessage shortMessage = 4;</code>
        */
-      public com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage.Builder getShortMessageBuilder(
+      public ShortMessage.Builder getShortMessageBuilder(
           int index) {
         return getShortMessageFieldBuilder().getBuilder(index);
       }
       /**
        * <code>repeated .phonedata.TtShortMessage.ShortMessage shortMessage = 4;</code>
        */
-      public com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessageOrBuilder getShortMessageOrBuilder(
+      public ShortMessageOrBuilder getShortMessageOrBuilder(
           int index) {
         if (shortMessageBuilder_ == null) {
           return shortMessage_.get(index);  } else {
@@ -1849,17 +1849,17 @@ public final class TtShortMessageProtos {
       /**
        * <code>repeated .phonedata.TtShortMessage.ShortMessage shortMessage = 4;</code>
        */
-      public com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage.Builder addShortMessageBuilder() {
+      public ShortMessage.Builder addShortMessageBuilder() {
         return getShortMessageFieldBuilder().addBuilder(
-            com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage.getDefaultInstance());
+            ShortMessage.getDefaultInstance());
       }
       /**
        * <code>repeated .phonedata.TtShortMessage.ShortMessage shortMessage = 4;</code>
        */
-      public com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage.Builder addShortMessageBuilder(
+      public ShortMessage.Builder addShortMessageBuilder(
           int index) {
         return getShortMessageFieldBuilder().addBuilder(
-            index, com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage.getDefaultInstance());
+            index, ShortMessage.getDefaultInstance());
       }
       /**
        * <code>repeated .phonedata.TtShortMessage.ShortMessage shortMessage = 4;</code>
@@ -1897,12 +1897,12 @@ public final class TtShortMessageProtos {
     }
 
     // @@protoc_insertion_point(class_scope:phonedata.TtShortMessage)
-    private static final com.qzy.tt.data.TtShortMessageProtos.TtShortMessage DEFAULT_INSTANCE;
+    private static final TtShortMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.qzy.tt.data.TtShortMessageProtos.TtShortMessage();
+      DEFAULT_INSTANCE = new TtShortMessage();
     }
 
-    public static com.qzy.tt.data.TtShortMessageProtos.TtShortMessage getDefaultInstance() {
+    public static TtShortMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -1925,7 +1925,7 @@ public final class TtShortMessageProtos {
       return PARSER;
     }
 
-    public com.qzy.tt.data.TtShortMessageProtos.TtShortMessage getDefaultInstanceForType() {
+    public TtShortMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -1933,12 +1933,12 @@ public final class TtShortMessageProtos {
 
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_phonedata_TtShortMessage_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_phonedata_TtShortMessage_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_phonedata_TtShortMessage_ShortMessage_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_phonedata_TtShortMessage_ShortMessage_fieldAccessorTable;
 
