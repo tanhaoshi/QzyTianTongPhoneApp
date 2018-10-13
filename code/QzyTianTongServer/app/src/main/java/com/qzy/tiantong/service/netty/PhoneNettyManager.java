@@ -335,7 +335,11 @@ public class PhoneNettyManager {
 
         @Override
         public void onReceiveSms(String phoneNumber, String smsBody) {
-
+            TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage = TtShortMessageProtos.TtShortMessage.ShortMessage.newBuilder()
+                    .setNumberPhone(phoneNumber)
+                    .setMessage(smsBody)
+                    .build();
+            mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_receiver_short_message, shortMessage));
         }
     };
 
