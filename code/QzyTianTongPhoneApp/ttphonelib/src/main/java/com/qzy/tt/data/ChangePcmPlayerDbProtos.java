@@ -81,14 +81,14 @@ public final class ChangePcmPlayerDbProtos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ChangePcmPlayerDbProtos.internal_static_phonedata_ChangePcmPlayerDb_descriptor;
+      return com.qzy.tt.data.ChangePcmPlayerDbProtos.internal_static_phonedata_ChangePcmPlayerDb_descriptor;
     }
 
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ChangePcmPlayerDbProtos.internal_static_phonedata_ChangePcmPlayerDb_fieldAccessorTable
+      return com.qzy.tt.data.ChangePcmPlayerDbProtos.internal_static_phonedata_ChangePcmPlayerDb_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ChangePcmPlayerDb.class, Builder.class);
+              com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb.class, com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb.Builder.class);
     }
 
     public static final int DB_FIELD_NUMBER = 1;
@@ -136,10 +136,10 @@ public final class ChangePcmPlayerDbProtos {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof ChangePcmPlayerDb)) {
+      if (!(obj instanceof com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb)) {
         return super.equals(obj);
       }
-      ChangePcmPlayerDb other = (ChangePcmPlayerDb) obj;
+      com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb other = (com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb) obj;
 
       boolean result = true;
       result = result && (getDb()
@@ -161,58 +161,58 @@ public final class ChangePcmPlayerDbProtos {
       return hash;
     }
 
-    public static ChangePcmPlayerDb parseFrom(
+    public static com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ChangePcmPlayerDb parseFrom(
+    public static com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ChangePcmPlayerDb parseFrom(byte[] data)
+    public static com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ChangePcmPlayerDb parseFrom(
+    public static com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ChangePcmPlayerDb parseFrom(java.io.InputStream input)
+    public static com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static ChangePcmPlayerDb parseFrom(
+    public static com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static ChangePcmPlayerDb parseDelimitedFrom(java.io.InputStream input)
+    public static com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static ChangePcmPlayerDb parseDelimitedFrom(
+    public static com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static ChangePcmPlayerDb parseFrom(
+    public static com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static ChangePcmPlayerDb parseFrom(
+    public static com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -224,7 +224,7 @@ public final class ChangePcmPlayerDbProtos {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ChangePcmPlayerDb prototype) {
+    public static Builder newBuilder(com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -244,17 +244,17 @@ public final class ChangePcmPlayerDbProtos {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:phonedata.ChangePcmPlayerDb)
-        ChangePcmPlayerDbOrBuilder {
+        com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDbOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ChangePcmPlayerDbProtos.internal_static_phonedata_ChangePcmPlayerDb_descriptor;
+        return com.qzy.tt.data.ChangePcmPlayerDbProtos.internal_static_phonedata_ChangePcmPlayerDb_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ChangePcmPlayerDbProtos.internal_static_phonedata_ChangePcmPlayerDb_fieldAccessorTable
+        return com.qzy.tt.data.ChangePcmPlayerDbProtos.internal_static_phonedata_ChangePcmPlayerDb_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ChangePcmPlayerDb.class, Builder.class);
+                com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb.class, com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb.Builder.class);
       }
 
       // Construct using com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb.newBuilder()
@@ -281,23 +281,23 @@ public final class ChangePcmPlayerDbProtos {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ChangePcmPlayerDbProtos.internal_static_phonedata_ChangePcmPlayerDb_descriptor;
+        return com.qzy.tt.data.ChangePcmPlayerDbProtos.internal_static_phonedata_ChangePcmPlayerDb_descriptor;
       }
 
-      public ChangePcmPlayerDb getDefaultInstanceForType() {
-        return ChangePcmPlayerDb.getDefaultInstance();
+      public com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb getDefaultInstanceForType() {
+        return com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb.getDefaultInstance();
       }
 
-      public ChangePcmPlayerDb build() {
-        ChangePcmPlayerDb result = buildPartial();
+      public com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb build() {
+        com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ChangePcmPlayerDb buildPartial() {
-        ChangePcmPlayerDb result = new ChangePcmPlayerDb(this);
+      public com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb buildPartial() {
+        com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb result = new com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb(this);
         result.db_ = db_;
         onBuilt();
         return result;
@@ -330,16 +330,16 @@ public final class ChangePcmPlayerDbProtos {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ChangePcmPlayerDb) {
-          return mergeFrom((ChangePcmPlayerDb)other);
+        if (other instanceof com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb) {
+          return mergeFrom((com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ChangePcmPlayerDb other) {
-        if (other == ChangePcmPlayerDb.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb other) {
+        if (other == com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb.getDefaultInstance()) return this;
         if (other.getDb() != 0) {
           setDb(other.getDb());
         }
@@ -355,11 +355,11 @@ public final class ChangePcmPlayerDbProtos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ChangePcmPlayerDb parsedMessage = null;
+        com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ChangePcmPlayerDb) e.getUnfinishedMessage();
+          parsedMessage = (com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -380,7 +380,7 @@ public final class ChangePcmPlayerDbProtos {
        * <code>optional int32 db = 1;</code>
        */
       public Builder setDb(int value) {
-        
+
         db_ = value;
         onChanged();
         return this;
@@ -389,7 +389,7 @@ public final class ChangePcmPlayerDbProtos {
        * <code>optional int32 db = 1;</code>
        */
       public Builder clearDb() {
-        
+
         db_ = 0;
         onChanged();
         return this;
@@ -409,12 +409,12 @@ public final class ChangePcmPlayerDbProtos {
     }
 
     // @@protoc_insertion_point(class_scope:phonedata.ChangePcmPlayerDb)
-    private static final ChangePcmPlayerDb DEFAULT_INSTANCE;
+    private static final com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ChangePcmPlayerDb();
+      DEFAULT_INSTANCE = new com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb();
     }
 
-    public static ChangePcmPlayerDb getDefaultInstance() {
+    public static com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -437,7 +437,7 @@ public final class ChangePcmPlayerDbProtos {
       return PARSER;
     }
 
-    public ChangePcmPlayerDb getDefaultInstanceForType() {
+    public com.qzy.tt.data.ChangePcmPlayerDbProtos.ChangePcmPlayerDb getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -445,7 +445,7 @@ public final class ChangePcmPlayerDbProtos {
 
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_phonedata_ChangePcmPlayerDb_descriptor;
-  private static final 
+  private static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_phonedata_ChangePcmPlayerDb_fieldAccessorTable;
 

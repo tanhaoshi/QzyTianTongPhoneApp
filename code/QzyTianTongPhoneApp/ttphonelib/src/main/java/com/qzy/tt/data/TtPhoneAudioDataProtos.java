@@ -81,14 +81,14 @@ public final class TtPhoneAudioDataProtos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return TtPhoneAudioDataProtos.internal_static_phonedata_PhoneAudioData_descriptor;
+      return com.qzy.tt.data.TtPhoneAudioDataProtos.internal_static_phonedata_PhoneAudioData_descriptor;
     }
 
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return TtPhoneAudioDataProtos.internal_static_phonedata_PhoneAudioData_fieldAccessorTable
+      return com.qzy.tt.data.TtPhoneAudioDataProtos.internal_static_phonedata_PhoneAudioData_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              PhoneAudioData.class, Builder.class);
+              com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData.class, com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData.Builder.class);
     }
 
     public static final int AUDIODATA_FIELD_NUMBER = 1;
@@ -136,10 +136,10 @@ public final class TtPhoneAudioDataProtos {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof PhoneAudioData)) {
+      if (!(obj instanceof com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData)) {
         return super.equals(obj);
       }
-      PhoneAudioData other = (PhoneAudioData) obj;
+      com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData other = (com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData) obj;
 
       boolean result = true;
       result = result && getAudiodata()
@@ -161,58 +161,58 @@ public final class TtPhoneAudioDataProtos {
       return hash;
     }
 
-    public static PhoneAudioData parseFrom(
+    public static com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static PhoneAudioData parseFrom(
+    public static com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static PhoneAudioData parseFrom(byte[] data)
+    public static com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static PhoneAudioData parseFrom(
+    public static com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static PhoneAudioData parseFrom(java.io.InputStream input)
+    public static com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static PhoneAudioData parseFrom(
+    public static com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static PhoneAudioData parseDelimitedFrom(java.io.InputStream input)
+    public static com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static PhoneAudioData parseDelimitedFrom(
+    public static com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static PhoneAudioData parseFrom(
+    public static com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static PhoneAudioData parseFrom(
+    public static com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -224,7 +224,7 @@ public final class TtPhoneAudioDataProtos {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(PhoneAudioData prototype) {
+    public static Builder newBuilder(com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -244,17 +244,17 @@ public final class TtPhoneAudioDataProtos {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:phonedata.PhoneAudioData)
-        PhoneAudioDataOrBuilder {
+        com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioDataOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return TtPhoneAudioDataProtos.internal_static_phonedata_PhoneAudioData_descriptor;
+        return com.qzy.tt.data.TtPhoneAudioDataProtos.internal_static_phonedata_PhoneAudioData_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return TtPhoneAudioDataProtos.internal_static_phonedata_PhoneAudioData_fieldAccessorTable
+        return com.qzy.tt.data.TtPhoneAudioDataProtos.internal_static_phonedata_PhoneAudioData_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                PhoneAudioData.class, Builder.class);
+                com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData.class, com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData.Builder.class);
       }
 
       // Construct using com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData.newBuilder()
@@ -281,23 +281,23 @@ public final class TtPhoneAudioDataProtos {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return TtPhoneAudioDataProtos.internal_static_phonedata_PhoneAudioData_descriptor;
+        return com.qzy.tt.data.TtPhoneAudioDataProtos.internal_static_phonedata_PhoneAudioData_descriptor;
       }
 
-      public PhoneAudioData getDefaultInstanceForType() {
-        return PhoneAudioData.getDefaultInstance();
+      public com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData getDefaultInstanceForType() {
+        return com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData.getDefaultInstance();
       }
 
-      public PhoneAudioData build() {
-        PhoneAudioData result = buildPartial();
+      public com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData build() {
+        com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public PhoneAudioData buildPartial() {
-        PhoneAudioData result = new PhoneAudioData(this);
+      public com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData buildPartial() {
+        com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData result = new com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData(this);
         result.audiodata_ = audiodata_;
         onBuilt();
         return result;
@@ -330,16 +330,16 @@ public final class TtPhoneAudioDataProtos {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof PhoneAudioData) {
-          return mergeFrom((PhoneAudioData)other);
+        if (other instanceof com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData) {
+          return mergeFrom((com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(PhoneAudioData other) {
-        if (other == PhoneAudioData.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData other) {
+        if (other == com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData.getDefaultInstance()) return this;
         if (other.getAudiodata() != com.google.protobuf.ByteString.EMPTY) {
           setAudiodata(other.getAudiodata());
         }
@@ -355,11 +355,11 @@ public final class TtPhoneAudioDataProtos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        PhoneAudioData parsedMessage = null;
+        com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (PhoneAudioData) e.getUnfinishedMessage();
+          parsedMessage = (com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -383,7 +383,7 @@ public final class TtPhoneAudioDataProtos {
         if (value == null) {
     throw new NullPointerException();
   }
-  
+
         audiodata_ = value;
         onChanged();
         return this;
@@ -392,7 +392,7 @@ public final class TtPhoneAudioDataProtos {
        * <code>optional bytes audiodata = 1;</code>
        */
       public Builder clearAudiodata() {
-        
+
         audiodata_ = getDefaultInstance().getAudiodata();
         onChanged();
         return this;
@@ -412,12 +412,12 @@ public final class TtPhoneAudioDataProtos {
     }
 
     // @@protoc_insertion_point(class_scope:phonedata.PhoneAudioData)
-    private static final PhoneAudioData DEFAULT_INSTANCE;
+    private static final com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new PhoneAudioData();
+      DEFAULT_INSTANCE = new com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData();
     }
 
-    public static PhoneAudioData getDefaultInstance() {
+    public static com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -440,7 +440,7 @@ public final class TtPhoneAudioDataProtos {
       return PARSER;
     }
 
-    public PhoneAudioData getDefaultInstanceForType() {
+    public com.qzy.tt.data.TtPhoneAudioDataProtos.PhoneAudioData getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -448,7 +448,7 @@ public final class TtPhoneAudioDataProtos {
 
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_phonedata_PhoneAudioData_descriptor;
-  private static final 
+  private static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_phonedata_PhoneAudioData_fieldAccessorTable;
 

@@ -92,14 +92,14 @@ public final class TtPhoneBatteryProtos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return TtPhoneBatteryProtos.internal_static_phonedata_TtPhoneBattery_descriptor;
+      return com.qzy.tt.data.TtPhoneBatteryProtos.internal_static_phonedata_TtPhoneBattery_descriptor;
     }
 
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return TtPhoneBatteryProtos.internal_static_phonedata_TtPhoneBattery_fieldAccessorTable
+      return com.qzy.tt.data.TtPhoneBatteryProtos.internal_static_phonedata_TtPhoneBattery_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              TtPhoneBattery.class, Builder.class);
+              com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery.class, com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery.Builder.class);
     }
 
     public static final int LEVEL_FIELD_NUMBER = 1;
@@ -163,10 +163,10 @@ public final class TtPhoneBatteryProtos {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof TtPhoneBattery)) {
+      if (!(obj instanceof com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery)) {
         return super.equals(obj);
       }
-      TtPhoneBattery other = (TtPhoneBattery) obj;
+      com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery other = (com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery) obj;
 
       boolean result = true;
       result = result && (getLevel()
@@ -192,58 +192,58 @@ public final class TtPhoneBatteryProtos {
       return hash;
     }
 
-    public static TtPhoneBattery parseFrom(
+    public static com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static TtPhoneBattery parseFrom(
+    public static com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static TtPhoneBattery parseFrom(byte[] data)
+    public static com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static TtPhoneBattery parseFrom(
+    public static com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static TtPhoneBattery parseFrom(java.io.InputStream input)
+    public static com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static TtPhoneBattery parseFrom(
+    public static com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static TtPhoneBattery parseDelimitedFrom(java.io.InputStream input)
+    public static com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static TtPhoneBattery parseDelimitedFrom(
+    public static com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static TtPhoneBattery parseFrom(
+    public static com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static TtPhoneBattery parseFrom(
+    public static com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -255,7 +255,7 @@ public final class TtPhoneBatteryProtos {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(TtPhoneBattery prototype) {
+    public static Builder newBuilder(com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -275,17 +275,17 @@ public final class TtPhoneBatteryProtos {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:phonedata.TtPhoneBattery)
-        TtPhoneBatteryOrBuilder {
+        com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBatteryOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return TtPhoneBatteryProtos.internal_static_phonedata_TtPhoneBattery_descriptor;
+        return com.qzy.tt.data.TtPhoneBatteryProtos.internal_static_phonedata_TtPhoneBattery_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return TtPhoneBatteryProtos.internal_static_phonedata_TtPhoneBattery_fieldAccessorTable
+        return com.qzy.tt.data.TtPhoneBatteryProtos.internal_static_phonedata_TtPhoneBattery_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                TtPhoneBattery.class, Builder.class);
+                com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery.class, com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery.Builder.class);
       }
 
       // Construct using com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery.newBuilder()
@@ -314,23 +314,23 @@ public final class TtPhoneBatteryProtos {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return TtPhoneBatteryProtos.internal_static_phonedata_TtPhoneBattery_descriptor;
+        return com.qzy.tt.data.TtPhoneBatteryProtos.internal_static_phonedata_TtPhoneBattery_descriptor;
       }
 
-      public TtPhoneBattery getDefaultInstanceForType() {
-        return TtPhoneBattery.getDefaultInstance();
+      public com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery getDefaultInstanceForType() {
+        return com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery.getDefaultInstance();
       }
 
-      public TtPhoneBattery build() {
-        TtPhoneBattery result = buildPartial();
+      public com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery build() {
+        com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public TtPhoneBattery buildPartial() {
-        TtPhoneBattery result = new TtPhoneBattery(this);
+      public com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery buildPartial() {
+        com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery result = new com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery(this);
         result.level_ = level_;
         result.scale_ = scale_;
         onBuilt();
@@ -364,16 +364,16 @@ public final class TtPhoneBatteryProtos {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof TtPhoneBattery) {
-          return mergeFrom((TtPhoneBattery)other);
+        if (other instanceof com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery) {
+          return mergeFrom((com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(TtPhoneBattery other) {
-        if (other == TtPhoneBattery.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery other) {
+        if (other == com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery.getDefaultInstance()) return this;
         if (other.getLevel() != 0) {
           setLevel(other.getLevel());
         }
@@ -392,11 +392,11 @@ public final class TtPhoneBatteryProtos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        TtPhoneBattery parsedMessage = null;
+        com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (TtPhoneBattery) e.getUnfinishedMessage();
+          parsedMessage = (com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -417,7 +417,7 @@ public final class TtPhoneBatteryProtos {
        * <code>optional int32 level = 1;</code>
        */
       public Builder setLevel(int value) {
-        
+
         level_ = value;
         onChanged();
         return this;
@@ -426,7 +426,7 @@ public final class TtPhoneBatteryProtos {
        * <code>optional int32 level = 1;</code>
        */
       public Builder clearLevel() {
-        
+
         level_ = 0;
         onChanged();
         return this;
@@ -443,7 +443,7 @@ public final class TtPhoneBatteryProtos {
        * <code>optional int32 scale = 2;</code>
        */
       public Builder setScale(int value) {
-        
+
         scale_ = value;
         onChanged();
         return this;
@@ -452,7 +452,7 @@ public final class TtPhoneBatteryProtos {
        * <code>optional int32 scale = 2;</code>
        */
       public Builder clearScale() {
-        
+
         scale_ = 0;
         onChanged();
         return this;
@@ -472,12 +472,12 @@ public final class TtPhoneBatteryProtos {
     }
 
     // @@protoc_insertion_point(class_scope:phonedata.TtPhoneBattery)
-    private static final TtPhoneBattery DEFAULT_INSTANCE;
+    private static final com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new TtPhoneBattery();
+      DEFAULT_INSTANCE = new com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery();
     }
 
-    public static TtPhoneBattery getDefaultInstance() {
+    public static com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -500,7 +500,7 @@ public final class TtPhoneBatteryProtos {
       return PARSER;
     }
 
-    public TtPhoneBattery getDefaultInstanceForType() {
+    public com.qzy.tt.data.TtPhoneBatteryProtos.TtPhoneBattery getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -508,7 +508,7 @@ public final class TtPhoneBatteryProtos {
 
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_phonedata_TtPhoneBattery_descriptor;
-  private static final 
+  private static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_phonedata_TtPhoneBattery_fieldAccessorTable;
 

@@ -162,14 +162,14 @@ public final class TtPhoneSmsProtos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return TtPhoneSmsProtos.internal_static_phonedata_TtPhoneSms_descriptor;
+      return com.qzy.tt.data.TtPhoneSmsProtos.internal_static_phonedata_TtPhoneSms_descriptor;
     }
 
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return TtPhoneSmsProtos.internal_static_phonedata_TtPhoneSms_fieldAccessorTable
+      return com.qzy.tt.data.TtPhoneSmsProtos.internal_static_phonedata_TtPhoneSms_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              TtPhoneSms.class, Builder.class);
+              com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms.class, com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms.Builder.class);
     }
 
     public static final int IP_FIELD_NUMBER = 1;
@@ -182,7 +182,7 @@ public final class TtPhoneSmsProtos {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         ip_ = s;
@@ -196,7 +196,7 @@ public final class TtPhoneSmsProtos {
         getIpBytes() {
       Object ref = ip_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         ip_ = b;
@@ -216,7 +216,7 @@ public final class TtPhoneSmsProtos {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         phoneNumber_ = s;
@@ -230,7 +230,7 @@ public final class TtPhoneSmsProtos {
         getPhoneNumberBytes() {
       Object ref = phoneNumber_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         phoneNumber_ = b;
@@ -285,7 +285,7 @@ public final class TtPhoneSmsProtos {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         messageText_ = s;
@@ -299,7 +299,7 @@ public final class TtPhoneSmsProtos {
         getMessageTextBytes() {
       Object ref = messageText_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         messageText_ = b;
@@ -377,10 +377,10 @@ public final class TtPhoneSmsProtos {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof TtPhoneSms)) {
+      if (!(obj instanceof com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms)) {
         return super.equals(obj);
       }
-      TtPhoneSms other = (TtPhoneSms) obj;
+      com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms other = (com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms) obj;
 
       boolean result = true;
       result = result && getIp()
@@ -425,58 +425,58 @@ public final class TtPhoneSmsProtos {
       return hash;
     }
 
-    public static TtPhoneSms parseFrom(
+    public static com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static TtPhoneSms parseFrom(
+    public static com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static TtPhoneSms parseFrom(byte[] data)
+    public static com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static TtPhoneSms parseFrom(
+    public static com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static TtPhoneSms parseFrom(java.io.InputStream input)
+    public static com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static TtPhoneSms parseFrom(
+    public static com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static TtPhoneSms parseDelimitedFrom(java.io.InputStream input)
+    public static com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static TtPhoneSms parseDelimitedFrom(
+    public static com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static TtPhoneSms parseFrom(
+    public static com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static TtPhoneSms parseFrom(
+    public static com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -488,7 +488,7 @@ public final class TtPhoneSmsProtos {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(TtPhoneSms prototype) {
+    public static Builder newBuilder(com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -508,17 +508,17 @@ public final class TtPhoneSmsProtos {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:phonedata.TtPhoneSms)
-        TtPhoneSmsOrBuilder {
+        com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSmsOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return TtPhoneSmsProtos.internal_static_phonedata_TtPhoneSms_descriptor;
+        return com.qzy.tt.data.TtPhoneSmsProtos.internal_static_phonedata_TtPhoneSms_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return TtPhoneSmsProtos.internal_static_phonedata_TtPhoneSms_fieldAccessorTable
+        return com.qzy.tt.data.TtPhoneSmsProtos.internal_static_phonedata_TtPhoneSms_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                TtPhoneSms.class, Builder.class);
+                com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms.class, com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms.Builder.class);
       }
 
       // Construct using com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms.newBuilder()
@@ -555,23 +555,23 @@ public final class TtPhoneSmsProtos {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return TtPhoneSmsProtos.internal_static_phonedata_TtPhoneSms_descriptor;
+        return com.qzy.tt.data.TtPhoneSmsProtos.internal_static_phonedata_TtPhoneSms_descriptor;
       }
 
-      public TtPhoneSms getDefaultInstanceForType() {
-        return TtPhoneSms.getDefaultInstance();
+      public com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms getDefaultInstanceForType() {
+        return com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms.getDefaultInstance();
       }
 
-      public TtPhoneSms build() {
-        TtPhoneSms result = buildPartial();
+      public com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms build() {
+        com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public TtPhoneSms buildPartial() {
-        TtPhoneSms result = new TtPhoneSms(this);
+      public com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms buildPartial() {
+        com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms result = new com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms(this);
         result.ip_ = ip_;
         result.phoneNumber_ = phoneNumber_;
         result.isSend_ = isSend_;
@@ -609,16 +609,16 @@ public final class TtPhoneSmsProtos {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof TtPhoneSms) {
-          return mergeFrom((TtPhoneSms)other);
+        if (other instanceof com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms) {
+          return mergeFrom((com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(TtPhoneSms other) {
-        if (other == TtPhoneSms.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms other) {
+        if (other == com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms.getDefaultInstance()) return this;
         if (!other.getIp().isEmpty()) {
           ip_ = other.ip_;
           onChanged();
@@ -652,11 +652,11 @@ public final class TtPhoneSmsProtos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        TtPhoneSms parsedMessage = null;
+        com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (TtPhoneSms) e.getUnfinishedMessage();
+          parsedMessage = (com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -689,7 +689,7 @@ public final class TtPhoneSmsProtos {
           getIpBytes() {
         Object ref = ip_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           ip_ = b;
@@ -706,7 +706,7 @@ public final class TtPhoneSmsProtos {
         if (value == null) {
     throw new NullPointerException();
   }
-  
+
         ip_ = value;
         onChanged();
         return this;
@@ -715,7 +715,7 @@ public final class TtPhoneSmsProtos {
        * <code>optional string ip = 1;</code>
        */
       public Builder clearIp() {
-        
+
         ip_ = getDefaultInstance().getIp();
         onChanged();
         return this;
@@ -729,7 +729,7 @@ public final class TtPhoneSmsProtos {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
+
         ip_ = value;
         onChanged();
         return this;
@@ -758,7 +758,7 @@ public final class TtPhoneSmsProtos {
           getPhoneNumberBytes() {
         Object ref = phoneNumber_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           phoneNumber_ = b;
@@ -775,7 +775,7 @@ public final class TtPhoneSmsProtos {
         if (value == null) {
     throw new NullPointerException();
   }
-  
+
         phoneNumber_ = value;
         onChanged();
         return this;
@@ -784,7 +784,7 @@ public final class TtPhoneSmsProtos {
        * <code>optional string phoneNumber = 2;</code>
        */
       public Builder clearPhoneNumber() {
-        
+
         phoneNumber_ = getDefaultInstance().getPhoneNumber();
         onChanged();
         return this;
@@ -798,7 +798,7 @@ public final class TtPhoneSmsProtos {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
+
         phoneNumber_ = value;
         onChanged();
         return this;
@@ -823,7 +823,7 @@ public final class TtPhoneSmsProtos {
        * <code>optional bool isSend = 3;</code>
        */
       public Builder setIsSend(boolean value) {
-        
+
         isSend_ = value;
         onChanged();
         return this;
@@ -836,7 +836,7 @@ public final class TtPhoneSmsProtos {
        * <code>optional bool isSend = 3;</code>
        */
       public Builder clearIsSend() {
-        
+
         isSend_ = false;
         onChanged();
         return this;
@@ -853,7 +853,7 @@ public final class TtPhoneSmsProtos {
        * <code>optional bool isSendSuccess = 4;</code>
        */
       public Builder setIsSendSuccess(boolean value) {
-        
+
         isSendSuccess_ = value;
         onChanged();
         return this;
@@ -862,7 +862,7 @@ public final class TtPhoneSmsProtos {
        * <code>optional bool isSendSuccess = 4;</code>
        */
       public Builder clearIsSendSuccess() {
-        
+
         isSendSuccess_ = false;
         onChanged();
         return this;
@@ -887,7 +887,7 @@ public final class TtPhoneSmsProtos {
        * <code>optional bool isReceiverSuccess = 5;</code>
        */
       public Builder setIsReceiverSuccess(boolean value) {
-        
+
         isReceiverSuccess_ = value;
         onChanged();
         return this;
@@ -900,7 +900,7 @@ public final class TtPhoneSmsProtos {
        * <code>optional bool isReceiverSuccess = 5;</code>
        */
       public Builder clearIsReceiverSuccess() {
-        
+
         isReceiverSuccess_ = false;
         onChanged();
         return this;
@@ -929,7 +929,7 @@ public final class TtPhoneSmsProtos {
           getMessageTextBytes() {
         Object ref = messageText_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           messageText_ = b;
@@ -946,7 +946,7 @@ public final class TtPhoneSmsProtos {
         if (value == null) {
     throw new NullPointerException();
   }
-  
+
         messageText_ = value;
         onChanged();
         return this;
@@ -955,7 +955,7 @@ public final class TtPhoneSmsProtos {
        * <code>optional string messageText = 6;</code>
        */
       public Builder clearMessageText() {
-        
+
         messageText_ = getDefaultInstance().getMessageText();
         onChanged();
         return this;
@@ -969,7 +969,7 @@ public final class TtPhoneSmsProtos {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
+
         messageText_ = value;
         onChanged();
         return this;
@@ -989,12 +989,12 @@ public final class TtPhoneSmsProtos {
     }
 
     // @@protoc_insertion_point(class_scope:phonedata.TtPhoneSms)
-    private static final TtPhoneSms DEFAULT_INSTANCE;
+    private static final com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new TtPhoneSms();
+      DEFAULT_INSTANCE = new com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms();
     }
 
-    public static TtPhoneSms getDefaultInstance() {
+    public static com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -1017,7 +1017,7 @@ public final class TtPhoneSmsProtos {
       return PARSER;
     }
 
-    public TtPhoneSms getDefaultInstanceForType() {
+    public com.qzy.tt.data.TtPhoneSmsProtos.TtPhoneSms getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -1025,7 +1025,7 @@ public final class TtPhoneSmsProtos {
 
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_phonedata_TtPhoneSms_descriptor;
-  private static final 
+  private static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_phonedata_TtPhoneSms_fieldAccessorTable;
 

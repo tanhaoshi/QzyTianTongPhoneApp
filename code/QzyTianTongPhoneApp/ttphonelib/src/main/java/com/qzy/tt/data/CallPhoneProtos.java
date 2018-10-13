@@ -45,7 +45,7 @@ public final class CallPhoneProtos {
     /**
      * <code>optional .phonedata.CallPhone.PhoneCommand phonecommand = 3;</code>
      */
-    CallPhone.PhoneCommand getPhonecommand();
+    com.qzy.tt.data.CallPhoneProtos.CallPhone.PhoneCommand getPhonecommand();
   }
   /**
    * Protobuf type {@code phonedata.CallPhone}
@@ -120,14 +120,14 @@ public final class CallPhoneProtos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return CallPhoneProtos.internal_static_phonedata_CallPhone_descriptor;
+      return com.qzy.tt.data.CallPhoneProtos.internal_static_phonedata_CallPhone_descriptor;
     }
 
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return CallPhoneProtos.internal_static_phonedata_CallPhone_fieldAccessorTable
+      return com.qzy.tt.data.CallPhoneProtos.internal_static_phonedata_CallPhone_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              CallPhone.class, Builder.class);
+              com.qzy.tt.data.CallPhoneProtos.CallPhone.class, com.qzy.tt.data.CallPhoneProtos.CallPhone.Builder.class);
     }
 
     /**
@@ -220,7 +220,7 @@ public final class CallPhoneProtos {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return CallPhone.getDescriptor().getEnumTypes().get(0);
+        return com.qzy.tt.data.CallPhoneProtos.CallPhone.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final PhoneCommand[] VALUES = values();
@@ -256,7 +256,7 @@ public final class CallPhoneProtos {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         ip_ = s;
@@ -270,7 +270,7 @@ public final class CallPhoneProtos {
         getIpBytes() {
       Object ref = ip_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         ip_ = b;
@@ -290,7 +290,7 @@ public final class CallPhoneProtos {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         phoneNumber_ = s;
@@ -304,7 +304,7 @@ public final class CallPhoneProtos {
         getPhoneNumberBytes() {
       Object ref = phoneNumber_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         phoneNumber_ = b;
@@ -325,9 +325,9 @@ public final class CallPhoneProtos {
     /**
      * <code>optional .phonedata.CallPhone.PhoneCommand phonecommand = 3;</code>
      */
-    public PhoneCommand getPhonecommand() {
-      PhoneCommand result = PhoneCommand.valueOf(phonecommand_);
-      return result == null ? PhoneCommand.UNRECOGNIZED : result;
+    public com.qzy.tt.data.CallPhoneProtos.CallPhone.PhoneCommand getPhonecommand() {
+      com.qzy.tt.data.CallPhoneProtos.CallPhone.PhoneCommand result = com.qzy.tt.data.CallPhoneProtos.CallPhone.PhoneCommand.valueOf(phonecommand_);
+      return result == null ? com.qzy.tt.data.CallPhoneProtos.CallPhone.PhoneCommand.UNRECOGNIZED : result;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -348,7 +348,7 @@ public final class CallPhoneProtos {
       if (!getPhoneNumberBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, phoneNumber_);
       }
-      if (phonecommand_ != PhoneCommand.NONE.getNumber()) {
+      if (phonecommand_ != com.qzy.tt.data.CallPhoneProtos.CallPhone.PhoneCommand.NONE.getNumber()) {
         output.writeEnum(3, phonecommand_);
       }
     }
@@ -364,7 +364,7 @@ public final class CallPhoneProtos {
       if (!getPhoneNumberBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, phoneNumber_);
       }
-      if (phonecommand_ != PhoneCommand.NONE.getNumber()) {
+      if (phonecommand_ != com.qzy.tt.data.CallPhoneProtos.CallPhone.PhoneCommand.NONE.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(3, phonecommand_);
       }
@@ -378,10 +378,10 @@ public final class CallPhoneProtos {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof CallPhone)) {
+      if (!(obj instanceof com.qzy.tt.data.CallPhoneProtos.CallPhone)) {
         return super.equals(obj);
       }
-      CallPhone other = (CallPhone) obj;
+      com.qzy.tt.data.CallPhoneProtos.CallPhone other = (com.qzy.tt.data.CallPhoneProtos.CallPhone) obj;
 
       boolean result = true;
       result = result && getIp()
@@ -410,58 +410,58 @@ public final class CallPhoneProtos {
       return hash;
     }
 
-    public static CallPhone parseFrom(
+    public static com.qzy.tt.data.CallPhoneProtos.CallPhone parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static CallPhone parseFrom(
+    public static com.qzy.tt.data.CallPhoneProtos.CallPhone parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static CallPhone parseFrom(byte[] data)
+    public static com.qzy.tt.data.CallPhoneProtos.CallPhone parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static CallPhone parseFrom(
+    public static com.qzy.tt.data.CallPhoneProtos.CallPhone parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static CallPhone parseFrom(java.io.InputStream input)
+    public static com.qzy.tt.data.CallPhoneProtos.CallPhone parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static CallPhone parseFrom(
+    public static com.qzy.tt.data.CallPhoneProtos.CallPhone parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static CallPhone parseDelimitedFrom(java.io.InputStream input)
+    public static com.qzy.tt.data.CallPhoneProtos.CallPhone parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static CallPhone parseDelimitedFrom(
+    public static com.qzy.tt.data.CallPhoneProtos.CallPhone parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static CallPhone parseFrom(
+    public static com.qzy.tt.data.CallPhoneProtos.CallPhone parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static CallPhone parseFrom(
+    public static com.qzy.tt.data.CallPhoneProtos.CallPhone parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -473,7 +473,7 @@ public final class CallPhoneProtos {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(CallPhone prototype) {
+    public static Builder newBuilder(com.qzy.tt.data.CallPhoneProtos.CallPhone prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -493,17 +493,17 @@ public final class CallPhoneProtos {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:phonedata.CallPhone)
-        CallPhoneOrBuilder {
+        com.qzy.tt.data.CallPhoneProtos.CallPhoneOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return CallPhoneProtos.internal_static_phonedata_CallPhone_descriptor;
+        return com.qzy.tt.data.CallPhoneProtos.internal_static_phonedata_CallPhone_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return CallPhoneProtos.internal_static_phonedata_CallPhone_fieldAccessorTable
+        return com.qzy.tt.data.CallPhoneProtos.internal_static_phonedata_CallPhone_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                CallPhone.class, Builder.class);
+                com.qzy.tt.data.CallPhoneProtos.CallPhone.class, com.qzy.tt.data.CallPhoneProtos.CallPhone.Builder.class);
       }
 
       // Construct using com.qzy.tt.data.CallPhoneProtos.CallPhone.newBuilder()
@@ -534,23 +534,23 @@ public final class CallPhoneProtos {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return CallPhoneProtos.internal_static_phonedata_CallPhone_descriptor;
+        return com.qzy.tt.data.CallPhoneProtos.internal_static_phonedata_CallPhone_descriptor;
       }
 
-      public CallPhone getDefaultInstanceForType() {
-        return CallPhone.getDefaultInstance();
+      public com.qzy.tt.data.CallPhoneProtos.CallPhone getDefaultInstanceForType() {
+        return com.qzy.tt.data.CallPhoneProtos.CallPhone.getDefaultInstance();
       }
 
-      public CallPhone build() {
-        CallPhone result = buildPartial();
+      public com.qzy.tt.data.CallPhoneProtos.CallPhone build() {
+        com.qzy.tt.data.CallPhoneProtos.CallPhone result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public CallPhone buildPartial() {
-        CallPhone result = new CallPhone(this);
+      public com.qzy.tt.data.CallPhoneProtos.CallPhone buildPartial() {
+        com.qzy.tt.data.CallPhoneProtos.CallPhone result = new com.qzy.tt.data.CallPhoneProtos.CallPhone(this);
         result.ip_ = ip_;
         result.phoneNumber_ = phoneNumber_;
         result.phonecommand_ = phonecommand_;
@@ -585,16 +585,16 @@ public final class CallPhoneProtos {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof CallPhone) {
-          return mergeFrom((CallPhone)other);
+        if (other instanceof com.qzy.tt.data.CallPhoneProtos.CallPhone) {
+          return mergeFrom((com.qzy.tt.data.CallPhoneProtos.CallPhone)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(CallPhone other) {
-        if (other == CallPhone.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.qzy.tt.data.CallPhoneProtos.CallPhone other) {
+        if (other == com.qzy.tt.data.CallPhoneProtos.CallPhone.getDefaultInstance()) return this;
         if (!other.getIp().isEmpty()) {
           ip_ = other.ip_;
           onChanged();
@@ -618,11 +618,11 @@ public final class CallPhoneProtos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        CallPhone parsedMessage = null;
+        com.qzy.tt.data.CallPhoneProtos.CallPhone parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (CallPhone) e.getUnfinishedMessage();
+          parsedMessage = (com.qzy.tt.data.CallPhoneProtos.CallPhone) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -655,7 +655,7 @@ public final class CallPhoneProtos {
           getIpBytes() {
         Object ref = ip_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           ip_ = b;
@@ -672,7 +672,7 @@ public final class CallPhoneProtos {
         if (value == null) {
     throw new NullPointerException();
   }
-  
+
         ip_ = value;
         onChanged();
         return this;
@@ -681,7 +681,7 @@ public final class CallPhoneProtos {
        * <code>optional string ip = 1;</code>
        */
       public Builder clearIp() {
-        
+
         ip_ = getDefaultInstance().getIp();
         onChanged();
         return this;
@@ -695,7 +695,7 @@ public final class CallPhoneProtos {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
+
         ip_ = value;
         onChanged();
         return this;
@@ -724,7 +724,7 @@ public final class CallPhoneProtos {
           getPhoneNumberBytes() {
         Object ref = phoneNumber_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           phoneNumber_ = b;
@@ -741,7 +741,7 @@ public final class CallPhoneProtos {
         if (value == null) {
     throw new NullPointerException();
   }
-  
+
         phoneNumber_ = value;
         onChanged();
         return this;
@@ -750,7 +750,7 @@ public final class CallPhoneProtos {
        * <code>optional string phoneNumber = 2;</code>
        */
       public Builder clearPhoneNumber() {
-        
+
         phoneNumber_ = getDefaultInstance().getPhoneNumber();
         onChanged();
         return this;
@@ -764,7 +764,7 @@ public final class CallPhoneProtos {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
+
         phoneNumber_ = value;
         onChanged();
         return this;
@@ -788,18 +788,18 @@ public final class CallPhoneProtos {
       /**
        * <code>optional .phonedata.CallPhone.PhoneCommand phonecommand = 3;</code>
        */
-      public PhoneCommand getPhonecommand() {
-        PhoneCommand result = PhoneCommand.valueOf(phonecommand_);
-        return result == null ? PhoneCommand.UNRECOGNIZED : result;
+      public com.qzy.tt.data.CallPhoneProtos.CallPhone.PhoneCommand getPhonecommand() {
+        com.qzy.tt.data.CallPhoneProtos.CallPhone.PhoneCommand result = com.qzy.tt.data.CallPhoneProtos.CallPhone.PhoneCommand.valueOf(phonecommand_);
+        return result == null ? com.qzy.tt.data.CallPhoneProtos.CallPhone.PhoneCommand.UNRECOGNIZED : result;
       }
       /**
        * <code>optional .phonedata.CallPhone.PhoneCommand phonecommand = 3;</code>
        */
-      public Builder setPhonecommand(PhoneCommand value) {
+      public Builder setPhonecommand(com.qzy.tt.data.CallPhoneProtos.CallPhone.PhoneCommand value) {
         if (value == null) {
           throw new NullPointerException();
         }
-        
+
         phonecommand_ = value.getNumber();
         onChanged();
         return this;
@@ -808,7 +808,7 @@ public final class CallPhoneProtos {
        * <code>optional .phonedata.CallPhone.PhoneCommand phonecommand = 3;</code>
        */
       public Builder clearPhonecommand() {
-        
+
         phonecommand_ = 0;
         onChanged();
         return this;
@@ -828,12 +828,12 @@ public final class CallPhoneProtos {
     }
 
     // @@protoc_insertion_point(class_scope:phonedata.CallPhone)
-    private static final CallPhone DEFAULT_INSTANCE;
+    private static final com.qzy.tt.data.CallPhoneProtos.CallPhone DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new CallPhone();
+      DEFAULT_INSTANCE = new com.qzy.tt.data.CallPhoneProtos.CallPhone();
     }
 
-    public static CallPhone getDefaultInstance() {
+    public static com.qzy.tt.data.CallPhoneProtos.CallPhone getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -856,7 +856,7 @@ public final class CallPhoneProtos {
       return PARSER;
     }
 
-    public CallPhone getDefaultInstanceForType() {
+    public com.qzy.tt.data.CallPhoneProtos.CallPhone getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -864,7 +864,7 @@ public final class CallPhoneProtos {
 
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_phonedata_CallPhone_descriptor;
-  private static final 
+  private static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_phonedata_CallPhone_fieldAccessorTable;
 

@@ -81,14 +81,14 @@ public final class TtPhoneSimCards {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return TtPhoneSimCards.internal_static_phonedata_TtPhoneSimCard_descriptor;
+      return com.qzy.tt.data.TtPhoneSimCards.internal_static_phonedata_TtPhoneSimCard_descriptor;
     }
 
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return TtPhoneSimCards.internal_static_phonedata_TtPhoneSimCard_fieldAccessorTable
+      return com.qzy.tt.data.TtPhoneSimCards.internal_static_phonedata_TtPhoneSimCard_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              TtPhoneSimCard.class, Builder.class);
+              com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard.class, com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard.Builder.class);
     }
 
     public static final int ISSIMCARD_FIELD_NUMBER = 1;
@@ -136,10 +136,10 @@ public final class TtPhoneSimCards {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof TtPhoneSimCard)) {
+      if (!(obj instanceof com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard)) {
         return super.equals(obj);
       }
-      TtPhoneSimCard other = (TtPhoneSimCard) obj;
+      com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard other = (com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard) obj;
 
       boolean result = true;
       result = result && (getIsSimCard()
@@ -162,58 +162,58 @@ public final class TtPhoneSimCards {
       return hash;
     }
 
-    public static TtPhoneSimCard parseFrom(
+    public static com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static TtPhoneSimCard parseFrom(
+    public static com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static TtPhoneSimCard parseFrom(byte[] data)
+    public static com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static TtPhoneSimCard parseFrom(
+    public static com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static TtPhoneSimCard parseFrom(java.io.InputStream input)
+    public static com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static TtPhoneSimCard parseFrom(
+    public static com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static TtPhoneSimCard parseDelimitedFrom(java.io.InputStream input)
+    public static com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static TtPhoneSimCard parseDelimitedFrom(
+    public static com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static TtPhoneSimCard parseFrom(
+    public static com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static TtPhoneSimCard parseFrom(
+    public static com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -225,7 +225,7 @@ public final class TtPhoneSimCards {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(TtPhoneSimCard prototype) {
+    public static Builder newBuilder(com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -245,17 +245,17 @@ public final class TtPhoneSimCards {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:phonedata.TtPhoneSimCard)
-        TtPhoneSimCardOrBuilder {
+        com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCardOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return TtPhoneSimCards.internal_static_phonedata_TtPhoneSimCard_descriptor;
+        return com.qzy.tt.data.TtPhoneSimCards.internal_static_phonedata_TtPhoneSimCard_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return TtPhoneSimCards.internal_static_phonedata_TtPhoneSimCard_fieldAccessorTable
+        return com.qzy.tt.data.TtPhoneSimCards.internal_static_phonedata_TtPhoneSimCard_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                TtPhoneSimCard.class, Builder.class);
+                com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard.class, com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard.Builder.class);
       }
 
       // Construct using com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard.newBuilder()
@@ -282,23 +282,23 @@ public final class TtPhoneSimCards {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return TtPhoneSimCards.internal_static_phonedata_TtPhoneSimCard_descriptor;
+        return com.qzy.tt.data.TtPhoneSimCards.internal_static_phonedata_TtPhoneSimCard_descriptor;
       }
 
-      public TtPhoneSimCard getDefaultInstanceForType() {
-        return TtPhoneSimCard.getDefaultInstance();
+      public com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard getDefaultInstanceForType() {
+        return com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard.getDefaultInstance();
       }
 
-      public TtPhoneSimCard build() {
-        TtPhoneSimCard result = buildPartial();
+      public com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard build() {
+        com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public TtPhoneSimCard buildPartial() {
-        TtPhoneSimCard result = new TtPhoneSimCard(this);
+      public com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard buildPartial() {
+        com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard result = new com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard(this);
         result.isSimCard_ = isSimCard_;
         onBuilt();
         return result;
@@ -331,16 +331,16 @@ public final class TtPhoneSimCards {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof TtPhoneSimCard) {
-          return mergeFrom((TtPhoneSimCard)other);
+        if (other instanceof com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard) {
+          return mergeFrom((com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(TtPhoneSimCard other) {
-        if (other == TtPhoneSimCard.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard other) {
+        if (other == com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard.getDefaultInstance()) return this;
         if (other.getIsSimCard() != false) {
           setIsSimCard(other.getIsSimCard());
         }
@@ -356,11 +356,11 @@ public final class TtPhoneSimCards {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        TtPhoneSimCard parsedMessage = null;
+        com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (TtPhoneSimCard) e.getUnfinishedMessage();
+          parsedMessage = (com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -381,7 +381,7 @@ public final class TtPhoneSimCards {
        * <code>optional bool isSimCard = 1;</code>
        */
       public Builder setIsSimCard(boolean value) {
-        
+
         isSimCard_ = value;
         onChanged();
         return this;
@@ -390,7 +390,7 @@ public final class TtPhoneSimCards {
        * <code>optional bool isSimCard = 1;</code>
        */
       public Builder clearIsSimCard() {
-        
+
         isSimCard_ = false;
         onChanged();
         return this;
@@ -410,12 +410,12 @@ public final class TtPhoneSimCards {
     }
 
     // @@protoc_insertion_point(class_scope:phonedata.TtPhoneSimCard)
-    private static final TtPhoneSimCard DEFAULT_INSTANCE;
+    private static final com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new TtPhoneSimCard();
+      DEFAULT_INSTANCE = new com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard();
     }
 
-    public static TtPhoneSimCard getDefaultInstance() {
+    public static com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -438,7 +438,7 @@ public final class TtPhoneSimCards {
       return PARSER;
     }
 
-    public TtPhoneSimCard getDefaultInstanceForType() {
+    public com.qzy.tt.data.TtPhoneSimCards.TtPhoneSimCard getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -446,7 +446,7 @@ public final class TtPhoneSimCards {
 
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_phonedata_TtPhoneSimCard_descriptor;
-  private static final 
+  private static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_phonedata_TtPhoneSimCard_fieldAccessorTable;
 

@@ -100,14 +100,14 @@ public final class TtOpenBeiDouProtos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return TtOpenBeiDouProtos.internal_static_phonedata_TtOpenBeiDou_descriptor;
+      return com.qzy.tt.data.TtOpenBeiDouProtos.internal_static_phonedata_TtOpenBeiDou_descriptor;
     }
 
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return TtOpenBeiDouProtos.internal_static_phonedata_TtOpenBeiDou_fieldAccessorTable
+      return com.qzy.tt.data.TtOpenBeiDouProtos.internal_static_phonedata_TtOpenBeiDou_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              TtOpenBeiDou.class, Builder.class);
+              com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou.class, com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou.Builder.class);
     }
 
     public static final int REQUEST_STATUS_FIELD_NUMBER = 1;
@@ -179,10 +179,10 @@ public final class TtOpenBeiDouProtos {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof TtOpenBeiDou)) {
+      if (!(obj instanceof com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou)) {
         return super.equals(obj);
       }
-      TtOpenBeiDou other = (TtOpenBeiDou) obj;
+      com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou other = (com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou) obj;
 
       boolean result = true;
       result = result && (getRequestStatus()
@@ -210,58 +210,58 @@ public final class TtOpenBeiDouProtos {
       return hash;
     }
 
-    public static TtOpenBeiDou parseFrom(
+    public static com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static TtOpenBeiDou parseFrom(
+    public static com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static TtOpenBeiDou parseFrom(byte[] data)
+    public static com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static TtOpenBeiDou parseFrom(
+    public static com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static TtOpenBeiDou parseFrom(java.io.InputStream input)
+    public static com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static TtOpenBeiDou parseFrom(
+    public static com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static TtOpenBeiDou parseDelimitedFrom(java.io.InputStream input)
+    public static com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static TtOpenBeiDou parseDelimitedFrom(
+    public static com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static TtOpenBeiDou parseFrom(
+    public static com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static TtOpenBeiDou parseFrom(
+    public static com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -273,7 +273,7 @@ public final class TtOpenBeiDouProtos {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(TtOpenBeiDou prototype) {
+    public static Builder newBuilder(com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -293,17 +293,17 @@ public final class TtOpenBeiDouProtos {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:phonedata.TtOpenBeiDou)
-        TtOpenBeiDouOrBuilder {
+        com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDouOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return TtOpenBeiDouProtos.internal_static_phonedata_TtOpenBeiDou_descriptor;
+        return com.qzy.tt.data.TtOpenBeiDouProtos.internal_static_phonedata_TtOpenBeiDou_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return TtOpenBeiDouProtos.internal_static_phonedata_TtOpenBeiDou_fieldAccessorTable
+        return com.qzy.tt.data.TtOpenBeiDouProtos.internal_static_phonedata_TtOpenBeiDou_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                TtOpenBeiDou.class, Builder.class);
+                com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou.class, com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou.Builder.class);
       }
 
       // Construct using com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou.newBuilder()
@@ -332,23 +332,23 @@ public final class TtOpenBeiDouProtos {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return TtOpenBeiDouProtos.internal_static_phonedata_TtOpenBeiDou_descriptor;
+        return com.qzy.tt.data.TtOpenBeiDouProtos.internal_static_phonedata_TtOpenBeiDou_descriptor;
       }
 
-      public TtOpenBeiDou getDefaultInstanceForType() {
-        return TtOpenBeiDou.getDefaultInstance();
+      public com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou getDefaultInstanceForType() {
+        return com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou.getDefaultInstance();
       }
 
-      public TtOpenBeiDou build() {
-        TtOpenBeiDou result = buildPartial();
+      public com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou build() {
+        com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public TtOpenBeiDou buildPartial() {
-        TtOpenBeiDou result = new TtOpenBeiDou(this);
+      public com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou buildPartial() {
+        com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou result = new com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou(this);
         result.requestStatus_ = requestStatus_;
         result.responseStatus_ = responseStatus_;
         onBuilt();
@@ -382,16 +382,16 @@ public final class TtOpenBeiDouProtos {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof TtOpenBeiDou) {
-          return mergeFrom((TtOpenBeiDou)other);
+        if (other instanceof com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou) {
+          return mergeFrom((com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(TtOpenBeiDou other) {
-        if (other == TtOpenBeiDou.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou other) {
+        if (other == com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou.getDefaultInstance()) return this;
         if (other.getRequestStatus() != false) {
           setRequestStatus(other.getRequestStatus());
         }
@@ -410,11 +410,11 @@ public final class TtOpenBeiDouProtos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        TtOpenBeiDou parsedMessage = null;
+        com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (TtOpenBeiDou) e.getUnfinishedMessage();
+          parsedMessage = (com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -443,7 +443,7 @@ public final class TtOpenBeiDouProtos {
        * <code>optional bool request_status = 1;</code>
        */
       public Builder setRequestStatus(boolean value) {
-        
+
         requestStatus_ = value;
         onChanged();
         return this;
@@ -456,7 +456,7 @@ public final class TtOpenBeiDouProtos {
        * <code>optional bool request_status = 1;</code>
        */
       public Builder clearRequestStatus() {
-        
+
         requestStatus_ = false;
         onChanged();
         return this;
@@ -481,7 +481,7 @@ public final class TtOpenBeiDouProtos {
        * <code>optional bool response_status = 2;</code>
        */
       public Builder setResponseStatus(boolean value) {
-        
+
         responseStatus_ = value;
         onChanged();
         return this;
@@ -494,7 +494,7 @@ public final class TtOpenBeiDouProtos {
        * <code>optional bool response_status = 2;</code>
        */
       public Builder clearResponseStatus() {
-        
+
         responseStatus_ = false;
         onChanged();
         return this;
@@ -514,12 +514,12 @@ public final class TtOpenBeiDouProtos {
     }
 
     // @@protoc_insertion_point(class_scope:phonedata.TtOpenBeiDou)
-    private static final TtOpenBeiDou DEFAULT_INSTANCE;
+    private static final com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new TtOpenBeiDou();
+      DEFAULT_INSTANCE = new com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou();
     }
 
-    public static TtOpenBeiDou getDefaultInstance() {
+    public static com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -542,7 +542,7 @@ public final class TtOpenBeiDouProtos {
       return PARSER;
     }
 
-    public TtOpenBeiDou getDefaultInstanceForType() {
+    public com.qzy.tt.data.TtOpenBeiDouProtos.TtOpenBeiDou getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -550,7 +550,7 @@ public final class TtOpenBeiDouProtos {
 
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_phonedata_TtOpenBeiDou_descriptor;
-  private static final 
+  private static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_phonedata_TtOpenBeiDou_fieldAccessorTable;
 
