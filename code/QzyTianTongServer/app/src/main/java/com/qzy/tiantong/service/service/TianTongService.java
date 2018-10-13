@@ -29,6 +29,9 @@ public class TianTongService extends Service {
         super.onCreate();
         LogUtils.d("onCreate");
         acquireWakeLock();
+
+        manager = new TianTongServiceManager(getApplicationContext());
+
         //如果API大于18，需要弹出一个可见通知
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             Notification.Builder builder = new Notification.Builder(this);
@@ -45,7 +48,7 @@ public class TianTongService extends Service {
         }
 
 
-        manager = new TianTongServiceManager(getApplicationContext());
+
     }
 
     @Override

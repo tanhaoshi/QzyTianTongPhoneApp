@@ -20,6 +20,7 @@ public class PrototocalTools {
         int request_gps_position = 110;
         int request_open_beidou = 112;
         int request_call_record = 114;
+        int request_short_message = 116;
     }
 
     public interface IProtoClientIndex{
@@ -33,6 +34,7 @@ public class PrototocalTools {
         int tt_gps_position = 115;
         int tt_beidou_switch = 117;
         int tt_call_record = 119;
+        int tt_short_message = 121;
     }
 
 

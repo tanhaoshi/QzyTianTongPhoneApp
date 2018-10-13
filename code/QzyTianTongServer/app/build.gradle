@@ -40,7 +40,6 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     compile 'com.squareup.okio:okio:1.9.0'
-    compile project(':qzyTianTongProbufLib')
     compile project(':rtptest')
     compile project(':qzytiantonglocallib')
 }

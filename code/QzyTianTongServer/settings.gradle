@@ -1,1 +1,2 @@
-include ':app', ':qzyTianTongLib', ':qzyTianTongProbufLib', ':qzytiantonglocallib', ':rtptest'
+include ':app', ':qzyTianTongLib', ':qzytiantonglocallib', ':rtptest',':qzyTianTongProbufLib'
+

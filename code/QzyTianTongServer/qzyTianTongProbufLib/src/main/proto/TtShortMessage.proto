@@ -9,13 +9,13 @@ message TtShortMessage {
     bool request = 1;
     bool response = 2;
 
-    message ShortMessage{
+    message ShortMessage {
         string numberPhone = 1;
         string message = 2;
         string time = 3;
-        string state = 4;
+        int32 type = 4;
         string name = 5;
     }
 
-    repeated ShortMessage shortMessage = 4;
+    repeated ShortMessage shortMessage = 3;
 }

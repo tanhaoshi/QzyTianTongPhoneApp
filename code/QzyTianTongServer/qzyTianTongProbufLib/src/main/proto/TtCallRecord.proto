@@ -13,9 +13,10 @@ message TtCallRecordProto {
       string phoneNumber = 1;
       string name = 2;
       string address = 3;
-      string state = 4;
+      int32 type = 4;
       string date = 5;
+      int64 duration =6;
    }
 
-   repeated CallRecord callRecord = 4;
+   repeated CallRecord callRecord = 3;
 }

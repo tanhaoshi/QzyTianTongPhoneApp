@@ -1,6 +1,7 @@
 package com.qzy.tiantong.service.service;
 
 
+import com.qzy.tiantong.service.netty.PhoneNettyManager;
 import com.qzy.tiantong.service.phone.QzyPhoneManager;
 import com.qzy.tiantong.service.phone.TtPhoneState;
 import com.qzy.tt.data.TtPhoneSmsProtos;
@@ -13,6 +14,8 @@ public interface ITianTongServer {
 
     //对外提供电话操控工具
     QzyPhoneManager getQzyPhoneManager();
+
+    PhoneNettyManager getPhoneNettyManager();
 
     //更新打电话时 电话状态
     void onPhoneStateChange(TtPhoneState state);

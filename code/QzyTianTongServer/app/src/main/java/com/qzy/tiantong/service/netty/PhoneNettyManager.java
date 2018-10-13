@@ -6,14 +6,17 @@ import com.qzy.led.Netled;
 import com.qzy.tiantong.lib.eventbus.MessageEvent;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.phone.BatteryManager;
+import com.qzy.tiantong.service.phone.CallLogManager;
 import com.qzy.tiantong.service.phone.SmsPhoneManager;
 import com.qzy.tiantong.service.phone.TtPhoneState;
 import com.qzy.tiantong.service.utils.PhoneUtils;
 import com.qzy.tt.data.CallPhoneStateProtos;
+import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtPhoneBatteryProtos;
 import com.qzy.tt.data.TtPhoneSignalProtos;
 import com.qzy.tt.data.TtPhoneSimCards;
 import com.qzy.tt.data.TtPhoneSmsProtos;
+import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.probuf.lib.data.PhoneAudioCmd;
 import com.qzy.tt.probuf.lib.data.PhoneCmd;
 import com.qzy.tt.probuf.lib.data.PrototocalTools;
@@ -50,6 +53,8 @@ public class PhoneNettyManager {
     private BatteryManager mBatteryManager;
     private TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery;
 
+    private CallLogManager mCallLogManager;
+
     public PhoneNettyManager(Context context, NettyServerManager manager) {
         mContext = context;
         mNettyServerManager = manager;
@@ -64,6 +69,7 @@ public class PhoneNettyManager {
         initSendThread();
 
         initBattery();
+        LogUtils.e("getCallLog...11111..");
     }
 
     /**
@@ -147,6 +153,7 @@ public class PhoneNettyManager {
             sendPhoneAudioData(phoneAudioCmd);
         }
     }
+
 
     /**
      * 更新电话状态
@@ -240,6 +247,27 @@ public class PhoneNettyManager {
 
 
     /**
+     * 发送所有通话记录
+     *
+     * @param callRecordProto
+     */
+    public void sendCallLogToPhoneClient(TtCallRecordProtos.TtCallRecordProto callRecordProto) {
+        LogUtils.d("callRecordProto list = " + callRecordProto.getCallRecordList().size());
+        mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_call_record, callRecordProto));
+    }
+
+    /**
+     * 发送所有短信
+     *
+     * @param ttShortMessage
+     */
+    public void sendCallLogToPhoneClient(TtShortMessageProtos.TtShortMessage ttShortMessage) {
+        LogUtils.d("ttShortMessage list = " + ttShortMessage.getShortMessageList().size());
+        mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_short_message, ttShortMessage));
+    }
+
+
+    /**
      * 发送短信
      *
      * @param ttPhoneSms
@@ -303,6 +331,11 @@ public class PhoneNettyManager {
                     .setIsReceiverSuccess(false)
                     .build();
             mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.phone_send_sms_callback, tt));
+        }
+
+        @Override
+        public void onReceiveSms(String phoneNumber, String smsBody) {
+
         }
     };
 
