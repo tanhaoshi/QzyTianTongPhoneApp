@@ -337,6 +337,7 @@ public class PhoneNettyManager {
         public void onReceiveSms(String phoneNumber, String smsBody) {
             TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage = TtShortMessageProtos.TtShortMessage.ShortMessage.newBuilder()
                     .setNumberPhone(phoneNumber)
+                    .setType(1)// 接收
                     .setMessage(smsBody)
                     .build();
             mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_receiver_short_message, shortMessage));
