@@ -35,6 +35,7 @@ public class PrototocalTools {
         int tt_beidou_switch = 117;
         int tt_call_record = 119;
         int tt_short_message = 121;
+        int tt_receiver_short_message=123;
     }
 
 
