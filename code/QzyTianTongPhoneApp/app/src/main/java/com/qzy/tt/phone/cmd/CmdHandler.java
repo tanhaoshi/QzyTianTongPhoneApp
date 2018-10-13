@@ -18,10 +18,12 @@ import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSignalProtos;
 import com.qzy.tt.data.TtPhoneSimCards;
 import com.qzy.tt.data.TtPhoneSmsProtos;
+import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.activity.TellPhoneIncomingActivity;
+import com.tt.qzy.view.presenter.manager.SyncManager;
 
 
 import io.netty.buffer.ByteBufInputStream;
@@ -33,9 +35,11 @@ import io.netty.buffer.ByteBufInputStream;
 public class CmdHandler {
 
     private Context context;
+    private SyncManager mSyncManager;
 
     public CmdHandler(Context context) {
         this.context = context;
+        mSyncManager = new SyncManager(context);
     }
 
     /**
@@ -113,7 +117,11 @@ public class CmdHandler {
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_call_record:
                     TtCallRecordProtos.TtCallRecordProto ttCallRecordProto = TtCallRecordProtos.TtCallRecordProto.parseDelimitedFrom(inputStream);
-                    sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_CALL_RECORD,protoId,ttCallRecordProto);
+                    mSyncManager.syncCallRecord(ttCallRecordProto);
+                    break;
+                case PrototocalTools.IProtoClientIndex.tt_short_message:
+                    TtShortMessageProtos.TtShortMessage ttShortMessage = TtShortMessageProtos.TtShortMessage.parseDelimitedFrom(inputStream);
+                    mSyncManager.syncShortMessage(ttShortMessage);
                     break;
             }
         } catch (Exception e) {

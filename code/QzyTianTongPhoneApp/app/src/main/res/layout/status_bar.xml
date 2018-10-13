@@ -28,7 +28,7 @@
 
     <ImageView
         android:id="@+id/img3"
-        android:src="@drawable/satellite_noconnect"
+        android:src="@drawable/signal_noconnect"
         android:layout_marginRight="8dp"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/img2"
@@ -37,6 +37,7 @@
 
     <ImageView
         android:id="@+id/img4"
+        android:visibility="gone"
         android:src="@drawable/phone_nonetwork"
         android:layout_centerVertical="true"
         android:layout_marginRight="6dp"
@@ -46,11 +47,11 @@
 
     <ImageView
         android:id="@+id/img5"
-        android:src="@drawable/search_nerwork"
+        android:src="@drawable/search_nonerwork"
         android:layout_marginRight="6dp"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/img4"
-        android:layout_width="100dp"
+        android:layout_width="28dp"
         android:layout_height="20dp"/>
 
 </RelativeLayout>

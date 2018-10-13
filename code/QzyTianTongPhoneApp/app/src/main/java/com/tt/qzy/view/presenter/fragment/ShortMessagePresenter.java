@@ -2,14 +2,24 @@ package com.tt.qzy.view.presenter.fragment;
 
 import android.content.Context;
 
+import com.qzy.data.PhoneCmd;
+import com.qzy.eventbus.EventBusUtils;
+import com.qzy.eventbus.IMessageEventBustType;
+import com.qzy.eventbus.MessageEventBus;
+import com.qzy.tt.data.TtCallRecordProtos;
+import com.qzy.tt.data.TtShortMessageProtos;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.bean.ShortMessageModel;
 import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
+import com.tt.qzy.view.db.manager.CallRecordManager;
 import com.tt.qzy.view.db.manager.ShortMessageManager;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
 import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.view.ShortMessageView;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,78 +45,136 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
     // "更早" 标题进行添加一次的控制
     private boolean isEarlier = true;
 
-
     public ShortMessagePresenter(Context context){
         this.mContext = context;
     }
 
-    public void getShortMessageData(){
+    /**
+     * 请求天通猫短信记录
+     */
+    public void requestShortMessage(){
+        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SHORT_MESSGAE));
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEventBus event) {
+        switch (event.getType()) {
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SHORT_MESSAGE:
+                parseShortMessage(event.getObject());
+                break;
+        }
+    }
+
+    /**
+     * 解析与处理 协议数据
+     */
+    private void parseShortMessage(Object o){
+        PhoneCmd cmd = (PhoneCmd) o;
+        TtShortMessageProtos.TtShortMessage ttShortMessage = (TtShortMessageProtos.TtShortMessage)cmd.getMessage();
+        getShortMessageData(ttShortMessage.getShortMessageList());
+    }
+
+    public void getShortMessageData(final List<TtShortMessageProtos.TtShortMessage.ShortMessage> list){
         Observable.create(new ObservableOnSubscribe<List<ShortMessageDao>>() {
             @Override
-            public void subscribe(ObservableEmitter<List<ShortMessageDao>> e) throws Exception {
-                List<ShortMessageDao> messageDaoList = ShortMessageManager.getInstance(mContext).queryCallRecordList();
-                 e.onNext(arrangementData(messageDaoList));
+            public void subscribe(ObservableEmitter<List<ShortMessageDao>> e){
+                e.onNext(dataMerging(list));
             }
         })
-          .subscribeOn(Schedulers.io())
-          .unsubscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(new Observer<List<ShortMessageDao>>() {
-              @Override
-              public void onSubscribe(Disposable d) {
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<ShortMessageDao>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-              }
+                    }
 
-              @Override
-              public void onNext(List<ShortMessageDao> value) {
-                  mView.get().getShortMessageData(value);
-                  onComplete();
-              }
+                    @Override
+                    public void onNext(List<ShortMessageDao> value) {
+                        mView.get().getShortMessageData(value);
+                        onComplete();
+                    }
 
-              @Override
-              public void onError(Throwable e) {
-                  mView.get().showError(e.getMessage().toString(),true);
-              }
+                    @Override
+                    public void onError(Throwable e) {
+                        mView.get().showError(e.getMessage().toString(),true);
+                    }
 
-              @Override
-              public void onComplete() {
-                  mView.get().hideProgress();
+                    @Override
+                    public void onComplete() {
+                        mView.get().hideProgress();
+                    }
+                });
+    }
 
-              }
-          });
+    public List<ShortMessageDao> dataMerging(List<TtShortMessageProtos.TtShortMessage.ShortMessage> list){
+
+        List<ShortMessageDao> shortMessagList = handlerAgrementData(list);
+
+        List<ShortMessageDao> messageDaoList = ShortMessageManager.getInstance(mContext).queryShortMessageList();
+        //当协议数据大小为0或集合为空
+        if(shortMessagList.size() == 0 || shortMessagList == null){
+            //当数据库数据大于0且不等于空
+            if(messageDaoList.size() > 0 && messageDaoList != null){
+                //返回数据库数据给UI显示
+                return arrangementData(messageDaoList);
+            }
+        }
+        //如果协议数据大于数据库中的数据
+        if(shortMessagList.size() > messageDaoList.size()){
+            //删除本地
+            ShortMessageManager.getInstance(mContext).deleteShortMessageList();
+            //再者将协议数据插入到本地
+            ShortMessageManager.getInstance(mContext).insertShortMessageList(shortMessagList,mContext);
+            //当协议数据和数据库中数据相等情况下 返回协议数据给UI
+        } else if(shortMessagList.size() == messageDaoList.size()){
+            return arrangementData(shortMessagList);
+            //当协议数据小于数据库中数据,将其数据库中数据删除，提供协议数据供UI显示
+        }else if(shortMessagList.size() < messageDaoList.size()){
+            //删除本地
+            ShortMessageManager.getInstance(mContext).deleteShortMessageList();
+            //再者将协议数据插入到本地
+            ShortMessageManager.getInstance(mContext).insertShortMessageList(shortMessagList,mContext);
+            //返回协议数据
+            return arrangementData(shortMessagList);
+        }
+
+        return arrangementData(messageDaoList);
+    }
+
+    public List<ShortMessageDao> handlerAgrementData(List<TtShortMessageProtos.TtShortMessage.ShortMessage> list){
+        List<ShortMessageDao> shortMessageDaos = new ArrayList<>();
+        if(list.size() > 0){
+            for(TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage : list){
+                shortMessageDaos.add(new ShortMessageDao(shortMessage.getNumberPhone(),shortMessage.getMessage(),
+                        shortMessage.getTime(),shortMessage.getState(),shortMessage.getName()));
+            }
+        }
+        return shortMessageDaos;
     }
 
     public List<ShortMessageDao> arrangementData(List<ShortMessageDao> list){
         List<ShortMessageDao> mModelList = new ArrayList<>();
-//        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-28 14:33:24",0,""));
-//        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-25 14:33:24",0,""));
-//        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-20 14:33:24",0,""));
-//        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-30 9:33:24",0,""));
-//        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-29 14:33:24",0,""));
-//        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-29 18:33:24",0,""));
-//        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-27 14:33:24",0,""));
-//        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-23 14:33:24",0,""));
-//        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-24 14:33:24",0,""));
-//        list.add(new ShortMessageDao("106575020131875","你好!","2018-8-20 14:33:24",0,""));
         if(list.size()>0){
             sortData(list);
-            mModelList.add(new ShortMessageDao("","","",1,"今天"));
+            mModelList.add(new ShortMessageDao("","","",1,"今天","",""));
             for(ShortMessageDao shortMessageModel : list){
                 if(DateUtil.isToday(shortMessageModel.getTime())){
                     mModelList.add(shortMessageModel);
                 }else if(DateUtil.isYesterday(shortMessageModel.getTime())){
                     if(isYesterday){
-                        mModelList.add(new ShortMessageDao("","","",1,"昨天"));
+                        mModelList.add(new ShortMessageDao("","","",1,"昨天","",""));
                         isYesterday = false;
                     }
                     mModelList.add(shortMessageModel);
                 }else{
                     if(isYesterday){
-                        mModelList.add(new ShortMessageDao("","","",1,"昨天"));
+                        mModelList.add(new ShortMessageDao("","","",1,"昨天","",""));
                         isYesterday = false;
                     }
                     if(isEarlier){
-                        mModelList.add(new ShortMessageDao("","","",1,"更早"));
+                        mModelList.add(new ShortMessageDao("","","",1,"更早","",""));
                         isEarlier = false;
                     }
                     mModelList.add(shortMessageModel);

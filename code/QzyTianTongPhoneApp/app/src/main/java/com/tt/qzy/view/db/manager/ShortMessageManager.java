@@ -2,9 +2,11 @@ package com.tt.qzy.view.db.manager;
 
 import android.content.Context;
 
+import com.tt.qzy.view.db.CallRecordDaoDao;
 import com.tt.qzy.view.db.DaoMaster;
 import com.tt.qzy.view.db.DaoSession;
 import com.tt.qzy.view.db.ShortMessageDaoDao;
+import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
 
 import org.greenrobot.greendao.query.QueryBuilder;
@@ -32,10 +34,25 @@ public class ShortMessageManager {
        return sShortMessageManager;
    }
 
-    public List<ShortMessageDao> queryCallRecordList() {
+    public List<ShortMessageDao> queryShortMessageList() {
         ShortMessageDaoDao dao = daoSession.getShortMessageDaoDao();
         QueryBuilder<ShortMessageDao> qb = dao.queryBuilder();
         List<ShortMessageDao> list = qb.list();
         return list;
+    }
+
+    public void deleteShortMessageList(){
+        ShortMessageDaoDao dao = daoSession.getShortMessageDaoDao();
+        dao.deleteAll();
+    }
+
+    public void insertShortMessageList(List<ShortMessageDao> shortMessageDaos, Context context) {
+        if (shortMessageDaos == null || shortMessageDaos.isEmpty()) {
+            return;
+        }
+        DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
+        DaoSession daoSession = daoMaster.newSession();
+        ShortMessageDaoDao shortMessageDaoDao = daoSession.getShortMessageDaoDao();
+        shortMessageDaoDao.insertInTx(shortMessageDaos);
     }
 }

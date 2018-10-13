@@ -13,6 +13,7 @@ import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
+import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.phone.cmd.CmdHandler;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.SmsBean;
@@ -94,7 +95,6 @@ public class PhoneNettyManager {
         sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.call_phone, callPhone));
     }
 
-
     /**
      * 发送连接状态
      */
@@ -108,7 +108,6 @@ public class PhoneNettyManager {
             EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_FAILED));
         }
     }
-
 
     /**
      * 发送短信
@@ -149,13 +148,23 @@ public class PhoneNettyManager {
     }
 
     /**
-     * 请求通话记录
+     * 请求天通猫通话记录
      */
     private void requestCallRecord(){
         TtCallRecordProtos.TtCallRecordProto ttCallRecordProto = TtCallRecordProtos.TtCallRecordProto.newBuilder()
                 .setRequest(true)
                 .build();
         sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_call_record,ttCallRecordProto));
+    }
+
+    /**
+     * 请求天通猫短信记录
+     */
+    private void requestShortMessage(){
+        TtShortMessageProtos.TtShortMessage ttShortMessage = TtShortMessageProtos.TtShortMessage.newBuilder()
+                .setRequest(true)
+                .build();
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_short_message,ttShortMessage));
     }
 
     private NettyClientManager.INettyListener nettyListener = new NettyClientManager.INettyListener() {
@@ -182,7 +191,6 @@ public class PhoneNettyManager {
             setConnectedState();
         }
     };
-
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(MessageEventBus event) {
@@ -217,6 +225,9 @@ public class PhoneNettyManager {
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_CALL_RECORD:
                 requestCallRecord();
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SHORT_MESSGAE:
+                requestShortMessage();
                 break;
         }
     }

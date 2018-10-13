@@ -9,7 +9,6 @@ import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.data.TtCallRecordProtos;
-import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.phone.common.CommonData;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.TellPhoneActivity;
@@ -103,8 +102,6 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
     private void parseCallRecord(Object o){
         PhoneCmd cmd = (PhoneCmd) o;
         TtCallRecordProtos.TtCallRecordProto ttCallRecordProto = (TtCallRecordProtos.TtCallRecordProto)cmd.getMessage();
-        //如果我从协议获得的数据与我数据库中的数据不同步的话,我要将其,数据库中的数据进行删除，然后重新将协议中获得的数据添加到数据库中
-        //处理协议的数据应该放入到线程当中去处理
         getCallHistroy(ttCallRecordProto.getCallRecordList());
     }
 
@@ -112,26 +109,7 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
         Observable.create(new ObservableOnSubscribe<List<CallRecordDao>>() {
             @Override
             public void subscribe(ObservableEmitter<List<CallRecordDao>> e){
-
-                List<CallRecordDao> callRecordDaos = handlerAgrementData(list);
-
-                if(callRecordDaos.size() == 0 || callRecordDaos == null){
-
-                }
-
-                List<CallRecordDao> listDao = CallRecordManager.getInstance(mContext).queryCallRecordList();
-
-                if(callRecordDaos.size() > listDao.size()){
-                    //如果协议过来的数据大于我们数据库当中的数据 要进行删除
-                    CallRecordManager.getInstance(mContext).deleteRecordList();
-                    //删除后,然后批量进行添加
-                    //其实每次过来都应该同步一次 然后我展示的话，就展示
-                    CallRecordManager.getInstance(mContext).insertCallRecordList(callRecordDaos,mContext);
-                } else if(callRecordDaos.size() == listDao.size()){
-
-                }
-
-                e.onNext(arrangementData(listDao));
+                e.onNext(dataMerging(list));
             }
         })
             .subscribeOn(Schedulers.io())
@@ -160,6 +138,42 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
             });
     }
 
+    //数据合并处理
+    private List<CallRecordDao> dataMerging(List<TtCallRecordProtos.TtCallRecordProto.CallRecord> list){
+        //通过协议获取到的数据
+        List<CallRecordDao> callRecordDaos = handlerAgrementData(list);
+        //查询本地数据库所获得的数据
+        List<CallRecordDao> listDao = CallRecordManager.getInstance(mContext).queryCallRecordList();
+        //当协议数据大小为0或集合为空
+        if(callRecordDaos.size() == 0 || callRecordDaos == null){
+            //当数据数据大于0且不等于空
+            if(listDao.size() > 0 && listDao != null){
+                //返回数据库数据给UI显示
+                return arrangementData(listDao);
+            }
+        }
+        //如果协议数据大于数据库中的数据
+        if(callRecordDaos.size() > listDao.size()){
+            //删除本地
+            CallRecordManager.getInstance(mContext).deleteRecordList();
+            //再者将协议数据插入到本地
+            CallRecordManager.getInstance(mContext).insertCallRecordList(callRecordDaos,mContext);
+            //当协议数据和数据库中数据相等情况下 返回协议数据给UI
+        } else if(callRecordDaos.size() == listDao.size()){
+            return arrangementData(callRecordDaos);
+            //当协议数据小于数据库中数据,将其数据库中数据删除，提供协议数据供UI显示
+        }else if(callRecordDaos.size() < listDao.size()){
+            //删除本地
+            CallRecordManager.getInstance(mContext).deleteRecordList();
+            //再者将协议数据插入到本地
+            CallRecordManager.getInstance(mContext).insertCallRecordList(callRecordDaos,mContext);
+            //返回协议数据
+            return arrangementData(callRecordDaos);
+        }
+
+        return arrangementData(listDao);
+    }
+
     public List<CallRecordDao> handlerAgrementData(List<TtCallRecordProtos.TtCallRecordProto.CallRecord> list){
         List<CallRecordDao> callRecordDaos = new ArrayList<>();
         if(list.size() > 0){
@@ -173,11 +187,6 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
 
     public List<CallRecordDao> arrangementData(List<CallRecordDao> list){
         List<CallRecordDao> mModelList = new ArrayList<>();
-        list.add(new CallRecordDao("181-2644-0000","","广东深圳","响铃9秒","2018-8-27 14:33:24",0,""));
-        list.add(new CallRecordDao("181-2644-0000","","广东深圳","响铃8秒","2018-8-24 14:33:24",0,""));
-        list.add(new CallRecordDao("181-2644-0000","","广东深圳","响铃8秒","2018-8-29 14:33:24",0,""));
-        list.add(new CallRecordDao("181-2644-0000","","广东深圳","响铃8秒","2018-8-30 14:33:24",0,""));
-        list.add(new CallRecordDao("181-2644-0000","","广东深圳","响铃8秒","2018-8-30 14:33:24",0,""));
         if(list.size() > 0){
             sortData(list);
             mModelList.add(new CallRecordDao("","","","","",1,"今天"));

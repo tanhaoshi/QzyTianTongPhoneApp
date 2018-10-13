@@ -2,7 +2,9 @@ package com.tt.qzy.view.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.tt.qzy.view.R;
@@ -16,6 +18,14 @@ public class AddContactsActivity extends AppCompatActivity {
 
     @BindView(R.id.base_tv_toolbar_title)
     TextView base_tv_toolbar_title;
+    @BindView(R.id.name)
+    EditText name;
+    @BindView(R.id.phone)
+    EditText phone;
+    @BindView(R.id.email)
+    EditText email;
+    @BindView(R.id.qq)
+    EditText qq;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +37,12 @@ public class AddContactsActivity extends AppCompatActivity {
 
     private void initView() {
         base_tv_toolbar_title.setText(getResources().getString(R.string.TMT_add_contacts));
+    }
+
+    private void handleData(){
+        if(!TextUtils.isEmpty(name.getText().toString())){
+
+        }
     }
 
     @OnClick({R.id.base_iv_back,R.id.base_tv_toolbar_right})

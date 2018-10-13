@@ -107,7 +107,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
      */
     private void connectTianTongSuccess(){
         tt_status = true;
-        img5.setImageDrawable(getResources().getDrawable(R.drawable.wifi_status));
+        img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nerwork));
         img4.setImageDrawable(getResources().getDrawable(R.drawable.phone_network));
     }
 
@@ -116,7 +116,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
      */
     private void connectTianTongFailed(){
         tt_status = false;
-        img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nerwork));
+        img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonerwork));
         img4.setImageDrawable(getResources().getDrawable(R.drawable.phone_nonetwork));
     }
 
@@ -145,6 +145,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
 
     private void onBatteryInfoReceiver(int intLevel, int intScale) {
         int percent = intLevel * 100 / intScale;
+        KLog.i("battery info is :"+percent);
         img1.setPower(percent);
     }
 
@@ -166,15 +167,19 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     private void onTiantongInfoReceiver(int intLevel) {
         KLog.i("intLevel = " + intLevel);
         if (intLevel == 97) {
-            img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nerwork));
+            img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
         } else if (intLevel == 98) {
-            img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nerwork));
+            img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
         } else if (intLevel == 99) {
-            img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nerwork));
-        } else if (intLevel > 2 && intLevel <= 33) {
-            img5.setImageDrawable(getResources().getDrawable(R.drawable.wifi_status));
-        } else {
-            img5.setImageDrawable(getResources().getDrawable(R.drawable.wifi_status));
+            img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
+        } else if (intLevel >= 0 && intLevel <= 1) {
+            img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_one));
+        }else if (intLevel >= 2 && intLevel <= 4) {
+            img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_two));
+        }else if (intLevel >= 5 && intLevel <= 7) {
+            img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_three));
+        }else if (intLevel >= 8) {
+            img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_four));
         }
     }
 

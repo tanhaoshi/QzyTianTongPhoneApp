@@ -51,6 +51,8 @@ public class CallRecordDao {
         this.address = address;
         this.state = state;
         this.date = date;
+        this.isTitle = 0;
+        this.titleName = "";
     }
 
     @Generated(hash = 1511194593)

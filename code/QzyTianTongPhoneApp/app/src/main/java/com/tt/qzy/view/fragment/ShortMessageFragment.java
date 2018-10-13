@@ -134,7 +134,6 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
 
     @Override
     public void onClick(int position) {
-        //Log.i(getClass().getSimpleName().toString(),""+position);
     }
 
     @Override
@@ -186,8 +185,8 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
 
     @Override
     public void loadData(boolean pullToRefresh) {
-        showProgress(true);
-        mPresenter.getShortMessageData();
+//        showProgress(true);
+//        mPresenter.getShortMessageData();
     }
 
     private void initProgress(){

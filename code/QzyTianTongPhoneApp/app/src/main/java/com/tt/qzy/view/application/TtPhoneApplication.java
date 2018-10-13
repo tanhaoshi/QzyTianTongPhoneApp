@@ -2,13 +2,10 @@ package com.tt.qzy.view.application;
 
 import android.app.Application;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.multidex.MultiDex;
 
-import com.socks.library.KLog;
-import com.tt.qzy.view.db.DaoMaster;
-import com.tt.qzy.view.db.DaoSession;
-import com.tt.qzy.view.db.manager.DBManager;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 /**
  * Created by yj.zhang on 2018/8/25.
@@ -16,32 +13,36 @@ import com.tt.qzy.view.db.manager.DBManager;
 
 public class TtPhoneApplication extends Application {
 
-//    private DaoMaster mDaoMaster;
-//    private DaoSession mDaoSession;
-//    private DaoMaster.DevOpenHelper mHelper;
-//    private SQLiteDatabase db;
+    private RefWatcher refWatcher;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        if(LeakCanary.isInAnalyzerProcess(this)){
+            return;
+        }
+        LeakCanary.install(this);
         MultiDex.install(this);
-        KLog.init(true, "qzy_tt_phone");
-        //setDataBase();
+//        refWatcher = setupLeakCanary();
     }
 
-//    private void setDataBase(){
-//        mHelper = new DaoMaster.DevOpenHelper(this, "sport-db", null);
-//        db = mHelper.getWritableDatabase();
-//        mDaoMaster = new DaoMaster(db);
-//        mDaoSession = mDaoMaster.newSession();
-//    }
-//
-//    public DaoSession getDaoSession() {
-//        return mDaoSession;
-//    }
-//
-//    public SQLiteDatabase getDb() {
-//        return db;
-//    }
+    private void checkActivityMemory(){
+        if(LeakCanary.isInAnalyzerProcess(this)){
+            return;
+        }
+        LeakCanary.install(this);
+    }
+
+    private RefWatcher setupLeakCanary() {
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            return RefWatcher.DISABLED;
+        }
+        return LeakCanary.install(this);
+    }
+
+    public static RefWatcher getRefWatcher(Context context) {
+        TtPhoneApplication leakApplication = (TtPhoneApplication) context.getApplicationContext();
+        return leakApplication.refWatcher;
+    }
 
 }

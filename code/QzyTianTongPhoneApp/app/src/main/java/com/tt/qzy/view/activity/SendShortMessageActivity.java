@@ -93,8 +93,8 @@ public class SendShortMessageActivity extends AppCompatActivity {
                 sendMessage(MsgModel.TYPE_SENT);
                 break;
             case R.id.sms_base_tv_toolbar_right:
-                //Intent intent = new Intent(SendShortMessageActivity.this,SelectContactsActivity.class);
-                // startActivityForResult(intent,REQUEST_CODE);
+                Intent intent = new Intent(SendShortMessageActivity.this,SelectContactsActivity.class);
+                startActivityForResult(intent,REQUEST_CODE);
                 break;
         }
     }

@@ -218,16 +218,14 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
 
     @Override
     public void hideProgress() {
-
     }
 
     @Override
     public void showError(String msg, boolean pullToRefresh) {
-
     }
 
     @Override
     public void loadData(boolean pullToRefresh) {
-
     }
+
 }
