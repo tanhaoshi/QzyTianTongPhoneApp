@@ -1,15 +1,18 @@
 package com.qzy.tiantong.service.netty;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.qzy.led.Netled;
 import com.qzy.tiantong.lib.eventbus.MessageEvent;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.phone.BatteryManager;
 import com.qzy.tiantong.service.phone.CallLogManager;
+import com.qzy.tiantong.service.phone.PhoneClientManager;
 import com.qzy.tiantong.service.phone.SmsPhoneManager;
 import com.qzy.tiantong.service.phone.TtPhoneState;
 import com.qzy.tiantong.service.utils.PhoneUtils;
+import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.CallPhoneStateProtos;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtPhoneBatteryProtos;
@@ -89,7 +92,6 @@ public class PhoneNettyManager {
         });
     }
 
-
     /**
      * 初始化发送线程
      */
@@ -163,16 +165,23 @@ public class PhoneNettyManager {
     public void updateTtCallPhoneState(TtPhoneState state, String phoneNumber) {
         LogUtils.e("updateTtCallPhoneState " + state.ordinal());
         CallPhoneStateProtos.CallPhoneState.PhoneState phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL;
+
+
+
         if (state == TtPhoneState.NOCALL) {
             phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL;
+            if(currentPhoneState != phoneState){
+               PhoneClientManager.getInstance().setEndCallUser();
+            }
         } else if (state == TtPhoneState.RING) {
             phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.RING;
         } else if (state == TtPhoneState.CALL) {
             phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.CALL;
         } else if (state == TtPhoneState.HUANGUP) {
             phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.HUANGUP;
-        } else if (state == TtPhoneState.HUANGUP) {
-            phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.HUANGUP;
+            if(currentPhoneState != phoneState){
+                PhoneClientManager.getInstance().setEndCallUser();
+            }
         } else if (state == TtPhoneState.INCOMING) {
             phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.INCOMING;
         }
@@ -193,8 +202,24 @@ public class PhoneNettyManager {
                 .setPhoneState(phoneState)
                 .setPhoneNumber(phoneNumber)
                 .build();
-        mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
+        String ip = PhoneClientManager.getInstance().isCallingIp();
+        if (TextUtils.isEmpty(ip)) {
+            mNettyServerManager.sendData(ip, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
+        }
 
+    }
+
+    /**
+     * 发送客户端 有用户正在通话
+     * @param ip
+     */
+    public void sendTtCallPhoneBackToClient(String ip,String callingIp,boolean flag) {
+        if (checkNettManagerIsNull()) return;
+        CallPhoneBackProtos.CallPhoneBack callPhoneBack = CallPhoneBackProtos.CallPhoneBack.newBuilder()
+                .setIp(callingIp)
+                .setIsCalling(flag)
+                .build();
+        mNettyServerManager.sendData(ip, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_call_phone_back, callPhoneBack));
     }
 
     /**
@@ -214,7 +239,7 @@ public class PhoneNettyManager {
     public void sendTtPhoneBatteryToClient() {
         if (checkNettManagerIsNull()) return;
         if (ttPhoneBattery != null) {
-            mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_phone_battery, ttPhoneBattery));
+            mNettyServerManager.sendData(null,PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_phone_battery, ttPhoneBattery));
         }
     }
 
@@ -229,7 +254,7 @@ public class PhoneNettyManager {
         TtPhoneSignalProtos.PhoneSignalStrength signalStrength = TtPhoneSignalProtos.PhoneSignalStrength.newBuilder()
                 .setSignalStrength(value)
                 .build();
-        mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_phone_signal, signalStrength));
+        mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_phone_signal, signalStrength));
     }
 
     /**
@@ -242,7 +267,7 @@ public class PhoneNettyManager {
         TtPhoneSimCards.TtPhoneSimCard simCard = TtPhoneSimCards.TtPhoneSimCard.newBuilder()
                 .setIsSimCard(hasSim)
                 .build();
-        mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_phone_simcard, simCard));
+        mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_phone_simcard, simCard));
     }
 
 
@@ -251,9 +276,9 @@ public class PhoneNettyManager {
      *
      * @param callRecordProto
      */
-    public void sendCallLogToPhoneClient(TtCallRecordProtos.TtCallRecordProto callRecordProto) {
+    public void sendCallLogToPhoneClient(String ip, TtCallRecordProtos.TtCallRecordProto callRecordProto) {
         LogUtils.d("callRecordProto list = " + callRecordProto.getCallRecordList().size());
-        mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_call_record, callRecordProto));
+        mNettyServerManager.sendData(ip, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_call_record, callRecordProto));
     }
 
     /**
@@ -261,9 +286,9 @@ public class PhoneNettyManager {
      *
      * @param ttShortMessage
      */
-    public void sendCallLogToPhoneClient(TtShortMessageProtos.TtShortMessage ttShortMessage) {
+    public void sendCallLogToPhoneClient(String ip, TtShortMessageProtos.TtShortMessage ttShortMessage) {
         LogUtils.d("ttShortMessage list = " + ttShortMessage.getShortMessageList().size());
-        mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_short_message, ttShortMessage));
+        mNettyServerManager.sendData(ip, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_short_message, ttShortMessage));
     }
 
 
@@ -291,7 +316,7 @@ public class PhoneNettyManager {
                     .setIsSendSuccess(true)
                     .setIsReceiverSuccess(false)
                     .build();
-            mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.phone_send_sms_callback, tt));
+            mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.phone_send_sms_callback, tt));
         }
 
         @Override
@@ -304,7 +329,7 @@ public class PhoneNettyManager {
                     .setIsSendSuccess(false)
                     .setIsReceiverSuccess(false)
                     .build();
-            mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.phone_send_sms_callback, tt));
+            mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.phone_send_sms_callback, tt));
         }
 
         @Override
@@ -317,7 +342,7 @@ public class PhoneNettyManager {
                     .setIsSendSuccess(false)
                     .setIsReceiverSuccess(true)
                     .build();
-            mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.phone_send_sms_callback, tt));
+            mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.phone_send_sms_callback, tt));
         }
 
         @Override
@@ -330,7 +355,7 @@ public class PhoneNettyManager {
                     .setIsSendSuccess(false)
                     .setIsReceiverSuccess(false)
                     .build();
-            mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.phone_send_sms_callback, tt));
+            mNettyServerManager.sendData(ip, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.phone_send_sms_callback, tt));
         }
 
         @Override
@@ -340,12 +365,15 @@ public class PhoneNettyManager {
                     .setType(1)// 接收
                     .setMessage(smsBody)
                     .build();
-            mNettyServerManager.sendData(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_receiver_short_message, shortMessage));
+            mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_receiver_short_message, shortMessage));
         }
     };
 
     public void sendPhoneAudioData(PhoneAudioCmd cmd) {
-        mNettyServerManager.sendPhoneAudioData(cmd);
+        String ip = PhoneClientManager.getInstance().isCallingIp();
+        if (!TextUtils.isEmpty(ip)) {
+            mNettyServerManager.sendPhoneAudioData(ip, cmd);
+        }
     }
 
     /**

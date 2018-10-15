@@ -36,6 +36,7 @@ public class PrototocalTools {
         int tt_call_record = 119;
         int tt_short_message = 121;
         int tt_receiver_short_message=123;
+        int tt_call_phone_back = 125;
     }
 
 

@@ -76,12 +76,20 @@ public class QzyPhoneManager {
      *
      * @param phoneNum
      */
-    public void callPhone(String phoneNum) {
+    public void callPhone(String ip, String phoneNum) {
+
+        //设置电话ip
+        if(!mServer.setCurrenCallingIp(ip)){
+            LogUtils.e("has user calling pleas waiting...");
+            return;
+        }
+
         Intent intent = new Intent(Intent.ACTION_CALL);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Uri data = Uri.parse("tel:" + phoneNum);
         intent.setData(data);
         mContext.startActivity(intent);
+
     }
 
     /**
@@ -89,14 +97,18 @@ public class QzyPhoneManager {
      *
      * @param
      */
-    public void hangupPhone() {
+    public void hangupPhone(String ip) {
+        mServer.setEndCallingIp(ip);
         endCall();
     }
 
     /**
      * 接听电话
      */
-    public void acceptCalling() {
+    public void acceptCalling(String ip) {
+        //设置电话ip
+        mServer.setCurrenCallingIp(ip);
+
         new Thread(new Runnable() {
             @Override
             public void run() {
