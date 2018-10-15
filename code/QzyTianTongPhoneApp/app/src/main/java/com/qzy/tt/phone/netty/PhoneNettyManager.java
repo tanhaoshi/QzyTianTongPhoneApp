@@ -170,7 +170,7 @@ public class PhoneNettyManager {
     private NettyClientManager.INettyListener nettyListener = new NettyClientManager.INettyListener() {
         @Override
         public void onReceiveData(ByteBufInputStream inputStream) {
-            KLog.i("netty onReceiveData ...");
+//            KLog.i("netty onReceiveData ...");
             if (mCmdHandler != null) {
                 mCmdHandler.handlerCmd(inputStream);
             }
@@ -194,7 +194,7 @@ public class PhoneNettyManager {
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(MessageEventBus event) {
-        KLog.i("event type = " + event.getType());
+//        KLog.i("event type = " + event.getType());
         switch (event.getType()) {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG:
                 connect();

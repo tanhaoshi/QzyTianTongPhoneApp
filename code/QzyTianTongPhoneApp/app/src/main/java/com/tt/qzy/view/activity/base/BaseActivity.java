@@ -145,7 +145,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
 
     private void onBatteryInfoReceiver(int intLevel, int intScale) {
         int percent = intLevel * 100 / intScale;
-        KLog.i("battery info is :"+percent);
+//        KLog.i("battery info is :"+percent);
         img1.setPower(percent);
     }
 
@@ -165,7 +165,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
      * @param intLevel
      */
     private void onTiantongInfoReceiver(int intLevel) {
-        KLog.i("intLevel = " + intLevel);
+//        KLog.i("intLevel = " + intLevel);
         if (intLevel == 97) {
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
         } else if (intLevel == 98) {

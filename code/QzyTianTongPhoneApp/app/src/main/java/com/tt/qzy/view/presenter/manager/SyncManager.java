@@ -2,6 +2,7 @@ package com.tt.qzy.view.presenter.manager;
 
 import android.content.Context;
 
+import com.google.protobuf.GeneratedMessageV3;
 import com.qzy.data.PhoneCmd;
 import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
@@ -14,6 +15,8 @@ import com.tt.qzy.view.db.dao.ShortMessageDao;
 import com.tt.qzy.view.db.manager.CallRecordManager;
 import com.tt.qzy.view.db.manager.ShortMessageManager;
 import com.tt.qzy.view.utils.DateUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,8 +46,9 @@ public class SyncManager {
         handleShortMessage(ttShortMessage.getShortMessageList());
     }
 
-    public void syncShortMessageSignal(TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessage){
-        handleShortMessageSignal(ttShortMessage);
+    public void syncShortMessageSignal(final int protoId,final GeneratedMessageV3 messageV3,
+                                       TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessage){
+        handleShortMessageSignal(protoId,messageV3,ttShortMessage);
     }
 
     private void handleCallRecord(final List<TtCallRecordProtos.TtCallRecordProto.CallRecord> list){
@@ -133,7 +137,8 @@ public class SyncManager {
         return shortMessageDaos;
     }
 
-    private void handleShortMessageSignal(final TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessage){
+    private void handleShortMessageSignal(final int protoId,final GeneratedMessageV3 messageV3,
+                                          final TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessage){
        Observable.create(new ObservableOnSubscribe<ShortMessageDao>() {
            @Override
            public void subscribe(ObservableEmitter<ShortMessageDao> e){
@@ -149,8 +154,8 @@ public class SyncManager {
             }
             @Override
             public void onNext(ShortMessageDao value) {
-                EventBusUtils.post(new MessageEventBus(IMessageEventBustType.
-                        EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SHORT_MESSAGE, ttShortMessage));
+                EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.
+                        EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SHORT_MESSAGE, PhoneCmd.getPhoneCmd(protoId,messageV3)));
             }
             @Override
             public void onError(Throwable e) {

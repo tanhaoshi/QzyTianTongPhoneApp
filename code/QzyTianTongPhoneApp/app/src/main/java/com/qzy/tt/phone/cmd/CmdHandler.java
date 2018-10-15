@@ -125,7 +125,7 @@ public class CmdHandler {
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_receiver_short_message:
                     TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessageSignal = TtShortMessageProtos.TtShortMessage.ShortMessage.parseDelimitedFrom(inputStream);
-                    mSyncManager.syncShortMessageSignal(ttShortMessageSignal);
+                    mSyncManager.syncShortMessageSignal(protoId,ttShortMessageSignal,ttShortMessageSignal);
                     break;
             }
         } catch (Exception e) {

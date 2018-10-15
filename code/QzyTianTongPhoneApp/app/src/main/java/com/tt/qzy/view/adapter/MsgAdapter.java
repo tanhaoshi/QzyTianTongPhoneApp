@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.bean.MsgModel;
 
@@ -58,11 +59,7 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.MsgViewHolder>{
     @Override
     public void onBindViewHolder(MsgViewHolder holder, int position) {
         MsgModel msg = mMsgList.get(position);
-        if (msg.getType() == MsgModel.TYPE_RECEIVED){
-            holder.leftLayout.setVisibility(View.VISIBLE);
-            holder.rightLayout.setVisibility(View.GONE);
-            holder.leftMsg.setText(msg.getContent());
-        }else if (msg.getType() == MsgModel.TYPE_SENT){
+        if (msg.getType() == MsgModel.TYPE_SENT){
             holder.rightLayout.setVisibility(View.VISIBLE);
             holder.leftLayout.setVisibility(View.GONE);
             holder.rightMsg.setText(msg.getContent());

@@ -112,7 +112,6 @@ public class SendShortMessageActivity extends AppCompatActivity {
 
     /**
      * 发送短信
-     *
      * @param model
      */
     private void sendMessage(int model) {
@@ -134,7 +133,6 @@ public class SendShortMessageActivity extends AppCompatActivity {
             adapter.notifyItemInserted(msgList.size() - 1);
             mRecyclerView.scrollToPosition(msgList.size() - 1);
             custom_input.setText("");
-            model = model == MsgModel.TYPE_RECEIVED ? MsgModel.TYPE_SENT : MsgModel.TYPE_RECEIVED;
             EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS, new SmsBean(receive, content)));
         }
     }
@@ -180,8 +178,9 @@ public class SendShortMessageActivity extends AppCompatActivity {
         PhoneCmd cmd = (PhoneCmd) object;
         TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage =
                 (TtShortMessageProtos.TtShortMessage.ShortMessage) cmd.getMessage();
+        KLog.i("查看内容:"+shortMessage.getMessage()+"----------"+"查看type:"+shortMessage.getType());
         MsgModel msgModel = new MsgModel(shortMessage.getMessage(),shortMessage.getType());
-        msgList.add(0,msgModel);
+        msgList.add(msgList.size()-1,msgModel);
         adapter.setData(msgList);
     }
 
