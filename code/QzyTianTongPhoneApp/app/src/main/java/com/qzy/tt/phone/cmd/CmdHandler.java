@@ -9,6 +9,7 @@ import com.qzy.data.PrototocalTools;
 import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
+import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.CallPhoneStateProtos;
 import com.qzy.tt.data.TtBeiDouStatuss;
 import com.qzy.tt.data.TtCallRecordProtos;
@@ -126,6 +127,10 @@ public class CmdHandler {
                 case PrototocalTools.IProtoClientIndex.tt_receiver_short_message:
                     TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessageSignal = TtShortMessageProtos.TtShortMessage.ShortMessage.parseDelimitedFrom(inputStream);
                     mSyncManager.syncShortMessageSignal(protoId,ttShortMessageSignal,ttShortMessageSignal);
+                    break;
+                case PrototocalTools.IProtoClientIndex.tt_call_phone_back:
+                    CallPhoneBackProtos.CallPhoneBack callPhoneBack = CallPhoneBackProtos.CallPhoneBack.parseDelimitedFrom(inputStream);
+                    sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_CALL_STATE,protoId,callPhoneBack);
                     break;
             }
         } catch (Exception e) {

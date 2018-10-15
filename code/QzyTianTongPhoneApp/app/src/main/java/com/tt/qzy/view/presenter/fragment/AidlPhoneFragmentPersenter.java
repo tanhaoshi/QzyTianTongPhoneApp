@@ -9,6 +9,7 @@ import com.qzy.data.PhoneCmd;
 import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
+import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.phone.common.CommonData;
 import com.socks.library.KLog;
@@ -53,9 +54,11 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
     // "更早" 标题进行添加一次的控制
     private boolean isEarlier = true;
 
+    private String phone = "";
+
     public AidlPhoneFragmentPersenter(Context context) {
         mContext = context;
-        //EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
     }
 
     /**
@@ -74,36 +77,35 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
             return;
         }
 
+        phone = phoneNumber;
+
         EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber));
 
-        Intent intent = new Intent(mContext, TellPhoneActivity.class);
-        intent.putExtra("diapadNumber", phoneNumber);
-        mContext.startActivity(intent);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEventBus event) {
+        switch (event.getType()) {
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_CALL_STATE:
+                parseCallBack(event.getObject());
+                break;
+        }
     }
 
     /**
-     * 请求通话记录
-     */
-    public void requestCallRecord(){
-        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_CALL_RECORD));
-    }
-
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onMessageEvent(MessageEventBus event) {
-//        switch (event.getType()) {
-//            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_CALL_RECORD:
-//                parseCallRecord(event.getObject());
-//                break;
-//        }
-//    }
-
-    /**
-     * 解析与处理 协议数据
+     * 解析与处理 电话状态
      * @param o
      */
-    private void parseCallRecord(Object o){
+    private void parseCallBack(Object o){
         PhoneCmd cmd = (PhoneCmd) o;
-        TtCallRecordProtos.TtCallRecordProto ttCallRecordProto = (TtCallRecordProtos.TtCallRecordProto)cmd.getMessage();
+        CallPhoneBackProtos.CallPhoneBack callPhoneBack = (CallPhoneBackProtos.CallPhoneBack)cmd.getMessage();
+        if(!callPhoneBack.getIsCalling()){
+            Intent intent = new Intent(mContext, TellPhoneActivity.class);
+            intent.putExtra("diapadNumber", phone);
+            mContext.startActivity(intent);
+        }else{
+            NToast.shortToast(mContext,"当前天通猫正被占用!");
+        }
     }
 
     public void getCallHistroy(){
@@ -139,53 +141,6 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
                     mView.get().hideProgress();
                 }
             });
-    }
-
-    //数据合并处理
-    private List<CallRecordDao> dataMerging(List<TtCallRecordProtos.TtCallRecordProto.CallRecord> list){
-        //通过协议获取到的数据
-        List<CallRecordDao> callRecordDaos = handlerAgrementData(list);
-        //查询本地数据库所获得的数据
-        List<CallRecordDao> listDao = CallRecordManager.getInstance(mContext).queryCallRecordList();
-        //当协议数据大小为0或集合为空
-        if(callRecordDaos.size() == 0 || callRecordDaos == null){
-            //当数据数据大于0且不等于空
-            if(listDao.size() > 0 && listDao != null){
-                //返回数据库数据给UI显示
-                return arrangementData(listDao);
-            }
-        }
-        //如果协议数据大于数据库中的数据
-        if(callRecordDaos.size() > listDao.size()){
-            //删除本地
-            CallRecordManager.getInstance(mContext).deleteRecordList();
-            //再者将协议数据插入到本地
-            CallRecordManager.getInstance(mContext).insertCallRecordList(callRecordDaos,mContext);
-            //当协议数据和数据库中数据相等情况下 返回协议数据给UI
-        } else if(callRecordDaos.size() == listDao.size()){
-            return arrangementData(callRecordDaos);
-            //当协议数据小于数据库中数据,将其数据库中数据删除，提供协议数据供UI显示
-        }else if(callRecordDaos.size() < listDao.size()){
-            //删除本地
-            CallRecordManager.getInstance(mContext).deleteRecordList();
-            //再者将协议数据插入到本地
-            CallRecordManager.getInstance(mContext).insertCallRecordList(callRecordDaos,mContext);
-            //返回协议数据
-            return arrangementData(callRecordDaos);
-        }
-
-        return arrangementData(listDao);
-    }
-
-    public List<CallRecordDao> handlerAgrementData(List<TtCallRecordProtos.TtCallRecordProto.CallRecord> list){
-        List<CallRecordDao> callRecordDaos = new ArrayList<>();
-        if(list.size() > 0){
-            for(TtCallRecordProtos.TtCallRecordProto.CallRecord callRecord : list){
-                callRecordDaos.add(new CallRecordDao(callRecord.getPhoneNumber(),callRecord.getName(),
-                        callRecord.getAddress(),String.valueOf(callRecord.getType()),callRecord.getDate(),callRecord.getDuration()));
-            }
-        }
-        return callRecordDaos;
     }
 
     public List<CallRecordDao> arrangementData(List<CallRecordDao> list){
@@ -234,7 +189,7 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
     }
 
     public void release(){
-        //EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
     }
 
 }
