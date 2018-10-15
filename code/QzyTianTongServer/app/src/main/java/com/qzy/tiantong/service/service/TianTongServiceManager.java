@@ -2,6 +2,7 @@ package com.qzy.tiantong.service.service;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 
 import com.qzy.audiosocket.SocketIntercomManager;
@@ -18,6 +19,7 @@ import com.qzy.tiantong.service.netty.cmd.CmdHandler;
 import com.qzy.tiantong.service.netty.cmd.TianTongHandler;
 import com.qzy.tiantong.service.phone.BroadcastManager;
 import com.qzy.tiantong.service.phone.CallLogManager;
+import com.qzy.tiantong.service.phone.PhoneClientManager;
 import com.qzy.tiantong.service.phone.QzyPhoneManager;
 import com.qzy.tiantong.service.phone.TtPhoneState;
 import com.qzy.tiantong.service.rtptest.Global;
@@ -130,15 +132,12 @@ public class TianTongServiceManager implements ITianTongServer {
                 }
                 Global.IP = ip;
 
-                if (mLocalPcmSocketManager != null) {
-                    mLocalPcmSocketManager.setPhoneIpAndPort(ip, Constants.UNICAST_PORT);
-                }
 
                 //发送通讯录
-                CallLogManager.syncCallLogInfo(mContext,mPhoneNettyManager);
+                CallLogManager.syncCallLogInfo(ip, mContext, mPhoneNettyManager);
 
                 //发送短信数据库
-                CallLogManager.syncSmsInfo(mContext,mPhoneNettyManager);
+                CallLogManager.syncSmsInfo(ip, mContext, mPhoneNettyManager);
 
             }
 
@@ -165,6 +164,41 @@ public class TianTongServiceManager implements ITianTongServer {
      */
     private void initPhoneNettyManager() {
         mPhoneNettyManager = new PhoneNettyManager(mContext, mNettyServerManager);
+    }
+
+
+    /**
+     * 设置打电话的用户ip
+     *
+     * @param ip
+     */
+    @Override
+    public boolean setCurrenCallingIp(String ip) {
+
+        String callingIp = PhoneClientManager.getInstance().isCallingIp();
+        if (!TextUtils.isEmpty(callingIp)) {
+            if (mPhoneNettyManager != null) {
+                mPhoneNettyManager.sendTtCallPhoneBackToClient(ip, callingIp, true);
+            }
+
+            return false;
+        }
+
+        if (mPhoneNettyManager != null) {
+            mPhoneNettyManager.sendTtCallPhoneBackToClient(ip, "", false);
+        }
+
+        PhoneClientManager.getInstance().setCurrentCallingUser(ip);
+        if (mLocalPcmSocketManager != null) {
+            mLocalPcmSocketManager.setPhoneIpAndPort(ip, Constants.UNICAST_PORT);
+        }
+
+        return true;
+    }
+
+    @Override
+    public void setEndCallingIp(String ip) {
+        PhoneClientManager.getInstance().setEndCallUser(ip);
     }
 
 

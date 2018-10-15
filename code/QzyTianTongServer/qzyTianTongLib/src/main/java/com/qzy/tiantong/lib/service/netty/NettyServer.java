@@ -36,7 +36,7 @@ public class NettyServer {
     private Thread mThread;
 
     //发送数据句柄
-    public ChannelHandlerContext connectHanlerCtx;
+   // public ChannelHandlerContext connectHanlerCtx;
 
 
     private IServerListener iServerListener;
@@ -102,12 +102,12 @@ public class NettyServer {
         public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
             LogUtils.d("channelUnregistered...");
             Channel channel = ctx.channel();
-            connectHanlerCtx = null;
+           // connectHanlerCtx = null;
             InetSocketAddress insocket = (InetSocketAddress) channel.remoteAddress();
             String ip = insocket.getAddress().getHostAddress();
             LogUtils.d("New client has disconnected:" + ip);
             if (iServerListener != null) {
-                iServerListener.onConnected(ip, false);
+                iServerListener.onConnected(ctx,ip, false);
             }
         }
 
@@ -115,12 +115,12 @@ public class NettyServer {
         public void channelActive(ChannelHandlerContext ctx) throws Exception {
             LogUtils.d("channelActive...");
             Channel channel = ctx.channel();
-            connectHanlerCtx = ctx;
+           // connectHanlerCtx = ctx;
             InetSocketAddress insocket = (InetSocketAddress) channel.remoteAddress();
             String ip = insocket.getAddress().getHostAddress();
             LogUtils.d("New client has connected:" + ip);
             if (iServerListener != null) {
-                iServerListener.onConnected(ip, true);
+                iServerListener.onConnected(ctx,ip, true);
             }
 
         }
@@ -130,12 +130,12 @@ public class NettyServer {
         public void channelInactive(ChannelHandlerContext ctx) throws Exception {
             LogUtils.d("channelInactive...");
             Channel channel = ctx.channel();
-            connectHanlerCtx = null;
+           // connectHanlerCtx = null;
             InetSocketAddress insocket = (InetSocketAddress) channel.remoteAddress();
             String ip = insocket.getAddress().getHostAddress();
             LogUtils.d("New client has disconnected:" + ip);
             if(iServerListener != null){
-                iServerListener.onConnected(ip,false);
+                iServerListener.onConnected(ctx,ip,false);
             }
         }
 
@@ -166,9 +166,9 @@ public class NettyServer {
         }
     }
 
-    public ChannelHandlerContext getConnectHanlerCtx() {
+    /*public ChannelHandlerContext getConnectHanlerCtx() {
         return connectHanlerCtx;
-    }
+    }*/
 
     public void stopServer() {
 
@@ -190,7 +190,7 @@ public class NettyServer {
     }
 
     public interface IServerListener {
-        void onConnected(String ip, boolean state);
+        void onConnected(ChannelHandlerContext ctx,String ip, boolean state);
 
         void onReceiveData(ByteBufInputStream inputStream);
     }

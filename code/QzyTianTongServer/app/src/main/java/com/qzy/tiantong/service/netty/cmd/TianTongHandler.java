@@ -39,11 +39,11 @@ public class TianTongHandler extends Handler {
                     CallPhoneProtos.CallPhone callPhone = (CallPhoneProtos.CallPhone) msg.obj;
                     if (callPhone != null) {
                         if (callPhone.getPhonecommand() == CallPhoneProtos.CallPhone.PhoneCommand.CALL) {
-                            mServer.getQzyPhoneManager().callPhone(callPhone.getPhoneNumber());
+                            mServer.getQzyPhoneManager().callPhone(callPhone.getIp(),callPhone.getPhoneNumber());
                         } else if (callPhone.getPhonecommand() == CallPhoneProtos.CallPhone.PhoneCommand.HUANGUP) {
-                            mServer.getQzyPhoneManager().hangupPhone();
+                            mServer.getQzyPhoneManager().hangupPhone(callPhone.getIp());
                         } else if (callPhone.getPhonecommand() == CallPhoneProtos.CallPhone.PhoneCommand.ACCEPTCALL) {
-                            mServer.getQzyPhoneManager().acceptCalling();
+                            mServer.getQzyPhoneManager().acceptCalling(callPhone.getIp());
                         }
                     }
                     break;

@@ -17,6 +17,9 @@ public interface ITianTongServer {
 
     PhoneNettyManager getPhoneNettyManager();
 
+    boolean setCurrenCallingIp(String ip);
+    void setEndCallingIp(String ip);
+
     //更新打电话时 电话状态
     void onPhoneStateChange(TtPhoneState state);
 

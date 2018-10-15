@@ -23,7 +23,7 @@ public class CallLogManager {
      *
      * @param context
      */
-    public static void syncCallLogInfo(final Context context, final PhoneNettyManager phoneNettyManager) {
+    public static void syncCallLogInfo(final String ip,final Context context, final PhoneNettyManager phoneNettyManager) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -44,7 +44,7 @@ public class CallLogManager {
                     }
 
                     if (phoneNettyManager != null) {
-                        phoneNettyManager.sendCallLogToPhoneClient(listRecorder.build());
+                        phoneNettyManager.sendCallLogToPhoneClient(ip,listRecorder.build());
                     }
                 }
             }
@@ -59,7 +59,7 @@ public class CallLogManager {
      * @param context
      * @param phoneNettyManager
      */
-    public static void syncSmsInfo(final Context context, final PhoneNettyManager phoneNettyManager) {
+    public static void syncSmsInfo(final String ip,final Context context, final PhoneNettyManager phoneNettyManager) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -79,7 +79,7 @@ public class CallLogManager {
                         ttShortMessage.addShortMessage(shortMessage);
                     }
                     if (phoneNettyManager != null) {
-                        phoneNettyManager.sendCallLogToPhoneClient(ttShortMessage.build());
+                        phoneNettyManager.sendCallLogToPhoneClient(ip,ttShortMessage.build());
                     }
 
                 }
