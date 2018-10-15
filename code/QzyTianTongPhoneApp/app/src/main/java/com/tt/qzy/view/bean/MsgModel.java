@@ -8,6 +8,7 @@ public class MsgModel {
 
     public static final int TYPE_RECEIVED = 0;//表示这是一条收到的消息
     public static final int TYPE_SENT = 1;//表示这是一条发出的消息
+    public static final int TYPE_RECEIVE = 2;
     private String content;
     private int type;
 

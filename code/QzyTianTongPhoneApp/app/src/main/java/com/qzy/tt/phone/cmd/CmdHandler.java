@@ -131,14 +131,11 @@ public class CmdHandler {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void sendCmdToView(String messageType,int protoId, GeneratedMessageV3 messageV3) {
         EventBusUtils.post(new MessageEventBus(messageType,PhoneCmd.getPhoneCmd(protoId,messageV3)));
     }
-
-
 
     private void incommingState(String number){
        /* Intent intent = new Intent("com.qzy.tt.incoming");

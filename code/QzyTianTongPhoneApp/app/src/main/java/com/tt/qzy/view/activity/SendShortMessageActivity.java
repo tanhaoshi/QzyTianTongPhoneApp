@@ -17,11 +17,16 @@ import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.data.TtPhoneSmsProtos;
+import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.SmsBean;
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.MsgAdapter;
 import com.tt.qzy.view.bean.MsgModel;
+import com.tt.qzy.view.db.dao.ShortMessageDao;
+import com.tt.qzy.view.db.manager.ShortMessageManager;
+import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NToast;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -48,7 +53,7 @@ public class SendShortMessageActivity extends AppCompatActivity {
     @BindView(R.id.sms_et_name)
     EditText sms_et_name;
 
-    private static List<MsgModel> msgList = new ArrayList<>();
+    private List<MsgModel> msgList = new ArrayList<>();
     private MsgAdapter adapter;
     private static final int REQUEST_CODE = 99;
 
@@ -59,7 +64,7 @@ public class SendShortMessageActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         EventBusUtils.register(this);
         initView();
-        // initMsgs();
+        initMsgs();
         initAdapter();
     }
 
@@ -69,12 +74,18 @@ public class SendShortMessageActivity extends AppCompatActivity {
     }
 
     private void initMsgs() {
-        MsgModel msg1 = new MsgModel("Hello guy", MsgModel.TYPE_RECEIVED);
-        MsgModel msg2 = new MsgModel("Hello.Who is that?", MsgModel.TYPE_SENT);
-        MsgModel msg3 = new MsgModel("I am Jack.Nice talking to you.", MsgModel.TYPE_RECEIVED);
-        msgList.add(msg1);
-        msgList.add(msg2);
-        msgList.add(msg3);
+        Intent intent = getIntent();
+        if(intent.getExtras() != null){
+            mImageView.setVisibility(View.GONE);
+            sms_et_name.setText(intent.getStringExtra(Constans.SHORT_MESSAGE_PHONE));
+            sms_et_name.setFocusable(false);
+            List<ShortMessageDao> daoList =
+                    ShortMessageManager.getInstance(this).queryShortMessageCondition(intent.getStringExtra(Constans.SHORT_MESSAGE_PHONE));
+            for(ShortMessageDao shortMessageDao : daoList){
+                MsgModel msgModel = new MsgModel(shortMessageDao.getMessage(), Integer.valueOf(shortMessageDao.getState()));
+                msgList.add(msgModel);
+            }
+        }
     }
 
     private void initAdapter() {
@@ -128,12 +139,14 @@ public class SendShortMessageActivity extends AppCompatActivity {
         }
     }
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS_STATE:
                 parseSmsState(event.getObject());
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SHORT_MESSAGE:
+                parseSmsreciver(event.getObject());
                 break;
         }
     }
@@ -157,7 +170,19 @@ public class SendShortMessageActivity extends AppCompatActivity {
         }else{
             NToast.shortToast(this, R.string.TMT_sendMessage_receiver_failed);
         }
+    }
 
+    /**
+     * 解析收到短息
+     * @param object
+     */
+    private void parseSmsreciver(Object object){
+        PhoneCmd cmd = (PhoneCmd) object;
+        TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage =
+                (TtShortMessageProtos.TtShortMessage.ShortMessage) cmd.getMessage();
+        MsgModel msgModel = new MsgModel(shortMessage.getMessage(),shortMessage.getType());
+        msgList.add(0,msgModel);
+        adapter.setData(msgList);
     }
 
     @Override

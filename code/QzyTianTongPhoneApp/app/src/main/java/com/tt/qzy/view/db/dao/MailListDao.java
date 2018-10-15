@@ -39,6 +39,12 @@ public class MailListDao {
         this.mail = mail;
         this.qq = qq;
     }
+
+    public MailListDao(String phone,String name){
+        this.phone = phone;
+        this.name = name;
+    }
+
     @Generated(hash = 1958615879)
     public MailListDao() {
     }

@@ -2,6 +2,10 @@ package com.tt.qzy.view.presenter.manager;
 
 import android.content.Context;
 
+import com.qzy.data.PhoneCmd;
+import com.qzy.eventbus.EventBusUtils;
+import com.qzy.eventbus.IMessageEventBustType;
+import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.socks.library.KLog;
@@ -132,8 +136,9 @@ public class SyncManager {
     private void handleShortMessageSignal(final TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessage){
        Observable.create(new ObservableOnSubscribe<ShortMessageDao>() {
            @Override
-           public void subscribe(ObservableEmitter<ShortMessageDao> e) throws Exception {
+           public void subscribe(ObservableEmitter<ShortMessageDao> e){
                ShortMessageManager.getInstance(mContext).insertShortMessage(meragingShortMessage(ttShortMessage),mContext);
+               e.onNext(meragingShortMessage(ttShortMessage));
            }
        }).subscribeOn(Schedulers.io())
          .unsubscribeOn(Schedulers.io())
@@ -141,30 +146,23 @@ public class SyncManager {
         .subscribe(new Observer<ShortMessageDao>() {
             @Override
             public void onSubscribe(Disposable d) {
-
             }
-
             @Override
             public void onNext(ShortMessageDao value) {
-
+                EventBusUtils.post(new MessageEventBus(IMessageEventBustType.
+                        EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SHORT_MESSAGE, ttShortMessage));
             }
-
             @Override
             public void onError(Throwable e) {
-
             }
 
             @Override
             public void onComplete() {
-
             }
         });
     }
 
     private ShortMessageDao meragingShortMessage(TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage){
-        KLog.i("look at shortMessage : " + shortMessage.getMessage());
-        KLog.i("look at name : " + shortMessage.getName());
-        KLog.i("look at numberPhone : " + shortMessage.getNumberPhone());
         ShortMessageDao shortMessageDao = new ShortMessageDao(shortMessage.getNumberPhone(),shortMessage.getMessage(),
                 DateUtil.backTimeFomat(new Date()),String.valueOf(shortMessage.getType()),shortMessage.getName());
         return shortMessageDao;

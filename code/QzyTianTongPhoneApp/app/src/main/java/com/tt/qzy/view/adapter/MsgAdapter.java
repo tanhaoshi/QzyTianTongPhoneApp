@@ -44,6 +44,11 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.MsgViewHolder>{
         this.mMsgList = mMsgList;
     }
 
+    public void setData(List<MsgModel> msgList){
+        this.mMsgList = msgList;
+        notifyDataSetChanged();
+    }
+
     @Override
     public MsgViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.msg_item_layout,parent,false);
@@ -61,6 +66,10 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.MsgViewHolder>{
             holder.rightLayout.setVisibility(View.VISIBLE);
             holder.leftLayout.setVisibility(View.GONE);
             holder.rightMsg.setText(msg.getContent());
+        }else if(msg.getType() == MsgModel.TYPE_RECEIVE){
+            holder.leftLayout.setVisibility(View.VISIBLE);
+            holder.rightLayout.setVisibility(View.GONE);
+            holder.leftMsg.setText(msg.getContent());
         }
     }
 

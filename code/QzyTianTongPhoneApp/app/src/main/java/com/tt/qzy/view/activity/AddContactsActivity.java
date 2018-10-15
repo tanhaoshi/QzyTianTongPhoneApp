@@ -8,6 +8,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.tt.qzy.view.R;
+import com.tt.qzy.view.db.dao.MailListDao;
+import com.tt.qzy.view.db.manager.MailListManager;
 import com.tt.qzy.view.utils.NToast;
 
 import butterknife.BindView;
@@ -40,9 +42,23 @@ public class AddContactsActivity extends AppCompatActivity {
     }
 
     private void handleData(){
-        if(!TextUtils.isEmpty(name.getText().toString())){
-
+        if(!TextUtils.isEmpty(name.getText().toString())  &&  name.getText().toString().length() > 0){
+            NToast.shortToast(this,"名字不能为空!");
+            return;
         }
+
+        if(!TextUtils.isEmpty(phone.getText().toString()) && phone.getText().toString().length() > 0){
+            NToast.shortToast(this,"电话不能为空!");
+            return;
+        }
+
+        MailListDao mailListDao = new MailListDao();
+        mailListDao.setName(name.getText().toString());
+        mailListDao.setPhone(phone.getText().toString());
+        mailListDao.setMail(email.getText().toString());
+        mailListDao.setQq(qq.getText().toString());
+
+        MailListManager.getInstance(this).insertMailListSignal(mailListDao,this);
     }
 
     @OnClick({R.id.base_iv_back,R.id.base_tv_toolbar_right})
@@ -52,7 +68,8 @@ public class AddContactsActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.base_tv_toolbar_right:
-                NToast.shortToast(AddContactsActivity.this,"保存成功");
+                handleData();
+                NToast.shortToast(AddContactsActivity.this,getString(R.string.TMT_save_success));
                 finish();
                 break;
         }

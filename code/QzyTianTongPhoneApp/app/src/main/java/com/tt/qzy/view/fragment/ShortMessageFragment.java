@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.SendShortMessageActivity;
 import com.tt.qzy.view.adapter.ShortMessageAdapter;
@@ -23,6 +24,7 @@ import com.tt.qzy.view.db.dao.ShortMessageDao;
 import com.tt.qzy.view.layout.PopShortMessageWindow;
 import com.tt.qzy.view.layout.PopWindow;
 import com.tt.qzy.view.presenter.fragment.ShortMessagePresenter;
+import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.PinyinUtils;
 import com.tt.qzy.view.view.ShortMessageView;
@@ -131,9 +133,14 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
         getActivity().getWindow().setAttributes(lp);
     }
 
-
     @Override
     public void onClick(int position) {
+        Intent intent = new Intent(getActivity(),SendShortMessageActivity.class);
+        intent.putExtra(Constans.SHORT_MESSAGE_NAME,models.get(position).getName());
+        intent.putExtra(Constans.SHORT_MESSAGE_PHONE,models.get(position).getNumberPhone());
+        intent.putExtra(Constans.SHORT_MESSAGE_CONTENT,models.get(position).getMessage());
+        intent.putExtra(Constans.SHORT_MESSAGE_TYPE,models.get(position).getState());
+        startActivity(intent);
     }
 
     @Override

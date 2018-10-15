@@ -50,5 +50,10 @@ public class MailListManager {
         userDao.insertInTx(mailListDaos);
     }
 
-
+    public void insertMailListSignal(MailListDao mailListDao,Context context){
+        DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
+        DaoSession daoSession = daoMaster.newSession();
+        MailListDaoDao mailListDaoDao = daoSession.getMailListDaoDao();
+        mailListDaoDao.insert(mailListDao);
+    }
 }
