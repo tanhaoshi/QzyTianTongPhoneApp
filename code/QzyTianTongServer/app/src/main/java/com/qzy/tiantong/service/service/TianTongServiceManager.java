@@ -174,7 +174,7 @@ public class TianTongServiceManager implements ITianTongServer {
      */
     @Override
     public boolean setCurrenCallingIp(String ip) {
-
+        LogUtils.e("1111 setCurrenCallingIp = " + ip);
         String callingIp = PhoneClientManager.getInstance().isCallingIp();
         if (!TextUtils.isEmpty(callingIp)) {
             if (mPhoneNettyManager != null) {
@@ -183,6 +183,8 @@ public class TianTongServiceManager implements ITianTongServer {
 
             return false;
         }
+
+        LogUtils.e("setCurrenCallingIp = " + ip);
 
         if (mPhoneNettyManager != null) {
             mPhoneNettyManager.sendTtCallPhoneBackToClient(ip, "", false);

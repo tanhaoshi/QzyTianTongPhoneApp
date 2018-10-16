@@ -79,7 +79,7 @@ public class QzyPhoneManager {
     public void callPhone(String ip, String phoneNum) {
 
         //设置电话ip
-        if(!mServer.setCurrenCallingIp(ip)){
+        if (!mServer.setCurrenCallingIp(ip)) {
             LogUtils.e("has user calling pleas waiting...");
             return;
         }
@@ -89,7 +89,7 @@ public class QzyPhoneManager {
         Uri data = Uri.parse("tel:" + phoneNum);
         intent.setData(data);
         mContext.startActivity(intent);
-
+        LogUtils.e("tel phone ..  " + phoneNum);
     }
 
     /**

@@ -167,11 +167,10 @@ public class PhoneNettyManager {
         CallPhoneStateProtos.CallPhoneState.PhoneState phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL;
 
 
-
         if (state == TtPhoneState.NOCALL) {
             phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL;
-            if(currentPhoneState != phoneState){
-               PhoneClientManager.getInstance().setEndCallUser();
+            if (currentPhoneState != phoneState) {
+                PhoneClientManager.getInstance().setEndCallUser();
             }
         } else if (state == TtPhoneState.RING) {
             phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.RING;
@@ -179,7 +178,7 @@ public class PhoneNettyManager {
             phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.CALL;
         } else if (state == TtPhoneState.HUANGUP) {
             phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.HUANGUP;
-            if(currentPhoneState != phoneState){
+            if (currentPhoneState != phoneState) {
                 PhoneClientManager.getInstance().setEndCallUser();
             }
         } else if (state == TtPhoneState.INCOMING) {
@@ -202,18 +201,16 @@ public class PhoneNettyManager {
                 .setPhoneState(phoneState)
                 .setPhoneNumber(phoneNumber)
                 .build();
-        String ip = PhoneClientManager.getInstance().isCallingIp();
-        if (TextUtils.isEmpty(ip)) {
-            mNettyServerManager.sendData(ip, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
-        }
+        mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
 
     }
 
     /**
      * 发送客户端 有用户正在通话
+     *
      * @param ip
      */
-    public void sendTtCallPhoneBackToClient(String ip,String callingIp,boolean flag) {
+    public void sendTtCallPhoneBackToClient(String ip, String callingIp, boolean flag) {
         if (checkNettManagerIsNull()) return;
         CallPhoneBackProtos.CallPhoneBack callPhoneBack = CallPhoneBackProtos.CallPhoneBack.newBuilder()
                 .setIp(callingIp)
@@ -239,7 +236,7 @@ public class PhoneNettyManager {
     public void sendTtPhoneBatteryToClient() {
         if (checkNettManagerIsNull()) return;
         if (ttPhoneBattery != null) {
-            mNettyServerManager.sendData(null,PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_phone_battery, ttPhoneBattery));
+            mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_phone_battery, ttPhoneBattery));
         }
     }
 

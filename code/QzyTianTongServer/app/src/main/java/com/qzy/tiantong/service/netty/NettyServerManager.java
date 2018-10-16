@@ -132,7 +132,7 @@ public class NettyServerManager implements NettyServer.IServerListener {
                 stream.writeInt(len);
                 stream.write(dataBuff.array(), 0, len);
                 //stream.writeBytes(cmdData);
-                //LogUtils.d("write buff:" + ByteUtils.byteArrToHexString(buff.array()));
+                LogUtils.d("ProtoId :" + cmd.getProtoId());
                 stream.flush();
                 ctx.writeAndFlush(buff);
             }
