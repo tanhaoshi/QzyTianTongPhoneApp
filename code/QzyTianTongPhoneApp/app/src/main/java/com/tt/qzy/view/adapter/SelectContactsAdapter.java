@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tt.qzy.view.R;
+import com.tt.qzy.view.bean.MallListModel;
 import com.tt.qzy.view.bean.SortModel;
 
 import java.util.List;
@@ -21,10 +22,10 @@ import java.util.List;
 public class SelectContactsAdapter extends RecyclerView.Adapter<SelectContactsAdapter.ViewHolder>{
 
     private LayoutInflater mInflater;
-    private List<SortModel> mData;
+    private List<MallListModel> mData;
     private Context mContext;
 
-    public SelectContactsAdapter(Context context, List<SortModel> data) {
+    public SelectContactsAdapter(Context context, List<MallListModel> data) {
         mInflater = LayoutInflater.from(context);
         mData = data;
         this.mContext = context;
@@ -112,7 +113,7 @@ public class SelectContactsAdapter extends RecyclerView.Adapter<SelectContactsAd
      * 提供给Activity刷新数据
      * @param list
      */
-    public void updateList(List<SortModel> list){
+    public void updateList(List<MallListModel> list){
         this.mData = list;
         notifyDataSetChanged();
     }

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.db.dao.MailListDao;
 import com.tt.qzy.view.db.manager.MailListManager;
@@ -42,12 +43,13 @@ public class AddContactsActivity extends AppCompatActivity {
     }
 
     private void handleData(){
-        if(!TextUtils.isEmpty(name.getText().toString())  &&  name.getText().toString().length() > 0){
+
+        if(TextUtils.isEmpty(name.getText().toString()) ||  name.getText().toString().length() <= 0){
             NToast.shortToast(this,"名字不能为空!");
             return;
         }
 
-        if(!TextUtils.isEmpty(phone.getText().toString()) && phone.getText().toString().length() > 0){
+        if(TextUtils.isEmpty(phone.getText().toString()) || phone.getText().toString().length() <= 0){
             NToast.shortToast(this,"电话不能为空!");
             return;
         }

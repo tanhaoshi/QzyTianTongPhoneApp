@@ -22,18 +22,26 @@ import io.reactivex.schedulers.Schedulers;
 
 public class SelectContactsPresenter extends BasePresenter<SelectContactView>{
 
+    private Context mContext;
+
+    public SelectContactsPresenter(Context context){
+        this.mContext = context;
+    }
+
     public void getMallList(final Context context){
         Observable.create(new ObservableOnSubscribe<List<MallListModel>>() {
             @Override
             public void subscribe(ObservableEmitter<List<MallListModel>> e) throws Exception {
                 List<MailListDao> listDaos = MailListManager.getInstance(context).queryMailList();
-                if(listDaos.size() > 0){
-                    e.onNext(mergeData(listDaos,context));
-                }else{
-                    List<MallListModel> listModels = MallListUtils.readContacts(context);
-                    saveInSqlite(context,listModels);
-                    e.onNext(listModels);
-                }
+//                if(listDaos.size() > 0) {
+                    e.onNext(mergeData(listDaos, context));
+//                }else{
+//                }
+//                }else{
+//                    List<MallListModel> listModels = MallListUtils.readContacts(context);
+//                    saveInSqlite(context,listModels);
+//                    e.onNext(listModels);
+//                }
             }
         }).subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
@@ -46,7 +54,7 @@ public class SelectContactsPresenter extends BasePresenter<SelectContactView>{
 
                     @Override
                     public void onNext(List<MallListModel> value) {
-//                        mView.get().loadData(value);
+                        mView.get().loadData(value);
                         onComplete();
                     }
 

@@ -1,7 +1,10 @@
 package com.tt.qzy.view.view;
 
+import com.tt.qzy.view.bean.MallListModel;
 import com.tt.qzy.view.view.base.BaseView;
 
-public interface SelectContactView extends BaseView{
+import java.util.List;
 
+public interface SelectContactView extends BaseView{
+    void loadData(List<MallListModel> listModels);
 }
