@@ -195,6 +195,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     public void onTianTongCallStatus(Object o){
         PhoneCmd cmd = (PhoneCmd) o;
         CallPhoneBackProtos.CallPhoneBack callPhoneBack = (CallPhoneBackProtos.CallPhoneBack)cmd.getMessage();
+        KLog.i("tt_call_status is = " + callPhoneBack.getIsCalling());
         tt_call_status = callPhoneBack.getIsCalling();
     }
 

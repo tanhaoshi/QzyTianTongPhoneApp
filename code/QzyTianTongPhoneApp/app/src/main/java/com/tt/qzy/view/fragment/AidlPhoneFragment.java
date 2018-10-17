@@ -142,7 +142,13 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     @Override
     public void inputString(final String diapadNumber) {
         //拨打电话
-        mPersenter.dialPhone(diapadNumber);
+        MainActivity mainActivity = (MainActivity) getActivity();
+        KLog.i("tt_call_status is = " + mainActivity.isCallStatus());
+        if(!mainActivity.isCallStatus()){
+            mPersenter.dialPhone(diapadNumber);
+        }else{
+            NToast.shortToast(getActivity(),"天通猫正被占用!");
+        }
     }
 
     @Override
@@ -151,6 +157,7 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
 //        intent.putExtra("phoneNumber",mModelList.get(position).getPhoneNumber());
 //        startActivity(intent);
         MainActivity mainActivity = (MainActivity) getActivity();
+        KLog.i("tt_call_status is = " + mainActivity.isCallStatus());
         if(!mainActivity.isCallStatus()){
             mPersenter.dialPhone(diapadNumber);
         }else{
