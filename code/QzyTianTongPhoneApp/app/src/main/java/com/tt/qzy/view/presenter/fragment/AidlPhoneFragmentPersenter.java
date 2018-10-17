@@ -58,7 +58,7 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
 
     public AidlPhoneFragmentPersenter(Context context) {
         mContext = context;
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
     }
 
     /**
@@ -78,20 +78,23 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
         }
 
         phone = phoneNumber;
-        KLog.i("look up phone is : "+phone);
-        KLog.i("start call phone ...");
+
         EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber));
 
+        Intent intent = new Intent(mContext, TellPhoneActivity.class);
+        intent.putExtra("diapadNumber", phone);
+        mContext.startActivity(intent);
+
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MessageEventBus event) {
-        switch (event.getType()) {
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_CALL_STATE:
-                parseCallBack(event.getObject());
-                break;
-        }
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onMessageEvent(MessageEventBus event) {
+//        switch (event.getType()) {
+//            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_CALL_STATE:
+//                parseCallBack(event.getObject());
+//                break;
+//        }
+//    }
 
     /**
      * 解析与处理 电话状态
@@ -191,7 +194,7 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
     }
 
     public void release(){
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
     }
 
 }

@@ -1,17 +1,22 @@
 package com.tt.qzy.view.activity.base;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.qzy.data.PhoneCmd;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
+import com.qzy.tt.data.CallPhoneBackProtos;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
+import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.layout.BatteryView;
 import com.tt.qzy.view.presenter.activity.BaseActivityPresenter;
+import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.view.BaseMainView;
 import com.tt.qzy.view.view.base.BaseView;
 
@@ -36,6 +41,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
 
     public boolean tt_status = false;
     public boolean tt_beidou_status = false;
+    public boolean tt_call_status = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,6 +104,9 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_BEIDOU:
                 getTianTongConnectBeiDou(mPresenter.getTianTongConnectBeiDou(event.getObject()));
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_CALL_STATE:
+                onTianTongCallStatus(event.getObject());
                 break;
         }
     }
@@ -183,12 +192,22 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         }
     }
 
+    public void onTianTongCallStatus(Object o){
+        PhoneCmd cmd = (PhoneCmd) o;
+        CallPhoneBackProtos.CallPhoneBack callPhoneBack = (CallPhoneBackProtos.CallPhoneBack)cmd.getMessage();
+        tt_call_status = callPhoneBack.getIsCalling();
+    }
+
     public boolean isConnectStatus(){
         return tt_status;
     }
 
     public boolean isConnectBeiDou(){
         return tt_beidou_status;
+    }
+
+    public boolean isCallStatus(){
+        return tt_call_status;
     }
 
 }
