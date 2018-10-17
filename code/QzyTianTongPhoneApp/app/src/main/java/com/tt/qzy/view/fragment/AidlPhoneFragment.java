@@ -2,6 +2,7 @@ package com.tt.qzy.view.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -138,16 +139,17 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     }
 
     @Override
-    public void inputString(String diapadNumber) {
+    public void inputString(final String diapadNumber) {
         //拨打电话
         mPersenter.dialPhone(diapadNumber);
     }
 
     @Override
-    public void onClick(int position) {
-        Intent intent = new Intent(getActivity(), ContactsActivity.class);
-        intent.putExtra("phoneNumber",mModelList.get(position).getPhoneNumber());
-        startActivity(intent);
+    public void onClick(int position,final String diapadNumber) {
+//        Intent intent = new Intent(getActivity(), ContactsActivity.class);
+//        intent.putExtra("phoneNumber",mModelList.get(position).getPhoneNumber());
+//        startActivity(intent);
+        mPersenter.dialPhone(diapadNumber);
     }
 
     private void initProgress(){

@@ -67,10 +67,16 @@ public class CallRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 callRecordViewHolder.address.setText(mModelList.get(position).getAddress());
                 callRecordViewHolder.duration.setText("通话时长:"+DateUtil.secondToDate(mModelList.get(position).getDuration(),"mm:ss"));
                 callRecordViewHolder.date.setText(mModelList.get(position).getDate());
-                callRecordViewHolder.see_detail.setOnClickListener(new View.OnClickListener() {
+//                callRecordViewHolder.see_detail.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        mOnItemClickListener.onClick(position);
+//                    }
+//                });
+                callRecordViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOnItemClickListener.onClick(position);
+                        mOnItemClickListener.onClick(position,mModelList.get(position).getPhoneNumber());
                     }
                 });
                 break;
@@ -102,6 +108,7 @@ public class CallRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         TextView duration;
         TextView date;
         LinearLayout see_detail;
+        LinearLayout linearLayout;
 
         public CallRecordViewHolder(View view){
             super(view);
@@ -111,6 +118,7 @@ public class CallRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             duration = (TextView)view.findViewById(R.id.duration);
             date = (TextView)view.findViewById(R.id.date);
             see_detail = (LinearLayout) view.findViewById(R.id.see_detail);
+            linearLayout = (LinearLayout)view.findViewById(R.id.linearLayout);
         }
     }
 
@@ -125,7 +133,7 @@ public class CallRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public interface OnItemClickListener{
-        void onClick( int position);
+        void onClick( int position,String phoneNumber);
         void onLongClick( int position);
     }
     public void setOnItemClickListener(OnItemClickListener onItemClickListener ){

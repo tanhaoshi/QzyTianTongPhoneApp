@@ -32,6 +32,9 @@ public class TellPhoneActivity extends AppCompatActivity {
     public static final int msg_calling_time = 1;
     public static final int msg_calling_time_remove = 2;
 
+    //根据是否拨通重复播,或当用户手动关闭当前activity
+    private boolean isFinsh = true;
+
     @BindView(R.id.phoneNumber)
     TextView phoneNumber;
 
@@ -129,7 +132,6 @@ public class TellPhoneActivity extends AppCompatActivity {
         startTime = System.currentTimeMillis();
     }
 
-
     /**
      * 通话状态
      */
@@ -143,6 +145,7 @@ public class TellPhoneActivity extends AppCompatActivity {
     private void onEndCallState() {
         mTellPhoneActivityPresenter.endCall();
         mHandler.sendEmptyMessage(msg_calling_time_remove);
+        isFinsh = false;
         finish();
     }
 
@@ -156,33 +159,39 @@ public class TellPhoneActivity extends AppCompatActivity {
 
         switch (PhoneStateUtils.getTtPhoneState(cmd)) {
             case NOCALL:
-                long timeDuration1 = System.currentTimeMillis() - startTime;
-                LogUtils.e("timeDuration1 = " + timeDuration1 + " count = " + count);
-                if(timeDuration1 < 5 * 1000 && count > 0){
-                    EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber.getText().toString()));
-                    count --;
-                    countTime();
-                    break;
+                if(isFinsh){
+                    long timeDuration1 = System.currentTimeMillis() - startTime;
+                    LogUtils.e("timeDuration1 = " + timeDuration1 + " count = " + count);
+                    if(timeDuration1 < 5 * 1000 && count > 0){
+                        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber.getText().toString()));
+                        count --;
+                        countTime();
+                        break;
+                    }
                 }
                 onEndCallState();
                 break;
             case RING:
                 break;
             case CALL:
-                long timeDuration = System.currentTimeMillis() - startTime;
-                if(timeDuration < 5 * 1000){
-                    break;
+                if(isFinsh){
+                    long timeDuration = System.currentTimeMillis() - startTime;
+                    if(timeDuration < 5 * 1000){
+                        break;
+                    }
                 }
                 onCallingState();
                 break;
             case HUANGUP:
-                long timeDuration2 = System.currentTimeMillis() - startTime;
-                LogUtils.e("timeDuration2 = " + timeDuration2 + " count = " + count);
-                if(timeDuration2 < 5 * 1000 && count > 0){
-                    EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber.getText().toString()));
-                    count --;
-                    countTime();
-                    break;
+                if(isFinsh){
+                    long timeDuration2 = System.currentTimeMillis() - startTime;
+                    LogUtils.e("timeDuration2 = " + timeDuration2 + " count = " + count);
+                    if(timeDuration2 < 5 * 1000 && count > 0){
+                        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber.getText().toString()));
+                        count --;
+                        countTime();
+                        break;
+                    }
                 }
                 onEndCallState();
                 break;
@@ -198,9 +207,10 @@ public class TellPhoneActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         KLog.e("onStop");
+        isFinsh = false;
         EventBusUtils.unregister(TellPhoneActivity.this);
        //finish();
-}
+    }
 
     @Override
     protected void onDestroy() {

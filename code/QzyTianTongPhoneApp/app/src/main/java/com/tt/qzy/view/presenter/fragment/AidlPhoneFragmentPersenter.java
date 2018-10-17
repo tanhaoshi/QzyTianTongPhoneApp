@@ -78,7 +78,8 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
         }
 
         phone = phoneNumber;
-
+        KLog.i("look up phone is : "+phone);
+        KLog.i("start call phone ...");
         EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber));
 
     }
@@ -99,6 +100,7 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
     private void parseCallBack(Object o){
         PhoneCmd cmd = (PhoneCmd) o;
         CallPhoneBackProtos.CallPhoneBack callPhoneBack = (CallPhoneBackProtos.CallPhoneBack)cmd.getMessage();
+        KLog.i("reciver state is : "+callPhoneBack.getIsCalling());
         if(!callPhoneBack.getIsCalling()){
             Intent intent = new Intent(mContext, TellPhoneActivity.class);
             intent.putExtra("diapadNumber", phone);
