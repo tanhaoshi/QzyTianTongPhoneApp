@@ -11,6 +11,7 @@ import com.qzy.data.PhoneCmd;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.data.CallPhoneBackProtos;
+import com.qzy.tt.phone.common.CommonData;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.TellPhoneActivity;
@@ -196,7 +197,13 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         PhoneCmd cmd = (PhoneCmd) o;
         CallPhoneBackProtos.CallPhoneBack callPhoneBack = (CallPhoneBackProtos.CallPhoneBack)cmd.getMessage();
         KLog.i("tt_call_status is = " + callPhoneBack.getIsCalling());
-        tt_call_status = callPhoneBack.getIsCalling();
+        if(callPhoneBack.getIsCalling() && callPhoneBack.getIp().equals(CommonData.getInstance().getLocalWifiIp())){
+            tt_call_status = true;
+            EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE));
+            return;
+        }
+        tt_call_status = false;
+        NToast.shortToast(this,"当前天通猫被占用!");
     }
 
     public boolean isConnectStatus(){

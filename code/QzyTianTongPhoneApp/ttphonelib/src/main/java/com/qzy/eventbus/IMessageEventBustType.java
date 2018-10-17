@@ -41,4 +41,6 @@ public interface IMessageEventBustType {
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SHORT_MESSAGE = "event_bus_type_connect_tiantong_response_short_message";
     // 返回天通猫通话状态
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_CALL_STATE = "event_bus_type_connect_tiantong_response_call_state";
+    // 不被占用情况下打电话
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE = "event_bus_type_connect_tiantong_call_state";
 }
