@@ -197,13 +197,19 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         PhoneCmd cmd = (PhoneCmd) o;
         CallPhoneBackProtos.CallPhoneBack callPhoneBack = (CallPhoneBackProtos.CallPhoneBack)cmd.getMessage();
         KLog.i("tt_call_status is = " + callPhoneBack.getIsCalling());
-        if(callPhoneBack.getIsCalling() && callPhoneBack.getIp().equals(CommonData.getInstance().getLocalWifiIp())){
-            tt_call_status = true;
-            EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE));
-            return;
+        if(callPhoneBack.getIsCalling()){
+            if(callPhoneBack.getIp().equals(CommonData.getInstance().getLocalWifiIp())){
+                tt_call_status = true;
+                EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE));
+
+            }else{
+                tt_call_status = true;
+               /// NToast.shortToast(this,"当前天通猫被占用");
+            }
+        }else{
+            tt_call_status = false;
+            //EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE));
         }
-        tt_call_status = false;
-        NToast.shortToast(this,"当前天通猫被占用!");
     }
 
     public boolean isConnectStatus(){
