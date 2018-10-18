@@ -21,6 +21,8 @@ import com.qzy.tiantong.service.utils.WifiUtils;
 
 import java.lang.reflect.Method;
 import java.util.UUID;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Created by yj.zhang on 2018/8/3/003.
@@ -31,6 +33,8 @@ public class QzyPhoneManager {
     private Context mContext;
     private ITianTongServer mServer;
 
+
+
     public QzyPhoneManager(Context context, ITianTongServer server) {
         mContext = context;
         mServer = server;
@@ -39,7 +43,12 @@ public class QzyPhoneManager {
         WifiUtils.setWifiApEnabled(context, getSsidName(), QzyTtContants.WIFI_PASSWD, true);
 
         setPhoneListener();
+
+
     }
+
+
+
 
     private String getSsidName() {
         String ssid = getSsidToSharedpref();
@@ -261,4 +270,7 @@ public class QzyPhoneManager {
     }
 
 
+    public void release(){
+
+    }
 }

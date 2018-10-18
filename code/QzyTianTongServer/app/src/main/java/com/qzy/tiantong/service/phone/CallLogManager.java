@@ -23,16 +23,25 @@ public class CallLogManager {
      *
      * @param context
      */
-    public static void syncCallLogInfo(final String ip,final Context context, final PhoneNettyManager phoneNettyManager) {
+    public static void syncCallLogInfo(final String ip, final Context context, final PhoneNettyManager phoneNettyManager) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                LogUtils.e("getCall log sync .....");
-                List<CallLogInfo> callLogInfo = PhoneUtils.getCallLog(context);
-                if (callLogInfo != null) {
+                int page = 0;
+                int pageCount = 30;
+                while (true) {
+                    LogUtils.e("getCall log sync .....");
+                    List<CallLogInfo> callLogInfo = PhoneUtils.getCallLog(context, page, pageCount);
+                    page++;
+                    if (callLogInfo == null || callLogInfo.size() <= 0) {
+                        LogUtils.e("getCall log fininsh .....");
+                        break;
+                    }
+
+                    LogUtils.e("callLogInfo size  = " + callLogInfo.size());
                     TtCallRecordProtos.TtCallRecordProto.Builder listRecorder = TtCallRecordProtos.TtCallRecordProto.newBuilder();
                     for (CallLogInfo callInfo : callLogInfo) {
-                        LogUtils.e("callInfo = " + callInfo.toString());
+                       // LogUtils.e("callInfo = " + callInfo.toString());
                         TtCallRecordProtos.TtCallRecordProto.CallRecord callRecord = TtCallRecordProtos.TtCallRecordProto.CallRecord.newBuilder()
                                 .setPhoneNumber(callInfo.getNumber())
                                 .setDate(callInfo.getDate())
@@ -44,8 +53,9 @@ public class CallLogManager {
                     }
 
                     if (phoneNettyManager != null) {
-                        phoneNettyManager.sendCallLogToPhoneClient(ip,listRecorder.build());
+                        phoneNettyManager.sendCallLogToPhoneClient(ip, listRecorder.build());
                     }
+
                 }
             }
         }).start();
@@ -59,16 +69,25 @@ public class CallLogManager {
      * @param context
      * @param phoneNettyManager
      */
-    public static void syncSmsInfo(final String ip,final Context context, final PhoneNettyManager phoneNettyManager) {
+    public static void syncSmsInfo(final String ip, final Context context, final PhoneNettyManager phoneNettyManager) {
+
         new Thread(new Runnable() {
             @Override
             public void run() {
-                LogUtils.e("getSms sync .....");
-                List<SmsInfo> smsList = PhoneUtils.getSms(context);
-                if (smsList != null) {
+                int page = 0;
+                int pageCount = 30;
+                while (true) {
+                    LogUtils.e("getSms sync .....");
+                    List<SmsInfo> smsList = PhoneUtils.getSms(context, page, pageCount);
+                    page++;
+                    if (smsList == null || smsList.size() <= 0) {
+                        LogUtils.e("getSms sync finish .....");
+                        break;
+                    }
+                    LogUtils.e("getSms sync size = " + smsList.size());
                     TtShortMessageProtos.TtShortMessage.Builder ttShortMessage = TtShortMessageProtos.TtShortMessage.newBuilder();
                     for (SmsInfo smsInfo : smsList) {
-                        LogUtils.d("smsInfo  = " + smsInfo.toString());
+                        //LogUtils.d("smsInfo  = " + smsInfo.toString());
                         TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage = TtShortMessageProtos.TtShortMessage.ShortMessage.newBuilder()
                                 .setNumberPhone(smsInfo.getNumber())
                                 .setName(smsInfo.getName())
@@ -78,13 +97,17 @@ public class CallLogManager {
                                 .build();
                         ttShortMessage.addShortMessage(shortMessage);
                     }
+
+
                     if (phoneNettyManager != null) {
-                        phoneNettyManager.sendCallLogToPhoneClient(ip,ttShortMessage.build());
+                        phoneNettyManager.sendCallLogToPhoneClient(ip, ttShortMessage.build());
                     }
+
 
                 }
             }
         }).start();
+
 
     }
 

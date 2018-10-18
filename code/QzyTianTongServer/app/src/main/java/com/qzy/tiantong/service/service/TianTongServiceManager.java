@@ -173,24 +173,27 @@ public class TianTongServiceManager implements ITianTongServer {
      * @param ip
      */
     @Override
-    public boolean setCurrenCallingIp(String ip) {
+    public synchronized boolean setCurrenCallingIp(String ip) {
         LogUtils.e("1111 setCurrenCallingIp = " + ip);
         String callingIp = PhoneClientManager.getInstance().isCallingIp();
+
         if (!TextUtils.isEmpty(callingIp)) {
+            LogUtils.e("1111 callingIp = " + callingIp);
             if (mPhoneNettyManager != null) {
-                mPhoneNettyManager.sendTtCallPhoneBackToClient(ip, callingIp, true);
+                mPhoneNettyManager.sendTtCallPhoneBackToClient(null, callingIp, true);
             }
 
             return false;
         }
 
         LogUtils.e("setCurrenCallingIp = " + ip);
+        PhoneClientManager.getInstance().setCurrentCallingUser(ip);
 
         if (mPhoneNettyManager != null) {
-            mPhoneNettyManager.sendTtCallPhoneBackToClient(ip, "", false);
+            mPhoneNettyManager.sendTtCallPhoneBackToClient(null, ip, true);
         }
 
-        PhoneClientManager.getInstance().setCurrentCallingUser(ip);
+
         if (mLocalPcmSocketManager != null) {
             mLocalPcmSocketManager.setPhoneIpAndPort(ip, Constants.UNICAST_PORT);
         }
@@ -221,6 +224,10 @@ public class TianTongServiceManager implements ITianTongServer {
 
         if (mBroadcastManager != null) {
             mBroadcastManager.release();
+        }
+
+        if (mQzyPhoneManager != null) {
+            mQzyPhoneManager.release();
         }
 
         if (mPhoneNettyManager != null) {

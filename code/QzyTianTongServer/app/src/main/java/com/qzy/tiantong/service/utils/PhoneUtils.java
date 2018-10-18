@@ -96,12 +96,13 @@ public class PhoneUtils {
      * @param context
      * @return
      */
-    public static List<SmsInfo> getSms(Context context) {
+    public static List<SmsInfo> getSms(Context context,int page,int pageCount) {
         List<SmsInfo> smsInfoList = null;
         String[] projection = new String[]{"_id", "address", "person", "body", "date", "type"};
+        String sortOrder = "date desc limit  " + page * pageCount + "," + (page * pageCount + pageCount);
         try {
             Uri smsUri = Uri.parse("content://sms/");
-            Cursor cursor = context.getContentResolver().query(smsUri, projection, null, null, "date desc");
+            Cursor cursor = context.getContentResolver().query(smsUri, projection, null, null, sortOrder);
 
             String smsType;
             String smsName;
@@ -172,16 +173,18 @@ public class PhoneUtils {
 
     /**
      * 查询通讯记录
-     *
      * @param context
+     * @param page     页数
+     * @param pageCount  每页的个数
      * @return
      */
-    public static List<CallLogInfo> getCallLog(Context context) {
+    public static List<CallLogInfo> getCallLog(Context context,int page,int pageCount) {
         List<CallLogInfo> callLogList = null;
         String[] projection = {CallLog.Calls.CACHED_NAME, CallLog.Calls.NUMBER, CallLog.Calls.TYPE, CallLog.Calls.DURATION, CallLog.Calls.DATE};
+        String sortOrder = CallLog.Calls.DEFAULT_SORT_ORDER + " limit  " + page * pageCount + "," + (page * pageCount + pageCount);
         try {
             Uri callLogUri = CallLog.Calls.CONTENT_URI;
-            Cursor cursor = context.getContentResolver().query(callLogUri, projection, null, null, CallLog.Calls.DEFAULT_SORT_ORDER);
+            Cursor cursor = context.getContentResolver().query(callLogUri, projection, null, null, sortOrder);
             String callLogName;
             String callLogNumber;
             String callLogDate;

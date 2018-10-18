@@ -1,6 +1,8 @@
 package com.qzy.tiantong.service.netty;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 
 import com.qzy.led.Netled;
@@ -27,6 +29,9 @@ import com.qzy.tt.probuf.lib.data.PrototocalTools;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by yj.zhang on 2018/8/9.
@@ -56,7 +61,7 @@ public class PhoneNettyManager {
     private BatteryManager mBatteryManager;
     private TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery;
 
-    private CallLogManager mCallLogManager;
+    private Timer timerCalling;
 
     public PhoneNettyManager(Context context, NettyServerManager manager) {
         mContext = context;
@@ -73,7 +78,32 @@ public class PhoneNettyManager {
 
         initBattery();
         LogUtils.e("getCallLog...11111..");
+
+       // initCallingTimer();
     }
+
+    /**
+     * 初始发送当前通话的time
+     */
+    private void initCallingTimer() {
+        mHandler.sendEmptyMessageDelayed(1, 500);
+        sendTtCallPhoneBackToClientTimer();
+    }
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:
+                    initCallingTimer();
+                    break;
+            }
+
+        }
+
+    };
+
 
     /**
      * 初始化电量管理
@@ -103,6 +133,7 @@ public class PhoneNettyManager {
                     while (true) {
                         Thread.sleep(3000);
                         // LogUtils.e("send all sate.....");
+
                         if (currentPhoneState != null) {
                             sendTtCallPhoneStateToClient(currentPhoneState, currentPhoneNumber);
                         }
@@ -111,6 +142,8 @@ public class PhoneNettyManager {
                         sendTtPhoneBatteryToClient();
                         //sim 卡是否插入
                         sendSimStateToPhoneClient();
+
+
                     }
 
                 } catch (Exception e) {
@@ -171,6 +204,7 @@ public class PhoneNettyManager {
             phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL;
             if (currentPhoneState != phoneState) {
                 PhoneClientManager.getInstance().setEndCallUser();
+                sendTtCallPhoneBackToClientTimer();
             }
         } else if (state == TtPhoneState.RING) {
             phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.RING;
@@ -180,6 +214,7 @@ public class PhoneNettyManager {
             phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.HUANGUP;
             if (currentPhoneState != phoneState) {
                 PhoneClientManager.getInstance().setEndCallUser();
+                sendTtCallPhoneBackToClientTimer();
             }
         } else if (state == TtPhoneState.INCOMING) {
             phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.INCOMING;
@@ -202,6 +237,21 @@ public class PhoneNettyManager {
                 .setPhoneNumber(phoneNumber)
                 .build();
         mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
+
+    }
+
+
+    /**
+     * 定时发送 发送当前正有人通话
+     */
+    private void sendTtCallPhoneBackToClientTimer() {
+
+        String callingIp = PhoneClientManager.getInstance().isCallingIp();
+        if (!TextUtils.isEmpty(callingIp)) {
+            sendTtCallPhoneBackToClient(null, callingIp, true);
+        } else {
+            sendTtCallPhoneBackToClient(null, "", false);
+        }
 
     }
 
@@ -399,6 +449,12 @@ public class PhoneNettyManager {
     }
 
     public void free() {
+
+        if (mHandler != null && mHandler.hasMessages(1)) {
+            mHandler.removeMessages(1);
+        }
+        mHandler = null;
+
         EventBus.getDefault().unregister(this);
         freeSingnal();
         if (mStateThread != null && mStateThread.isAlive()) {
@@ -412,6 +468,7 @@ public class PhoneNettyManager {
         if (mBatteryManager != null) {
             mBatteryManager.free();
         }
+
 
     }
 

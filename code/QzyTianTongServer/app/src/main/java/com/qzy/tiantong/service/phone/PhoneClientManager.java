@@ -98,6 +98,7 @@ public class PhoneClientManager {
 
     /**
      * 设置用户通话结束
+     *
      * @param ip
      */
     public void setEndCallUser(String ip) {
@@ -122,10 +123,17 @@ public class PhoneClientManager {
 
     /**
      * 当前通话的ip
+     *
      * @return
      */
-    public String isCallingIp(){
+    public String isCallingIp() {
+
         HashMap<String, ClientInfoBean> hashMap = PhoneClientManager.getInstance().getmHaspMapPhoneClient();
+
+        if (hashMap == null) {
+            return null;
+        }
+
         for (Map.Entry<String, ClientInfoBean> entry : hashMap.entrySet()) {
             if (entry.getValue() != null && entry.getValue().isCalling()) {
 
