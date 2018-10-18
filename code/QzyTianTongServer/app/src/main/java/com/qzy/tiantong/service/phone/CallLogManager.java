@@ -103,7 +103,6 @@ public class CallLogManager {
                         phoneNettyManager.sendCallLogToPhoneClient(ip, ttShortMessage.build());
                     }
 
-
                 }
             }
         }).start();

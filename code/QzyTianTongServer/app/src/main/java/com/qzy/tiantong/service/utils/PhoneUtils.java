@@ -99,7 +99,7 @@ public class PhoneUtils {
     public static List<SmsInfo> getSms(Context context,int page,int pageCount) {
         List<SmsInfo> smsInfoList = null;
         String[] projection = new String[]{"_id", "address", "person", "body", "date", "type"};
-        String sortOrder = "date desc limit  " + page * pageCount + "," + (page * pageCount + pageCount);
+        String sortOrder = "date desc limit  " + page * pageCount + "," + pageCount;
         try {
             Uri smsUri = Uri.parse("content://sms/");
             Cursor cursor = context.getContentResolver().query(smsUri, projection, null, null, sortOrder);
@@ -181,7 +181,7 @@ public class PhoneUtils {
     public static List<CallLogInfo> getCallLog(Context context,int page,int pageCount) {
         List<CallLogInfo> callLogList = null;
         String[] projection = {CallLog.Calls.CACHED_NAME, CallLog.Calls.NUMBER, CallLog.Calls.TYPE, CallLog.Calls.DURATION, CallLog.Calls.DATE};
-        String sortOrder = CallLog.Calls.DEFAULT_SORT_ORDER + " limit  " + page * pageCount + "," + (page * pageCount + pageCount);
+        String sortOrder = CallLog.Calls.DEFAULT_SORT_ORDER + " limit  " + page * pageCount + "," + pageCount;  // 从那里取  取多少个
         try {
             Uri callLogUri = CallLog.Calls.CONTENT_URI;
             Cursor cursor = context.getContentResolver().query(callLogUri, projection, null, null, sortOrder);
