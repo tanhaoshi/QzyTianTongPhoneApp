@@ -20,10 +20,19 @@ public final class TtPhonePositionProtos {
 
     /**
      * <pre>
+     *gps 开关
+     * </pre>
+     *
+     * <code>optional bool isOpen = 1;</code>
+     */
+    boolean getIsOpen();
+
+    /**
+     * <pre>
      *纬度
      * </pre>
      *
-     * <code>optional string lat_itude = 1;</code>
+     * <code>optional string lat_itude = 2;</code>
      */
     String getLatItude();
     /**
@@ -31,7 +40,7 @@ public final class TtPhonePositionProtos {
      *纬度
      * </pre>
      *
-     * <code>optional string lat_itude = 1;</code>
+     * <code>optional string lat_itude = 2;</code>
      */
     com.google.protobuf.ByteString
         getLatItudeBytes();
@@ -41,7 +50,7 @@ public final class TtPhonePositionProtos {
      *经度
      * </pre>
      *
-     * <code>optional string long_itude = 2;</code>
+     * <code>optional string long_itude = 3;</code>
      */
     String getLongItude();
     /**
@@ -49,7 +58,7 @@ public final class TtPhonePositionProtos {
      *经度
      * </pre>
      *
-     * <code>optional string long_itude = 2;</code>
+     * <code>optional string long_itude = 3;</code>
      */
     com.google.protobuf.ByteString
         getLongItudeBytes();
@@ -59,7 +68,7 @@ public final class TtPhonePositionProtos {
      *请求状态
      * </pre>
      *
-     * <code>optional bool request_status = 3;</code>
+     * <code>optional bool request_status = 4;</code>
      */
     boolean getRequestStatus();
 
@@ -68,7 +77,7 @@ public final class TtPhonePositionProtos {
      *响应状态
      * </pre>
      *
-     * <code>optional bool response_status = 4;</code>
+     * <code>optional bool response_status = 5;</code>
      */
     boolean getResponseStatus();
   }
@@ -84,6 +93,7 @@ public final class TtPhonePositionProtos {
       super(builder);
     }
     private TtPhonePosition() {
+      isOpen_ = false;
       latItude_ = "";
       longItude_ = "";
       requestStatus_ = false;
@@ -115,24 +125,29 @@ public final class TtPhonePositionProtos {
               }
               break;
             }
-            case 10: {
-              String s = input.readStringRequireUtf8();
+            case 8: {
 
-              latItude_ = s;
+              isOpen_ = input.readBool();
               break;
             }
             case 18: {
               String s = input.readStringRequireUtf8();
 
+              latItude_ = s;
+              break;
+            }
+            case 26: {
+              String s = input.readStringRequireUtf8();
+
               longItude_ = s;
               break;
             }
-            case 24: {
+            case 32: {
 
               requestStatus_ = input.readBool();
               break;
             }
-            case 32: {
+            case 40: {
 
               responseStatus_ = input.readBool();
               break;
@@ -150,31 +165,44 @@ public final class TtPhonePositionProtos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.qzy.tt.data.TtPhonePositionProtos.internal_static_phonedata_TtPhonePosition_descriptor;
+      return TtPhonePositionProtos.internal_static_phonedata_TtPhonePosition_descriptor;
     }
 
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.qzy.tt.data.TtPhonePositionProtos.internal_static_phonedata_TtPhonePosition_fieldAccessorTable
+      return TtPhonePositionProtos.internal_static_phonedata_TtPhonePosition_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition.class, com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition.Builder.class);
+              TtPhonePosition.class, Builder.class);
     }
 
-    public static final int LAT_ITUDE_FIELD_NUMBER = 1;
+    public static final int ISOPEN_FIELD_NUMBER = 1;
+    private boolean isOpen_;
+    /**
+     * <pre>
+     *gps 开关
+     * </pre>
+     *
+     * <code>optional bool isOpen = 1;</code>
+     */
+    public boolean getIsOpen() {
+      return isOpen_;
+    }
+
+    public static final int LAT_ITUDE_FIELD_NUMBER = 2;
     private volatile Object latItude_;
     /**
      * <pre>
      *纬度
      * </pre>
      *
-     * <code>optional string lat_itude = 1;</code>
+     * <code>optional string lat_itude = 2;</code>
      */
     public String getLatItude() {
       Object ref = latItude_;
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         latItude_ = s;
@@ -186,13 +214,13 @@ public final class TtPhonePositionProtos {
      *纬度
      * </pre>
      *
-     * <code>optional string lat_itude = 1;</code>
+     * <code>optional string lat_itude = 2;</code>
      */
     public com.google.protobuf.ByteString
         getLatItudeBytes() {
       Object ref = latItude_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         latItude_ = b;
@@ -202,21 +230,21 @@ public final class TtPhonePositionProtos {
       }
     }
 
-    public static final int LONG_ITUDE_FIELD_NUMBER = 2;
+    public static final int LONG_ITUDE_FIELD_NUMBER = 3;
     private volatile Object longItude_;
     /**
      * <pre>
      *经度
      * </pre>
      *
-     * <code>optional string long_itude = 2;</code>
+     * <code>optional string long_itude = 3;</code>
      */
     public String getLongItude() {
       Object ref = longItude_;
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         longItude_ = s;
@@ -228,13 +256,13 @@ public final class TtPhonePositionProtos {
      *经度
      * </pre>
      *
-     * <code>optional string long_itude = 2;</code>
+     * <code>optional string long_itude = 3;</code>
      */
     public com.google.protobuf.ByteString
         getLongItudeBytes() {
       Object ref = longItude_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         longItude_ = b;
@@ -244,27 +272,27 @@ public final class TtPhonePositionProtos {
       }
     }
 
-    public static final int REQUEST_STATUS_FIELD_NUMBER = 3;
+    public static final int REQUEST_STATUS_FIELD_NUMBER = 4;
     private boolean requestStatus_;
     /**
      * <pre>
      *请求状态
      * </pre>
      *
-     * <code>optional bool request_status = 3;</code>
+     * <code>optional bool request_status = 4;</code>
      */
     public boolean getRequestStatus() {
       return requestStatus_;
     }
 
-    public static final int RESPONSE_STATUS_FIELD_NUMBER = 4;
+    public static final int RESPONSE_STATUS_FIELD_NUMBER = 5;
     private boolean responseStatus_;
     /**
      * <pre>
      *响应状态
      * </pre>
      *
-     * <code>optional bool response_status = 4;</code>
+     * <code>optional bool response_status = 5;</code>
      */
     public boolean getResponseStatus() {
       return responseStatus_;
@@ -282,17 +310,20 @@ public final class TtPhonePositionProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      if (isOpen_ != false) {
+        output.writeBool(1, isOpen_);
+      }
       if (!getLatItudeBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, latItude_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, latItude_);
       }
       if (!getLongItudeBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, longItude_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, longItude_);
       }
       if (requestStatus_ != false) {
-        output.writeBool(3, requestStatus_);
+        output.writeBool(4, requestStatus_);
       }
       if (responseStatus_ != false) {
-        output.writeBool(4, responseStatus_);
+        output.writeBool(5, responseStatus_);
       }
     }
 
@@ -301,19 +332,23 @@ public final class TtPhonePositionProtos {
       if (size != -1) return size;
 
       size = 0;
+      if (isOpen_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(1, isOpen_);
+      }
       if (!getLatItudeBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, latItude_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, latItude_);
       }
       if (!getLongItudeBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, longItude_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, longItude_);
       }
       if (requestStatus_ != false) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(3, requestStatus_);
+          .computeBoolSize(4, requestStatus_);
       }
       if (responseStatus_ != false) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(4, responseStatus_);
+          .computeBoolSize(5, responseStatus_);
       }
       memoizedSize = size;
       return size;
@@ -325,12 +360,14 @@ public final class TtPhonePositionProtos {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition)) {
+      if (!(obj instanceof TtPhonePosition)) {
         return super.equals(obj);
       }
-      com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition other = (com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition) obj;
+      TtPhonePosition other = (TtPhonePosition) obj;
 
       boolean result = true;
+      result = result && (getIsOpen()
+          == other.getIsOpen());
       result = result && getLatItude()
           .equals(other.getLatItude());
       result = result && getLongItude()
@@ -349,6 +386,9 @@ public final class TtPhonePositionProtos {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptorForType().hashCode();
+      hash = (37 * hash) + ISOPEN_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getIsOpen());
       hash = (37 * hash) + LAT_ITUDE_FIELD_NUMBER;
       hash = (53 * hash) + getLatItude().hashCode();
       hash = (37 * hash) + LONG_ITUDE_FIELD_NUMBER;
@@ -364,58 +404,58 @@ public final class TtPhonePositionProtos {
       return hash;
     }
 
-    public static com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition parseFrom(
+    public static TtPhonePosition parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition parseFrom(
+    public static TtPhonePosition parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition parseFrom(byte[] data)
+    public static TtPhonePosition parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition parseFrom(
+    public static TtPhonePosition parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition parseFrom(java.io.InputStream input)
+    public static TtPhonePosition parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition parseFrom(
+    public static TtPhonePosition parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition parseDelimitedFrom(java.io.InputStream input)
+    public static TtPhonePosition parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition parseDelimitedFrom(
+    public static TtPhonePosition parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition parseFrom(
+    public static TtPhonePosition parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition parseFrom(
+    public static TtPhonePosition parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -427,7 +467,7 @@ public final class TtPhonePositionProtos {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition prototype) {
+    public static Builder newBuilder(TtPhonePosition prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -447,17 +487,17 @@ public final class TtPhonePositionProtos {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:phonedata.TtPhonePosition)
-        com.qzy.tt.data.TtPhonePositionProtos.TtPhonePositionOrBuilder {
+        TtPhonePositionOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.qzy.tt.data.TtPhonePositionProtos.internal_static_phonedata_TtPhonePosition_descriptor;
+        return TtPhonePositionProtos.internal_static_phonedata_TtPhonePosition_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.qzy.tt.data.TtPhonePositionProtos.internal_static_phonedata_TtPhonePosition_fieldAccessorTable
+        return TtPhonePositionProtos.internal_static_phonedata_TtPhonePosition_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition.class, com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition.Builder.class);
+                TtPhonePosition.class, Builder.class);
       }
 
       // Construct using com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition.newBuilder()
@@ -477,6 +517,8 @@ public final class TtPhonePositionProtos {
       }
       public Builder clear() {
         super.clear();
+        isOpen_ = false;
+
         latItude_ = "";
 
         longItude_ = "";
@@ -490,23 +532,24 @@ public final class TtPhonePositionProtos {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.qzy.tt.data.TtPhonePositionProtos.internal_static_phonedata_TtPhonePosition_descriptor;
+        return TtPhonePositionProtos.internal_static_phonedata_TtPhonePosition_descriptor;
       }
 
-      public com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition getDefaultInstanceForType() {
-        return com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition.getDefaultInstance();
+      public TtPhonePosition getDefaultInstanceForType() {
+        return TtPhonePosition.getDefaultInstance();
       }
 
-      public com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition build() {
-        com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition result = buildPartial();
+      public TtPhonePosition build() {
+        TtPhonePosition result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition buildPartial() {
-        com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition result = new com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition(this);
+      public TtPhonePosition buildPartial() {
+        TtPhonePosition result = new TtPhonePosition(this);
+        result.isOpen_ = isOpen_;
         result.latItude_ = latItude_;
         result.longItude_ = longItude_;
         result.requestStatus_ = requestStatus_;
@@ -542,16 +585,19 @@ public final class TtPhonePositionProtos {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition) {
-          return mergeFrom((com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition)other);
+        if (other instanceof TtPhonePosition) {
+          return mergeFrom((TtPhonePosition)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition other) {
-        if (other == com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition.getDefaultInstance()) return this;
+      public Builder mergeFrom(TtPhonePosition other) {
+        if (other == TtPhonePosition.getDefaultInstance()) return this;
+        if (other.getIsOpen() != false) {
+          setIsOpen(other.getIsOpen());
+        }
         if (!other.getLatItude().isEmpty()) {
           latItude_ = other.latItude_;
           onChanged();
@@ -578,11 +624,11 @@ public final class TtPhonePositionProtos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition parsedMessage = null;
+        TtPhonePosition parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition) e.getUnfinishedMessage();
+          parsedMessage = (TtPhonePosition) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -592,13 +638,51 @@ public final class TtPhonePositionProtos {
         return this;
       }
 
+      private boolean isOpen_ ;
+      /**
+       * <pre>
+       *gps 开关
+       * </pre>
+       *
+       * <code>optional bool isOpen = 1;</code>
+       */
+      public boolean getIsOpen() {
+        return isOpen_;
+      }
+      /**
+       * <pre>
+       *gps 开关
+       * </pre>
+       *
+       * <code>optional bool isOpen = 1;</code>
+       */
+      public Builder setIsOpen(boolean value) {
+        
+        isOpen_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *gps 开关
+       * </pre>
+       *
+       * <code>optional bool isOpen = 1;</code>
+       */
+      public Builder clearIsOpen() {
+        
+        isOpen_ = false;
+        onChanged();
+        return this;
+      }
+
       private Object latItude_ = "";
       /**
        * <pre>
        *纬度
        * </pre>
        *
-       * <code>optional string lat_itude = 1;</code>
+       * <code>optional string lat_itude = 2;</code>
        */
       public String getLatItude() {
         Object ref = latItude_;
@@ -617,13 +701,13 @@ public final class TtPhonePositionProtos {
        *纬度
        * </pre>
        *
-       * <code>optional string lat_itude = 1;</code>
+       * <code>optional string lat_itude = 2;</code>
        */
       public com.google.protobuf.ByteString
           getLatItudeBytes() {
         Object ref = latItude_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           latItude_ = b;
@@ -637,14 +721,14 @@ public final class TtPhonePositionProtos {
        *纬度
        * </pre>
        *
-       * <code>optional string lat_itude = 1;</code>
+       * <code>optional string lat_itude = 2;</code>
        */
       public Builder setLatItude(
           String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         latItude_ = value;
         onChanged();
         return this;
@@ -654,10 +738,10 @@ public final class TtPhonePositionProtos {
        *纬度
        * </pre>
        *
-       * <code>optional string lat_itude = 1;</code>
+       * <code>optional string lat_itude = 2;</code>
        */
       public Builder clearLatItude() {
-
+        
         latItude_ = getDefaultInstance().getLatItude();
         onChanged();
         return this;
@@ -667,7 +751,7 @@ public final class TtPhonePositionProtos {
        *纬度
        * </pre>
        *
-       * <code>optional string lat_itude = 1;</code>
+       * <code>optional string lat_itude = 2;</code>
        */
       public Builder setLatItudeBytes(
           com.google.protobuf.ByteString value) {
@@ -675,7 +759,7 @@ public final class TtPhonePositionProtos {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         latItude_ = value;
         onChanged();
         return this;
@@ -687,7 +771,7 @@ public final class TtPhonePositionProtos {
        *经度
        * </pre>
        *
-       * <code>optional string long_itude = 2;</code>
+       * <code>optional string long_itude = 3;</code>
        */
       public String getLongItude() {
         Object ref = longItude_;
@@ -706,13 +790,13 @@ public final class TtPhonePositionProtos {
        *经度
        * </pre>
        *
-       * <code>optional string long_itude = 2;</code>
+       * <code>optional string long_itude = 3;</code>
        */
       public com.google.protobuf.ByteString
           getLongItudeBytes() {
         Object ref = longItude_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           longItude_ = b;
@@ -726,14 +810,14 @@ public final class TtPhonePositionProtos {
        *经度
        * </pre>
        *
-       * <code>optional string long_itude = 2;</code>
+       * <code>optional string long_itude = 3;</code>
        */
       public Builder setLongItude(
           String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         longItude_ = value;
         onChanged();
         return this;
@@ -743,10 +827,10 @@ public final class TtPhonePositionProtos {
        *经度
        * </pre>
        *
-       * <code>optional string long_itude = 2;</code>
+       * <code>optional string long_itude = 3;</code>
        */
       public Builder clearLongItude() {
-
+        
         longItude_ = getDefaultInstance().getLongItude();
         onChanged();
         return this;
@@ -756,7 +840,7 @@ public final class TtPhonePositionProtos {
        *经度
        * </pre>
        *
-       * <code>optional string long_itude = 2;</code>
+       * <code>optional string long_itude = 3;</code>
        */
       public Builder setLongItudeBytes(
           com.google.protobuf.ByteString value) {
@@ -764,7 +848,7 @@ public final class TtPhonePositionProtos {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         longItude_ = value;
         onChanged();
         return this;
@@ -776,7 +860,7 @@ public final class TtPhonePositionProtos {
        *请求状态
        * </pre>
        *
-       * <code>optional bool request_status = 3;</code>
+       * <code>optional bool request_status = 4;</code>
        */
       public boolean getRequestStatus() {
         return requestStatus_;
@@ -786,10 +870,10 @@ public final class TtPhonePositionProtos {
        *请求状态
        * </pre>
        *
-       * <code>optional bool request_status = 3;</code>
+       * <code>optional bool request_status = 4;</code>
        */
       public Builder setRequestStatus(boolean value) {
-
+        
         requestStatus_ = value;
         onChanged();
         return this;
@@ -799,10 +883,10 @@ public final class TtPhonePositionProtos {
        *请求状态
        * </pre>
        *
-       * <code>optional bool request_status = 3;</code>
+       * <code>optional bool request_status = 4;</code>
        */
       public Builder clearRequestStatus() {
-
+        
         requestStatus_ = false;
         onChanged();
         return this;
@@ -814,7 +898,7 @@ public final class TtPhonePositionProtos {
        *响应状态
        * </pre>
        *
-       * <code>optional bool response_status = 4;</code>
+       * <code>optional bool response_status = 5;</code>
        */
       public boolean getResponseStatus() {
         return responseStatus_;
@@ -824,10 +908,10 @@ public final class TtPhonePositionProtos {
        *响应状态
        * </pre>
        *
-       * <code>optional bool response_status = 4;</code>
+       * <code>optional bool response_status = 5;</code>
        */
       public Builder setResponseStatus(boolean value) {
-
+        
         responseStatus_ = value;
         onChanged();
         return this;
@@ -837,10 +921,10 @@ public final class TtPhonePositionProtos {
        *响应状态
        * </pre>
        *
-       * <code>optional bool response_status = 4;</code>
+       * <code>optional bool response_status = 5;</code>
        */
       public Builder clearResponseStatus() {
-
+        
         responseStatus_ = false;
         onChanged();
         return this;
@@ -860,12 +944,12 @@ public final class TtPhonePositionProtos {
     }
 
     // @@protoc_insertion_point(class_scope:phonedata.TtPhonePosition)
-    private static final com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition DEFAULT_INSTANCE;
+    private static final TtPhonePosition DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition();
+      DEFAULT_INSTANCE = new TtPhonePosition();
     }
 
-    public static com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition getDefaultInstance() {
+    public static TtPhonePosition getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -888,7 +972,7 @@ public final class TtPhonePositionProtos {
       return PARSER;
     }
 
-    public com.qzy.tt.data.TtPhonePositionProtos.TtPhonePosition getDefaultInstanceForType() {
+    public TtPhonePosition getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -896,7 +980,7 @@ public final class TtPhonePositionProtos {
 
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_phonedata_TtPhonePosition_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_phonedata_TtPhonePosition_fieldAccessorTable;
 
@@ -908,11 +992,12 @@ public final class TtPhonePositionProtos {
       descriptor;
   static {
     String[] descriptorData = {
-      "\n\025TtPhonePosition.proto\022\tphonedata\"i\n\017Tt" +
-      "PhonePosition\022\021\n\tlat_itude\030\001 \001(\t\022\022\n\nlong" +
-      "_itude\030\002 \001(\t\022\026\n\016request_status\030\003 \001(\010\022\027\n\017" +
-      "response_status\030\004 \001(\010B(\n\017com.qzy.tt.data" +
-      "B\025TtPhonePositionProtosb\006proto3"
+      "\n\025TtPhonePosition.proto\022\tphonedata\"y\n\017Tt" +
+      "PhonePosition\022\016\n\006isOpen\030\001 \001(\010\022\021\n\tlat_itu" +
+      "de\030\002 \001(\t\022\022\n\nlong_itude\030\003 \001(\t\022\026\n\016request_" +
+      "status\030\004 \001(\010\022\027\n\017response_status\030\005 \001(\010B(\n" +
+      "\017com.qzy.tt.dataB\025TtPhonePositionProtosb" +
+      "\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -931,7 +1016,7 @@ public final class TtPhonePositionProtos {
     internal_static_phonedata_TtPhonePosition_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_phonedata_TtPhonePosition_descriptor,
-        new String[] { "LatItude", "LongItude", "RequestStatus", "ResponseStatus", });
+        new String[] { "IsOpen", "LatItude", "LongItude", "RequestStatus", "ResponseStatus", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
