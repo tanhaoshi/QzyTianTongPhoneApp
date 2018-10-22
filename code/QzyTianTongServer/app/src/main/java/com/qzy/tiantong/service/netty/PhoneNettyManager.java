@@ -9,7 +9,7 @@ import com.qzy.led.Netled;
 import com.qzy.tiantong.lib.eventbus.MessageEvent;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.phone.BatteryManager;
-import com.qzy.tiantong.service.phone.CallLogManager;
+import com.qzy.tiantong.service.gps.GpsManager;
 import com.qzy.tiantong.service.phone.PhoneClientManager;
 import com.qzy.tiantong.service.phone.SmsPhoneManager;
 import com.qzy.tiantong.service.phone.TtPhoneState;
@@ -31,7 +31,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by yj.zhang on 2018/8/9.
@@ -55,6 +54,8 @@ public class PhoneNettyManager {
 
     private SmsPhoneManager mSmsPhoneManager;
 
+    private GpsManager  mGpsManager;
+
     /**
      * 电量获取
      */
@@ -68,7 +69,7 @@ public class PhoneNettyManager {
         mNettyServerManager = manager;
 
         mSmsPhoneManager = new SmsPhoneManager(context, iOnSMSCallback);
-
+        mGpsManager = new GpsManager(mContext,mNettyServerManager);
 
         EventBus.getDefault().register(this);
 
@@ -143,7 +144,8 @@ public class PhoneNettyManager {
                         //sim 卡是否插入
                         sendSimStateToPhoneClient();
 
-
+                        //发送gps状态
+                        mGpsManager.sendGpsState();
                     }
 
                 } catch (Exception e) {
@@ -310,7 +312,7 @@ public class PhoneNettyManager {
     private void sendSimStateToPhoneClient() {
         if (checkNettManagerIsNull()) return;
         boolean hasSim = PhoneUtils.ishasSimCard(mContext);
-        LogUtils.d("hasSim = " + hasSim);
+       // LogUtils.d("hasSim = " + hasSim);
         TtPhoneSimCards.TtPhoneSimCard simCard = TtPhoneSimCards.TtPhoneSimCard.newBuilder()
                 .setIsSimCard(hasSim)
                 .build();
@@ -438,6 +440,13 @@ public class PhoneNettyManager {
         }
     }
 
+    /**
+     * 返回gps控制类
+     * @return
+     */
+    public GpsManager getmGpsManager() {
+        return mGpsManager;
+    }
 
     /**
      * 是否控制信号灯

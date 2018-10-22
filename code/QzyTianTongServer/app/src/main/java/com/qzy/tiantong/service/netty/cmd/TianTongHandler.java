@@ -6,6 +6,7 @@ import android.os.Message;
 import com.qzy.tiantong.service.service.ITianTongServer;
 import com.qzy.tt.data.CallPhoneProtos;
 import com.qzy.tt.data.ChangePcmPlayerDbProtos;
+import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.probuf.lib.data.PrototocalTools;
 import com.qzy.voice.VoiceManager;
@@ -54,6 +55,9 @@ public class TianTongHandler extends Handler {
                 case PrototocalTools.IProtoServerIndex.phone_send_sms:
                     TtPhoneSmsProtos.TtPhoneSms ttPhoneSms = (TtPhoneSmsProtos.TtPhoneSms)msg.obj;
                     mServer.sendSms(ttPhoneSms);
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_gps_position:
+                    mServer.getPhoneNettyManager().getmGpsManager().parseProtocalControl((TtPhonePositionProtos.TtPhonePosition) msg.obj);
                     break;
                 default:
                     break;

@@ -30,7 +30,7 @@ public class TianTongService extends Service {
         LogUtils.d("onCreate");
         acquireWakeLock();
 
-        manager = new TianTongServiceManager(getApplicationContext());
+        manager = new TianTongServiceManager(this);
 
         //如果API大于18，需要弹出一个可见通知
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {

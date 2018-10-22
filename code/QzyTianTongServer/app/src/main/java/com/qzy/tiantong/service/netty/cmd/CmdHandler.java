@@ -7,6 +7,7 @@ import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tt.data.CallPhoneProtos;
 import com.qzy.tt.data.ChangePcmPlayerDbProtos;
 import com.qzy.tt.data.TtPhoneAudioDataProtos;
+import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.probuf.lib.data.PhoneAudioCmd;
 import com.qzy.tt.probuf.lib.data.PrototocalTools;
@@ -73,6 +74,11 @@ public class CmdHandler {
                 case PrototocalTools.IProtoServerIndex.phone_send_sms:
                     TtPhoneSmsProtos.TtPhoneSms ttPhoneSms = TtPhoneSmsProtos.TtPhoneSms.parseDelimitedFrom(inputStream);
                     senMsg(protoId,ttPhoneSms);
+                    break;
+
+                case PrototocalTools.IProtoServerIndex.request_gps_position:
+                    TtPhonePositionProtos.TtPhonePosition ttPhonePosition = TtPhonePositionProtos.TtPhonePosition.parseDelimitedFrom(inputStream);
+                    senMsg(protoId,ttPhonePosition);
                     break;
             }
         }catch (Exception e){
