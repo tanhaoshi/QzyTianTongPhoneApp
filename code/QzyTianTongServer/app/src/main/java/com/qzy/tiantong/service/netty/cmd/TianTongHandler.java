@@ -6,6 +6,8 @@ import android.os.Message;
 import com.qzy.tiantong.service.service.ITianTongServer;
 import com.qzy.tt.data.CallPhoneProtos;
 import com.qzy.tt.data.ChangePcmPlayerDbProtos;
+import com.qzy.tt.data.TtBeiDouStatuss;
+import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.probuf.lib.data.PrototocalTools;
@@ -58,6 +60,9 @@ public class TianTongHandler extends Handler {
                     break;
                 case PrototocalTools.IProtoServerIndex.request_gps_position:
                     mServer.getPhoneNettyManager().getmGpsManager().parseProtocalControl((TtPhonePositionProtos.TtPhonePosition) msg.obj);
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_open_beidou_usb:
+                    mServer.getPhoneNettyManager().getmTtUsbManager().parseUsbModel((TtOpenBeiDouProtos.TtOpenBeiDou) msg.obj);
                     break;
                 default:
                     break;

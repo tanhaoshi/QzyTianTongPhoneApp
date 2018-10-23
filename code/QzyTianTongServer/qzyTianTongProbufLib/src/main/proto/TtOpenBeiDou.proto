@@ -6,6 +6,7 @@ option java_package = "com.qzy.tt.data";            //生成java文件的包名
 option java_outer_classname = "TtOpenBeiDouProtos";  //生成的类名
 
 message TtOpenBeiDou{
-    bool request_status = 1; //请求状态
-    bool response_status = 2; //响应状态
+    bool isOpen = 1;
+    bool request_status = 2; //请求状态
+    bool response_status = 3; //响应状态
 }

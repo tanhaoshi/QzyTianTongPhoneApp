@@ -17,4 +17,6 @@ public class BootReceiver extends BroadcastReceiver {
         LogUtils.e("BootReceiver start tiantong service...");
         context.startService(new Intent(context.getApplicationContext(),TianTongService.class));
     }
+
+
 }

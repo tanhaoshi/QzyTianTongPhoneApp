@@ -18,7 +18,7 @@ public class PrototocalTools {
         int phone_audio = 106;
         int phone_send_sms = 108;
         int request_gps_position = 110;
-        int request_open_beidou = 112;
+        int request_open_beidou_usb = 112;
         int request_call_record = 114;
         int request_short_message = 116;
     }
@@ -30,7 +30,7 @@ public class PrototocalTools {
         int phone_send_sms_callback = 107;
         int tt_phone_battery = 109;
         int tt_phone_simcard = 111;
-        int tt_phone_beidoustatus = 113;
+        int tt_phone_beidoustatus_usb = 113;
         int tt_gps_position = 115;
         int tt_beidou_switch = 117;
         int tt_call_record = 119;

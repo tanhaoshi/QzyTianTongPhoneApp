@@ -13,6 +13,7 @@ import com.qzy.tiantong.service.gps.GpsManager;
 import com.qzy.tiantong.service.phone.PhoneClientManager;
 import com.qzy.tiantong.service.phone.SmsPhoneManager;
 import com.qzy.tiantong.service.phone.TtPhoneState;
+import com.qzy.tiantong.service.usb.TtUsbManager;
 import com.qzy.tiantong.service.utils.PhoneUtils;
 import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.CallPhoneStateProtos;
@@ -56,6 +57,8 @@ public class PhoneNettyManager {
 
     private GpsManager  mGpsManager;
 
+    private TtUsbManager mTtUsbManager;
+
     /**
      * 电量获取
      */
@@ -70,6 +73,7 @@ public class PhoneNettyManager {
 
         mSmsPhoneManager = new SmsPhoneManager(context, iOnSMSCallback);
         mGpsManager = new GpsManager(mContext,mNettyServerManager);
+        mTtUsbManager = new TtUsbManager(mContext,mNettyServerManager);
 
         EventBus.getDefault().register(this);
 
@@ -447,6 +451,16 @@ public class PhoneNettyManager {
     public GpsManager getmGpsManager() {
         return mGpsManager;
     }
+
+
+    /**
+     * 返回usb模式 切换类
+     * @return
+     */
+    public TtUsbManager getmTtUsbManager() {
+        return mTtUsbManager;
+    }
+
 
     /**
      * 是否控制信号灯

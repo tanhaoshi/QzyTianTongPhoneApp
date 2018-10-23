@@ -1,5 +1,6 @@
 package com.qzy.tiantong.service.gps;
 
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -9,8 +10,11 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.UserHandle;
+import android.provider.Settings;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.netty.NettyServerManager;
@@ -49,6 +53,8 @@ public class GpsManager {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(action_gps_result);
         mContext.registerReceiver(mReceiver, intentFilter);
+
+        openGPS(true);
 
         initLocationManager();
 
@@ -252,6 +258,21 @@ public class GpsManager {
         mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_gps_position, ttPhonePosition));
 
     }
+
+    //打开或者关闭gps
+    public void openGPS(boolean open) {
+        if (Build.VERSION.SDK_INT <19) {
+            Settings.Secure.setLocationProviderEnabled(mContext.getContentResolver(), LocationManager.GPS_PROVIDER, open);
+        }else{
+            if(!open){
+                Settings.Secure.putInt(mContext.getContentResolver(), Settings.Secure.LOCATION_MODE, android.provider.Settings.Secure.LOCATION_MODE_OFF);
+            }else{
+                Settings.Secure.putInt(mContext.getContentResolver(), Settings.Secure.LOCATION_MODE, android.provider.Settings.Secure.LOCATION_MODE_BATTERY_SAVING);
+            }
+        }
+    }
+
+
 
 
     public void free() {

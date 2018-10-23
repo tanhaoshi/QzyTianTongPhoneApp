@@ -6,6 +6,8 @@ import com.google.protobuf.GeneratedMessageV3;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tt.data.CallPhoneProtos;
 import com.qzy.tt.data.ChangePcmPlayerDbProtos;
+import com.qzy.tt.data.TtBeiDouStatuss;
+import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhoneAudioDataProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
@@ -79,6 +81,10 @@ public class CmdHandler {
                 case PrototocalTools.IProtoServerIndex.request_gps_position:
                     TtPhonePositionProtos.TtPhonePosition ttPhonePosition = TtPhonePositionProtos.TtPhonePosition.parseDelimitedFrom(inputStream);
                     senMsg(protoId,ttPhonePosition);
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_open_beidou_usb:
+                   TtOpenBeiDouProtos.TtOpenBeiDou ttOpenBeiDou = TtOpenBeiDouProtos.TtOpenBeiDou.parseDelimitedFrom(inputStream);
+                    senMsg(protoId,ttOpenBeiDou);
                     break;
             }
         }catch (Exception e){
