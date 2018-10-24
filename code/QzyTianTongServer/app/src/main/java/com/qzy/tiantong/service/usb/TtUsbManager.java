@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.annotation.Keep;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.netty.NettyServerManager;
@@ -11,6 +12,7 @@ import com.qzy.tiantong.service.utils.TtUpdateUtils;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.probuf.lib.data.PhoneCmd;
 import com.qzy.tt.probuf.lib.data.PrototocalTools;
+import com.qzy.usb.UsbTool;
 
 public class TtUsbManager {
 
@@ -42,29 +44,24 @@ public class TtUsbManager {
         }
 
         boolean isOpen = ttOpenBeiDou.getIsOpen();
-        LogUtils.e("isOpen = " + isOpen);
-        if (isOpen) {
-            boolean state = TtUpdateUtils.openTtUpdateMode();
-            sendUsbModelToPhoneClient();
-            return;
-        }
 
-        boolean state = TtUpdateUtils.closeTtUpdateMode();
-        sendUsbModelToPhoneClient();
+        boolean returnState = new UsbTool().switchMode(isOpen);
+
+        sendUsbModelToPhoneClient(returnState);
     }
 
 
-    public void sendUsbModelToPhoneClient() {
+    public void sendUsbModelToPhoneClient(boolean state) {
 
         if (mNettyServerManager == null) {
             LogUtils.e("mNettyServerManager is null ...");
             return;
         }
-
-        int mode = TtUpdateUtils.readTtUpdateMode();
+        LogUtils.e("send the message to the aplication layer  ");
+        //int mode = TtUpdateUtils.readTtUpdateMode();
         TtOpenBeiDouProtos.TtOpenBeiDou ttOpenBeiDou = TtOpenBeiDouProtos.TtOpenBeiDou.newBuilder()
-                .setIsOpen(mode == 1 ? true : false)
-                .setResponseStatus(true)
+                .setIsOpen(state)
+                .setResponseStatus(state)
                 .build();
         mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_phone_beidoustatus_usb, ttOpenBeiDou));
     }
