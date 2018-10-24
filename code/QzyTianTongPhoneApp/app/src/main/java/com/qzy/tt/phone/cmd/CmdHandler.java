@@ -104,7 +104,7 @@ public class CmdHandler {
                     TtPhoneSimCards.TtPhoneSimCard ttPhoneSimCard = TtPhoneSimCards.TtPhoneSimCard.parseDelimitedFrom(inputStream);
                     sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SIM_CARD,protoId,ttPhoneSimCard);
                     break;
-                case PrototocalTools.IProtoClientIndex.tt_phone_beidoustatus:
+                case PrototocalTools.IProtoClientIndex.tt_phone_beidoustatus_usb:
                     TtBeiDouStatuss.TtBeiDouStatus ttBeiDouStatus = TtBeiDouStatuss.TtBeiDouStatus.parseDelimitedFrom(inputStream);
                     sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_BEIDOU,protoId,ttBeiDouStatus);
                     break;

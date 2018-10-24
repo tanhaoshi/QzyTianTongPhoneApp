@@ -102,21 +102,23 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
     private void parseCallBack(Object o){
         PhoneCmd cmd = (PhoneCmd) o;
         CallPhoneBackProtos.CallPhoneBack callPhoneBack = (CallPhoneBackProtos.CallPhoneBack)cmd.getMessage();
-        KLog.i("reciver state is : "+callPhoneBack.getIsCalling());
         if(!callPhoneBack.getIsCalling()){
             Intent intent = new Intent(mContext, TellPhoneActivity.class);
             intent.putExtra("diapadNumber", phone);
             mContext.startActivity(intent);
         }else{
-            NToast.shortToast(mContext,"当前天通猫正被占用!");
+            NToast.shortToast(mContext,mContext.getResources().getString(R.string.loading));
         }
     }
 
-    public void getCallHistroy(){
+    public void getCallHistroy(final int offset,final int limit){
         Observable.create(new ObservableOnSubscribe<List<CallRecordDao>>() {
             @Override
             public void subscribe(ObservableEmitter<List<CallRecordDao>> e){
-                List<CallRecordDao> listDao = CallRecordManager.getInstance(mContext).queryCallRecordList();
+                List<CallRecordDao> callRecordDaos = CallRecordManager.getInstance(mContext).queryCallRecordList();
+                mView.get().getDaoListSize(callRecordDaos.size());
+                List<CallRecordDao> listDao = CallRecordManager.getInstance(mContext).limitCallRecordList(offset,limit);
+                mView.get().getListSize(listDao.size());
                 e.onNext(arrangementData(listDao));
             }
         })
@@ -130,13 +132,12 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
 
                 @Override
                 public void onNext(List<CallRecordDao> value) {
-                    mView.get().callRecordHistroy(value);
+                    mView.get().loadRefresh(value);
                     onComplete();
                 }
 
                 @Override
                 public void onError(Throwable e) {
-                    KLog.i("look at error : " +e.getMessage().toString());
                     mView.get().showError(e.getMessage().toString(),true);
                 }
 
@@ -145,6 +146,70 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
                     mView.get().hideProgress();
                 }
             });
+    }
+
+    public void getRefresh(final int offset,final int limit){
+        Observable.create(new ObservableOnSubscribe<List<CallRecordDao>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<CallRecordDao>> e){
+                List<CallRecordDao> listDao = CallRecordManager.getInstance(mContext).limitCallRecordList(offset,limit);
+                mView.get().getListSize(listDao.size());
+                e.onNext(arrangementData(listDao));
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<CallRecordDao>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(List<CallRecordDao> value) {
+                        mView.get().loadRefresh(value);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+    }
+
+    public void getLoadMore(final int offset, final int limit){
+        Observable.create(new ObservableOnSubscribe<List<CallRecordDao>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<CallRecordDao>> e){
+                List<CallRecordDao> listDao = CallRecordManager.getInstance(mContext).limitCallRecordList(offset,limit);
+                mView.get().getListSize(listDao.size());
+                e.onNext(arrangementData(listDao));
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<CallRecordDao>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(List<CallRecordDao> value) {
+                        mView.get().loadMore(value);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
     }
 
     public List<CallRecordDao> arrangementData(List<CallRecordDao> list){
@@ -174,6 +239,9 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
                 }
             }
         }
+        mView.get().getDateSize(mModelList.size() - list.size());
+        isYesterday = true;
+        isEarlier = true;
         return mModelList;
     }
 

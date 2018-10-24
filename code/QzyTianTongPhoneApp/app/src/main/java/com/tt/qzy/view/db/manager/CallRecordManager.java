@@ -56,6 +56,13 @@ public class CallRecordManager {
         DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
         DaoSession daoSession = daoMaster.newSession();
         CallRecordDaoDao callRecordDao = daoSession.getCallRecordDaoDao();
+//        callRecordDao.insertOrReplaceInTx(callRecordDaos);
         callRecordDao.insertInTx(callRecordDaos);
+    }
+
+    public List<CallRecordDao> limitCallRecordList(int offset,int limit){
+        CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
+        List<CallRecordDao> list = dao.queryBuilder().offset(offset).limit(limit).orderDesc().list();
+        return list;
     }
 }

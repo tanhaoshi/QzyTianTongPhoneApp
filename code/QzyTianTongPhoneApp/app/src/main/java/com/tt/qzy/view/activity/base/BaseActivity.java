@@ -17,7 +17,9 @@ import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.layout.BatteryView;
 import com.tt.qzy.view.presenter.activity.BaseActivityPresenter;
+import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NToast;
+import com.tt.qzy.view.utils.SPUtils;
 import com.tt.qzy.view.view.BaseMainView;
 import com.tt.qzy.view.view.base.BaseView;
 
@@ -117,6 +119,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
      */
     private void connectTianTongSuccess(){
         tt_status = true;
+        SPUtils.putShare(BaseActivity.this, Constans.TTM_STATUS,tt_status);
         img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nerwork));
         img4.setImageDrawable(getResources().getDrawable(R.drawable.phone_network));
     }
@@ -126,6 +129,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
      */
     private void connectTianTongFailed(){
         tt_status = false;
+        SPUtils.putShare(BaseActivity.this, Constans.TTM_STATUS,tt_status);
         img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonerwork));
         img4.setImageDrawable(getResources().getDrawable(R.drawable.phone_nonetwork));
     }
@@ -155,7 +159,6 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
 
     private void onBatteryInfoReceiver(int intLevel, int intScale) {
         int percent = intLevel * 100 / intScale;
-//        KLog.i("battery info is :"+percent);
         img1.setPower(percent);
     }
 
@@ -175,7 +178,6 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
      * @param intLevel
      */
     private void onTiantongInfoReceiver(int intLevel) {
-//        KLog.i("intLevel = " + intLevel);
         if (intLevel == 97) {
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
         } else if (intLevel == 98) {

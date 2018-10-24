@@ -178,7 +178,7 @@ public class SelectContactsActivity extends AppCompatActivity implements SelectC
     private void initProgress() {
         mHUD = KProgressHUD.create(this)
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-                .setDetailsLabel("加载中...")
+                .setDetailsLabel(getString(R.string.loading))
                 .setCancellable(true)
                 .setAnimationSpeed(2)
                 .setDimAmount(0.5f);

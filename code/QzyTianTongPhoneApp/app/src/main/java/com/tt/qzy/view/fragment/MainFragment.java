@@ -7,10 +7,13 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
+import com.qzy.tt.phone.cmd.CmdHandler;
+import com.socks.library.KLog;
 import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.SettingsActivity;
@@ -107,20 +110,20 @@ public class MainFragment extends Fragment implements MainFragmentView{
     }
 
     private void initListener(){
-//        main_location.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if(mainActivity.isConnectStatus()){
-//                    if(isChecked){
-//                        mPresneter.openTianTongBeidou(true);
-//                    }else{
-//                        mPresneter.openTianTongBeidou(false);
-//                    }
-//                }else{
-//                    NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
-//                }
-//            }
-//        });
+        main_location.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(mainActivity.isConnectStatus()){
+                    if(isChecked){
+                        mPresneter.requestGpsPosition(true);
+                    }else{
+                        mPresneter.requestGpsPosition(false);
+                    }
+                }else{
+                    NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
+                }
+            }
+        });
 //        sc_settin_testxinlv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 //            @Override
 //            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -191,12 +194,15 @@ public class MainFragment extends Fragment implements MainFragmentView{
 
     @Override
     public void getTtPhonePosition(TtPhonePositionProtos.TtPhonePosition ttPhonePosition) {
+        KLog.i("look over isOpen value is = " + ttPhonePosition.getIsOpen());
         if(ttPhonePosition.getResponseStatus()){
             main_latitude.setText(ttPhonePosition.getLatItude());
             main_longitude.setText(ttPhonePosition.getLongItude());
         }else{
             NToast.shortToast(getActivity(),getActivity().getString(R.string.TMT_gps_position_filed));
         }
+
+        main_location.setChecked(ttPhonePosition.getIsOpen());
     }
 
     @Override
@@ -230,6 +236,5 @@ public class MainFragment extends Fragment implements MainFragmentView{
 
     @Override
     public void loadData(boolean pullToRefresh) {
-        mPresneter.requestGpsPosition();
     }
 }

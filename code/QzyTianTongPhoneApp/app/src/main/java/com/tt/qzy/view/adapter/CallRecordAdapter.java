@@ -36,6 +36,7 @@ public class CallRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void setData(List<CallRecordDao> list){
+        mModelList.clear();
         this.mModelList = list;
         notifyDataSetChanged();
     }

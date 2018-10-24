@@ -199,7 +199,7 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
     private void initProgress(){
         mHUD = KProgressHUD.create(getActivity())
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-                .setDetailsLabel("加载中...")
+                .setDetailsLabel(getString(R.string.loading))
                 .setCancellable(true)
                 .setAnimationSpeed(2)
                 .setDimAmount(0.5f);

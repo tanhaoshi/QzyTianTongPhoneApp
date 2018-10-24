@@ -1,8 +1,6 @@
 package com.tt.qzy.view.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,12 +12,12 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
 import com.socks.library.KLog;
 import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
-import com.tt.qzy.view.activity.ContactsActivity;
 import com.tt.qzy.view.adapter.CallRecordAdapter;
 import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.layout.PopWindow;
@@ -28,8 +26,6 @@ import com.tt.qzy.view.layout.dialpad.MyInputPwdUtil;
 import com.tt.qzy.view.presenter.fragment.AidlPhoneFragmentPersenter;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.view.CallRecordView;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +45,8 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     ImageView base_tv_toolbar_right;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
+    @BindView(R.id.refreshLayout)
+    RefreshLayout mRefreshLayout;
 
     private MyInputPwdUtil myInputPwdUtil;
     private PopWindow mPopWindow;
@@ -57,6 +55,10 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
 
     private AidlPhoneFragmentPersenter mPersenter;
     private KProgressHUD mHUD;
+
+    private int offset = 0;
+    private int daoListSize = 0;
+    private int dateSize = 0;
 
     public AidlPhoneFragment() {
     }
@@ -89,7 +91,6 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     }
 
     private void initAdapter(){
-        mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         mCallRecordAdapter = new CallRecordAdapter(mModelList,getActivity());
         mCallRecordAdapter.setOnItemClickListener(this);
@@ -104,6 +105,30 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
         myInputPwdUtil.getMyInputDialogBuilder().setAnimStyle(R.style.dialog_anim);
         myInputPwdUtil.setListener(this);
         initProgress();
+        mRefreshLayout.setOnRefreshLoadmoreListener(new OnRefreshLoadmoreListener() {
+            @Override
+            public void onLoadmore(RefreshLayout refreshlayout) {
+                int count = daoListSize - offset;
+                if(count > 0){
+                    if(count < 20){
+                        mPersenter.getLoadMore(0,offset+count);
+                        refreshlayout.finishLoadmore(200);
+                    }else{
+                        mPersenter.getLoadMore(0,offset+20);
+                        refreshlayout.finishLoadmore(200);
+                    }
+                }else if(count == 0){
+                    NToast.shortToast(getActivity(),getString(R.string.TMT_dataisnull));
+                    refreshlayout.finishLoadmore(200);
+                }
+            }
+
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                mPersenter.getRefresh(0,offset);
+                refreshlayout.finishRefresh(200);
+            }
+        });
     }
 
     @OnClick({R.id.fab,R.id.base_tv_toolbar_right})
@@ -141,34 +166,28 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
 
     @Override
     public void inputString(final String diapadNumber) {
-        //拨打电话
         MainActivity mainActivity = (MainActivity) getActivity();
-        KLog.i("tt_call_status is = " + mainActivity.isCallStatus());
         if(!mainActivity.isCallStatus()){
             mPersenter.dialPhone(diapadNumber);
         }else{
-            NToast.shortToast(getActivity(),"天通猫正被占用!");
+            NToast.shortToast(getActivity(),getString(R.string.TMT_be_occupied));
         }
     }
 
     @Override
     public void onClick(int position,final String diapadNumber) {
-//        Intent intent = new Intent(getActivity(), ContactsActivity.class);
-//        intent.putExtra("phoneNumber",mModelList.get(position).getPhoneNumber());
-//        startActivity(intent);
         MainActivity mainActivity = (MainActivity) getActivity();
-        KLog.i("tt_call_status is = " + mainActivity.isCallStatus());
         if(!mainActivity.isCallStatus()){
             mPersenter.dialPhone(diapadNumber);
         }else{
-            NToast.shortToast(getActivity(),"天通猫正被占用!");
+            NToast.shortToast(getActivity(),getString(R.string.TMT_be_occupied));
         }
     }
 
     private void initProgress(){
         mHUD = KProgressHUD.create(getActivity())
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-                .setDetailsLabel("加载中...")
+                .setDetailsLabel(getString(R.string.TMT_loading))
                 .setCancellable(true)
                 .setAnimationSpeed(2)
                 .setDimAmount(0.5f);
@@ -176,11 +195,33 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
 
     @Override
     public void onLongClick(int position) {
-
     }
 
     @Override
-    public void callRecordHistroy(List<CallRecordDao> list) {
+    public void getListSize(int listSize) {
+        offset = listSize;
+    }
+
+    @Override
+    public void getDaoListSize(int daoListSize) {
+        this.daoListSize = daoListSize;
+    }
+
+    @Override
+    public void getDateSize(int dateSize) {
+        this.dateSize = dateSize;
+    }
+
+    @Override
+    public void loadRefresh(List<CallRecordDao> list) {
+        mModelList.clear();
+        mModelList = list;
+        mCallRecordAdapter.setData(mModelList);
+    }
+
+    @Override
+    public void loadMore(List<CallRecordDao> list) {
+        mModelList.clear();
         mModelList = list;
         mCallRecordAdapter.setData(mModelList);
     }
@@ -204,7 +245,7 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     @Override
     public void loadData(boolean pullToRefresh) {
         showProgress(true);
-        mPersenter.getCallHistroy();
+        mPersenter.getCallHistroy(0,20);
     }
 
     @Override

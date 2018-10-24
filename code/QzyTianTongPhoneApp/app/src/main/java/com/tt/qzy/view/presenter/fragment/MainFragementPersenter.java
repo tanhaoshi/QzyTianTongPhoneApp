@@ -100,16 +100,9 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
     /**
      * 请求gps准确位置
      */
-    public void requestGpsPosition(){
-        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_ACCURACY_POSITION));
-    }
-
-    /**
-     * 要求天通猫连接北斗卫星开关
-     */
-    public void openTianTongBeidou(boolean isSwitch){
-        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_BEIDOU_SWITCH,new
-                TtBeidouOpenBean(isSwitch)));
+    public void requestGpsPosition(boolean isSwitch){
+        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_ACCURACY_POSITION,
+                new TtBeidouOpenBean(isSwitch)));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

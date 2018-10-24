@@ -10,8 +10,6 @@
 
     <include layout="@layout/toobar_layout"/>
 
-    <include layout="@layout/line_dimens"/>
-
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

@@ -1,6 +1,8 @@
 package com.qzy.tt.phone.netty;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.UserHandle;
 
 import com.qzy.data.PhoneCmd;
 import com.qzy.data.PrototocalTools;
@@ -72,6 +74,7 @@ public class PhoneNettyManager {
                 .setPhonecommand(CallPhoneProtos.CallPhone.PhoneCommand.CALL)
                 .build();
         sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.call_phone, callPhone));
+
     }
 
     /**
@@ -130,22 +133,24 @@ public class PhoneNettyManager {
     /**
      * 请求gps准确位置
      */
-    private void requestGpsPosition(){
+    private void requestGpsPosition(Object o){
+        TtBeidouOpenBean ttBeidouOpenBean = (TtBeidouOpenBean)o;
         TtPhonePositionProtos.TtPhonePosition ttPhonePosition = TtPhonePositionProtos.TtPhonePosition.newBuilder()
-                .setRequestStatus(true)
+                .setIsOpen(ttBeidouOpenBean.isSwitch())
                 .build();
         sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_gps_position,ttPhonePosition));
     }
 
     /**
-     * 打开或关闭天通北斗卫星
+     * 打开usb升级
      */
     private void openBeidou(Object o){
         TtBeidouOpenBean ttBeidouOpenBean = (TtBeidouOpenBean)o;
         TtOpenBeiDouProtos.TtOpenBeiDou ttOpenBeiDou = TtOpenBeiDouProtos.TtOpenBeiDou.newBuilder()
-                .setRequestStatus(ttBeidouOpenBean.isSwitch())
+                .setIsOpen(ttBeidouOpenBean.isSwitch())
                 .build();
-        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_open_beidou,ttOpenBeiDou));
+        KLog.i("look over open status = "+ttBeidouOpenBean.isSwitch());
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_open_beidou_usb,ttOpenBeiDou));
     }
 
     /**
@@ -219,7 +224,7 @@ public class PhoneNettyManager {
                 sendSms(event.getObject());
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_ACCURACY_POSITION:
-                requestGpsPosition();
+                requestGpsPosition(event.getObject());
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_BEIDOU_SWITCH:
                 openBeidou(event.getObject());

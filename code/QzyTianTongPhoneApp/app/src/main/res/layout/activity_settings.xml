@@ -7,6 +7,8 @@
     android:orientation="vertical"
     tools:context="com.tt.qzy.view.activity.SettingsActivity">
 
+    <include layout="@layout/status_bar"/>
+
     <include layout="@layout/left_toobar_layout"/>
 
     <TextView
@@ -74,5 +76,37 @@
         android:paddingRight="17dp"
         android:text="@string/TMT_about"
         android:drawableLeft="@drawable/guanyu"/>
+
+    <TextView
+        android:layout_marginLeft="56dp"
+        android:background="@color/line_bg"
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_height="48dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:drawablePadding="20dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:layout_weight="1"
+            android:text="@string/TMT_location"
+            android:drawableLeft="@drawable/usb"/>
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/usb_swtich"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="12dp"
+            android:theme="@style/SwitchComputer"
+            />
+
+    </LinearLayout>
 
 </LinearLayout>

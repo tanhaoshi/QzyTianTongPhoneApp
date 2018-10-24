@@ -4,36 +4,73 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.qzy.eventbus.IMessageEventBustType;
+import com.qzy.eventbus.MessageEventBus;
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
+import com.tt.qzy.view.activity.base.BaseActivity;
+import com.tt.qzy.view.bean.TtBeidouOpenBean;
+import com.tt.qzy.view.presenter.activity.SettingsPresenter;
+import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NToast;
+import com.tt.qzy.view.utils.SPUtils;
+import com.tt.qzy.view.view.SettingsView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends BaseActivity<SettingsView> implements SettingsView{
 
     private AlertDialog dialog;
 
     @BindView(R.id.setting_map)
     TextView setting_map;
+    @BindView(R.id.usb_swtich)
+    SwitchCompat mSwitchCompat;
+
+    private SettingsPresenter mPresenter;
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-        ButterKnife.bind(this);
-        initView();
+    public int getContentView() {
+        return R.layout.activity_settings;
     }
 
-    private void initView() {
+    public void initView() {
+        ButterKnife.bind(this);
+        mPresenter = new SettingsPresenter(this);
+        mPresenter.onBindView(this);
+        mSwitchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if((Boolean) SPUtils.getShare(SettingsActivity.this, Constans.TTM_STATUS,false)){
+                    if(isChecked){
+                        mPresenter.openTianTongBeidou(true);
+                    }else{
+                        mPresenter.openTianTongBeidou(false);
+                    }
+                }else{
+                    NToast.shortToast(SettingsActivity.this,getString(R.string.TMT_connect_tiantong_please));
+                }
+            }
+        });
+    }
+
+    @Override
+    public void initData() {
+
     }
 
     @OnClick({R.id.settings_sos,R.id.setting_map,R.id.setting_about,R.id.main_quantity})
@@ -104,5 +141,36 @@ public class SettingsActivity extends AppCompatActivity {
         editText.setFocusableInTouchMode(true);
         editText.requestFocus();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+    }
+
+    @Override
+    public void usbSwtich(boolean isOpen) {
+
+    }
+
+    @Override
+    public void showProgress(boolean isTrue) {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
+    public void showError(String msg, boolean pullToRefresh) {
+
+    }
+
+    @Override
+    public void loadData(boolean pullToRefresh) {
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mPresenter.release();
     }
 }
