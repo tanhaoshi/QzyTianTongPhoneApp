@@ -96,7 +96,7 @@
             android:gravity="center_vertical"
             android:paddingLeft="20dp"
             android:layout_weight="1"
-            android:text="@string/TMT_location"
+            android:text="@string/TMT_usb_swtich"
             android:drawableLeft="@drawable/usb"/>
 
         <android.support.v7.widget.SwitchCompat

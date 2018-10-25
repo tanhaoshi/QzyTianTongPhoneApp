@@ -94,4 +94,5 @@
     
     <string name="TMT_be_occupied">天通猫已被占用!</string>
     <string name="TMT_loading">加载中...</string>
+    <string name="TMT_usb_swtich">USB切换</string>
 </resources>
