@@ -77,7 +77,7 @@ public class PhoneNettyManager {
 
         EventBus.getDefault().register(this);
 
-        //initSignal();
+        initSignal();
 
         initSendThread();
 
@@ -282,7 +282,7 @@ public class PhoneNettyManager {
      */
     public void sendTtCallPhoneSignalToClient(int value) {
         currentSignalValue = value;
-        //controlSignal(value);
+        controlSignal(value);
         sendSignalToPhoneClient(value);
     }
 
