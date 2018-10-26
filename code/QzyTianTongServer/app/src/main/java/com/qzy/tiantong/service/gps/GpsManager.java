@@ -1,5 +1,6 @@
 package com.qzy.tiantong.service.gps;
 
+import android.app.KeyguardManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -18,6 +19,7 @@ import android.provider.Settings;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.netty.NettyServerManager;
+import com.qzy.tiantong.service.utils.GpsUtils;
 import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.probuf.lib.data.PhoneCmd;
 import com.qzy.tt.probuf.lib.data.PrototocalTools;
@@ -126,13 +128,22 @@ public class GpsManager {
             return;
         }
 
+        LogUtils.e("parse pro tocalcontrol status ,,,");
+
         if (ttPhonePosition.getIsOpen()) {
+
             openGps();
+
+            GpsUtils.openGPS(mContext,Settings.Secure.LOCATION_MODE_OFF,Settings.Secure.LOCATION_MODE_HIGH_ACCURACY);
 
             sendLoactionToPhoneClient(mCurrenLocation);
 
         } else {
+
             closeGps();
+
+            GpsUtils.closeGPS(mContext,Settings.Secure.LOCATION_MODE_HIGH_ACCURACY,Settings.Secure.LOCATION_MODE_OFF);
+
         }
 
     }

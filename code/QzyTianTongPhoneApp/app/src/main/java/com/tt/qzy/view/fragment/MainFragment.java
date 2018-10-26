@@ -202,7 +202,6 @@ public class MainFragment extends Fragment implements MainFragmentView{
             NToast.shortToast(getActivity(),getActivity().getString(R.string.TMT_gps_position_filed));
         }
 
-        main_location.setChecked(ttPhonePosition.getIsOpen());
     }
 
     @Override

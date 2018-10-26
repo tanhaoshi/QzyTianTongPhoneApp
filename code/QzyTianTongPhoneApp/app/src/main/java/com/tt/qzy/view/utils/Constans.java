@@ -17,4 +17,6 @@ public interface Constans {
     String SHORT_MESSAGE_TYPE = "type";
 
     String TTM_STATUS = "ttm_status";
+
+    String BASE_URL = "";
 }
