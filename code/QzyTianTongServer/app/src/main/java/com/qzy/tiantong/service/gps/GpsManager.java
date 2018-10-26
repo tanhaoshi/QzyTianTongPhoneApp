@@ -144,6 +144,7 @@ public class GpsManager {
     public void openGps() {
         Intent intent = new Intent(action_gps_open);
         mContext.sendBroadcastAsUser(intent, getUserHandleALL());
+        LogUtils.d("open gps .....");
     }
 
     private UserHandle getUserHandleALL() {
@@ -177,6 +178,7 @@ public class GpsManager {
     public void closeGps() {
         Intent intent = new Intent(action_gps_close);
         mContext.sendBroadcastAsUser(intent, getUserHandleALL());
+        LogUtils.d("close gps .....");
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
