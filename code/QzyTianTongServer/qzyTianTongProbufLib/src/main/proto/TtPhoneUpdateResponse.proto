@@ -1,0 +1,14 @@
+syntax = "proto3"; // 表明使用protobuf的编译器最新的版本为v3
+
+package phonedata; // proto自己的包  类似于命名空间
+
+option java_package = "com.qzy.tt.data"; //生成java文件的包名
+option java_outer_classname = "TtPhoneUpdateResponseProtos"; //生成的类名
+
+message UpdateResponse {
+    string ip = 1;
+    bool isUpdate = 2;         //是否升级标志
+    bool isSendFileFinish = 3; //传送文件完成标注
+    bool isUpdateFinish = 4;  //升级完成标志
+}
+
