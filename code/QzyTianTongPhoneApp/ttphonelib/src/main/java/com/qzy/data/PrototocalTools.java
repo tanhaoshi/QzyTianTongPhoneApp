@@ -20,6 +20,8 @@ public class PrototocalTools {
         int request_open_beidou_usb = 112;
         int request_call_record = 114;
         int request_short_message = 116;
+        int request_update_phone_aapinfo = 118;
+        int request_update_send_zip = 120;
     }
 
     public interface IProtoClientIndex{
@@ -35,6 +37,8 @@ public class PrototocalTools {
         int tt_short_message = 121;
         int tt_receiver_short_message=123;
         int tt_call_phone_back = 125;
+        int response_update_phone_aapinfo = 127;
+        int response_update_send_zip = 129;
     }
 
     public static boolean readToFour0x5aHeaderByte(ByteBufInputStream stream) throws IOException {
