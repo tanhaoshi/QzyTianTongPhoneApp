@@ -43,4 +43,12 @@ public interface IMessageEventBustType {
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_CALL_STATE = "event_bus_type_connect_tiantong_response_call_state";
     // 不被占用情况下打电话
     String EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE = "event_bus_type_connect_tiantong_call_state";
+    // 检查天通猫服务端APP版本是否更新
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_APP_VERSION = "event_bus_type_connect_tiantong_request_server_app_version";
+    // 天通猫服务端APP返回是否更新
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG__RESPONSE_SERVER_APP_VERSION = "event_bus_type_connect_tiantong_response_server_app_version";
+    // 开始上传文件
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_UPLOAD_APP = "event_bus_type_connect_tiantong_request_server_upload_app";
+    // 完成下载
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG__RESPONSE_SERVER_UPLOAD_FINSH = "event_bus_type_connect_tiantong_response_server_upload_finsh";
 }

@@ -19,4 +19,11 @@ public interface Constans {
     String TTM_STATUS = "ttm_status";
 
     String BASE_URL = "";
+
+    String IP = "192.168.43.1";
+    int UPLOAD_PORT = 9998;
+    int PORT = 9999;
+
+    String SERVER_APP_VERSION = "3";
+
 }

@@ -1,6 +1,5 @@
 package com.tt.qzy.view.activity.base;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -14,11 +13,9 @@ import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.phone.common.CommonData;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
-import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.layout.BatteryView;
 import com.tt.qzy.view.presenter.activity.BaseActivityPresenter;
 import com.tt.qzy.view.utils.Constans;
-import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.SPUtils;
 import com.tt.qzy.view.view.BaseMainView;
 import com.tt.qzy.view.view.base.BaseView;

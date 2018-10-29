@@ -12,7 +12,6 @@ import android.widget.Button;
 
 
 import com.qzy.tt.phone.service.TtPhoneService;
-import com.tencent.bugly.beta.Beta;
 import com.tt.qzy.view.activity.base.BaseActivity;
 import com.tt.qzy.view.fragment.AidlPhoneFragment;
 import com.tt.qzy.view.fragment.MailListFragment;
@@ -56,7 +55,6 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
 
     @Override
     public void initView() {
-        Beta.checkUpgrade(false,false);
         showMainFragment();
         remind(button,"12");
     }

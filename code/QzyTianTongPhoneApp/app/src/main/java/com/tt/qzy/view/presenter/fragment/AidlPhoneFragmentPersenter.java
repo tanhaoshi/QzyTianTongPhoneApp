@@ -87,7 +87,6 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE:
-//                parseCallBack(event.getObject());
                 Intent intent = new Intent(mContext, TellPhoneActivity.class);
                 intent.putExtra("diapadNumber", phone);
                 mContext.startActivity(intent);

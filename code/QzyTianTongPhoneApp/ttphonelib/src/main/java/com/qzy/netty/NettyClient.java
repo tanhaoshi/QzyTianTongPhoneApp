@@ -43,7 +43,7 @@ public class NettyClient {
     /**
      * 连接服务
      */
-    public void starConnect(){
+    public void starConnect(final int port, final String ip){
         mThread =  new Thread(new Runnable() {
             @Override
             public void run() {
@@ -60,7 +60,7 @@ public class NettyClient {
                     // 指定EventLoopGroup
                     bootstrap.group(groupConnected);
                     // 连接到目标IP的8000端口的服务端
-                    Channel channel = bootstrap.connect(new InetSocketAddress(IP, Port)).sync().channel();
+                    Channel channel = bootstrap.connect(new InetSocketAddress(ip, port)).sync().channel();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

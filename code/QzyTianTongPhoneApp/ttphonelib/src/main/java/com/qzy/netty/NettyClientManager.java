@@ -24,14 +24,18 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
     private Thread mReconnectedThread;
 
     private boolean isConnected = false;
+    private String ip;
+    private int port;
 
     public NettyClientManager(INettyListener listener){
         iNettyListener = listener;
         mNettyClent = new NettyClient(this);
     }
 
-    public void startConnect(){
-        mNettyClent.starConnect();
+    public void startConnect(int port , String ip){
+        this.ip = ip;
+        this.port = port;
+        mNettyClent.starConnect(port,ip);
     }
 
 
@@ -48,7 +52,7 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
         if(isConnected){
             stopReconnected();
         }else {
-            startReconnected();
+            startReconnected(port,ip);
         }
         if(iNettyListener != null){
             if(state) {
@@ -60,7 +64,7 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
     }
 
 
-    private void startReconnected(){
+    private void startReconnected(final int port,final String ip){
         isConnected = false;
         if(mReconnectedThread == null) {
             mReconnectedThread = new Thread(new Runnable() {
@@ -68,7 +72,7 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
                 public void run() {
                     while (!isConnected){
                         try{
-                            startConnect();
+                            startConnect(port,ip);
                             Thread.sleep(2000);
                         }catch (Exception e){
                             e.printStackTrace();

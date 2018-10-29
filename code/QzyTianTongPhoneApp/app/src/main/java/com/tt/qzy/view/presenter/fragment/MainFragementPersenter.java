@@ -3,6 +3,7 @@ package com.tt.qzy.view.presenter.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.net.wifi.WifiManager;
 import android.text.TextUtils;
 
@@ -10,20 +11,22 @@ import com.qzy.data.PhoneCmd;
 import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
-import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
-import com.qzy.tt.data.TtPhoneBatteryProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
-import com.qzy.tt.data.TtPhoneSignalProtos;
-import com.qzy.tt.data.TtPhoneSmsProtos;
+import com.qzy.tt.data.TtPhoneUpdateResponseProtos;
 import com.qzy.tt.phone.common.CommonData;
+import com.qzy.utils.IPUtil;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.activity.UserEditorsActivity;
+import com.tt.qzy.view.bean.AppInfoModel;
+import com.tt.qzy.view.bean.ServerPortIp;
 import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
+import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.Constans;
+import com.tt.qzy.view.utils.MD5Utils;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.NetworkUtil;
 import com.tt.qzy.view.view.MainFragmentView;
@@ -32,7 +35,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.List;
+import java.io.IOException;
+
 
 /**
  * Created by yj.zhang on 2018/9/17.
@@ -94,7 +98,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
             return;
         }
 
-        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG));
+        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));
     }
 
     /**
@@ -103,6 +107,20 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
     public void requestGpsPosition(boolean isSwitch){
         EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_ACCURACY_POSITION,
                 new TtBeidouOpenBean(isSwitch)));
+    }
+
+    /**
+     * 检查天通猫服务端APP版本是否更新
+     */
+    public void requestServerVersion(){
+        AssetManager assetManager = mContext.getAssets();
+        try {
+            EventBus.getDefault().post(new MessageEventBus((IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_APP_VERSION),
+                    new AppInfoModel(IPUtil.getLocalIPAddress(mContext), String.valueOf(AppUtils.getVersionCode(mContext)),Constans.SERVER_APP_VERSION,
+                            MD5Utils.getFileMD5(assetManager.open("tiantong_update.zip")))));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -116,10 +134,48 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SUCCESS:
                 mView.get().updateConnectedState(true);
+                requestServerVersion();
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_FAILED:
                 mView.get().updateConnectedState(false);
                 break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__RESPONSE_SERVER_APP_VERSION:
+                parseServerAppVersion(event.getObject());
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__RESPONSE_SERVER_UPLOAD_FINSH:
+                parseAppUploadFinsh(event.getObject());
+                break;
+        }
+    }
+
+    /**
+     * 关闭天通猫链接
+     */
+    private void parseAppUploadFinsh(Object o){
+        PhoneCmd cmd = (PhoneCmd)o;
+        TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse)cmd.getMessage();
+        if(updateResponse.getIsUpdateFinish()){
+            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_DISCONNECT_TIANTONG));
+        }else{
+            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.PORT)));
+        }
+    }
+
+    /**
+     * 返回天通猫服务端APP是否需要更新
+     */
+    private void parseServerAppVersion(Object o){
+        PhoneCmd cmd = (PhoneCmd)o;
+        TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse)cmd.getMessage();
+        KLog.i(" look over logcat println ... ");
+        if(updateResponse.getIsUpdate()){
+            //关闭前一个链接
+//            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_DISCONNECT_TIANTONG));
+            //开启一个新链接
+            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_UPLOAD_APP,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));
+        }else{
+            //链接我们正常端口
+            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.PORT)));
         }
     }
 
