@@ -11,9 +11,10 @@ import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhoneAudioDataProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
+import com.qzy.tt.data.TtPhoneUpdateAppInfoProtos;
+import com.qzy.tt.data.TtPhoneUpdateSendFileProtos;
 import com.qzy.tt.probuf.lib.data.PhoneAudioCmd;
 import com.qzy.tt.probuf.lib.data.PrototocalTools;
-
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -23,11 +24,11 @@ import io.netty.buffer.ByteBufInputStream;
  * Created by yj.zhang on 2018/8/3/003.
  */
 
-public class CmdHandler implements ICmdHandler {
+public class CmdHandlerUpdate implements ICmdHandler {
 
-    private TianTongHandler mHandler;
+    private TianTongHandlerUpdate mHandler;
 
-    public CmdHandler(TianTongHandler handler) {
+    public CmdHandlerUpdate(TianTongHandlerUpdate handler) {
         mHandler = handler;
     }
 
@@ -52,6 +53,7 @@ public class CmdHandler implements ICmdHandler {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
 
@@ -65,30 +67,13 @@ public class CmdHandler implements ICmdHandler {
     public void handProcessCmd(int protoId, ByteBufInputStream inputStream) {
         try {
             switch (protoId) {
-                case PrototocalTools.IProtoServerIndex.call_phone:
-                    CallPhoneProtos.CallPhone callPhone = CallPhoneProtos.CallPhone.parseDelimitedFrom(inputStream);
-                    senMsg(protoId, callPhone);
+                case PrototocalTools.IProtoServerIndex.request_update_phone_aapinfo:
+                    TtPhoneUpdateAppInfoProtos.UpdateAppInfo updateAppInfo = TtPhoneUpdateAppInfoProtos.UpdateAppInfo.parseDelimitedFrom(inputStream);
+                    senMsg(protoId,updateAppInfo);
                     break;
-                case PrototocalTools.IProtoServerIndex.chang_pcmplayer_db:
-                    ChangePcmPlayerDbProtos.ChangePcmPlayerDb changePcmPlayerDb = ChangePcmPlayerDbProtos.ChangePcmPlayerDb.parseDelimitedFrom(inputStream);
-                    senMsg(protoId, changePcmPlayerDb);
-                    break;
-                case PrototocalTools.IProtoServerIndex.phone_audio:
-                    TtPhoneAudioDataProtos.PhoneAudioData audioData = TtPhoneAudioDataProtos.PhoneAudioData.parseDelimitedFrom(inputStream);
-                    senAudioData(protoId, audioData);
-                    break;
-                case PrototocalTools.IProtoServerIndex.phone_send_sms:
-                    TtPhoneSmsProtos.TtPhoneSms ttPhoneSms = TtPhoneSmsProtos.TtPhoneSms.parseDelimitedFrom(inputStream);
-                    senMsg(protoId, ttPhoneSms);
-                    break;
-
-                case PrototocalTools.IProtoServerIndex.request_gps_position:
-                    TtPhonePositionProtos.TtPhonePosition ttPhonePosition = TtPhonePositionProtos.TtPhonePosition.parseDelimitedFrom(inputStream);
-                    senMsg(protoId, ttPhonePosition);
-                    break;
-                case PrototocalTools.IProtoServerIndex.request_open_beidou_usb:
-                    TtOpenBeiDouProtos.TtOpenBeiDou ttOpenBeiDou = TtOpenBeiDouProtos.TtOpenBeiDou.parseDelimitedFrom(inputStream);
-                    senMsg(protoId, ttOpenBeiDou);
+                case PrototocalTools.IProtoServerIndex.request_update_send_zip:
+                    TtPhoneUpdateSendFileProtos.UpdateSendFile updateSendFile = TtPhoneUpdateSendFileProtos.UpdateSendFile.parseDelimitedFrom(inputStream);
+                    senMsg(protoId,updateSendFile);
                     break;
                 default:
                     break;
@@ -107,8 +92,5 @@ public class CmdHandler implements ICmdHandler {
         mHandler.sendMessage(msg);
     }
 
-    private void senAudioData(int protoId, GeneratedMessageV3 messageV3) {
-        EventBus.getDefault().post(PhoneAudioCmd.getPhoneAudioCmd(protoId, messageV3));
-    }
 
 }

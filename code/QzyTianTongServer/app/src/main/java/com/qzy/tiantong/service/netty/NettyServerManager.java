@@ -66,9 +66,9 @@ public class NettyServerManager implements NettyServer.IServerListener {
     /**
      * 开启netty服务
      */
-    public void startNettyServer() {
+    public void startNettyServer(int port) {
         if (mNettyServer != null) {
-            mNettyServer.startServer();
+            mNettyServer.startServer(port);
         }
     }
 

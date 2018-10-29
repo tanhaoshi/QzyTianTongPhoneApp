@@ -146,7 +146,7 @@ public class TianTongServiceManager implements ITianTongServer {
 
             }
         });
-        mNettyServerManager.startNettyServer();
+        mNettyServerManager.startNettyServer(9999);
     }
 
 
