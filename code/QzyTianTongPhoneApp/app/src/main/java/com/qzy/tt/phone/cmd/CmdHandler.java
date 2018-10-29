@@ -27,6 +27,7 @@ import com.socks.library.KLog;
 import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.activity.TellPhoneIncomingActivity;
 import com.tt.qzy.view.presenter.manager.SyncManager;
+import com.tt.qzy.view.utils.RingToneUtils;
 
 
 import io.netty.buffer.ByteBufInputStream;
@@ -96,6 +97,7 @@ public class CmdHandler {
                     break;
                 case PrototocalTools.IProtoClientIndex.phone_send_sms_callback:
                     TtPhoneSmsProtos.TtPhoneSms ttPhoneSms = TtPhoneSmsProtos.TtPhoneSms.parseDelimitedFrom(inputStream);
+                    startSystemRingTone(ttPhoneSms);
                     sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS_STATE,protoId, ttPhoneSms);
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_phone_battery:
@@ -168,6 +170,15 @@ public class CmdHandler {
      */
     public void resetPhoneState(){
         currentPhoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL;
+    }
+
+    /**
+     *收到短信播放系统铃声
+     */
+    private void startSystemRingTone(TtPhoneSmsProtos.TtPhoneSms ttPhoneSms){
+       if(ttPhoneSms.getIsSendSuccess()){
+           RingToneUtils.playRingtone(context);
+       }
     }
 
 }

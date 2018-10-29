@@ -46,6 +46,7 @@
     <string name="TMT_text">[中国平安]倒计时!“29元深圳政府重疾险个人”,,,,</string>
     <string name="TMT_delete">删除</string>
     <string name="TMT_delete_all">删除全部</string>
+    <string name="TMT_delete_succeed">删除成功!</string>
     <string name="TMT_email">邮箱</string>
     <string name="TMT_QQ">QQ</string>
     <string name="TMT_loding_more">查看更多通话记录</string>
@@ -78,9 +79,8 @@
     <string name="TMT_save_success">保存成功!</string>
     <string name="TMT_remind">请先去完成SOS设置!</string>
     <string name="TMT_dataisnull">没有更多的数据了!</string>
-
     <!-- 连接成功状态下 -->
-    <string name="TMT_connect_sussces">默认用户</string>
+    <string name="TMT_connect_sussces">已连接</string>
     <string name="TMT_connect_tiantong_please">请连接天通</string>
     <string name="TMT_connect_sussces_notice">已连接天通</string>
     <string name="TMT_dial_number_notmull">电话号码不能为空</string>

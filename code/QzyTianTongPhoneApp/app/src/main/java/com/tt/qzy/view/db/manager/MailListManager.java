@@ -56,4 +56,11 @@ public class MailListManager {
         MailListDaoDao mailListDaoDao = daoSession.getMailListDaoDao();
         mailListDaoDao.insert(mailListDao);
     }
+
+    public void deleteMailContacts(MailListDao dao , Context context){
+        DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
+        DaoSession daoSession = daoMaster.newSession();
+        MailListDaoDao mailListDaoDao = daoSession.getMailListDaoDao();
+        mailListDaoDao.delete(dao);
+    }
 }

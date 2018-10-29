@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.AddContactsActivity;
 import com.tt.qzy.view.adapter.SortAdapter;
@@ -45,7 +47,6 @@ public class MailListFragment extends Fragment implements PopWindow.OnDismissLis
     ImageView base_iv_back;
     @BindView(R.id.base_tv_toolbar_right)
     ImageView base_tv_toolbar_right;
-
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R.id.dialog)
@@ -54,6 +55,8 @@ public class MailListFragment extends Fragment implements PopWindow.OnDismissLis
     SideBar mSideBar;
     @BindView(R.id.custom_input)
     ClearEditText mClearEditText;
+    @BindView(R.id.refreshLayout)
+    RefreshLayout mRefreshLayout;
 
     private List<MallListModel> listModels = new ArrayList<>();
     private PinyinComparator pinyinComparator;
@@ -118,6 +121,15 @@ public class MailListFragment extends Fragment implements PopWindow.OnDismissLis
             public void afterTextChanged(Editable s) {
             }
         });
+
+        mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                mPresenter.getMallList(getActivity());
+                mRefreshLayout.finishRefresh(200);
+            }
+        });
+
         initProgress();
     }
 
@@ -208,7 +220,7 @@ public class MailListFragment extends Fragment implements PopWindow.OnDismissLis
 
     private void initProgress() {
         mHUD = KProgressHUD.create(getActivity())
-                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setStyle(KProgressHUD.Style.PIE_DETERMINATE)
                 .setDetailsLabel(getString(R.string.loading))
                 .setCancellable(true)
                 .setAnimationSpeed(2)

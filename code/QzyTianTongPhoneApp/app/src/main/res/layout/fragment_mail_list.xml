@@ -1,65 +1,79 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:focusable="true"
-              android:focusableInTouchMode="true"
-              android:background="@color/white">
-
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
     <include layout="@layout/toobar_layout"/>
 
-    <include layout="@layout/line_dimens"/>
-
-    <com.tt.qzy.view.layout.ClearEditText
-        android:id="@+id/custom_input"
-        android:background="@drawable/custom_edittext_layout"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:drawableLeft="@drawable/search"
-        android:drawablePadding="6dp"
-        android:paddingLeft="8dp"
-        android:textColor="#999999"
-        android:hint="@string/TMT_jilu"
-        android:textSize="9sp"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="38dp"/>
+        android:layout_height="match_parent"
+        app:srlEnableLoadmore="true">
 
-    <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <RelativeLayout
+        <com.scwang.smartrefresh.layout.header.ClassicsHeader
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
+          <LinearLayout
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/dialog"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_centerInParent="true"
-                android:background="#9DDE76"
-                android:gravity="center"
-                android:textColor="#ffffffff"
-                android:textSize="30dp"
-                android:visibility="invisible" />
+              <com.tt.qzy.view.layout.ClearEditText
+                  android:id="@+id/custom_input"
+                  android:background="@drawable/custom_edittext_layout"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginLeft="8dp"
+                  android:layout_marginRight="8dp"
+                  android:layout_marginBottom="8dp"
+                  android:drawableLeft="@drawable/search"
+                  android:drawablePadding="6dp"
+                  android:paddingLeft="8dp"
+                  android:textColor="#999999"
+                  android:hint="@string/TMT_jilu"
+                  android:textSize="9sp"
+                  android:layout_width="match_parent"
+                  android:layout_height="38dp"/>
 
-            <com.tt.qzy.view.layout.SideBar
-                android:id="@+id/sideBar"
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                />
+              <RelativeLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content" >
 
-        </RelativeLayout>
+                  <android.support.v7.widget.RecyclerView
+                      android:id="@+id/recyclerView"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      />
+
+                  <TextView
+                      android:id="@+id/dialog"
+                      android:layout_width="80dp"
+                      android:layout_height="80dp"
+                      android:layout_centerInParent="true"
+                      android:background="#9DDE76"
+                      android:gravity="center"
+                      android:textColor="#ffffffff"
+                      android:textSize="30dp"
+                      android:visibility="invisible" />
+
+                  <com.tt.qzy.view.layout.SideBar
+                      android:id="@+id/sideBar"
+                      android:layout_width="20dp"
+                      android:layout_height="wrap_content"
+                      android:layout_alignParentRight="true"
+                      />
+
+              </RelativeLayout>
+
+          </LinearLayout>
+
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
@@ -77,4 +91,3 @@
 
     </android.support.design.widget.CoordinatorLayout>
 
-</LinearLayout>

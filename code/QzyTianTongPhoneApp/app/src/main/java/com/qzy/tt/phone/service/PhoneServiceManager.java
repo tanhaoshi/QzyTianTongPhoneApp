@@ -42,14 +42,14 @@ public class PhoneServiceManager {
      * @param context
      */
 
-    private QzySensorManager mQzySensorManager;
+//    private QzySensorManager mQzySensorManager;
 
 
     public PhoneServiceManager(Context context) {
         EventBusUtils.register(this);
         mContext = context;
         mPhoneNettyManager = new PhoneNettyManager(context);
-        mQzySensorManager = new QzySensorManager(context);
+//        mQzySensorManager = new QzySensorManager(context);
         initProtocal();
     }
 
@@ -141,9 +141,9 @@ public class PhoneServiceManager {
         }
         releaseProtocal();
 
-        if (mQzySensorManager != null) {
-            mQzySensorManager.freeSenerState();
-        }
+//        if (mQzySensorManager != null) {
+//            mQzySensorManager.freeSenerState();
+//        }
 
     }
 

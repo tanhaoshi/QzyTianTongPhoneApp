@@ -115,11 +115,11 @@ public class FtpClienManager {
                         }
                         LogUtils.e("-----------------dsdsfs");
                         try {
-                            client.createDirectory("file");
+                            client.createDirectory("tiantong_update");
                         }catch (Exception e){
                             e.printStackTrace();
                         }
-                        client.changeDirectory("file");
+                        client.changeDirectory("tiantong_update");
                         client.upload(file, listener);
                         client.changeDirectory("/");
                     } else {

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
-public class AppUtils {
+public final class AppUtils {
 
     public static String getVersionName(Context context) {
         return getPackageInfo(context).versionName;

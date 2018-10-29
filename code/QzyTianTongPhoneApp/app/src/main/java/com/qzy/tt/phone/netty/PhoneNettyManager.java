@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.UserHandle;
 
 import com.google.protobuf.ByteString;
+import com.qzy.androidftp.FtpClienManager;
+import com.qzy.androidftp.LogUtils;
 import com.qzy.data.PhoneCmd;
 import com.qzy.data.PrototocalTools;
 import com.qzy.eventbus.EventBusUtils;
@@ -42,6 +44,7 @@ import java.io.OutputStream;
 import java.util.Arrays;
 
 import io.netty.buffer.ByteBufInputStream;
+import it.sauronsoftware.ftp4j.FTPDataTransferListener;
 
 /**
  * Created by yj.zhang on 2018/9/17.
@@ -211,37 +214,74 @@ public class PhoneNettyManager {
         //开始下载
         try{
             InputStream inputStream = mContext.getAssets().open("tiantong_update.zip");
-            /*File file = new File("/mnt/sdcard/tiantong_udate.zip");
+            File file = new File("/mnt/sdcard/tiantong_udate.zip");
             if(!file.exists()){
                 file.createNewFile();
-            }*/
-            /*FileOutputStream outputStream = new FileOutputStream(file);
+            }
+            FileOutputStream outputStream = new FileOutputStream(file);
             byte[] read = new byte[1024 * 1024];
             int len = 0;
             while ((len = inputStream.read(read)) != -1){
                 KLog.i("1313123 len = " + len);
                 outputStream.write(read,0,len);
-
             }
             outputStream.flush();
             inputStream.close();
-            outputStream.close();*/
-           // AssetFileUtils.CopyAssets(mContext,"tiantong_update.zip",file.getAbsolutePath());
-           // FileInputStream in = new FileInputStream(file);
+            outputStream.close();
+            // AssetFileUtils.CopyAssets(mContext,"tiantong_update.zip",file.getAbsolutePath());
+            // FileInputStream in = new FileInputStream(file);
 
-            byte[] read = new byte[512];
-            int len = 0;
-            while ((len = inputStream.read(read)) != -1){
-                KLog.i("len = " + len);
-                sendZipFile(false,Arrays.copyOf(read,len));
-            }
-
-            sendZipFile(true,new byte[1]);
-
+//            byte[] read = new byte[512];
+//            int len = 0;
+//            while ((len = inputStream.read(read)) != -1){
+//                KLog.i("len = " + len);
+//                sendZipFile(false,Arrays.copyOf(read,len));
+//            }
+//
+//            sendZipFile(true,new byte[1]);
         }catch (Exception e){
             e.printStackTrace();
         }
 
+        final FtpClienManager mFtpClienManager = new FtpClienManager();
+        mFtpClienManager.ftpConnet(new FtpClienManager.IConnectListener() {
+            @Override
+            public void onConnected(boolean isConnect) {
+                if (isConnect) {
+                    upload(mFtpClienManager);
+                }
+            }
+        });
+    }
+
+    private void upload(FtpClienManager mFtpClienManager) {
+        mFtpClienManager.upload("/mnt/sdcard/tiantong_update.zip", new FTPDataTransferListener() {
+            @Override
+            public void started() {
+                LogUtils.e("-----------------started");
+            }
+
+            @Override
+            public void transferred(int i) {
+                //                   LogUtils.d("-----------------transferred");
+                KLog.i("view download progress = " + i);
+            }
+
+            @Override
+            public void completed() {
+                LogUtils.e("-----------------completed");
+            }
+
+            @Override
+            public void aborted() {
+                LogUtils.e("-----------------aborted");
+            }
+
+            @Override
+            public void failed() {
+                LogUtils.e("-----------------failed");
+            }
+        });
     }
 
 

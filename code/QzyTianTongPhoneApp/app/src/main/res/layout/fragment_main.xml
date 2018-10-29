@@ -93,7 +93,7 @@
                     android:layout_width="120dp"
                     android:layout_height="wrap_content">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
+                    <com.tt.qzy.view.layout.CircleImageView
                         android:id="@+id/imageContect"
                         android:scaleType="centerCrop"
                         android:layout_gravity="center"

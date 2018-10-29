@@ -12,11 +12,10 @@ import android.widget.TextView;
 
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
-import com.qzy.tt.phone.cmd.CmdHandler;
-import com.socks.library.KLog;
 import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.SettingsActivity;
+import com.tt.qzy.view.layout.CircleImageView;
 import com.tt.qzy.view.presenter.fragment.MainFragementPersenter;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.NetworkUtil;
@@ -26,7 +25,6 @@ import com.tt.qzy.view.view.MainFragmentView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class MainFragment extends Fragment implements MainFragmentView{
@@ -194,14 +192,12 @@ public class MainFragment extends Fragment implements MainFragmentView{
 
     @Override
     public void getTtPhonePosition(TtPhonePositionProtos.TtPhonePosition ttPhonePosition) {
-        KLog.i("look over isOpen value is = " + ttPhonePosition.getIsOpen());
         if(ttPhonePosition.getResponseStatus()){
             main_latitude.setText(ttPhonePosition.getLatItude());
             main_longitude.setText(ttPhonePosition.getLongItude());
         }else{
             NToast.shortToast(getActivity(),getActivity().getString(R.string.TMT_gps_position_filed));
         }
-
     }
 
     @Override
@@ -220,17 +216,14 @@ public class MainFragment extends Fragment implements MainFragmentView{
 
     @Override
     public void showProgress(boolean isTrue) {
-
     }
 
     @Override
     public void hideProgress() {
-
     }
 
     @Override
     public void showError(String msg, boolean pullToRefresh) {
-
     }
 
     @Override

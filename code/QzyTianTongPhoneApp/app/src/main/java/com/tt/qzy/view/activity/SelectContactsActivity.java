@@ -15,14 +15,10 @@ import com.kaopiz.kprogresshud.KProgressHUD;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.SelectContactsAdapter;
 import com.tt.qzy.view.bean.MallListModel;
-import com.tt.qzy.view.bean.SortModel;
 import com.tt.qzy.view.layout.ClearEditText;
 import com.tt.qzy.view.presenter.activity.SelectContactsPresenter;
-import com.tt.qzy.view.utils.PingyinContacts;
-import com.tt.qzy.view.utils.PinyinComparator;
 import com.tt.qzy.view.layout.SideBar;
 import com.tt.qzy.view.utils.NToast;
-import com.tt.qzy.view.utils.PinyinUtils;
 import com.tt.qzy.view.view.SelectContactView;
 
 import java.util.ArrayList;
@@ -177,7 +173,7 @@ public class SelectContactsActivity extends AppCompatActivity implements SelectC
 
     private void initProgress() {
         mHUD = KProgressHUD.create(this)
-                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setStyle(KProgressHUD.Style.PIE_DETERMINATE)
                 .setDetailsLabel(getString(R.string.loading))
                 .setCancellable(true)
                 .setAnimationSpeed(2)

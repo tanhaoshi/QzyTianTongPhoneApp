@@ -9,6 +9,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.tt.qzy.view.R;
+import com.tt.qzy.view.bean.MallListModel;
 import com.tt.qzy.view.bean.SortModel;
 
 import java.util.List;
@@ -20,10 +21,10 @@ import java.util.List;
 public class DeleteContactsAdapter extends RecyclerView.Adapter<DeleteContactsAdapter.ViewHolder>{
 
     private LayoutInflater mInflater;
-    private List<SortModel> mData;
+    private List<MallListModel> mData;
     private Context mContext;
 
-    public DeleteContactsAdapter(Context context, List<SortModel> data) {
+    public DeleteContactsAdapter(Context context, List<MallListModel> data) {
         mInflater = LayoutInflater.from(context);
         mData = data;
         this.mContext = context;
@@ -50,6 +51,13 @@ public class DeleteContactsAdapter extends RecyclerView.Adapter<DeleteContactsAd
         }
 
         holder.tvName.setText(this.mData.get(position).getName());
+        //  一整列的点击事件
+//        holder.tvName.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(mContext, mData.get(position).getName(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         holder.ck_chose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +112,7 @@ public class DeleteContactsAdapter extends RecyclerView.Adapter<DeleteContactsAd
      * 提供给Activity刷新数据
      * @param list
      */
-    public void updateList(List<SortModel> list){
+    public void updateList(List<MallListModel> list){
         this.mData = list;
         notifyDataSetChanged();
     }

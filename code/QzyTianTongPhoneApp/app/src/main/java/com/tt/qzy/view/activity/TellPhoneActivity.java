@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.widget.TextView;
 
 
+import com.qzy.QzySensorManager;
 import com.qzy.data.PhoneCmd;
 import com.qzy.data.PhoneStateUtils;
 import com.qzy.eventbus.EventBusUtils;
@@ -18,6 +19,7 @@ import com.qzy.utils.LogUtils;
 import com.qzy.utils.TimeToolUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
+import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.layout.dialpad.InputPwdViewCall;
 import com.tt.qzy.view.presenter.activity.TellPhoneActivityPresenter;
 
@@ -45,10 +47,13 @@ public class TellPhoneActivity extends AppCompatActivity {
 
     private TellPhoneActivityPresenter mTellPhoneActivityPresenter;
 
+    private QzySensorManager mQzySensorManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tell_phone);
+        mQzySensorManager = new QzySensorManager(TtPhoneApplication.getInstance());
         KLog.e("onCreate");
         ButterKnife.bind(this);
         String number = getIntent().getStringExtra("diapadNumber");
@@ -208,6 +213,7 @@ public class TellPhoneActivity extends AppCompatActivity {
         super.onStop();
         KLog.e("onStop");
         isFinsh = false;
+        mQzySensorManager.freeSenerState();
         EventBusUtils.unregister(TellPhoneActivity.this);
        //finish();
     }
