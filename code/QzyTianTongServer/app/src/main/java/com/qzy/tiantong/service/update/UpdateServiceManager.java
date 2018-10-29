@@ -37,20 +37,18 @@ public class UpdateServiceManager implements IUpdateManager {
 
     public UpdateServiceManager(Context context) {
         mContext = context;
-         mIniFile = new IniFile();
+        mIniFile = new IniFile();
 
         initNettyManager();
 
     }
 
 
-
-
     /**
      * 初始化netty
      */
     private void initNettyManager() {
-        mTianTongHandler = new TianTongHandlerUpdate();
+        mTianTongHandler = new TianTongHandlerUpdate(this);
         mCmdHandlerUpdate = new CmdHandlerUpdate(mTianTongHandler);
         mNettyServerManager = new NettyServerManager(new NettyServerManager.INettyServerListener() {
             @Override
@@ -86,15 +84,15 @@ public class UpdateServiceManager implements IUpdateManager {
     @Override
     public void checkUpdate(TtPhoneUpdateAppInfoProtos.UpdateAppInfo updateAppInfo) {
         try {
-            int phoneAppVersion = Integer.parseInt(updateAppInfo.getPhoneAppVersion().replace(".",""));
-            int serverAppVersion = Integer.parseInt(updateAppInfo.getServerAppVersion().replace(".",""));
+            int phoneAppVersion = Integer.parseInt(updateAppInfo.getPhoneAppVersion().replace(".", ""));
+            int serverAppVersion = Integer.parseInt(updateAppInfo.getServerAppVersion().replace(".", ""));
             String zipMd5 = updateAppInfo.getTiantongUpdateMd();
             LogUtils.d(" phoneAppVersion = " + phoneAppVersion + " serverAppVersion = " + serverAppVersion + " zipMd5 = " + zipMd5);
-            int nowServerVersion = Integer.parseInt(mIniFile.getUpdateConfigBean(true).getServer_version().replace(".",""));
-            if(serverAppVersion > nowServerVersion){
-                sendNeedUpdate(updateAppInfo.getIp(),true);
-            }else{
-                sendNeedUpdate(updateAppInfo.getIp(),false);
+            int nowServerVersion = Integer.parseInt(mIniFile.getUpdateConfigBean(true).getServer_version().replace(".", ""));
+            if (serverAppVersion > nowServerVersion) {
+                sendNeedUpdate(updateAppInfo.getIp(), true);
+            } else {
+                sendNeedUpdate(updateAppInfo.getIp(), false);
             }
 
             //处理动作
@@ -117,11 +115,9 @@ public class UpdateServiceManager implements IUpdateManager {
                 file.createNewFile();
             }
 
-            FileOutputStream out = new FileOutputStream(file);
-            out.write(updateSendFile.getFileData().getData().toByteArray());
-            out.flush();
-            out.close();
-            if (updateSendFile.getIsSendFileFinish()) {
+            boolean isFinish = updateSendFile.getIsSendFileFinish();
+
+            if (isFinish) {
                 if (MD5Utils.getFileMD5(file).equals(mIniFile.getUpdateConfigBean(true).getZip_md())) {
                     sendReceiveZipFileFinish(updateSendFile.getIp(), true);
                     //开始与底层进行通讯
@@ -131,7 +127,14 @@ public class UpdateServiceManager implements IUpdateManager {
                 } else {
                     sendReceiveZipFileFinish(updateSendFile.getIp(), false);
                 }
+                return;
             }
+
+            FileOutputStream out = new FileOutputStream(file);
+            out.write(updateSendFile.getFileData().getData().toByteArray());
+            out.flush();
+            out.close();
+
         } catch (Exception e) {
             e.printStackTrace();
             sendReceiveZipFileFinish(updateSendFile.getIp(), false);
@@ -142,6 +145,7 @@ public class UpdateServiceManager implements IUpdateManager {
 
     /**
      * 发送是否需要升级
+     *
      * @param ip
      * @param flag
      */

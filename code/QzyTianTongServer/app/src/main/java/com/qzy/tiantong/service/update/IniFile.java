@@ -45,7 +45,7 @@ public class IniFile {
 
             if (!isExsit) {
                 mIni.set(section_name, app_vesion, "1.0.1");
-                mIni.set(section_name, server_version, "1.0.1");
+                mIni.set(section_name, server_version, "1");
                 mIni.set(section_name, zip_md, "");
                 mIni.save();
             }
