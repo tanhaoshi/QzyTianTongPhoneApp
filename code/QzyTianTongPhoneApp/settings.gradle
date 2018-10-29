@@ -1,4 +1,4 @@
-include ':app', ':ttphonelib', ':qzyphonepcmlib'
+include ':app', ':ttphonelib', ':qzyphonepcmlib', ':ftpClient'
 
 /*
 include ':qzyTianTongProbufLib'
