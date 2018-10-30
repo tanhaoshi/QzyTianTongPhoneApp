@@ -3,6 +3,7 @@ package com.qzy.tiantong.service.update;
 import android.content.Context;
 
 import com.google.protobuf.ByteString;
+import com.qzy.ftpserver.FtpServerManager;
 import com.qzy.tiantong.lib.utils.IniFileUtils;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.lib.utils.MD5Utils;
@@ -35,11 +36,19 @@ public class UpdateServiceManager implements IUpdateManager {
 
     private IniFile mIniFile;
 
+    //创建ftp上传文件
+    private FtpServerManager mFtpServerManager;
+
     public UpdateServiceManager(Context context) {
         mContext = context;
         mIniFile = new IniFile();
 
         initNettyManager();
+
+        if(mFtpServerManager == null) {
+            mFtpServerManager = new FtpServerManager();
+            mFtpServerManager.onStartServer();
+        }
 
     }
 
@@ -103,20 +112,17 @@ public class UpdateServiceManager implements IUpdateManager {
         }
     }
 
+
     @Override
     public void receiverZipFile(TtPhoneUpdateSendFileProtos.UpdateSendFile updateSendFile) {
 
         try {
 
             String fileName = updateSendFile.getFileData().getFilename();
-            File file = new File("/mnt/sdcard/" + fileName);
-            if (file.exists()) {
-                file.delete();
-                file.createNewFile();
-            }
+            File file = new File("/mnt/sdcard/tiantong_update/file/" + fileName);
 
             boolean isFinish = updateSendFile.getIsSendFileFinish();
-
+            LogUtils.d("isFinish = " + isFinish + " fileName = " + fileName);
             if (isFinish) {
                 if (MD5Utils.getFileMD5(file).equals(mIniFile.getUpdateConfigBean(true).getZip_md())) {
                     sendReceiveZipFileFinish(updateSendFile.getIp(), true);
@@ -127,13 +133,8 @@ public class UpdateServiceManager implements IUpdateManager {
                 } else {
                     sendReceiveZipFileFinish(updateSendFile.getIp(), false);
                 }
-                return;
             }
 
-            FileOutputStream out = new FileOutputStream(file);
-            out.write(updateSendFile.getFileData().getData().toByteArray());
-            out.flush();
-            out.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -180,6 +181,10 @@ public class UpdateServiceManager implements IUpdateManager {
      */
     public void free() {
         freeNettyManager();
+
+        if (mFtpServerManager != null) {
+            mFtpServerManager.stopFtpServer();
+        }
     }
 
 
