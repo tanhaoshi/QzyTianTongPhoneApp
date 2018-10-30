@@ -222,7 +222,7 @@ public class PhoneNettyManager {
             byte[] read = new byte[1024 * 1024];
             int len = 0;
             while ((len = inputStream.read(read)) != -1){
-                KLog.i("1313123 len = " + len);
+//                KLog.i("copy file len = " + len);
                 outputStream.write(read,0,len);
             }
             outputStream.flush();
@@ -243,6 +243,8 @@ public class PhoneNettyManager {
             e.printStackTrace();
         }
 
+        //发送命令告诉服务端开始上传文件
+        sendZipFile(false,new byte[1]);
         final FtpClienManager mFtpClienManager = new FtpClienManager();
         mFtpClienManager.ftpConnet(new FtpClienManager.IConnectListener() {
             @Override
@@ -270,6 +272,8 @@ public class PhoneNettyManager {
             @Override
             public void completed() {
                 LogUtils.e("-----------------completed");
+                //发送命令告诉服务端开始上传文件完成
+                sendZipFile(true,new byte[1]);
             }
 
             @Override
