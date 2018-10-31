@@ -22,10 +22,10 @@ public class IniFile {
 
     private void initWorkSpace() {
         try {
-            File file = new File("/mnt/sdcard/" + "tiantong_work");
+            File file = new File("/mnt/sdcard/" + "tiantong_work/config");
             boolean isExsit = file.exists();
             if (!isExsit) {
-                file.mkdir();
+                file.mkdirs();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -34,7 +34,7 @@ public class IniFile {
 
     private void initIniFile() {
         try {
-            File file = new File("/mnt/sdcard/tiantong_work/" + "config.ini");
+            File file = new File("/mnt/sdcard/tiantong_work/config/" + "config.ini");
             boolean isExsit = file.exists();
             if (!isExsit) {
                 file.createNewFile();
@@ -73,6 +73,22 @@ public class IniFile {
             configBean.setZip_md((String) mIni.get(section_name, zip_md, ""));
         }
         return configBean;
+    }
+
+    /**
+     * 存储信息
+     * @param bean
+     */
+    public void setUpdateConfigBean(UpdateConfigBean bean) {
+        try{
+            mIni.set(section_name, app_vesion, bean.getApp_version());
+            mIni.set(section_name, server_version, bean.getServer_version());
+            mIni.set(section_name, zip_md, bean.getZip_md());
+            mIni.save();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 }

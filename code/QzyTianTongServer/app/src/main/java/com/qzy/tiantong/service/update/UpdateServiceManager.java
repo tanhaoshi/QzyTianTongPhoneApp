@@ -93,12 +93,21 @@ public class UpdateServiceManager implements IUpdateManager {
     @Override
     public void checkUpdate(TtPhoneUpdateAppInfoProtos.UpdateAppInfo updateAppInfo) {
         try {
-            int phoneAppVersion = Integer.parseInt(updateAppInfo.getPhoneAppVersion().replace(".", ""));
-            int serverAppVersion = Integer.parseInt(updateAppInfo.getServerAppVersion().replace(".", ""));
+            String appVer = updateAppInfo.getPhoneAppVersion();
+            String serverVer = updateAppInfo.getServerAppVersion();
+            int phoneAppVersion = Integer.parseInt(appVer.replace(".", ""));
+            int serverAppVersion = Integer.parseInt(serverVer.replace(".", ""));
             String zipMd5 = updateAppInfo.getTiantongUpdateMd();
             LogUtils.d(" phoneAppVersion = " + phoneAppVersion + " serverAppVersion = " + serverAppVersion + " zipMd5 = " + zipMd5);
-            int nowServerVersion = Integer.parseInt(mIniFile.getUpdateConfigBean(true).getServer_version().replace(".", ""));
+            UpdateConfigBean updateConfigBean = mIniFile.getUpdateConfigBean(true);
+            int nowServerVersion = Integer.parseInt(updateConfigBean.getServer_version().replace(".", ""));
             if (serverAppVersion > nowServerVersion) {
+                //更新配置信息
+                updateConfigBean.setApp_version(appVer);
+                updateConfigBean.setServer_version(serverVer);
+                updateConfigBean.setZip_md(zipMd5);
+                mIniFile.setUpdateConfigBean(updateConfigBean);
+
                 sendNeedUpdate(updateAppInfo.getIp(), true);
             } else {
                 sendNeedUpdate(updateAppInfo.getIp(), false);
@@ -119,12 +128,15 @@ public class UpdateServiceManager implements IUpdateManager {
         try {
 
             String fileName = updateSendFile.getFileData().getFilename();
-            File file = new File("/mnt/sdcard/tiantong_update/file/" + fileName);
+            File file = new File("/mnt/sdcard/tiantong_update/tiantong_update/" + fileName);
 
             boolean isFinish = updateSendFile.getIsSendFileFinish();
             LogUtils.d("isFinish = " + isFinish + " fileName = " + fileName);
             if (isFinish) {
-                if (MD5Utils.getFileMD5(file).equals(mIniFile.getUpdateConfigBean(true).getZip_md())) {
+                String md = mIniFile.getUpdateConfigBean(true).getZip_md();
+                String fileMd = MD5Utils.getFileMD5(file);
+                LogUtils.d("md5 = " + md  + " fileMd5 = " + fileMd);
+                if (fileMd.equals(md)) {
                     sendReceiveZipFileFinish(updateSendFile.getIp(), true);
                     //开始与底层进行通讯
                     ///
