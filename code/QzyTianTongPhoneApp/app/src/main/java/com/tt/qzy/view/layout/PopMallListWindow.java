@@ -23,7 +23,7 @@ public class PopMallListWindow extends PopWindow{
 
     private View mMenuView;
 
-    private PopWindow.OpenPictureListener mOpenPictureListener;
+    private PopMallListWindow.OpenWindowListener mListener;
 
     private TextView main_location;
     private TextView delete;
@@ -99,17 +99,17 @@ public class PopMallListWindow extends PopWindow{
         import_malllist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NToast.shortToast(mContext,"导入手机通讯录");
+                mListener.importPhoneMailList();
                 dismiss();
             }
         });
     }
 
-    public void setOpenWindowListener(PopWindow.OpenPictureListener listener){
-        this.mOpenPictureListener = listener;
+    public void setOpenWindowListener(OpenWindowListener listener){
+        this.mListener = listener;
     }
 
     public interface OpenWindowListener{
-        void popupDismiss();
+        void importPhoneMailList();
     }
 }

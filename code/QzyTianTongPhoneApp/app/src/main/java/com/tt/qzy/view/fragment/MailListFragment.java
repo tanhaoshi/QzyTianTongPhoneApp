@@ -15,14 +15,19 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.AddContactsActivity;
 import com.tt.qzy.view.adapter.SortAdapter;
 import com.tt.qzy.view.bean.MallListModel;
+import com.tt.qzy.view.db.dao.MailListDao;
+import com.tt.qzy.view.db.manager.MailListManager;
 import com.tt.qzy.view.layout.ClearEditText;
+import com.tt.qzy.view.utils.MallListUtils;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.PinyinComparator;
 import com.tt.qzy.view.layout.PopMallListWindow;
@@ -39,7 +44,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MailListFragment extends Fragment implements PopWindow.OnDismissListener,MailListView{
+public class MailListFragment extends Fragment implements PopWindow.OnDismissListener,MailListView,PopMallListWindow.OpenWindowListener{
 
     @BindView(R.id.base_tv_toolbar_title)
     TextView base_tv_toolbar_title;
@@ -157,6 +162,7 @@ public class MailListFragment extends Fragment implements PopWindow.OnDismissLis
                 if(mPopMallListWindow == null){
                     mPopMallListWindow = new PopMallListWindow(getActivity());
                     mPopMallListWindow.setOnDismissListener(this);
+                    mPopMallListWindow.setOpenWindowListener(this);
                     setWindowAttibus(0.5f);
                     mPopMallListWindow.showAtLocation(getActivity().findViewById(R.id.recyclerView),
                             Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
@@ -225,5 +231,11 @@ public class MailListFragment extends Fragment implements PopWindow.OnDismissLis
                 .setCancellable(true)
                 .setAnimationSpeed(2)
                 .setDimAmount(0.5f);
+    }
+
+    @Override
+    public void importPhoneMailList() {
+        mHUD.show();
+        mPresenter.getContactsMallList(getActivity());
     }
 }

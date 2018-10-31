@@ -15,6 +15,7 @@ import com.qzy.tt.phone.common.CommonData;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.TellPhoneActivity;
+import com.tt.qzy.view.bean.MallListModel;
 import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.manager.CallRecordManager;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
@@ -30,7 +31,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -257,6 +260,27 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
             }
         });
         return mList;
+    }
+
+    public List<CallRecordDao> removeDuplicate(List<CallRecordDao> list)  {
+        for  ( int  i  =   0 ; i  <  list.size()  -   1 ; i ++ )  {
+            for  ( int  j  =  list.size()  -   1 ; j  >  i; j -- )  {
+                if(list.get(j).getPhoneNumber() != null && list.get(i).getPhoneNumber()!=null){
+                    int count = 0;
+                    if  (list.get(j).getPhoneNumber().equals(list.get(i).getPhoneNumber()))  {
+                        KLog.i(" look over duplicate data value = " + list.get(j).getPhoneNumber());
+                        count++;
+                        list.remove(j);
+                    }
+                    KLog.i(" look over statistics value = " + count);
+                }else if(list.get(j).getPhoneNumber() == null){
+                    list.remove(j);
+                }else if(list.get(i).getPhoneNumber() == null){
+                    list.remove(i);
+                }
+            }
+        }
+        return list;
     }
 
     public void release(){

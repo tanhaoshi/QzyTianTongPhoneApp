@@ -32,7 +32,7 @@ public class MallListUtils {
                         PhoneNumber = PhoneNumber.replace("-", "");
                         PhoneNumber = PhoneNumber.replace(" ", "");
                     }
-                    mallListModels.add(new MallListModel(PhoneNumber,contact));
+                    mallListModels.add(new MallListModel(PhoneNumber,contact,Long.valueOf(ContactId)));
                 }
                 return mallListModels;
             }else{

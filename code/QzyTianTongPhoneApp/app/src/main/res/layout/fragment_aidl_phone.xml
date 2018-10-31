@@ -27,7 +27,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
 
-                                <EditText
+                                <com.tt.qzy.view.layout.ClearEditText
                                     android:id="@+id/custom_input"
                                     android:background="@drawable/custom_edittext_layout"
                                     android:layout_marginTop="8dp"
@@ -35,13 +35,12 @@
                                     android:layout_marginRight="8dp"
                                     android:layout_marginBottom="8dp"
                                     android:drawableLeft="@drawable/search"
-                                    android:drawablePadding="8dp"
+                                    android:drawablePadding="6dp"
                                     android:paddingLeft="8dp"
                                     android:textColor="#999999"
                                     android:hint="@string/TMT_jilu"
                                     android:textSize="9sp"
                                     android:layout_width="match_parent"
-                                    android:inputType="number"
                                     android:layout_height="38dp"/>
 
                                 <android.support.v7.widget.RecyclerView

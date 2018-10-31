@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
@@ -70,8 +71,8 @@ public class DeleteContactsActivity extends AppCompatActivity implements DeleteC
     private KProgressHUD mHUD;
 
     private String selectContacts="";
-    private static final String RESPONSE_FLAG = "back";
-    private static final int RESPONSE_CODE = 1;
+    private Long id;
+    private int position;
 
     private DeleteContactsPresenter mContactsPresenter;
 
@@ -95,9 +96,12 @@ public class DeleteContactsActivity extends AppCompatActivity implements DeleteC
                 break;
             case R.id.base_tv_toolbar_right:
                 if(!TextUtils.isEmpty(selectContacts.trim())){
-                    Intent intent = new Intent();
-                    intent.putExtra(RESPONSE_FLAG,selectContacts);
-                    setResult(RESPONSE_CODE,intent);
+                    KLog.i(" delete cureent id = " + id);
+                    KLog.i("look over dao data = " + JSON.toJSONString(mMailListDaos));
+                    KLog.i(" look over mail dao data = "+ JSON.toJSONString(mMailListDaos.get(position)));
+//                    MailListManager.getInstance(TtPhoneApplication.getInstance())
+//                            .deleteMailContacts(mMailListDaos.get(position),TtPhoneApplication.getInstance());
+                    NToast.shortToast(DeleteContactsActivity.this,getResources().getString(R.string.TMT_delete_succeed));
                     finish();
                 }else{
                     NToast.shortToast(this,getResources().getString(R.string.TMT_please_select));
@@ -152,12 +156,12 @@ public class DeleteContactsActivity extends AppCompatActivity implements DeleteC
     }
 
     @Override
-    public void onItemClick(View view, int position,boolean isFlag) {
+    public void onItemClick(View view, int position,boolean isFlag,Long id) {
         if(isFlag){
             selectContacts = SourceDateList.get(position).getName();
-            MailListManager.getInstance(TtPhoneApplication.getInstance())
-            .deleteMailContacts(mMailListDaos.get(position),TtPhoneApplication.getInstance());
-            NToast.shortToast(DeleteContactsActivity.this,getResources().getString(R.string.TMT_delete_succeed));
+            KLog.i(" look over position = " + position);
+            this.id = id;
+            this.position = position;
         }
     }
 

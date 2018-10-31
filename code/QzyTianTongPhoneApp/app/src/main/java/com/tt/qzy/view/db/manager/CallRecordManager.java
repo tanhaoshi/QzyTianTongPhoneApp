@@ -65,4 +65,18 @@ public class CallRecordManager {
         List<CallRecordDao> list = dao.queryBuilder().offset(offset).limit(limit).orderDesc().list();
         return list;
     }
+
+    public List<CallRecordDao> fuzzySearch(String value){
+        CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
+        QueryBuilder<CallRecordDao> db = dao.queryBuilder().where(CallRecordDaoDao.Properties.Name.like("%"+value+"%"));
+        List<CallRecordDao> daoList = db.list();
+        if(daoList.size() > 0){
+            return daoList;
+        }else{
+            QueryBuilder<CallRecordDao> queryBuilder = dao.queryBuilder().where(CallRecordDaoDao.Properties.PhoneNumber.
+                    like("%"+value+"%"));
+            List<CallRecordDao> list = queryBuilder.list();
+            return list;
+        }
+    }
 }

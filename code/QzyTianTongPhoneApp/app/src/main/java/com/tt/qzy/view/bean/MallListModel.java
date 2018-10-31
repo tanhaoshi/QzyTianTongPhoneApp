@@ -6,6 +6,7 @@ import com.tt.qzy.view.utils.PinyinUtils;
 
 public class MallListModel implements Comparable<MallListModel>{
 
+    private Long  id;
     private String phone;
     private String name;
     private String letters;
@@ -15,7 +16,7 @@ public class MallListModel implements Comparable<MallListModel>{
     public MallListModel(){
     }
 
-    public MallListModel(String phone,String name){
+    public MallListModel(String phone,String name,Long id){
         if(name == null){
             name = "无用户名";
         }
@@ -26,6 +27,7 @@ public class MallListModel implements Comparable<MallListModel>{
         }
         this.phone = phone;
         this.name = name;
+        this.id = id;
     }
 
     public String getPinyin() {
@@ -66,6 +68,14 @@ public class MallListModel implements Comparable<MallListModel>{
 
     public void setChoosed(boolean choosed) {
         this.choosed = choosed;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override

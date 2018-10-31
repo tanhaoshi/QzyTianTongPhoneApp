@@ -2,9 +2,13 @@ package com.tt.qzy.view.db.manager;
 
 import android.content.Context;
 
+import com.alibaba.fastjson.JSON;
+import com.socks.library.KLog;
+import com.tt.qzy.view.db.CallRecordDaoDao;
 import com.tt.qzy.view.db.DaoMaster;
 import com.tt.qzy.view.db.DaoSession;
 import com.tt.qzy.view.db.MailListDaoDao;
+import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.MailListDao;
 
 import org.greenrobot.greendao.query.QueryBuilder;
@@ -62,5 +66,17 @@ public class MailListManager {
         DaoSession daoSession = daoMaster.newSession();
         MailListDaoDao mailListDaoDao = daoSession.getMailListDaoDao();
         mailListDaoDao.delete(dao);
+    }
+
+    public List<MailListDao> fuzzyMailSearch(String value){
+        MailListDaoDao dao = daoSession.getMailListDaoDao();
+        QueryBuilder<MailListDao> db = dao.queryBuilder().where(MailListDaoDao.Properties.Name.like("%"+value+"%"));
+        List<MailListDao> daoList = db.list();
+        if(daoList.size() > 0){
+            return daoList;
+        }else{
+            QueryBuilder<MailListDao> queryBuilder = dao.queryBuilder().where(MailListDaoDao.Properties.Phone.like("%"+value+"%"));
+            return queryBuilder.list();
+        }
     }
 }

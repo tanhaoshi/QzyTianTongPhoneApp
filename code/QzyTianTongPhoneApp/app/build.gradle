@@ -53,6 +53,7 @@ android {
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
         exclude 'META-INF/netty-all-4.0.29.Final.jar'
+        exclude 'META-INF/com.android.support:design:26.+'
     }
 }
 

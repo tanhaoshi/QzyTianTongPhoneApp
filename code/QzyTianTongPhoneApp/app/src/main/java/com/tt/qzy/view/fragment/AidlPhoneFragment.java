@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +22,8 @@ import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.CallRecordAdapter;
 import com.tt.qzy.view.db.dao.CallRecordDao;
+import com.tt.qzy.view.db.manager.CallRecordManager;
+import com.tt.qzy.view.layout.ClearEditText;
 import com.tt.qzy.view.layout.PopWindow;
 import com.tt.qzy.view.layout.dialpad.InputPwdView;
 import com.tt.qzy.view.layout.dialpad.MyInputPwdUtil;
@@ -47,6 +51,8 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     RecyclerView mRecyclerView;
     @BindView(R.id.refreshLayout)
     RefreshLayout mRefreshLayout;
+    @BindView(R.id.custom_input)
+    ClearEditText mClearEditText;
 
     private MyInputPwdUtil myInputPwdUtil;
     private PopWindow mPopWindow;
@@ -127,6 +133,22 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
             public void onRefresh(RefreshLayout refreshlayout) {
                 mPersenter.getRefresh(0,offset);
                 refreshlayout.finishRefresh(200);
+            }
+        });
+
+        mClearEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                List<CallRecordDao> list = CallRecordManager.getInstance(getActivity()).fuzzySearch(s.toString());
+                mCallRecordAdapter.setData(list);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
             }
         });
     }

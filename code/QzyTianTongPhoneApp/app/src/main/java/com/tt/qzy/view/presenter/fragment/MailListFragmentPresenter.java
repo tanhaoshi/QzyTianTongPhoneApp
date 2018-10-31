@@ -52,13 +52,7 @@ public class MailListFragmentPresenter extends BasePresenter<MailListView>{
             @Override
             public void subscribe(ObservableEmitter<List<MallListModel>> e) throws Exception {
                 List<MailListDao> listDaos = MailListManager.getInstance(context).queryMailList();
-                if(listDaos.size() > 0){
-                    e.onNext(mergeData(listDaos,context));
-                }else{
-                    List<MallListModel> listModels = MallListUtils.readContacts(context);
-                    saveInSqlite(context,listModels);
-                    e.onNext(listModels);
-                }
+                e.onNext(mergeData(listDaos,context));
             }
         }).subscribeOn(Schedulers.io())
           .unsubscribeOn(Schedulers.io())
@@ -66,7 +60,6 @@ public class MailListFragmentPresenter extends BasePresenter<MailListView>{
           .subscribe(new Observer<List<MallListModel>>() {
               @Override
               public void onSubscribe(Disposable d) {
-
               }
 
               @Override
@@ -87,9 +80,42 @@ public class MailListFragmentPresenter extends BasePresenter<MailListView>{
           });
     }
 
+    public void getContactsMallList(final Context context){
+        Observable.create(new ObservableOnSubscribe<List<MallListModel>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<MallListModel>> e) throws Exception {
+                List<MallListModel> listModels = MallListUtils.readContacts(context);
+                saveInSqlite(context,listModels);
+                e.onNext(handleData(listModels,context));
+            }
+        }).subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<MallListModel>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(List<MallListModel> value) {
+                        mView.get().loadData(value);
+                        onComplete();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mView.get().showError(e.getMessage().toString(),true);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        mView.get().hideProgress();
+                    }
+                });
+    }
+
     public void filterData(List<MallListModel> sourceDateList , String filterStr , PinyinComparator pinyinComparator, SortAdapter sortAdapter) {
         List<MallListModel> filterDateList = new ArrayList<>();
-
         if (TextUtils.isEmpty(filterStr)) {
             filterDateList = sourceDateList;
         } else {
@@ -113,10 +139,21 @@ public class MailListFragmentPresenter extends BasePresenter<MailListView>{
     private List<MallListModel> mergeData(List<MailListDao> listDaos,Context context){
         List<MallListModel> listModels = new ArrayList<>();
         for(MailListDao mailListDao : listDaos){
-            listModels.add(new MallListModel(mailListDao.getPhone(),mailListDao.getName()));
+            listModels.add(new MallListModel(mailListDao.getPhone(),mailListDao.getName(),mailListDao.getId()));
         }
-        listModels.addAll(MallListUtils.readContacts(context));
-        return removeDuplicate(listModels);
+        return listModels;
+//        listModels.addAll(MallListUtils.readContacts(context));
+//        return removeDuplicate(listModels);
+    }
+
+    private List<MallListModel> handleData(List<MallListModel> listDaos,Context context){
+        List<MallListModel> listModels = new ArrayList<>();
+        for(MallListModel mailListDao : listDaos){
+            listModels.add(new MallListModel(mailListDao.getPhone(),mailListDao.getName(),mailListDao.getId()));
+        }
+        return listModels;
+//        listModels.addAll(MallListUtils.readContacts(context));
+//        return removeDuplicate(listModels);
     }
 
     private void saveInSqlite(Context context,List<MallListModel> list){

@@ -73,7 +73,7 @@ public class SelectContactsPresenter extends BasePresenter<SelectContactView>{
     private List<MallListModel> mergeData(List<MailListDao> listDaos,Context context){
         List<MallListModel> listModels = new ArrayList<>();
         for(MailListDao mailListDao : listDaos){
-            listModels.add(new MallListModel(mailListDao.getPhone(),mailListDao.getName()));
+            listModels.add(new MallListModel(mailListDao.getPhone(),mailListDao.getName(),mailListDao.getId()));
         }
         listModels.addAll(MallListUtils.readContacts(context));
         return removeDuplicate(listModels);
