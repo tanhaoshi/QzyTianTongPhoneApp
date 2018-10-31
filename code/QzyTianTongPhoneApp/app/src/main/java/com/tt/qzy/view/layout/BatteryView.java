@@ -9,6 +9,7 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 
 public class BatteryView extends View {
@@ -17,9 +18,11 @@ public class BatteryView extends View {
     private int width;
     private int height;
     private int mColor;
+    private Context mContext;
 
     public BatteryView(Context context) {
         super(context);
+        mContext = context;
     }
 
     public BatteryView(Context context, AttributeSet attrs) {
@@ -70,6 +73,9 @@ public class BatteryView extends View {
         float strokeWidth = width / 20.f;
         float strokeWidth_2 = strokeWidth / 2;
         paint.setStrokeWidth(strokeWidth);
+        //left = 1.875, top = 1.875 right = 69.375, bottom = 34.125
+        KLog.i("查看width = " +width);
+        KLog.i("left = " +strokeWidth_2+","+ " top = "+strokeWidth_2 + " right = " +(width - strokeWidth - strokeWidth_2)+","+" bottom = "+(height - strokeWidth_2));
         RectF r1 = new RectF(strokeWidth_2, strokeWidth_2, width - strokeWidth - strokeWidth_2, height - strokeWidth_2);
         //设置外边框颜色为黑色
 //        paint.setColor(Color.BLACK);
@@ -84,17 +90,29 @@ public class BatteryView extends View {
             paint.setColor(Color.RED);
         }
         if (mPower >= 30 && mPower < 50) {
-            paint.setColor(Color.GREEN);
+            paint.setColor(getResources().getColor(R.color.colorBattery));
         }
         if (mPower >= 50) {
-            paint.setColor(Color.GREEN);
+            paint.setColor(getResources().getColor(R.color.colorBattery));
         }
         canvas.drawRect(r2, paint);
-        //画电池头
-//        RectF r3 = new RectF(width - strokeWidth, height * 0.25f, width, height * 0.75f);
-        //设置电池头颜色为黑色
-//        paint.setColor(Color.BLACK);
-//        canvas.drawRect(r3, paint);
+//        画电池头 left top right bottom ()
+        /**
+         *
+         *   1----------1
+         *   1          1-
+         *   1----------1
+         *
+         */
+        //RectF r3 = new RectF(width - strokeWidth, height * 0.25f, width, height * 0.75f);
+        //  look over left = x = 71.25 and top = y = 9.0 right = x = 75 bottom y = 27.0
+        //       (71.25 , 9.0) (75 , 27)
+        //       right - left
+        RectF r3 = new RectF(width - strokeWidth, height * 0.25f, width, height * 0.75f);
+        KLog.i(" look over left = " + (width - strokeWidth) +" and top = " + height * 0.25f + " right = " + (width) + " bottom " + height*0.75);
+//        设置电池头颜色为黑色
+        paint.setColor(getResources().getColor(R.color.colorBattery));
+        canvas.drawRect(r3, paint);
     }
 
     /**

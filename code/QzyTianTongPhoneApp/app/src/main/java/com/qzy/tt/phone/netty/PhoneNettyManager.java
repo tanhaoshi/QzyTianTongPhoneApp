@@ -6,7 +6,6 @@ import android.os.UserHandle;
 
 import com.google.protobuf.ByteString;
 import com.qzy.androidftp.FtpClienManager;
-import com.qzy.androidftp.LogUtils;
 import com.qzy.data.PhoneCmd;
 import com.qzy.data.PrototocalTools;
 import com.qzy.eventbus.EventBusUtils;
@@ -27,6 +26,7 @@ import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.SmsBean;
 import com.qzy.tt.phone.netty.fileupload.FileUploadClient;
 import com.qzy.utils.IPUtil;
+import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.bean.AppInfoModel;
 import com.tt.qzy.view.bean.ServerPortIp;

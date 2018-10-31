@@ -4,7 +4,7 @@
     android:id="@+id/statusLayout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="38dp">
+    android:layout_height="34dp">
 
     <com.tt.qzy.view.layout.BatteryView
         android:id="@+id/img1"
@@ -13,7 +13,8 @@
         android:layout_height="12dp"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
-        app:batteryPower="70"
+        app:batteryColor="@color/colorBattery"
+        app:batteryPower="50"
         app:batteryOrientation="horizontal"/>
 
     <ImageView
@@ -21,8 +22,8 @@
         android:src="@drawable/sim_noconnect"
         android:layout_centerVertical="true"
         android:layout_marginRight="8dp"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
+        android:layout_width="13dp"
+        android:layout_height="13dp"
         android:layout_toLeftOf="@+id/img1"
         />
 
@@ -32,8 +33,8 @@
         android:layout_marginRight="8dp"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/img2"
-        android:layout_width="19dp"
-        android:layout_height="18dp"/>
+        android:layout_width="13dp"
+        android:layout_height="12dp"/>
 
     <ImageView
         android:id="@+id/img4"
@@ -42,8 +43,8 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="6dp"
         android:layout_toLeftOf="@+id/img3"
-        android:layout_width="28dp"
-        android:layout_height="18dp"/>
+        android:layout_width="22dp"
+        android:layout_height="12dp"/>
 
     <ImageView
         android:id="@+id/img5"
@@ -51,7 +52,7 @@
         android:layout_marginRight="6dp"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/img4"
-        android:layout_width="28dp"
-        android:layout_height="20dp"/>
+        android:layout_width="22dp"
+        android:layout_height="12dp"/>
 
 </RelativeLayout>

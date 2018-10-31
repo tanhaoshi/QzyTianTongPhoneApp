@@ -152,7 +152,7 @@
                 android:layout_height="wrap_content"/>
 
             <TextView
-                android:text="ABC"
+                android:text="JKL"
                 android:textSize="12sp"
                 android:layout_width="24dp"
                 android:layout_height="18dp"/>
@@ -178,9 +178,9 @@
                 android:layout_height="wrap_content"/>
 
             <TextView
-                android:text="DEF"
+                android:text="MNO"
                 android:textSize="12sp"
-                android:layout_width="24dp"
+                android:layout_width="wrap_content"
                 android:layout_height="18dp"/>
 
         </com.tt.qzy.view.layout.DialpadKeyButton>

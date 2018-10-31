@@ -148,7 +148,11 @@ public class MainFragment extends Fragment implements MainFragmentView{
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.main_editors:
-                mPresneter.startConnect();
+                if(mainActivity.isConnectStatus()){
+                    mPresneter.stopConnect();
+                }else{
+                    mPresneter.startConnect();
+                }
                 break;
             case R.id.main_settings:
                 Intent settings_intent = new Intent(getActivity(), SettingsActivity.class);

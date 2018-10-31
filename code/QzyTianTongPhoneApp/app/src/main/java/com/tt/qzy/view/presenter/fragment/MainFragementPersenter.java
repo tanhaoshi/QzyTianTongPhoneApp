@@ -102,6 +102,13 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
     }
 
     /**
+     * 关闭连接
+     */
+    public void stopConnect(){
+        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_DISCONNECT_TIANTONG));
+    }
+
+    /**
      * 请求gps准确位置
      */
     public void requestGpsPosition(boolean isSwitch){
