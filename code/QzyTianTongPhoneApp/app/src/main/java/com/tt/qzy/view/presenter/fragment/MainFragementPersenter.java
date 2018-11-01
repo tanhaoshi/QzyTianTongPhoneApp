@@ -21,11 +21,13 @@ import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.activity.UserEditorsActivity;
 import com.tt.qzy.view.bean.AppInfoModel;
+import com.tt.qzy.view.bean.DatetimeModel;
 import com.tt.qzy.view.bean.ServerPortIp;
 import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
 import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.Constans;
+import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.utils.MD5Utils;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.NetworkUtil;
@@ -36,6 +38,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
+import java.util.Date;
 
 
 /**
@@ -130,6 +133,14 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
         }
     }
 
+    /**
+     * 发送当前时间至服务器
+     */
+    public void requestServerDatetime(){
+        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_TIME_DATE,
+                new DatetimeModel(DateUtil.backTimeFomat(new Date()))));
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
@@ -140,6 +151,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
                 parseBeiDouSwitch(event.getObject());
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SUCCESS:
+                requestServerDatetime();
                 mView.get().updateConnectedState(true);
                 requestServerVersion();
                 break;

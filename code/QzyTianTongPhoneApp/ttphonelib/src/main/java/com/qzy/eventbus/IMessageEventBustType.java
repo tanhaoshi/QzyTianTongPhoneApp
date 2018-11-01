@@ -51,4 +51,8 @@ public interface IMessageEventBustType {
     String EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_UPLOAD_APP = "event_bus_type_connect_tiantong_request_server_upload_app";
     // 完成下载
     String EVENT_BUS_TYPE_CONNECT_TIANTONG__RESPONSE_SERVER_UPLOAD_FINSH = "event_bus_type_connect_tiantong_response_server_upload_finsh";
+    // 发送当前时间至服务器
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_TIME_DATE = "event_bus_type_connect_tiantong_request_server_time_date";
+    // 获取服务时间返回响应
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG__RESPONSE_SERVER_TIME_DATE = "event_bus_type_connect_tiantong_response_server_time_date";
 }

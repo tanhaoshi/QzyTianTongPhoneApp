@@ -17,9 +17,12 @@
     <string name="TMT_userEditors">用户编辑</string>
     <string name="TMT_exit">退出</string>
     <string name="TMT_sos_settings">sos设置</string>
+    <string name="TMT_wifi_settings">WIFI密码设置</string>
+    <string name="TMT_date_settings">时间设置</string>
     <string name="TMT_offline_map">离线地图</string>
     <string name="TMT_check_change">检查更新</string>
     <string name="TMT_about">关于</string>
+    <string name="TMT_factroy_reset">恢复出厂设置</string>
     <string name="TMT_link_phone">请输入紧急联系电话</string>
     <string name="TMT_cannel">取消</string>
     <string name="TMT_yes">确认</string>

@@ -21,6 +21,7 @@ import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.data.TtPhoneUpdateAppInfoProtos;
 import com.qzy.tt.data.TtPhoneUpdateSendFileProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
+import com.qzy.tt.data.TtTimeProtos;
 import com.qzy.tt.phone.cmd.CmdHandler;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.SmsBean;
@@ -29,9 +30,11 @@ import com.qzy.utils.IPUtil;
 import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.bean.AppInfoModel;
+import com.tt.qzy.view.bean.DatetimeModel;
 import com.tt.qzy.view.bean.ServerPortIp;
 import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.utils.AssetFileUtils;
+import com.tt.qzy.view.utils.DateUtil;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -208,6 +211,18 @@ public class PhoneNettyManager {
     }
 
     /**
+     * 发送当前时间至服务器
+     */
+    private void requestServerDatetime(Object o){
+        DatetimeModel datetimeModel = (DatetimeModel)o;
+        TtTimeProtos.TtTime ttTime = TtTimeProtos.TtTime.newBuilder()
+                .setDateTime(datetimeModel.getDateTime())
+                .setIsSync(true)
+                .build();
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_tt_time,ttTime));
+    }
+
+    /**
      * 开始链接下载
      */
     private void startUpload(){
@@ -370,6 +385,9 @@ public class PhoneNettyManager {
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_UPLOAD_APP:
                 startUpload();
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_TIME_DATE:
+                requestServerDatetime(event.getObject());
                 break;
         }
     }

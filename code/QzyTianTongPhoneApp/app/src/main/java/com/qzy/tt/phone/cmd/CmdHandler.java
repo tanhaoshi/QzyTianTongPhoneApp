@@ -22,6 +22,7 @@ import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.data.TtPhoneUpdateResponseProtos;
 import com.qzy.tt.data.TtPhoneUpdateSendFileProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
+import com.qzy.tt.data.TtTimeProtos;
 import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.activity.TellPhoneActivity;
@@ -143,6 +144,10 @@ public class CmdHandler {
                 case PrototocalTools.IProtoClientIndex.response_update_send_zip:
                     TtPhoneUpdateResponseProtos.UpdateResponse updateResponse1 = TtPhoneUpdateResponseProtos.UpdateResponse.parseDelimitedFrom(inputStream);
                     sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__RESPONSE_SERVER_UPLOAD_FINSH,protoId,updateResponse1);
+                    break;
+                 case PrototocalTools.IProtoClientIndex.response_tt_time:
+                     TtTimeProtos.TtTime ttTime = TtTimeProtos.TtTime.parseDelimitedFrom(inputStream);
+                     KLog.i( " look over the server time response !");
                     break;
             }
         } catch (Exception e) {
