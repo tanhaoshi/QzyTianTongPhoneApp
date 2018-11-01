@@ -13,6 +13,7 @@ import com.qzy.tiantong.service.gps.GpsManager;
 import com.qzy.tiantong.service.phone.PhoneClientManager;
 import com.qzy.tiantong.service.phone.SmsPhoneManager;
 import com.qzy.tiantong.service.phone.TtPhoneState;
+import com.qzy.tiantong.service.time.DateTimeManager;
 import com.qzy.tiantong.service.usb.TtUsbManager;
 import com.qzy.tiantong.service.utils.PhoneUtils;
 import com.qzy.tt.data.CallPhoneBackProtos;
@@ -59,6 +60,8 @@ public class PhoneNettyManager {
 
     private TtUsbManager mTtUsbManager;
 
+    private DateTimeManager mDateTimeManager;
+
     /**
      * 电量获取
      */
@@ -71,6 +74,7 @@ public class PhoneNettyManager {
         mContext = context;
         mNettyServerManager = manager;
 
+        mDateTimeManager = new DateTimeManager(context,mNettyServerManager);
         mSmsPhoneManager = new SmsPhoneManager(context, iOnSMSCallback);
         mGpsManager = new GpsManager(mContext,mNettyServerManager);
         mTtUsbManager = new TtUsbManager(mContext,mNettyServerManager);
@@ -79,7 +83,7 @@ public class PhoneNettyManager {
 
         initSignal();
 
-        initSendThread();
+       // initSendThread();
 
         initBattery();
         LogUtils.e("getCallLog...11111..");
@@ -461,6 +465,13 @@ public class PhoneNettyManager {
         return mTtUsbManager;
     }
 
+    /**
+     * 时间管理类
+     * @return
+     */
+    public DateTimeManager getmDateTimeManager() {
+        return mDateTimeManager;
+    }
 
     /**
      * 是否控制信号灯

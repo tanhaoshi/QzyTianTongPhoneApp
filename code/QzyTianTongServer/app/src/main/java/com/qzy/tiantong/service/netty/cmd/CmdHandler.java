@@ -11,6 +11,7 @@ import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhoneAudioDataProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
+import com.qzy.tt.data.TtTimeProtos;
 import com.qzy.tt.probuf.lib.data.PhoneAudioCmd;
 import com.qzy.tt.probuf.lib.data.PrototocalTools;
 
@@ -89,6 +90,10 @@ public class CmdHandler implements ICmdHandler {
                 case PrototocalTools.IProtoServerIndex.request_open_beidou_usb:
                     TtOpenBeiDouProtos.TtOpenBeiDou ttOpenBeiDou = TtOpenBeiDouProtos.TtOpenBeiDou.parseDelimitedFrom(inputStream);
                     senMsg(protoId, ttOpenBeiDou);
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_tt_time:
+                    TtTimeProtos.TtTime ttTime = TtTimeProtos.TtTime.parseDelimitedFrom(inputStream);
+                    senMsg(protoId, ttTime);
                     break;
                 default:
                     break;

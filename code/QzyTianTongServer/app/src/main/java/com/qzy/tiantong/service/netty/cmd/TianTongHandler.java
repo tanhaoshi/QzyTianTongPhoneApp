@@ -10,6 +10,7 @@ import com.qzy.tt.data.TtBeiDouStatuss;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
+import com.qzy.tt.data.TtTimeProtos;
 import com.qzy.tt.probuf.lib.data.PrototocalTools;
 import com.qzy.voice.VoiceManager;
 
@@ -63,6 +64,9 @@ public class TianTongHandler extends Handler {
                     break;
                 case PrototocalTools.IProtoServerIndex.request_open_beidou_usb:
                     mServer.getPhoneNettyManager().getmTtUsbManager().parseUsbModel((TtOpenBeiDouProtos.TtOpenBeiDou) msg.obj);
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_tt_time:
+                    mServer.getPhoneNettyManager().getmDateTimeManager().setDataAndTime((TtTimeProtos.TtTime) msg.obj);
                     break;
                 default:
                     break;

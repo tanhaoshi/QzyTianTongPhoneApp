@@ -1,0 +1,18 @@
+syntax = "proto3"; // 表明使用protobuf的编译器最新的版本为v3
+
+package phonedata; // proto自己的包  类似于命名空间
+
+option java_package = "com.qzy.tt.data"; //生成java文件的包名
+option java_outer_classname = "TtTimeProtos"; //生成的类名
+
+message TtTime {
+    string ip = 1;
+
+    bool isSync = 2;
+
+    string date_time = 3;  // YYYY-mm-dd hh:mm:ss
+
+    string date_time_server = 4; // YYYY-mm-dd hh:mm:ss
+
+}
+
