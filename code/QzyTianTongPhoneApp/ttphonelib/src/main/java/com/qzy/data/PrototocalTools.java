@@ -22,6 +22,7 @@ public class PrototocalTools {
         int request_short_message = 116;
         int request_update_phone_aapinfo = 118;
         int request_update_send_zip = 120;
+        int request_tt_time = 122;
     }
 
     public interface IProtoClientIndex{
@@ -39,6 +40,7 @@ public class PrototocalTools {
         int tt_call_phone_back = 125;
         int response_update_phone_aapinfo = 127;
         int response_update_send_zip = 129;
+        int response_tt_time = 131;
     }
 
     public static boolean readToFour0x5aHeaderByte(ByteBufInputStream stream) throws IOException {
