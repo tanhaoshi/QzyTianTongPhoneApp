@@ -56,7 +56,7 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
     @Override
     public void initView() {
         showMainFragment();
-        remind(button,"12");
+//        remind(button,"12");
     }
 
     @Override

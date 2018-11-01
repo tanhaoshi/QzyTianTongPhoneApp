@@ -66,7 +66,6 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
 
     /**
      * 拨打电话
-     *
      * @param phoneNumber
      */
     public void dialPhone(String phoneNumber) {
@@ -140,6 +139,7 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
 
                 @Override
                 public void onError(Throwable e) {
+                    KLog.i(" look over error message = "+e.getMessage().toString());
                     mView.get().showError(e.getMessage().toString(),true);
                 }
 
@@ -166,7 +166,6 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
                     @Override
                     public void onSubscribe(Disposable d) {
                     }
-
                     @Override
                     public void onNext(List<CallRecordDao> value) {
                         mView.get().loadRefresh(value);
@@ -260,27 +259,6 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
             }
         });
         return mList;
-    }
-
-    public List<CallRecordDao> removeDuplicate(List<CallRecordDao> list)  {
-        for  ( int  i  =   0 ; i  <  list.size()  -   1 ; i ++ )  {
-            for  ( int  j  =  list.size()  -   1 ; j  >  i; j -- )  {
-                if(list.get(j).getPhoneNumber() != null && list.get(i).getPhoneNumber()!=null){
-                    int count = 0;
-                    if  (list.get(j).getPhoneNumber().equals(list.get(i).getPhoneNumber()))  {
-                        KLog.i(" look over duplicate data value = " + list.get(j).getPhoneNumber());
-                        count++;
-                        list.remove(j);
-                    }
-                    KLog.i(" look over statistics value = " + count);
-                }else if(list.get(j).getPhoneNumber() == null){
-                    list.remove(j);
-                }else if(list.get(i).getPhoneNumber() == null){
-                    list.remove(i);
-                }
-            }
-        }
-        return list;
     }
 
     public void release(){

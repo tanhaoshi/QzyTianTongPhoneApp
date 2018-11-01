@@ -1,6 +1,5 @@
 package com.tt.qzy.view.activity;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,10 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -19,22 +15,16 @@ import com.kaopiz.kprogresshud.KProgressHUD;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.DeleteContactsAdapter;
-import com.tt.qzy.view.adapter.SelectContactsAdapter;
 import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.bean.MallListModel;
-import com.tt.qzy.view.bean.SortModel;
 import com.tt.qzy.view.db.dao.MailListDao;
 import com.tt.qzy.view.db.manager.MailListManager;
 import com.tt.qzy.view.layout.ClearEditText;
 import com.tt.qzy.view.presenter.activity.DeleteContactsPresenter;
-import com.tt.qzy.view.presenter.activity.SelectContactsPresenter;
-import com.tt.qzy.view.utils.PingyinContacts;
-import com.tt.qzy.view.utils.PinyinComparator;
 import com.tt.qzy.view.layout.PopDeleteContactsWindow;
 import com.tt.qzy.view.layout.PopWindow;
 import com.tt.qzy.view.layout.SideBar;
 import com.tt.qzy.view.utils.NToast;
-import com.tt.qzy.view.utils.PinyinUtils;
 import com.tt.qzy.view.view.DeleteContactsView;
 
 import java.util.ArrayList;
@@ -96,11 +86,8 @@ public class DeleteContactsActivity extends AppCompatActivity implements DeleteC
                 break;
             case R.id.base_tv_toolbar_right:
                 if(!TextUtils.isEmpty(selectContacts.trim())){
-                    KLog.i(" delete cureent id = " + id);
-                    KLog.i("look over dao data = " + JSON.toJSONString(mMailListDaos));
-                    KLog.i(" look over mail dao data = "+ JSON.toJSONString(mMailListDaos.get(position)));
-//                    MailListManager.getInstance(TtPhoneApplication.getInstance())
-//                            .deleteMailContacts(mMailListDaos.get(position),TtPhoneApplication.getInstance());
+                    MailListManager.getInstance(TtPhoneApplication.getInstance())
+                            .deleteByPrimaryKey(id);
                     NToast.shortToast(DeleteContactsActivity.this,getResources().getString(R.string.TMT_delete_succeed));
                     finish();
                 }else{

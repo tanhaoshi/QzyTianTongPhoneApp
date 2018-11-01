@@ -10,6 +10,7 @@ import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.MailListDao;
 
 import org.greenrobot.greendao.query.QueryBuilder;
+import org.greenrobot.greendao.query.WhereCondition;
 
 import java.util.List;
 
@@ -39,7 +40,10 @@ public class CallRecordManager {
 
     public List<CallRecordDao> queryCallRecordList() {
         CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
-        QueryBuilder<CallRecordDao> qb = dao.queryBuilder();
+        QueryBuilder<CallRecordDao> qb = dao.queryBuilder().where(
+                new WhereCondition.StringCondition(
+                         " _id in " + "(select min(_id) from CALL_RECORD_DAO group by PHONE_NUMBER)")
+        );
         List<CallRecordDao> list = qb.list();
         return list;
     }
@@ -62,19 +66,23 @@ public class CallRecordManager {
 
     public List<CallRecordDao> limitCallRecordList(int offset,int limit){
         CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
-        List<CallRecordDao> list = dao.queryBuilder().offset(offset).limit(limit).orderDesc().list();
+        List<CallRecordDao> list = dao.queryBuilder().where(new WhereCondition.StringCondition(
+                " _id in " + "(select min(_id) from CALL_RECORD_DAO group by PHONE_NUMBER)")).offset(offset).limit(limit).orderDesc().list();
         return list;
     }
 
     public List<CallRecordDao> fuzzySearch(String value){
         CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
-        QueryBuilder<CallRecordDao> db = dao.queryBuilder().where(CallRecordDaoDao.Properties.Name.like("%"+value+"%"));
+        QueryBuilder<CallRecordDao> db = dao.queryBuilder().where(CallRecordDaoDao.Properties.Name.like("%"+value+"%"))
+                .where(new WhereCondition.StringCondition(
+                        " _id in " + "(select min(_id) from CALL_RECORD_DAO group by PHONE_NUMBER)"));
         List<CallRecordDao> daoList = db.list();
         if(daoList.size() > 0){
             return daoList;
         }else{
             QueryBuilder<CallRecordDao> queryBuilder = dao.queryBuilder().where(CallRecordDaoDao.Properties.PhoneNumber.
-                    like("%"+value+"%"));
+                    like("%"+value+"%")).where(new WhereCondition.StringCondition(
+                    " _id in " + "(select min(_id) from CALL_RECORD_DAO group by PHONE_NUMBER)"));
             List<CallRecordDao> list = queryBuilder.list();
             return list;
         }

@@ -51,7 +51,7 @@ public class BaseActivityPresenter extends BasePresenter<BaseMainView>{
     public int getBatteryScal(Object obj){
         PhoneCmd cmd = (PhoneCmd) obj;
         TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery = (TtPhoneBatteryProtos.TtPhoneBattery) cmd.getMessage();
-        int scal = ttPhoneBattery.getLevel();
+        int scal = ttPhoneBattery.getScale();
         return scal;
     }
 

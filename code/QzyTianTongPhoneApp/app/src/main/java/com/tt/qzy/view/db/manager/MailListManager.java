@@ -44,6 +44,12 @@ public class MailListManager {
         return list;
     }
 
+    public MailListDao queryIdMail(Long id){
+        MailListDaoDao daoDao = daoSession.getMailListDaoDao();
+        MailListDao mailListDao = daoDao.load(id);
+        return mailListDao;
+    }
+
     public void insertMailListList(List<MailListDao> mailListDaos,Context context) {
         if (mailListDaos == null || mailListDaos.isEmpty()) {
             return;
@@ -78,5 +84,10 @@ public class MailListManager {
             QueryBuilder<MailListDao> queryBuilder = dao.queryBuilder().where(MailListDaoDao.Properties.Phone.like("%"+value+"%"));
             return queryBuilder.list();
         }
+    }
+
+    public void deleteByPrimaryKey(Long id){
+        MailListDaoDao daoDao = daoSession.getMailListDaoDao();
+        daoDao.deleteByKey(id);
     }
 }

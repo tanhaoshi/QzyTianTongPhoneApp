@@ -72,4 +72,9 @@ public class ShortMessageManager {
        List<ShortMessageDao> list = qb.list();
        return list;
     }
+
+    public void deleteShortMessageOfPrimaryKey(Long id){
+       ShortMessageDaoDao daoDao = daoSession.getShortMessageDaoDao();
+       daoDao.deleteByKey(id);
+    }
 }

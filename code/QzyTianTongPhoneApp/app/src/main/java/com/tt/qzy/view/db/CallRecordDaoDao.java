@@ -33,6 +33,7 @@ public class CallRecordDaoDao extends AbstractDao<CallRecordDao, Long> {
         public final static Property Duration = new Property(6, long.class, "duration", false, "DURATION");
         public final static Property IsTitle = new Property(7, int.class, "isTitle", false, "IS_TITLE");
         public final static Property TitleName = new Property(8, String.class, "titleName", false, "TITLE_NAME");
+        public final static Property Count = new Property(9, int.class, "count", false, "COUNT");
     }
 
 
@@ -56,7 +57,8 @@ public class CallRecordDaoDao extends AbstractDao<CallRecordDao, Long> {
                 "\"DATE\" TEXT," + // 5: date
                 "\"DURATION\" INTEGER NOT NULL ," + // 6: duration
                 "\"IS_TITLE\" INTEGER NOT NULL ," + // 7: isTitle
-                "\"TITLE_NAME\" TEXT);"); // 8: titleName
+                "\"TITLE_NAME\" TEXT," + // 8: titleName
+                "\"COUNT\" INTEGER NOT NULL );"); // 9: count
     }
 
     /** Drops the underlying database table. */
@@ -105,6 +107,7 @@ public class CallRecordDaoDao extends AbstractDao<CallRecordDao, Long> {
         if (titleName != null) {
             stmt.bindString(9, titleName);
         }
+        stmt.bindLong(10, entity.getCount());
     }
 
     @Override
@@ -147,6 +150,7 @@ public class CallRecordDaoDao extends AbstractDao<CallRecordDao, Long> {
         if (titleName != null) {
             stmt.bindString(9, titleName);
         }
+        stmt.bindLong(10, entity.getCount());
     }
 
     @Override
@@ -165,7 +169,8 @@ public class CallRecordDaoDao extends AbstractDao<CallRecordDao, Long> {
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // date
             cursor.getLong(offset + 6), // duration
             cursor.getInt(offset + 7), // isTitle
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8) // titleName
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // titleName
+            cursor.getInt(offset + 9) // count
         );
         return entity;
     }
@@ -181,6 +186,7 @@ public class CallRecordDaoDao extends AbstractDao<CallRecordDao, Long> {
         entity.setDuration(cursor.getLong(offset + 6));
         entity.setIsTitle(cursor.getInt(offset + 7));
         entity.setTitleName(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setCount(cursor.getInt(offset + 9));
      }
     
     @Override

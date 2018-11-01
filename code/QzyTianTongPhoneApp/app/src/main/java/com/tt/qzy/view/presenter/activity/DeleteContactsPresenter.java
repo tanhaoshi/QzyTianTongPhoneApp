@@ -34,16 +34,8 @@ public class DeleteContactsPresenter extends BasePresenter<DeleteContactsView> {
             @Override
             public void subscribe(ObservableEmitter<List<MallListModel>> e) throws Exception {
                 List<MailListDao> listDaos = MailListManager.getInstance(context).queryMailList();
-//                if(listDaos.size() > 0) {
                 mView.get().getContactsDao(listDaos);
                 e.onNext(mergeData(listDaos, context));
-//                }else{
-//                }
-//                }else{
-//                    List<MallListModel> listModels = MallListUtils.readContacts(context);
-//                    saveInSqlite(context,listModels);
-//                    e.onNext(listModels);
-//                }
             }
         }).subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
@@ -51,7 +43,6 @@ public class DeleteContactsPresenter extends BasePresenter<DeleteContactsView> {
                 .subscribe(new Observer<List<MallListModel>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
                     }
 
                     @Override
@@ -77,7 +68,7 @@ public class DeleteContactsPresenter extends BasePresenter<DeleteContactsView> {
         for(MailListDao mailListDao : listDaos){
             listModels.add(new MallListModel(mailListDao.getPhone(),mailListDao.getName(),mailListDao.getId()));
         }
-        listModels.addAll(MallListUtils.readContacts(context));
+        //listModels.addAll(MallListUtils.readContacts(context));
         return removeDuplicate(listModels);
     }
 

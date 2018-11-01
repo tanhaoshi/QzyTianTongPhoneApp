@@ -50,9 +50,9 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
     public void onConnectedState(boolean state) {
         isConnected = state;
         if(isConnected){
-            stopReconnected();
+//            stopReconnected();
         }else {
-            startReconnected(port,ip);
+//            startReconnected(port,ip);
         }
         if(iNettyListener != null){
             if(state) {

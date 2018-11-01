@@ -1,6 +1,7 @@
 package com.tt.qzy.view.layout;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -9,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.tt.qzy.view.R;
+import com.tt.qzy.view.activity.DeleteShortMessageActivity;
 import com.tt.qzy.view.utils.NToast;
 
 /**
@@ -78,7 +80,8 @@ public class PopShortMessageWindow extends PopWindow {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NToast.shortToast(mContext,"删除");
+                Intent intent = new Intent(mContext, DeleteShortMessageActivity.class);
+                mContext.startActivity(intent);
                 dismiss();
             }
         });

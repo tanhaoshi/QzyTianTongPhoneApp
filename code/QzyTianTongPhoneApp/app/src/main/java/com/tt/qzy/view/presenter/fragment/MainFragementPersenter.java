@@ -98,7 +98,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
             return;
         }
 
-        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));
+        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.PORT)));
     }
 
     /**

@@ -86,6 +86,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEventBus event) {
+        KLog.i(" look over type : = " + event.getType() );
         switch (event.getType()) {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SUCCESS:
                 connectTianTongSuccess();
@@ -155,6 +156,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     }
 
     private void onBatteryInfoReceiver(int intLevel, int intScale) {
+        KLog.i("look over intLevel value = " + intLevel + " and " + " intScale value = " + intScale);
         int percent = intLevel * 100 / intScale;
         img1.setPower(percent);
     }

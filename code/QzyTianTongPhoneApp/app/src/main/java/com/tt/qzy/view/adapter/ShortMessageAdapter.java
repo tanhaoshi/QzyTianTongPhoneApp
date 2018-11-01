@@ -90,12 +90,12 @@ public class ShortMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         return false;
                     }
                 });
-                messageViewHolder.mLinearLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mOnItemClickListener.onClick(position);
-                    }
-                });
+//                messageViewHolder.mLinearLayout.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        mOnItemClickListener.onClick(position);
+//                    }
+//                });
                 messageViewHolder.mCompatButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

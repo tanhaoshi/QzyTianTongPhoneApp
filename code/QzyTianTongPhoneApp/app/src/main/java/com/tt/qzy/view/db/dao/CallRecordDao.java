@@ -19,10 +19,11 @@ public class CallRecordDao {
     private long duration;
     private int isTitle;
     private String titleName;
-    @Generated(hash = 175154190)
+    private int count;
+    @Generated(hash = 1973110022)
     public CallRecordDao(Long id, String phoneNumber, String name, String address,
-            String state, String date, long duration, int isTitle,
-            String titleName) {
+            String state, String date, long duration, int isTitle, String titleName,
+            int count) {
         this.id = id;
         this.phoneNumber = phoneNumber;
         this.name = name;
@@ -32,6 +33,7 @@ public class CallRecordDao {
         this.duration = duration;
         this.isTitle = isTitle;
         this.titleName = titleName;
+        this.count = count;
     }
 
     public CallRecordDao(String phoneNumber, String name, String address,
@@ -115,5 +117,13 @@ public class CallRecordDao {
 
     public void setDuration(long duration) {
         this.duration = duration;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }
