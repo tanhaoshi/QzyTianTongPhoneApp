@@ -361,7 +361,7 @@ public class TianTongServiceManager implements ITianTongServer {
     @Override
     public void sendSms(TtPhoneSmsProtos.TtPhoneSms ttPhoneSms) {
         if (mPhoneNettyManager != null) {
-            mPhoneNettyManager.senSms(ttPhoneSms);
+            mPhoneNettyManager.getmSmsPhoneManager().senSms(ttPhoneSms);
         }
     }
 

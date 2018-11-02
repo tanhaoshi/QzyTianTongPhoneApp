@@ -11,6 +11,7 @@ import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhoneAudioDataProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
+import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.data.TtTimeProtos;
 import com.qzy.tt.probuf.lib.data.PhoneAudioCmd;
 import com.qzy.tt.probuf.lib.data.PrototocalTools;
@@ -94,6 +95,10 @@ public class CmdHandler implements ICmdHandler {
                 case PrototocalTools.IProtoServerIndex.request_tt_time:
                     TtTimeProtos.TtTime ttTime = TtTimeProtos.TtTime.parseDelimitedFrom(inputStream);
                     senMsg(protoId, ttTime);
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_phone_send_sms_read:
+                    TtShortMessageProtos.TtShortMessage.ShortMessage  shortMessage = TtShortMessageProtos.TtShortMessage.ShortMessage.parseDelimitedFrom(inputStream);
+                    senMsg(protoId, shortMessage);
                     break;
                 default:
                     break;

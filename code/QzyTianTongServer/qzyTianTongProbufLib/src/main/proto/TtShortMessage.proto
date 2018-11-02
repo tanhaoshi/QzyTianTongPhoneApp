@@ -10,11 +10,13 @@ message TtShortMessage {
     bool response = 2;
 
     message ShortMessage {
-        string numberPhone = 1;
-        string message = 2;
-        string time = 3;
-        int32 type = 4;
-        string name = 5;
+        int64 id = 1;
+        string numberPhone = 2;
+        string message = 3;
+        string time = 4;
+        int32 type = 5;
+        string name = 6;
+        bool isRead = 7;//是否已读
     }
 
     repeated ShortMessage shortMessage = 3;

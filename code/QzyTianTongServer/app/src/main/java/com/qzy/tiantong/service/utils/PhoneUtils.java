@@ -1,5 +1,6 @@
 package com.qzy.tiantong.service.utils;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -96,9 +97,9 @@ public class PhoneUtils {
      * @param context
      * @return
      */
-    public static List<SmsInfo> getSms(Context context,int page,int pageCount) {
+    public static List<SmsInfo> getSms(Context context, int page, int pageCount) {
         List<SmsInfo> smsInfoList = null;
-        String[] projection = new String[]{"_id", "address", "person", "body", "date", "type"};
+        String[] projection = new String[]{"_id", "address", "person", "body", "date", "type", "read"};
         String sortOrder = "date desc limit  " + page * pageCount + "," + pageCount;
         try {
             Uri smsUri = Uri.parse("content://sms/");
@@ -109,6 +110,8 @@ public class PhoneUtils {
             String smsNumber;
             String smsBody;
             String smsDate;
+            int isRead = 0;
+            long id = 0;
             if (cursor != null) {
                 while (cursor.moveToNext()) {
                     smsType = cursor.getString(cursor.getColumnIndex("type"));
@@ -131,10 +134,12 @@ public class PhoneUtils {
                     smsName = getContactNameByAddr(context, smsNumber);
                     smsBody = cursor.getString(cursor.getColumnIndex("body"));
                     smsDate = cursor.getString(cursor.getColumnIndex("date"));
+                    isRead = cursor.getInt(cursor.getColumnIndex("read"));
+                    id = cursor.getInt(cursor.getColumnIndex("_id"));
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                     Date d = new Date(Long.parseLong(smsDate));
                     smsDate = dateFormat.format(d);
-                    SmsInfo smsInfo = new SmsInfo(type, smsName, smsNumber, smsBody, smsDate);
+                    SmsInfo smsInfo = new SmsInfo(id, type, smsName, smsNumber, smsBody, smsDate, isRead);
                     if (smsInfoList == null) {
                         smsInfoList = new ArrayList<>();
                     }
@@ -148,6 +153,37 @@ public class PhoneUtils {
         }
 
         return smsInfoList;
+    }
+
+
+    /**
+     * 设置短信已读
+     *
+     * @param context
+     * @return
+     */
+    public static boolean writeSmsRead(Context context, long id) {
+        try {
+            String[] projection = new String[]{"_id", "address", "person", "body", "date", "type", "read"};
+            String where = "id=?";
+            String[] whereS = new String[]{id + ""};
+            Uri smsUri = Uri.parse("content://sms/");
+            Cursor cursor = context.getContentResolver().query(smsUri, projection, where, whereS, "date desc");
+            if (cursor != null) {
+                cursor.moveToFirst();
+                ContentValues values = new ContentValues();
+                values.put("read", "1");
+                int sate = context.getContentResolver().update(smsUri, values, where, whereS);
+                cursor.close();
+                return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return false;
     }
 
     /**
@@ -173,12 +209,13 @@ public class PhoneUtils {
 
     /**
      * 查询通讯记录
+     *
      * @param context
-     * @param page     页数
-     * @param pageCount  每页的个数
+     * @param page      页数
+     * @param pageCount 每页的个数
      * @return
      */
-    public static List<CallLogInfo> getCallLog(Context context,int page,int pageCount) {
+    public static List<CallLogInfo> getCallLog(Context context, int page, int pageCount) {
         List<CallLogInfo> callLogList = null;
         String[] projection = {CallLog.Calls.CACHED_NAME, CallLog.Calls.NUMBER, CallLog.Calls.TYPE, CallLog.Calls.DURATION, CallLog.Calls.DATE};
         String sortOrder = CallLog.Calls.DEFAULT_SORT_ORDER + " limit  " + page * pageCount + "," + pageCount;  // 从那里取  取多少个
@@ -239,6 +276,7 @@ public class PhoneUtils {
 
     /**
      * 获取短信内容
+     *
      * @param intent
      * @return
      */

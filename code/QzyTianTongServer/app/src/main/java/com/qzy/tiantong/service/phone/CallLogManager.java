@@ -41,7 +41,7 @@ public class CallLogManager {
                     LogUtils.e("callLogInfo size  = " + callLogInfo.size());
                     TtCallRecordProtos.TtCallRecordProto.Builder listRecorder = TtCallRecordProtos.TtCallRecordProto.newBuilder();
                     for (CallLogInfo callInfo : callLogInfo) {
-                       // LogUtils.e("callInfo = " + callInfo.toString());
+                        // LogUtils.e("callInfo = " + callInfo.toString());
                         TtCallRecordProtos.TtCallRecordProto.CallRecord callRecord = TtCallRecordProtos.TtCallRecordProto.CallRecord.newBuilder()
                                 .setPhoneNumber(callInfo.getNumber())
                                 .setDate(callInfo.getDate())
@@ -89,11 +89,13 @@ public class CallLogManager {
                     for (SmsInfo smsInfo : smsList) {
                         //LogUtils.d("smsInfo  = " + smsInfo.toString());
                         TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage = TtShortMessageProtos.TtShortMessage.ShortMessage.newBuilder()
+                                .setId(smsInfo.getId())
                                 .setNumberPhone(smsInfo.getNumber())
                                 .setName(smsInfo.getName())
                                 .setMessage(smsInfo.getBody())
                                 .setTime(smsInfo.getDate())
                                 .setType(smsInfo.getType())
+                                .setIsRead(smsInfo.getIsRead() == 1 ? true : false)
                                 .build();
                         ttShortMessage.addShortMessage(shortMessage);
                     }

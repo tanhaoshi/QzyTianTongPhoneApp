@@ -15,8 +15,11 @@ import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tiantong.service.phone.data.SmsInfo;
 import com.qzy.tiantong.service.phone.obersever.SmsDatabaseChaneObserver;
 import com.qzy.tiantong.service.utils.PhoneUtils;
+import com.qzy.tt.data.TtPhoneSmsProtos;
+import com.qzy.tt.data.TtShortMessageProtos;
 
 import java.util.List;
 
@@ -71,6 +74,8 @@ public class SmsPhoneManager {
         intentFilter.addAction(SMS_ACTION_RECEIVER);
         mContext.registerReceiver(mReceiverSms, intentFilter);
 
+        registerSmsDatabaseChangeObserver(mContext);
+
     }
 
     /**
@@ -81,6 +86,8 @@ public class SmsPhoneManager {
 
         mContext.unregisterReceiver(mSendReceiver);
         mContext.unregisterReceiver(mReceReceiver);
+
+        unregisterSmsDatabaseChangeObserver(mContext);
     }
 
 
@@ -155,7 +162,12 @@ public class SmsPhoneManager {
         //因为，某些机型修改rom导致没有getContentResolver
         final Uri SMS_MESSAGE_URI = Uri.parse("content://sms");
         try {
-            mSmsDBChangeObserver = new SmsDatabaseChaneObserver(context.getContentResolver(), new Handler());
+            mSmsDBChangeObserver = new SmsDatabaseChaneObserver(context.getContentResolver(), new Handler(), new SmsDatabaseChaneObserver.IReceiverMsgListener() {
+                @Override
+                public void onReceiveMsg(SmsInfo smsInfo) {
+                    mCallback.onReceiveSms(smsInfo);
+                }
+            });
             context.getContentResolver().registerContentObserver(SMS_MESSAGE_URI, true, mSmsDBChangeObserver);
         } catch (Throwable b) {
         }
@@ -240,6 +252,28 @@ public class SmsPhoneManager {
         }
     };
 
+
+    /**
+     * 发送短信
+     *
+     * @param ttPhoneSms
+     */
+    public void senSms(TtPhoneSmsProtos.TtPhoneSms ttPhoneSms) {
+        sendSms(ttPhoneSms.getIp(), ttPhoneSms.getPhoneNumber(), ttPhoneSms.getMessageText());
+    }
+
+
+    /**
+     * 更新短信已读状态
+     *
+     * @param ttShortMessage
+     */
+    public void updateSmsRead(TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessage) {
+        long id = ttShortMessage.getId();
+        LogUtils.d("id = " + id);
+        PhoneUtils.writeSmsRead(mContext, id);
+    }
+
     /**
      * 发送短信
      *
@@ -247,7 +281,7 @@ public class SmsPhoneManager {
      * @param phoneNumber
      * @param message
      */
-    public void sendSms(final String ip, final String phoneNumber, final String message) {
+    private void sendSms(final String ip, final String phoneNumber, final String message) {
         sentIntent.putExtra("phone_number", phoneNumber);
         sentIntent.putExtra("ip", ip);
         sentPI = PendingIntent.getBroadcast(mContext, 0, sentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -285,6 +319,8 @@ public class SmsPhoneManager {
         void onReceiveFailed(String ip, String phoneNumber);
 
         void onReceiveSms(String phoneNumber, String smsBody);
+
+        void onReceiveSms(SmsInfo smsInfo);
     }
 
 }

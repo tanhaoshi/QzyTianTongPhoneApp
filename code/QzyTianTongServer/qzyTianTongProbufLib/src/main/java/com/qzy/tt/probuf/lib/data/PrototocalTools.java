@@ -24,6 +24,7 @@ public class PrototocalTools {
         int request_update_phone_aapinfo = 118;
         int request_update_send_zip = 120;
         int request_tt_time = 122;
+        int request_phone_send_sms_read = 124;
     }
 
     public interface IProtoClientIndex{

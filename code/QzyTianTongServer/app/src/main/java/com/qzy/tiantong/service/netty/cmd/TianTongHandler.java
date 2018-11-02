@@ -10,6 +10,7 @@ import com.qzy.tt.data.TtBeiDouStatuss;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
+import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.data.TtTimeProtos;
 import com.qzy.tt.probuf.lib.data.PrototocalTools;
 import com.qzy.voice.VoiceManager;
@@ -43,7 +44,7 @@ public class TianTongHandler extends Handler {
                     CallPhoneProtos.CallPhone callPhone = (CallPhoneProtos.CallPhone) msg.obj;
                     if (callPhone != null) {
                         if (callPhone.getPhonecommand() == CallPhoneProtos.CallPhone.PhoneCommand.CALL) {
-                            mServer.getQzyPhoneManager().callPhone(callPhone.getIp(),callPhone.getPhoneNumber());
+                            mServer.getQzyPhoneManager().callPhone(callPhone.getIp(), callPhone.getPhoneNumber());
                         } else if (callPhone.getPhonecommand() == CallPhoneProtos.CallPhone.PhoneCommand.HUANGUP) {
                             mServer.getQzyPhoneManager().hangupPhone(callPhone.getIp());
                         } else if (callPhone.getPhonecommand() == CallPhoneProtos.CallPhone.PhoneCommand.ACCEPTCALL) {
@@ -52,11 +53,11 @@ public class TianTongHandler extends Handler {
                     }
                     break;
                 case PrototocalTools.IProtoServerIndex.chang_pcmplayer_db:
-                    ChangePcmPlayerDbProtos.ChangePcmPlayerDb changePcmPlayerDb = (ChangePcmPlayerDbProtos.ChangePcmPlayerDb)msg.obj;
+                    ChangePcmPlayerDbProtos.ChangePcmPlayerDb changePcmPlayerDb = (ChangePcmPlayerDbProtos.ChangePcmPlayerDb) msg.obj;
                     VoiceManager.setVolume(changePcmPlayerDb.getDb());
                     break;
                 case PrototocalTools.IProtoServerIndex.phone_send_sms:
-                    TtPhoneSmsProtos.TtPhoneSms ttPhoneSms = (TtPhoneSmsProtos.TtPhoneSms)msg.obj;
+                    TtPhoneSmsProtos.TtPhoneSms ttPhoneSms = (TtPhoneSmsProtos.TtPhoneSms) msg.obj;
                     mServer.sendSms(ttPhoneSms);
                     break;
                 case PrototocalTools.IProtoServerIndex.request_gps_position:
@@ -67,6 +68,9 @@ public class TianTongHandler extends Handler {
                     break;
                 case PrototocalTools.IProtoServerIndex.request_tt_time:
                     mServer.getPhoneNettyManager().getmDateTimeManager().setDataAndTime((TtTimeProtos.TtTime) msg.obj);
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_phone_send_sms_read:
+                    mServer.getPhoneNettyManager().getmSmsPhoneManager().updateSmsRead((TtShortMessageProtos.TtShortMessage.ShortMessage) msg.obj);
                     break;
                 default:
                     break;
