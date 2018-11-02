@@ -71,7 +71,7 @@ public class AddContactsActivity extends AppCompatActivity {
                 break;
             case R.id.base_tv_toolbar_right:
                 handleData();
-                NToast.shortToast(AddContactsActivity.this,getString(R.string.TMT_save_success));
+                NToast.shortToast(AddContactsActivity.this,getString(R.string.TMT_save_succeed));
                 finish();
                 break;
         }

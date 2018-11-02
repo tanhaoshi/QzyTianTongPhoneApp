@@ -2,8 +2,6 @@ package com.tt.qzy.view.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,17 +13,20 @@ import android.widget.TextView;
 
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
-import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.base.BaseActivity;
-import com.tt.qzy.view.bean.TtBeidouOpenBean;
+import com.tt.qzy.view.bean.DatetimeModel;
 import com.tt.qzy.view.presenter.activity.SettingsPresenter;
 import com.tt.qzy.view.utils.Constans;
+import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.SPUtils;
 import com.tt.qzy.view.view.SettingsView;
 
+
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +34,8 @@ import butterknife.OnClick;
 
 public class SettingsActivity extends BaseActivity<SettingsView> implements SettingsView{
 
-    private AlertDialog dialog;
+    private AlertDialog wifiDialog;
+    private AlertDialog dateDialog;
 
     @BindView(R.id.setting_map)
     TextView setting_map;
@@ -41,7 +43,6 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
     SwitchCompat mSwitchCompat;
 
     private SettingsPresenter mPresenter;
-
 
     @Override
     public int getContentView() {
@@ -70,14 +71,12 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
 
     @Override
     public void initData() {
-
     }
 
-    @OnClick({R.id.settings_sos,R.id.setting_map,R.id.setting_about,R.id.main_quantity})
+    @OnClick({R.id.settings_sos,R.id.setting_map,R.id.setting_about,R.id.main_quantity,R.id.settings_wifi,R.id.settings_date_time})
     public void onClick(View view){
         switch (view.getId()){
             case R.id.settings_sos:
-//                ininDialog();
                 jumpSosSetting();
                 break;
             case R.id.setting_map:
@@ -91,6 +90,12 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
             case R.id.main_quantity:
                 finish();
                 break;
+            case R.id.settings_wifi:
+                initWIFIDialog();
+                break;
+            case R.id.settings_date_time:
+                initDateDialog();
+                break;
         }
     }
 
@@ -99,19 +104,19 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
         startActivity(intent);
     }
 
-    public void ininDialog(){
+    public void initWIFIDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
         LayoutInflater inflater = LayoutInflater.from(SettingsActivity.this);
         View v = inflater.inflate(R.layout.customied_dialog_style, null);
         final EditText custom_input = (EditText)v.findViewById(R.id.custom_input);
         final TextView custom_cannel = (TextView)v.findViewById(R.id.custom_cannel);
         final TextView custom_yes = (TextView)v.findViewById(R.id.custom_yes);
-        dialog = builder.create();
-        dialog.setView(inflater.inflate(R.layout.customied_dialog_style, null));
-        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        dialog.show();
-        dialog.getWindow().setContentView(v);
-        dialog.getWindow().setGravity(Gravity.BOTTOM);
+        wifiDialog = builder.create();
+        wifiDialog.setView(inflater.inflate(R.layout.customied_dialog_style, null));
+        wifiDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        wifiDialog.show();
+        wifiDialog.getWindow().setContentView(v);
+        wifiDialog.getWindow().setGravity(Gravity.BOTTOM);
 
         custom_input.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,7 +128,7 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
         custom_cannel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                 dialog.dismiss();
+                wifiDialog.dismiss();
             }
         });
 
@@ -131,11 +136,47 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
             @Override
             public void onClick(View view) {
                 NToast.shortToast(SettingsActivity.this,getResources().getString(R.string.TMT_share));
-                dialog.dismiss();
+                wifiDialog.dismiss();
             }
         });
     }
 
+    private void initDateDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
+        LayoutInflater inflater = LayoutInflater.from(SettingsActivity.this);
+        View v = inflater.inflate(R.layout.dialog_datetime_settings, null);
+        final TextView custom_input = (TextView) v.findViewById(R.id.custom_input);
+        final TextView custom_cannel = (TextView)v.findViewById(R.id.custom_cannel);
+        final TextView custom_yes = (TextView)v.findViewById(R.id.custom_yes);
+        dateDialog = builder.create();
+        dateDialog.setView(inflater.inflate(R.layout.customied_dialog_style, null));
+        dateDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        dateDialog.show();
+        dateDialog.getWindow().setContentView(v);
+        dateDialog.getWindow().setGravity(Gravity.BOTTOM);
+        custom_input.setText(getString(R.string.TMT_setting_content_server_date) + DateUtil.backTimeFomat(new Date()));
+        custom_cannel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dateDialog.dismiss();
+            }
+        });
+
+        custom_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_TIME_DATE,
+                        new DatetimeModel(DateUtil.backTimeFomat(new Date()))));
+                NToast.shortToast(SettingsActivity.this,getResources().getString(R.string.TMT_date_sync_succeed));
+                dateDialog.dismiss();
+            }
+        });
+    }
+
+    /**
+     * 设置edittext  当软键盘弹出时自动向上弹 避免内容被覆盖。
+     * @param editText
+     */
     public void showSoftInputFromWindow(EditText editText) {
         editText.setFocusable(true);
         editText.setFocusableInTouchMode(true);
@@ -145,27 +186,22 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
 
     @Override
     public void usbSwtich(boolean isOpen) {
-
     }
 
     @Override
     public void showProgress(boolean isTrue) {
-
     }
 
     @Override
     public void hideProgress() {
-
     }
 
     @Override
     public void showError(String msg, boolean pullToRefresh) {
-
     }
 
     @Override
     public void loadData(boolean pullToRefresh) {
-
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.tt.qzy.view.adapter;
 
 
 import android.content.Context;
+import android.icu.util.ValueIterator;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.db.dao.CallRecordDao;
+import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.DateUtil;
 
 import java.util.List;
@@ -65,15 +67,15 @@ public class CallRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             case NORMAL_VALUE:
                 CallRecordViewHolder callRecordViewHolder = (CallRecordViewHolder)holder;
                 callRecordViewHolder.phoneNumber.setText(mModelList.get(position).getPhoneNumber());
-                callRecordViewHolder.address.setText(mModelList.get(position).getAddress());
                 callRecordViewHolder.duration.setText("通话时长:"+DateUtil.secondToDate(mModelList.get(position).getDuration(),"mm:ss"));
                 callRecordViewHolder.date.setText(mModelList.get(position).getDate());
-//                callRecordViewHolder.see_detail.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        mOnItemClickListener.onClick(position);
-//                    }
-//                });
+                if(Constans.ANSWER == Integer.valueOf(mModelList.get(position).getState())){
+                    callRecordViewHolder.status.setText(mContext.getString(R.string.TMT_ANSWER));
+                }else if(Constans.PUTOUT == Integer.valueOf(mModelList.get(position).getState())){
+                    callRecordViewHolder.status.setText(mContext.getString(R.string.TMT_PUTOUT));
+                }else{
+                    callRecordViewHolder.status.setText(mContext.getString(R.string.TMT_UNKNOW_STATUS));
+                }
                 callRecordViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -105,21 +107,21 @@ public class CallRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         LinearLayout mobile;
         TextView phoneNumber;
-        TextView address;
         TextView duration;
         TextView date;
         LinearLayout see_detail;
         LinearLayout linearLayout;
+        TextView status;
 
         public CallRecordViewHolder(View view){
             super(view);
             mobile = (LinearLayout)view.findViewById(R.id.mobile);
             phoneNumber = (TextView)view.findViewById(R.id.phoneNumber);
-            address = (TextView)view.findViewById(R.id.address);
             duration = (TextView)view.findViewById(R.id.duration);
             date = (TextView)view.findViewById(R.id.date);
             see_detail = (LinearLayout) view.findViewById(R.id.see_detail);
             linearLayout = (LinearLayout)view.findViewById(R.id.linearLayout);
+            status = (TextView) view.findViewById(R.id.status);
         }
     }
 

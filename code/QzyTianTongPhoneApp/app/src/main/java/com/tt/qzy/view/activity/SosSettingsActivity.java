@@ -77,7 +77,7 @@ public class SosSettingsActivity extends BaseActivity {
             SPUtils.putShare(SosSettingsActivity.this,Constans.CRY_HELP_TIMETIMER,defaultValue);
         }
 
-        NToast.shortToast(SosSettingsActivity.this,getString(R.string.TMT_save_success));
+        NToast.shortToast(SosSettingsActivity.this,getString(R.string.TMT_save_succeed));
 
         finish();
     }

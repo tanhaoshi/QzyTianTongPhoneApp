@@ -88,4 +88,10 @@ public interface NetService {
 
 //    @POST("ship/saveManUserId")
 //    Observable<ResponseBody> addMember(@Body Test str);
+
+    //http://47.106.33.137:9097/TinTong/web/versionrecord/getNewestVersion
+    @POST("versionrecord/getNewestVersion")
+    @FormUrlEncoded
+    Observable<ResponseBody> getAppVersion(
+    );
 }

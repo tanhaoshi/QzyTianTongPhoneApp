@@ -18,7 +18,7 @@ public interface Constans {
 
     String TTM_STATUS = "ttm_status";
 
-    String BASE_URL = "";
+    String BASE_URL = "http://47.106.33.137:9097/TinTong/web/";
 
     String IP = "192.168.43.1";
     int UPLOAD_PORT = 9998;
@@ -26,4 +26,6 @@ public interface Constans {
 
     String SERVER_APP_VERSION = "3";
 
+    int ANSWER = 1;
+    int PUTOUT = 2;
 }

@@ -44,9 +44,8 @@
 
                 <TextView
                     android:id="@+id/phoneNumber"
-                    android:text="181-2644-0000"
                     android:textSize="12sp"
-                    android:textColor="#F95972"
+                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -56,10 +55,10 @@
                     android:layout_height="14dp">
 
                     <TextView
-                        android:visibility="gone"
-                        android:id="@+id/address"
-                        android:text="通话时长:"
-                        android:textSize="12sp"
+                        android:id="@+id/status"
+                        android:text=""
+                        android:textColor="@color/red"
+                        android:textSize="10sp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginTop="2dp"
                         android:layout_width="wrap_content"
@@ -77,6 +76,7 @@
                     <TextView
                         android:id="@+id/duration"
                         android:textSize="10sp"
+                        android:layout_marginLeft="12dp"
                         android:text="通话时长:"
                         android:layout_marginTop="2dp"
                         android:layout_gravity="center_vertical"

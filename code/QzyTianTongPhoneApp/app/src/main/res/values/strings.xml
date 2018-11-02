@@ -24,8 +24,11 @@
     <string name="TMT_about">关于</string>
     <string name="TMT_factroy_reset">恢复出厂设置</string>
     <string name="TMT_link_phone">请输入紧急联系电话</string>
+    <string name="TMT_please_input_wifipassword">请输入WIFI热点密码</string>
+    <string name="TMT_please_settings_tt_server_date">设置天通猫时间</string>
     <string name="TMT_cannel">取消</string>
     <string name="TMT_yes">确认</string>
+    <string name="TMT_date_sync_succeed">同步天通猫时间成功!</string>
     <string name="TMT_share">已保存</string>
     <string name="TMT_city_name">城市列表</string>
     <string name="TMT_load_manager">下载管理</string>
@@ -79,13 +82,13 @@
     <string name="TMT_please_input_timetimer">发送间隔(秒)</string>
     <string name="TMT_is_empty_null">手机号不能为空!</string>
     <string name="TMT_COME_ON_HELP_ME">赶快来救我!</string>
-    <string name="TMT_save_success">保存成功!</string>
+    <string name="TMT_save_succeed">保存成功!</string>
     <string name="TMT_remind">请先去完成SOS设置!</string>
     <string name="TMT_dataisnull">没有更多的数据了!</string>
     <!-- 连接成功状态下 -->
-    <string name="TMT_connect_sussces">已连接</string>
+    <string name="TMT_connect_succeed">已连接</string>
     <string name="TMT_connect_tiantong_please">请连接天通</string>
-    <string name="TMT_connect_sussces_notice">已连接天通</string>
+    <string name="TMT_connect_succeed_notice">已连接天通</string>
     <string name="TMT_dial_number_notmull">电话号码不能为空</string>
     <string name="TMT_dial_dialing">正在拨号</string>
     <string name="TMT_gps_position_filed">获取天通猫定位失败!</string>
@@ -100,4 +103,8 @@
     <string name="TMT_usb_swtich">USB切换</string>
     <string name="TMT_select_shortMessage">选择短信</string>
     <string name="TMT_please_select_shortMessage">请先选择短信!</string>
+    <string name="TMT_setting_content_server_date"> 点击确定,将手机时间同步到设备中当前时间:</string>
+    <string name="TMT_ANSWER">来电</string>
+    <string name="TMT_PUTOUT">拨出</string>
+    <string name="TMT_UNKNOW_STATUS">未接通</string>
 </resources>

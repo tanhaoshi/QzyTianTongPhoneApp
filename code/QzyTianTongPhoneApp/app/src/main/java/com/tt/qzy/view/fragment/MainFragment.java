@@ -173,8 +173,8 @@ public class MainFragment extends Fragment implements MainFragmentView{
     private void setConnectStateView(boolean isConnected) {
         if (isConnected) {
             mCircleImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.yilianjie));
-            connect.setText(getResources().getString(R.string.TMT_connect_sussces));
-            NToast.shortToast(getActivity(), getString(R.string.TMT_connect_sussces_notice));
+            connect.setText(getResources().getString(R.string.TMT_connect_succeed));
+            NToast.shortToast(getActivity(), getString(R.string.TMT_connect_succeed_notice));
         } else {
             mCircleImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.weilianjie));
             connect.setText(getResources().getString(R.string.TMT_click_connect));

@@ -26,7 +26,7 @@ import io.netty.handler.codec.http.multipart.FileUpload;
 
 public class MainActivity extends BaseActivity<MainActivityView> implements ShortMessageFragment.OnKeyDownListener{
 
-    @BindView(R.id.search_close_btn)
+    @BindView(R.id.shortMessage)
     Button button;
 
     private MainFragment mMainFragment;
@@ -163,6 +163,7 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
     @Override
     protected void onStart() {
         super.onStart();
+
         startServcie();
     }
 
@@ -214,7 +215,6 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
 
     @Override
     public void showProgress(boolean isTrue) {
-
     }
 
     @Override
