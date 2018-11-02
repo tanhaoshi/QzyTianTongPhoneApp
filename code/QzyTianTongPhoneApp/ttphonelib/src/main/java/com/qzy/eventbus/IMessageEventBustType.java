@@ -55,4 +55,8 @@ public interface IMessageEventBustType {
     String EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_TIME_DATE = "event_bus_type_connect_tiantong_request_server_time_date";
     // 获取服务时间返回响应
     String EVENT_BUS_TYPE_CONNECT_TIANTONG__RESPONSE_SERVER_TIME_DATE = "event_bus_type_connect_tiantong_response_server_time_date";
+    // 发送短信已读状态
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SHORT_MESSAGE = "event_bus_type_connect_tiantong_request_server_short_message";
+    // 设置wifi密码
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_WIFI_PASSWORD = "event_bus_type_connect_tiantong_request_server_wifi_password";
 }

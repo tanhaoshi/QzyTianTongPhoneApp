@@ -10,10 +10,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.bean.ShortMessageModel;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
@@ -80,35 +83,41 @@ public class ShortMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 messageViewHolder.message.setText(mModelList.get(position).getMessage());
                 messageViewHolder.phoneNumber.setText(mModelList.get(position).getNumberPhone());
                 messageViewHolder.time.setText(mModelList.get(position).getTime());
-                messageViewHolder.mLinearLayout.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        for(Integer integer : mHashMap.keySet()){
-                            mHashMap.get(integer).setVisibility(View.VISIBLE);
-                        }
-                        mOnItemClickListener.onLongClick(position);
-                        return false;
-                    }
-                });
-//                messageViewHolder.mLinearLayout.setOnClickListener(new View.OnClickListener() {
+                KLog.i("look over boolean value = " + mModelList.get(position).getIsStatus());
+                if(mModelList.get(position).getIsStatus()){
+                    messageViewHolder.dot.setVisibility(View.INVISIBLE);
+                }else{
+                    messageViewHolder.dot.setVisibility(View.VISIBLE);
+                }
+//                messageViewHolder.mLinearLayout.setOnLongClickListener(new View.OnLongClickListener() {
 //                    @Override
-//                    public void onClick(View v) {
-//                        mOnItemClickListener.onClick(position);
+//                    public boolean onLongClick(View v) {
+//                        for(Integer integer : mHashMap.keySet()){
+//                            mHashMap.get(integer).setVisibility(View.VISIBLE);
+//                        }
+//                        mOnItemClickListener.onLongClick(position);
+//                        return false;
 //                    }
 //                });
-                messageViewHolder.mCompatButton.setOnClickListener(new View.OnClickListener() {
+                messageViewHolder.mLinearLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(mModelList.get(position).getIsCheck()){
-                            messageViewHolder.mCompatButton.setChecked(false);
-                            mModelList.get(position).setIsCheck(((RadioButton)v).isChecked());
-                        }else{
-                            messageViewHolder.mCompatButton.setChecked(true);
-                            mModelList.get(position).setIsCheck(((RadioButton)v).isChecked());
-                            mOnItemClickListener.onClick(position);
-                        }
+                        mOnItemClickListener.onClick(position);
                     }
                 });
+//                messageViewHolder.mCompatButton.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        if(mModelList.get(position).getIsCheck()){
+//                            messageViewHolder.mCompatButton.setChecked(false);
+//                            mModelList.get(position).setIsCheck(((RadioButton)v).isChecked());
+//                        }else{
+//                            messageViewHolder.mCompatButton.setChecked(true);
+//                            mModelList.get(position).setIsCheck(((RadioButton)v).isChecked());
+//                            mOnItemClickListener.onClick(position);
+//                        }
+//                    }
+//                });
                 if(mModelList.get(position).getIsCheck()){
                     messageViewHolder.mCompatButton.setChecked(true);
                     messageViewHolder.mCompatButton.setVisibility(View.VISIBLE);
@@ -135,6 +144,7 @@ public class ShortMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView time;
         AppCompatRadioButton mCompatButton;
         LinearLayout mLinearLayout;
+        ImageView dot;
 
         public MessageViewHolder(View v) {
             super(v);
@@ -143,6 +153,7 @@ public class ShortMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             time = (TextView)v.findViewById(R.id.isTime);
             mCompatButton = (AppCompatRadioButton)v.findViewById(R.id.isOpen);
             mLinearLayout = (LinearLayout)v.findViewById(R.id.lLayout);
+            dot = (ImageView)v.findViewById(R.id.dot);
         }
     }
 

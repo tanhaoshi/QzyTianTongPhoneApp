@@ -9,6 +9,8 @@ import android.net.Uri;
 import java.io.IOException;
 
 public class RingToneUtils {
+
+    private static MediaPlayer mMediaPlayer;
     /**
      * 获取铃声Uri
      */
@@ -28,7 +30,7 @@ public class RingToneUtils {
      */
 
     public static void playRingtone(Context context){
-        MediaPlayer mMediaPlayer = MediaPlayer.create(context,getDetaultRingtoneUri((context),RingtoneManager.TYPE_RINGTONE));
+        mMediaPlayer = MediaPlayer.create(context,getDetaultRingtoneUri((context),RingtoneManager.TYPE_RINGTONE));
         mMediaPlayer.setLooping(true);
         try {
             mMediaPlayer.prepare();
@@ -38,5 +40,14 @@ public class RingToneUtils {
             e.printStackTrace();
         }
         mMediaPlayer.start();
+    }
+
+    public static void stopRingtone(Context context){
+        if(mMediaPlayer != null){
+            mMediaPlayer.stop();
+        }else{
+            mMediaPlayer = MediaPlayer.create(context,getDetaultRingtoneUri((context),RingtoneManager.TYPE_RINGTONE));
+            mMediaPlayer.stop();
+        }
     }
 }

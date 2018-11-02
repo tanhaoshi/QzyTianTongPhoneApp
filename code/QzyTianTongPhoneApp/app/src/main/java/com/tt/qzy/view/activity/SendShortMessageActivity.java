@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.qzy.data.PhoneCmd;
 import com.qzy.eventbus.EventBusUtils;
@@ -24,11 +23,14 @@ import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.MsgAdapter;
 import com.tt.qzy.view.bean.MsgModel;
+import com.tt.qzy.view.bean.SMAgrementModel;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
 import com.tt.qzy.view.db.manager.ShortMessageManager;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NToast;
+import com.tt.qzy.view.utils.RingToneUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -85,6 +87,8 @@ public class SendShortMessageActivity extends AppCompatActivity {
                 MsgModel msgModel = new MsgModel(shortMessageDao.getMessage(), Integer.valueOf(shortMessageDao.getState()));
                 msgList.add(msgModel);
             }
+            EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SHORT_MESSAGE,new
+                    SMAgrementModel(intent.getLongExtra(Constans.SHORT_MESSAGE_ID,-1))));
         }
     }
 
@@ -158,16 +162,17 @@ public class SendShortMessageActivity extends AppCompatActivity {
         PhoneCmd cmd = (PhoneCmd) object;
         TtPhoneSmsProtos.TtPhoneSms ttPhoneSms = (TtPhoneSmsProtos.TtPhoneSms) cmd.getMessage();
         if (ttPhoneSms.getIsSendSuccess()) {
+            RingToneUtils.stopRingtone(SendShortMessageActivity.this);
             NToast.shortToast(this, R.string.TMT_sendMessage_success);
         }else{
             NToast.shortToast(this, R.string.TMT_sendMessage_failed);
         }
 
-        if (ttPhoneSms.getIsReceiverSuccess()) {
-            NToast.shortToast(this, R.string.TMT_sendMessage_receiver);
-        }else{
-            NToast.shortToast(this, R.string.TMT_sendMessage_receiver_failed);
-        }
+//        if (ttPhoneSms.getIsReceiverSuccess()) {
+//            NToast.shortToast(this, R.string.TMT_sendMessage_receiver);
+//        }else{
+//            NToast.shortToast(this, R.string.TMT_sendMessage_receiver_failed);
+//        }
     }
 
     /**

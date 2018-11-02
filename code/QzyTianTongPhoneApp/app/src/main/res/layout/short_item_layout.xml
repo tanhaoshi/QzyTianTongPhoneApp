@@ -18,10 +18,18 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/dot"
+            android:src="@drawable/dot"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
             android:layout_width="27dp"
             android:layout_height="27dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="22dp"
+            android:layout_marginLeft="8dp"
             android:src="@drawable/mine_default_avatar"/>
 
         <LinearLayout

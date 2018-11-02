@@ -134,7 +134,8 @@ public class SyncManager {
         if(list.size() > 0){
             for(TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage : list){
                 shortMessageDaos.add(new ShortMessageDao(shortMessage.getNumberPhone(),shortMessage.getMessage(),
-                        shortMessage.getTime(),String.valueOf(shortMessage.getType()),shortMessage.getName()));
+                        shortMessage.getTime(),String.valueOf(shortMessage.getType()),shortMessage.getName(),
+                        shortMessage.getId(),shortMessage.getIsRead()));
             }
         }
         return shortMessageDaos;
@@ -172,7 +173,8 @@ public class SyncManager {
 
     private ShortMessageDao meragingShortMessage(TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage){
         ShortMessageDao shortMessageDao = new ShortMessageDao(shortMessage.getNumberPhone(),shortMessage.getMessage(),
-                DateUtil.backTimeFomat(new Date()),String.valueOf(shortMessage.getType()),shortMessage.getName());
+                DateUtil.backTimeFomat(new Date()),String.valueOf(shortMessage.getType()),shortMessage.getName(),
+                shortMessage.getId(),shortMessage.getIsRead());
         return shortMessageDao;
     }
 }

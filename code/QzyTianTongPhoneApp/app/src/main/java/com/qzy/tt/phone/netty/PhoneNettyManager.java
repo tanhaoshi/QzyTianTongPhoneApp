@@ -20,6 +20,7 @@ import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.data.TtPhoneUpdateAppInfoProtos;
 import com.qzy.tt.data.TtPhoneUpdateSendFileProtos;
+import com.qzy.tt.data.TtPhoneWifiProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.data.TtTimeProtos;
 import com.qzy.tt.phone.cmd.CmdHandler;
@@ -31,8 +32,10 @@ import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.bean.AppInfoModel;
 import com.tt.qzy.view.bean.DatetimeModel;
+import com.tt.qzy.view.bean.SMAgrementModel;
 import com.tt.qzy.view.bean.ServerPortIp;
 import com.tt.qzy.view.bean.TtBeidouOpenBean;
+import com.tt.qzy.view.bean.WifiSettingModel;
 import com.tt.qzy.view.utils.AssetFileUtils;
 import com.tt.qzy.view.utils.DateUtil;
 
@@ -223,6 +226,29 @@ public class PhoneNettyManager {
     }
 
     /**
+     * 发送至服务器修改短信读的状态
+     */
+    private void requestServerShortMessageStatus(Object o){
+        SMAgrementModel smAgrementModel = (SMAgrementModel)o;
+        TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage = TtShortMessageProtos.TtShortMessage.ShortMessage.newBuilder()
+                .setIsRead(true)
+                .setId(smAgrementModel.getId())
+                .build();
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_phone_send_sms_read,shortMessage));
+    }
+
+    /**
+     * 发送至服务器修改wifi密码
+     */
+    private void requestServerWifipassword(Object o){
+        WifiSettingModel wifiSettingModel = (WifiSettingModel)o;
+        TtPhoneWifiProtos.TtWifi ttWifi = TtPhoneWifiProtos.TtWifi.newBuilder()
+                .setPasswd(wifiSettingModel.getWifiPassword())
+                .build();
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_phone_set_wifi_passwd,ttWifi));
+    }
+
+    /**
      * 开始链接下载
      */
     private void startUpload(){
@@ -388,6 +414,12 @@ public class PhoneNettyManager {
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_TIME_DATE:
                 requestServerDatetime(event.getObject());
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SHORT_MESSAGE:
+                requestServerShortMessageStatus(event.getObject());
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_WIFI_PASSWORD:
+                requestServerWifipassword(event.getObject());
                 break;
         }
     }

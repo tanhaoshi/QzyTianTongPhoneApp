@@ -16,9 +16,11 @@ public class ShortMessageDao {
     private String titleName;
     private boolean isCheck;
     private String name;
-    @Generated(hash = 1370442759)
-    public ShortMessageDao(Long id, String numberPhone, String message, String time, String state, int isTitle,
-            String titleName, boolean isCheck, String name) {
+    private long serverId;
+    private boolean isStatus;
+    @Generated(hash = 957255530)
+    public ShortMessageDao(Long id, String numberPhone, String message, String time, String state, int isTitle, String titleName,
+            boolean isCheck, String name, long serverId, boolean isStatus) {
         this.id = id;
         this.numberPhone = numberPhone;
         this.message = message;
@@ -28,6 +30,8 @@ public class ShortMessageDao {
         this.titleName = titleName;
         this.isCheck = isCheck;
         this.name = name;
+        this.serverId = serverId;
+        this.isStatus = isStatus;
     }
 
     public ShortMessageDao(String numberPhone, String message, String time,int isTitle,String titleName,String state,String name) {
@@ -40,7 +44,8 @@ public class ShortMessageDao {
         this.name = name;
     }
 
-    public ShortMessageDao(String numberPhone,String message,String time,String state,String name){
+    public ShortMessageDao(String numberPhone,String message,String time,String state,String name,long serverId,
+                           boolean isStatus){
         this.numberPhone = numberPhone;
         this.message = message;
         this.time = time;
@@ -48,6 +53,8 @@ public class ShortMessageDao {
         this.name = name;
         this.isTitle = 0;
         this.titleName = "";
+        this.serverId = serverId;
+        this.isStatus = isStatus;
     }
 
     @Generated(hash = 1341911062)
@@ -110,5 +117,29 @@ public class ShortMessageDao {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public long getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(long serverId) {
+        this.serverId = serverId;
+    }
+
+    public boolean isStatus() {
+        return isStatus;
+    }
+
+    public void setStatus(boolean status) {
+        isStatus = status;
+    }
+
+    public boolean getIsStatus() {
+        return this.isStatus;
+    }
+
+    public void setIsStatus(boolean isStatus) {
+        this.isStatus = isStatus;
     }
 }

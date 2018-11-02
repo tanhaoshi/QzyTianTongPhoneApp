@@ -15,6 +15,7 @@ public interface Constans {
     String SHORT_MESSAGE_PHONE = "phone";
     String SHORT_MESSAGE_CONTENT = "content";
     String SHORT_MESSAGE_TYPE = "type";
+    String SHORT_MESSAGE_ID = "id";
 
     String TTM_STATUS = "ttm_status";
 

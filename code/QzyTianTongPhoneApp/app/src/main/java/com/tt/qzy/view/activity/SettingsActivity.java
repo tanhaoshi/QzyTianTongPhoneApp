@@ -3,6 +3,7 @@ package com.tt.qzy.view.activity;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.qzy.eventbus.MessageEventBus;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.base.BaseActivity;
 import com.tt.qzy.view.bean.DatetimeModel;
+import com.tt.qzy.view.bean.WifiSettingModel;
 import com.tt.qzy.view.presenter.activity.SettingsPresenter;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.DateUtil;
@@ -135,6 +137,20 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
         custom_yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if(TextUtils.isEmpty(custom_input.getText().toString())){
+                    NToast.shortToast(SettingsActivity.this,getString(R.string.TMT_wifi_password_notnull));
+                    return;
+                }
+
+                if(custom_input.getText().toString().length() < 8 ){
+                    NToast.shortToast(SettingsActivity.this,getString(R.string.TMT_wifi_length_greatethan_eight));
+                    return;
+                }
+
+                EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_WIFI_PASSWORD,
+                        new WifiSettingModel(custom_input.getText().toString())));
+
                 NToast.shortToast(SettingsActivity.this,getResources().getString(R.string.TMT_share));
                 wifiDialog.dismiss();
             }

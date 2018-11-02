@@ -107,4 +107,6 @@
     <string name="TMT_ANSWER">来电</string>
     <string name="TMT_PUTOUT">拨出</string>
     <string name="TMT_UNKNOW_STATUS">未接通</string>
+    <string name="TMT_wifi_password_notnull">WIFI密码不能为空</string>
+    <string name="TMT_wifi_length_greatethan_eight">WIFI密码不能少于8位</string>
 </resources>

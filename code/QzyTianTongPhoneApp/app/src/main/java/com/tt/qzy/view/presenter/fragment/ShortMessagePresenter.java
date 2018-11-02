@@ -2,12 +2,14 @@ package com.tt.qzy.view.presenter.fragment;
 
 import android.content.Context;
 
+import com.alibaba.fastjson.JSON;
 import com.qzy.data.PhoneCmd;
 import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.bean.ShortMessageModel;
 import com.tt.qzy.view.db.dao.CallRecordDao;
@@ -79,6 +81,7 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
             @Override
             public void subscribe(ObservableEmitter<List<ShortMessageDao>> e){
                 List<ShortMessageDao> messageDaoList = ShortMessageManager.getInstance(mContext).queryShortMessageList();
+                KLog.i(" look over database list data value = "+JSON.toJSONString(messageDaoList));
                 e.onNext(arrangementData(messageDaoList));
             }
         })
@@ -149,7 +152,8 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
         if(list.size() > 0){
             for(TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage : list){
                 shortMessageDaos.add(new ShortMessageDao(shortMessage.getNumberPhone(),shortMessage.getMessage(),
-                        shortMessage.getTime(),String.valueOf(shortMessage.getType()),shortMessage.getName()));
+                        shortMessage.getTime(),String.valueOf(shortMessage.getType()),shortMessage.getName(),
+                        shortMessage.getId(),shortMessage.getIsRead()));
             }
         }
         return shortMessageDaos;

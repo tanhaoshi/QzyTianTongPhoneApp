@@ -33,6 +33,8 @@ public class ShortMessageDaoDao extends AbstractDao<ShortMessageDao, Long> {
         public final static Property TitleName = new Property(6, String.class, "titleName", false, "TITLE_NAME");
         public final static Property IsCheck = new Property(7, boolean.class, "isCheck", false, "IS_CHECK");
         public final static Property Name = new Property(8, String.class, "name", false, "NAME");
+        public final static Property ServerId = new Property(9, long.class, "serverId", false, "SERVER_ID");
+        public final static Property IsStatus = new Property(10, boolean.class, "isStatus", false, "IS_STATUS");
     }
 
 
@@ -56,7 +58,9 @@ public class ShortMessageDaoDao extends AbstractDao<ShortMessageDao, Long> {
                 "\"IS_TITLE\" INTEGER NOT NULL ," + // 5: isTitle
                 "\"TITLE_NAME\" TEXT," + // 6: titleName
                 "\"IS_CHECK\" INTEGER NOT NULL ," + // 7: isCheck
-                "\"NAME\" TEXT);"); // 8: name
+                "\"NAME\" TEXT," + // 8: name
+                "\"SERVER_ID\" INTEGER NOT NULL ," + // 9: serverId
+                "\"IS_STATUS\" INTEGER NOT NULL );"); // 10: isStatus
     }
 
     /** Drops the underlying database table. */
@@ -105,6 +109,8 @@ public class ShortMessageDaoDao extends AbstractDao<ShortMessageDao, Long> {
         if (name != null) {
             stmt.bindString(9, name);
         }
+        stmt.bindLong(10, entity.getServerId());
+        stmt.bindLong(11, entity.getIsStatus() ? 1L: 0L);
     }
 
     @Override
@@ -147,6 +153,8 @@ public class ShortMessageDaoDao extends AbstractDao<ShortMessageDao, Long> {
         if (name != null) {
             stmt.bindString(9, name);
         }
+        stmt.bindLong(10, entity.getServerId());
+        stmt.bindLong(11, entity.getIsStatus() ? 1L: 0L);
     }
 
     @Override
@@ -165,7 +173,9 @@ public class ShortMessageDaoDao extends AbstractDao<ShortMessageDao, Long> {
             cursor.getInt(offset + 5), // isTitle
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // titleName
             cursor.getShort(offset + 7) != 0, // isCheck
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8) // name
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // name
+            cursor.getLong(offset + 9), // serverId
+            cursor.getShort(offset + 10) != 0 // isStatus
         );
         return entity;
     }
@@ -181,6 +191,8 @@ public class ShortMessageDaoDao extends AbstractDao<ShortMessageDao, Long> {
         entity.setTitleName(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
         entity.setIsCheck(cursor.getShort(offset + 7) != 0);
         entity.setName(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setServerId(cursor.getLong(offset + 9));
+        entity.setIsStatus(cursor.getShort(offset + 10) != 0);
      }
     
     @Override

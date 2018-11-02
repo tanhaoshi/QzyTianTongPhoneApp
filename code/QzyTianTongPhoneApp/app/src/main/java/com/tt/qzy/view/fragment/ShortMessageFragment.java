@@ -140,6 +140,7 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
         intent.putExtra(Constans.SHORT_MESSAGE_PHONE,models.get(position).getNumberPhone());
         intent.putExtra(Constans.SHORT_MESSAGE_CONTENT,models.get(position).getMessage());
         intent.putExtra(Constans.SHORT_MESSAGE_TYPE,models.get(position).getState());
+        intent.putExtra(Constans.SHORT_MESSAGE_ID,models.get(position).getServerId());
         startActivity(intent);
     }
 
