@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.SendShortMessageActivity;
@@ -37,7 +39,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ShortMessageFragment extends Fragment implements PopWindow.OnDismissListener,ShortMessageAdapter.OnItemClickListener
-,ShortMessageView{
+,ShortMessageView,PopShortMessageWindow.ClearSignalListener{
 
     @BindView(R.id.base_iv_back)
     ImageView base_iv_back;
@@ -49,6 +51,8 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
     RecyclerView todayRecyclerView;
     @BindView(R.id.fab)
     FloatingActionButton mFloatingActionButton;
+    @BindView(R.id.refreshLayout)
+    RefreshLayout mRefreshLayout;
 
     private PopShortMessageWindow mPopShortMessageWindow;
     private List<ShortMessageDao> models = new ArrayList<>();
@@ -97,6 +101,25 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
         shortMessageAdapter = new ShortMessageAdapter(getActivity(),models);
         shortMessageAdapter.setOnItemClickListener(this);
         todayRecyclerView.setAdapter(shortMessageAdapter);
+        initListener();
+    }
+
+    private void initListener(){
+        mRefreshLayout.setOnRefreshLoadmoreListener(new OnRefreshLoadmoreListener() {
+            @Override
+            public void onLoadmore(RefreshLayout refreshlayout) {
+                // load more
+                refreshlayout.finishLoadmore(200);
+                NToast.shortToast(getActivity(),getString(R.string.TMT_dataisnull));
+            }
+
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+               //  refresh
+                refreshlayout.finishRefresh(200);
+                mPresenter.getShortMessageData();
+            }
+        });
     }
 
     @OnClick({R.id.base_tv_toolbar_right,R.id.fab})
@@ -106,6 +129,7 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
                 if(mPopShortMessageWindow == null){
                     mPopShortMessageWindow = new PopShortMessageWindow(getActivity());
                     mPopShortMessageWindow.setOnDismissListener(this);
+                    mPopShortMessageWindow.setOpenPictureListener(this);
                     setWindowAttibus(0.5f);
                     mPopShortMessageWindow.showAtLocation(getActivity().findViewById(R.id.todayRecyclerView),
                             Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
@@ -204,6 +228,14 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
                 .setCancellable(true)
                 .setAnimationSpeed(2)
                 .setDimAmount(0.5f);
+    }
+
+    @Override
+    public void deleteAllList() {
+        mHUD.show();
+        mPresenter.clearMessage();
+        mHUD.dismiss();
+        shortMessageAdapter.setData(null);
     }
 
     public interface OnKeyDownListener{

@@ -2,32 +2,20 @@ package com.tt.qzy.view.adapter;
 
 
 import android.content.Context;
-import android.provider.Settings;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
-import com.socks.library.KLog;
 import com.tt.qzy.view.R;
-import com.tt.qzy.view.bean.ShortMessageModel;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
-import com.tt.qzy.view.utils.AudioUtil;
-import com.tt.qzy.view.utils.PinyinUtils;
 
-import java.util.HashMap;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by qzy009 on 2018/8/29.
@@ -43,12 +31,9 @@ public class ShortMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private OnItemClickListener mOnItemClickListener;
 
-    private HashMap<Integer,View> mHashMap;
-
     public ShortMessageAdapter(Context context, List<ShortMessageDao> list){
         this.mModelList = list;
         this.mContext = context;
-        mHashMap = new HashMap<>();
     }
 
     public void setData(List<ShortMessageDao> list){
@@ -79,11 +64,9 @@ public class ShortMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 break;
             case NORMAL_VALUE:
                 final MessageViewHolder messageViewHolder = (MessageViewHolder)holder;
-                mHashMap.put(position,messageViewHolder.mCompatButton);
                 messageViewHolder.message.setText(mModelList.get(position).getMessage());
                 messageViewHolder.phoneNumber.setText(mModelList.get(position).getNumberPhone());
                 messageViewHolder.time.setText(mModelList.get(position).getTime());
-                KLog.i("look over boolean value = " + mModelList.get(position).getIsStatus());
                 if(mModelList.get(position).getIsStatus()){
                     messageViewHolder.dot.setVisibility(View.INVISIBLE);
                 }else{

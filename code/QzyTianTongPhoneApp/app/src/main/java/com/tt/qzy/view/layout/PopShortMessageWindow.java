@@ -23,7 +23,7 @@ public class PopShortMessageWindow extends PopWindow {
 
     private View mMenuView;
 
-    private PopWindow.OpenPictureListener mOpenPictureListener;
+    private ClearSignalListener mSignalListener;
 
     private TextView main_location;
     private TextView delete;
@@ -95,11 +95,11 @@ public class PopShortMessageWindow extends PopWindow {
         });
     }
 
-    public void setOpenPictureListener(PopWindow.OpenPictureListener listener){
-        this.mOpenPictureListener = listener;
+    public void setOpenPictureListener(ClearSignalListener listener){
+        this.mSignalListener = listener;
     }
 
-    public interface OpenPictureListener{
-        void popupDismiss();
+    public interface ClearSignalListener{
+        void deleteAllList();
     }
 }

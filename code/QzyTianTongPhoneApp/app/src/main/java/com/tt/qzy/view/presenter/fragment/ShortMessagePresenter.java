@@ -52,6 +52,13 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
     }
 
     /**
+     * 删除全部短信
+     */
+    public void clearMessage(){
+        ShortMessageManager.getInstance(mContext).deleteShortMessageList();
+    }
+
+    /**
      * 请求天通猫短信记录
      */
     public void requestShortMessage(){
@@ -81,7 +88,6 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
             @Override
             public void subscribe(ObservableEmitter<List<ShortMessageDao>> e){
                 List<ShortMessageDao> messageDaoList = ShortMessageManager.getInstance(mContext).queryShortMessageList();
-                KLog.i(" look over database list data value = "+JSON.toJSONString(messageDaoList));
                 e.onNext(arrangementData(messageDaoList));
             }
         })
@@ -102,6 +108,7 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
 
                     @Override
                     public void onError(Throwable e) {
+                        KLog.i("look over shortmessage presenter error string value = " + e.getMessage());
                         mView.get().showError(e.getMessage().toString(),true);
                     }
 

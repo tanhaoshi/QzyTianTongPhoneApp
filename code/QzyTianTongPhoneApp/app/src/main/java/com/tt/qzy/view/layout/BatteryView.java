@@ -48,6 +48,7 @@ public class BatteryView extends View {
         width = getMeasuredWidth();
         //对View上的內容进行测量后得到的View內容占据的高度
         height = getMeasuredHeight();
+        KLog.i("look over height = " + height);
     }
 
     @Override
@@ -89,11 +90,11 @@ public class BatteryView extends View {
         if (mPower < 30) {
             paint.setColor(Color.RED);
         }
-        if (mPower >= 30 && mPower < 50) {
-            paint.setColor(getResources().getColor(R.color.colorBattery));
-        }
-        if (mPower >= 50) {
-            paint.setColor(getResources().getColor(R.color.colorBattery));
+//        if (mPower >= 30 && mPower < 50) {
+//            paint.setColor(getResources().getColor(R.color.colorBattery));
+//        }
+        if (mPower >= 30) {
+            paint.setColor(getResources().getColor(R.color.green));
         }
         canvas.drawRect(r2, paint);
 //        画电池头 left top right bottom ()
@@ -111,7 +112,7 @@ public class BatteryView extends View {
         RectF r3 = new RectF(width - strokeWidth, height * 0.25f, width, height * 0.75f);
         KLog.i(" look over left = " + (width - strokeWidth) +" and top = " + height * 0.25f + " right = " + (width) + " bottom " + height*0.75);
 //        设置电池头颜色为黑色
-        paint.setColor(getResources().getColor(R.color.colorBattery));
+        paint.setColor(getResources().getColor(R.color.white));
         canvas.drawRect(r3, paint);
     }
 

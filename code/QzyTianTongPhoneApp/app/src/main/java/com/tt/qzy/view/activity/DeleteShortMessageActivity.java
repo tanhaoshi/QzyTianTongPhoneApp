@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.DeleteShortMessageAdapter;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
@@ -57,15 +58,14 @@ public class DeleteShortMessageActivity extends AppCompatActivity implements Del
     private void initView() {
         initProgress();
         base_tv_toolbar_title.setText(getString(R.string.TMT_select_shortMessage));
-        LinearLayoutManager manager = new LinearLayoutManager(DeleteShortMessageActivity.this);
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(manager);
-    }
-
-    private void initData(){
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(DeleteShortMessageActivity.this,
+                LinearLayoutManager.VERTICAL,false));
         mShortMessageAdapter = new DeleteShortMessageAdapter(this,mDaoList);
         mShortMessageAdapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(mShortMessageAdapter);
+    }
+
+    private void initData(){
         showProgress(true);
         loadData(true);
     }

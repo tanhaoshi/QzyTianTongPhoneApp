@@ -13,7 +13,7 @@
         android:layout_height="12dp"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
-        app:batteryColor="@color/colorBattery"
+        app:batteryColor="@color/white"
         app:batteryPower="50"
         app:batteryOrientation="horizontal"/>
 

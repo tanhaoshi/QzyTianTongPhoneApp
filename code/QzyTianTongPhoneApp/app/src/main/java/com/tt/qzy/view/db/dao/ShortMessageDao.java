@@ -142,4 +142,5 @@ public class ShortMessageDao {
     public void setIsStatus(boolean isStatus) {
         this.isStatus = isStatus;
     }
+
 }
