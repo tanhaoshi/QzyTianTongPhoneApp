@@ -30,7 +30,7 @@ public class DateTimeUtils {
      */
     public static void set12Hour(Context context) {
         android.provider.Settings.System.putString(context.getContentResolver(),
-                android.provider.Settings.System.TIME_12_24, "24");
+                android.provider.Settings.System.TIME_12_24, "12");
     }
 
     /**
@@ -40,7 +40,7 @@ public class DateTimeUtils {
      */
     public static void set24Hour(Context context) {
         android.provider.Settings.System.putString(context.getContentResolver(),
-                android.provider.Settings.System.TIME_12_24, "12");
+                android.provider.Settings.System.TIME_12_24, "24");
     }
 
     /**

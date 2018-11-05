@@ -10,6 +10,7 @@ import com.qzy.tt.data.TtBeiDouStatuss;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
+import com.qzy.tt.data.TtPhoneWifiProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.data.TtTimeProtos;
 import com.qzy.tt.probuf.lib.data.PrototocalTools;
@@ -71,6 +72,9 @@ public class TianTongHandler extends Handler {
                     break;
                 case PrototocalTools.IProtoServerIndex.request_phone_send_sms_read:
                     mServer.getPhoneNettyManager().getmSmsPhoneManager().updateSmsRead((TtShortMessageProtos.TtShortMessage.ShortMessage) msg.obj);
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_phone_set_wifi_passwd:
+                    mServer.getQzyPhoneManager().setWifiPasswd((TtPhoneWifiProtos.TtWifi) msg.obj);
                     break;
                 default:
                     break;
