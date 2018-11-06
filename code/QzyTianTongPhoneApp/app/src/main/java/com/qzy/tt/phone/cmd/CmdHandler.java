@@ -9,6 +9,7 @@ import com.qzy.data.PrototocalTools;
 import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
+import com.qzy.ring.RingManager;
 import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.CallPhoneStateProtos;
 import com.qzy.tt.data.TtBeiDouStatuss;
@@ -182,7 +183,7 @@ public class CmdHandler {
      */
     private void startSystemRingTone(TtPhoneSmsProtos.TtPhoneSms ttPhoneSms){
        if(ttPhoneSms.getIsSendSuccess()){
-           RingToneUtils.playRingtone(context);
+           RingManager.playDefaultCallMediaPlayer(context);
        }
     }
 
