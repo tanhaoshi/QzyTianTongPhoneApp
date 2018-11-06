@@ -83,6 +83,7 @@ public class PhoneServiceManager {
                 stopProtocal();
                 break;
             case RING:
+                startPlayerProtocal();
                 break;
             case CALL:
                 startProtocal();
@@ -105,6 +106,16 @@ public class PhoneServiceManager {
     public void startProtocal() {
         if (mAllLocalPcmManager != null) {
             mAllLocalPcmManager.start();
+        }
+
+    }
+
+    /**
+     * 开始播放
+     */
+    public void startPlayerProtocal() {
+        if (mAllLocalPcmManager != null) {
+            mAllLocalPcmManager.startPlayer();
         }
 
     }

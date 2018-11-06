@@ -48,8 +48,18 @@ public class AllLocalPcmManager {
     public void start(){
         try{
             Log.e("zyj","...AllLocalPcmManager........start.......");
-            NativeAudio.startPlayer();
+            //NativeAudio.startPlayer();
             NativeAudio.startRecord();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void startPlayer(){
+        try{
+            Log.e("zyj","...AllLocalPcmManager........start.......");
+            NativeAudio.startPlayer();
+           // NativeAudio.startRecord();
         }catch (Exception e){
             e.printStackTrace();
         }
