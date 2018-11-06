@@ -144,49 +144,63 @@ public final class TtShortMessageProtos {
         com.google.protobuf.MessageOrBuilder {
 
       /**
-       * <code>optional string numberPhone = 1;</code>
+       * <code>optional int64 id = 1;</code>
+       */
+      long getId();
+
+      /**
+       * <code>optional string numberPhone = 2;</code>
        */
       java.lang.String getNumberPhone();
       /**
-       * <code>optional string numberPhone = 1;</code>
+       * <code>optional string numberPhone = 2;</code>
        */
       com.google.protobuf.ByteString
           getNumberPhoneBytes();
 
       /**
-       * <code>optional string message = 2;</code>
+       * <code>optional string message = 3;</code>
        */
       java.lang.String getMessage();
       /**
-       * <code>optional string message = 2;</code>
+       * <code>optional string message = 3;</code>
        */
       com.google.protobuf.ByteString
           getMessageBytes();
 
       /**
-       * <code>optional string time = 3;</code>
+       * <code>optional string time = 4;</code>
        */
       java.lang.String getTime();
       /**
-       * <code>optional string time = 3;</code>
+       * <code>optional string time = 4;</code>
        */
       com.google.protobuf.ByteString
           getTimeBytes();
 
       /**
-       * <code>optional int32 type = 4;</code>
+       * <code>optional int32 type = 5;</code>
        */
       int getType();
 
       /**
-       * <code>optional string name = 5;</code>
+       * <code>optional string name = 6;</code>
        */
       java.lang.String getName();
       /**
-       * <code>optional string name = 5;</code>
+       * <code>optional string name = 6;</code>
        */
       com.google.protobuf.ByteString
           getNameBytes();
+
+      /**
+       * <pre>
+       *是否已读
+       * </pre>
+       *
+       * <code>optional bool isRead = 7;</code>
+       */
+      boolean getIsRead();
     }
     /**
      * Protobuf type {@code phonedata.TtShortMessage.ShortMessage}
@@ -200,11 +214,13 @@ public final class TtShortMessageProtos {
         super(builder);
       }
       private ShortMessage() {
+        id_ = 0L;
         numberPhone_ = "";
         message_ = "";
         time_ = "";
         type_ = 0;
         name_ = "";
+        isRead_ = false;
       }
 
       @java.lang.Override
@@ -232,33 +248,43 @@ public final class TtShortMessageProtos {
                 }
                 break;
               }
-              case 10: {
-                java.lang.String s = input.readStringRequireUtf8();
+              case 8: {
 
-                numberPhone_ = s;
+                id_ = input.readInt64();
                 break;
               }
               case 18: {
                 java.lang.String s = input.readStringRequireUtf8();
 
-                message_ = s;
+                numberPhone_ = s;
                 break;
               }
               case 26: {
                 java.lang.String s = input.readStringRequireUtf8();
 
+                message_ = s;
+                break;
+              }
+              case 34: {
+                java.lang.String s = input.readStringRequireUtf8();
+
                 time_ = s;
                 break;
               }
-              case 32: {
+              case 40: {
 
                 type_ = input.readInt32();
                 break;
               }
-              case 42: {
+              case 50: {
                 java.lang.String s = input.readStringRequireUtf8();
 
                 name_ = s;
+                break;
+              }
+              case 56: {
+
+                isRead_ = input.readBool();
                 break;
               }
             }
@@ -284,10 +310,19 @@ public final class TtShortMessageProtos {
                 com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage.class, com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage.Builder.class);
       }
 
-      public static final int NUMBERPHONE_FIELD_NUMBER = 1;
+      public static final int ID_FIELD_NUMBER = 1;
+      private long id_;
+      /**
+       * <code>optional int64 id = 1;</code>
+       */
+      public long getId() {
+        return id_;
+      }
+
+      public static final int NUMBERPHONE_FIELD_NUMBER = 2;
       private volatile java.lang.Object numberPhone_;
       /**
-       * <code>optional string numberPhone = 1;</code>
+       * <code>optional string numberPhone = 2;</code>
        */
       public java.lang.String getNumberPhone() {
         java.lang.Object ref = numberPhone_;
@@ -302,7 +337,7 @@ public final class TtShortMessageProtos {
         }
       }
       /**
-       * <code>optional string numberPhone = 1;</code>
+       * <code>optional string numberPhone = 2;</code>
        */
       public com.google.protobuf.ByteString
           getNumberPhoneBytes() {
@@ -318,10 +353,10 @@ public final class TtShortMessageProtos {
         }
       }
 
-      public static final int MESSAGE_FIELD_NUMBER = 2;
+      public static final int MESSAGE_FIELD_NUMBER = 3;
       private volatile java.lang.Object message_;
       /**
-       * <code>optional string message = 2;</code>
+       * <code>optional string message = 3;</code>
        */
       public java.lang.String getMessage() {
         java.lang.Object ref = message_;
@@ -336,7 +371,7 @@ public final class TtShortMessageProtos {
         }
       }
       /**
-       * <code>optional string message = 2;</code>
+       * <code>optional string message = 3;</code>
        */
       public com.google.protobuf.ByteString
           getMessageBytes() {
@@ -352,10 +387,10 @@ public final class TtShortMessageProtos {
         }
       }
 
-      public static final int TIME_FIELD_NUMBER = 3;
+      public static final int TIME_FIELD_NUMBER = 4;
       private volatile java.lang.Object time_;
       /**
-       * <code>optional string time = 3;</code>
+       * <code>optional string time = 4;</code>
        */
       public java.lang.String getTime() {
         java.lang.Object ref = time_;
@@ -370,7 +405,7 @@ public final class TtShortMessageProtos {
         }
       }
       /**
-       * <code>optional string time = 3;</code>
+       * <code>optional string time = 4;</code>
        */
       public com.google.protobuf.ByteString
           getTimeBytes() {
@@ -386,19 +421,19 @@ public final class TtShortMessageProtos {
         }
       }
 
-      public static final int TYPE_FIELD_NUMBER = 4;
+      public static final int TYPE_FIELD_NUMBER = 5;
       private int type_;
       /**
-       * <code>optional int32 type = 4;</code>
+       * <code>optional int32 type = 5;</code>
        */
       public int getType() {
         return type_;
       }
 
-      public static final int NAME_FIELD_NUMBER = 5;
+      public static final int NAME_FIELD_NUMBER = 6;
       private volatile java.lang.Object name_;
       /**
-       * <code>optional string name = 5;</code>
+       * <code>optional string name = 6;</code>
        */
       public java.lang.String getName() {
         java.lang.Object ref = name_;
@@ -413,7 +448,7 @@ public final class TtShortMessageProtos {
         }
       }
       /**
-       * <code>optional string name = 5;</code>
+       * <code>optional string name = 6;</code>
        */
       public com.google.protobuf.ByteString
           getNameBytes() {
@@ -429,6 +464,19 @@ public final class TtShortMessageProtos {
         }
       }
 
+      public static final int ISREAD_FIELD_NUMBER = 7;
+      private boolean isRead_;
+      /**
+       * <pre>
+       *是否已读
+       * </pre>
+       *
+       * <code>optional bool isRead = 7;</code>
+       */
+      public boolean getIsRead() {
+        return isRead_;
+      }
+
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -441,20 +489,26 @@ public final class TtShortMessageProtos {
 
       public void writeTo(com.google.protobuf.CodedOutputStream output)
                           throws java.io.IOException {
+        if (id_ != 0L) {
+          output.writeInt64(1, id_);
+        }
         if (!getNumberPhoneBytes().isEmpty()) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 1, numberPhone_);
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 2, numberPhone_);
         }
         if (!getMessageBytes().isEmpty()) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 2, message_);
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 3, message_);
         }
         if (!getTimeBytes().isEmpty()) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 3, time_);
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 4, time_);
         }
         if (type_ != 0) {
-          output.writeInt32(4, type_);
+          output.writeInt32(5, type_);
         }
         if (!getNameBytes().isEmpty()) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 5, name_);
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 6, name_);
+        }
+        if (isRead_ != false) {
+          output.writeBool(7, isRead_);
         }
       }
 
@@ -463,21 +517,29 @@ public final class TtShortMessageProtos {
         if (size != -1) return size;
 
         size = 0;
+        if (id_ != 0L) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeInt64Size(1, id_);
+        }
         if (!getNumberPhoneBytes().isEmpty()) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, numberPhone_);
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, numberPhone_);
         }
         if (!getMessageBytes().isEmpty()) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, message_);
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, message_);
         }
         if (!getTimeBytes().isEmpty()) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, time_);
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, time_);
         }
         if (type_ != 0) {
           size += com.google.protobuf.CodedOutputStream
-            .computeInt32Size(4, type_);
+            .computeInt32Size(5, type_);
         }
         if (!getNameBytes().isEmpty()) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, name_);
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, name_);
+        }
+        if (isRead_ != false) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBoolSize(7, isRead_);
         }
         memoizedSize = size;
         return size;
@@ -495,6 +557,8 @@ public final class TtShortMessageProtos {
         com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage other = (com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage) obj;
 
         boolean result = true;
+        result = result && (getId()
+            == other.getId());
         result = result && getNumberPhone()
             .equals(other.getNumberPhone());
         result = result && getMessage()
@@ -505,6 +569,8 @@ public final class TtShortMessageProtos {
             == other.getType());
         result = result && getName()
             .equals(other.getName());
+        result = result && (getIsRead()
+            == other.getIsRead());
         return result;
       }
 
@@ -515,6 +581,9 @@ public final class TtShortMessageProtos {
         }
         int hash = 41;
         hash = (19 * hash) + getDescriptorForType().hashCode();
+        hash = (37 * hash) + ID_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getId());
         hash = (37 * hash) + NUMBERPHONE_FIELD_NUMBER;
         hash = (53 * hash) + getNumberPhone().hashCode();
         hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
@@ -525,6 +594,9 @@ public final class TtShortMessageProtos {
         hash = (53 * hash) + getType();
         hash = (37 * hash) + NAME_FIELD_NUMBER;
         hash = (53 * hash) + getName().hashCode();
+        hash = (37 * hash) + ISREAD_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+            getIsRead());
         hash = (29 * hash) + unknownFields.hashCode();
         memoizedHashCode = hash;
         return hash;
@@ -643,6 +715,8 @@ public final class TtShortMessageProtos {
         }
         public Builder clear() {
           super.clear();
+          id_ = 0L;
+
           numberPhone_ = "";
 
           message_ = "";
@@ -652,6 +726,8 @@ public final class TtShortMessageProtos {
           type_ = 0;
 
           name_ = "";
+
+          isRead_ = false;
 
           return this;
         }
@@ -675,11 +751,13 @@ public final class TtShortMessageProtos {
 
         public com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage buildPartial() {
           com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage result = new com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage(this);
+          result.id_ = id_;
           result.numberPhone_ = numberPhone_;
           result.message_ = message_;
           result.time_ = time_;
           result.type_ = type_;
           result.name_ = name_;
+          result.isRead_ = isRead_;
           onBuilt();
           return result;
         }
@@ -721,6 +799,9 @@ public final class TtShortMessageProtos {
 
         public Builder mergeFrom(com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage other) {
           if (other == com.qzy.tt.data.TtShortMessageProtos.TtShortMessage.ShortMessage.getDefaultInstance()) return this;
+          if (other.getId() != 0L) {
+            setId(other.getId());
+          }
           if (!other.getNumberPhone().isEmpty()) {
             numberPhone_ = other.numberPhone_;
             onChanged();
@@ -739,6 +820,9 @@ public final class TtShortMessageProtos {
           if (!other.getName().isEmpty()) {
             name_ = other.name_;
             onChanged();
+          }
+          if (other.getIsRead() != false) {
+            setIsRead(other.getIsRead());
           }
           onChanged();
           return this;
@@ -766,9 +850,35 @@ public final class TtShortMessageProtos {
           return this;
         }
 
+        private long id_ ;
+        /**
+         * <code>optional int64 id = 1;</code>
+         */
+        public long getId() {
+          return id_;
+        }
+        /**
+         * <code>optional int64 id = 1;</code>
+         */
+        public Builder setId(long value) {
+          
+          id_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional int64 id = 1;</code>
+         */
+        public Builder clearId() {
+          
+          id_ = 0L;
+          onChanged();
+          return this;
+        }
+
         private java.lang.Object numberPhone_ = "";
         /**
-         * <code>optional string numberPhone = 1;</code>
+         * <code>optional string numberPhone = 2;</code>
          */
         public java.lang.String getNumberPhone() {
           java.lang.Object ref = numberPhone_;
@@ -783,7 +893,7 @@ public final class TtShortMessageProtos {
           }
         }
         /**
-         * <code>optional string numberPhone = 1;</code>
+         * <code>optional string numberPhone = 2;</code>
          */
         public com.google.protobuf.ByteString
             getNumberPhoneBytes() {
@@ -799,7 +909,7 @@ public final class TtShortMessageProtos {
           }
         }
         /**
-         * <code>optional string numberPhone = 1;</code>
+         * <code>optional string numberPhone = 2;</code>
          */
         public Builder setNumberPhone(
             java.lang.String value) {
@@ -812,7 +922,7 @@ public final class TtShortMessageProtos {
           return this;
         }
         /**
-         * <code>optional string numberPhone = 1;</code>
+         * <code>optional string numberPhone = 2;</code>
          */
         public Builder clearNumberPhone() {
           
@@ -821,7 +931,7 @@ public final class TtShortMessageProtos {
           return this;
         }
         /**
-         * <code>optional string numberPhone = 1;</code>
+         * <code>optional string numberPhone = 2;</code>
          */
         public Builder setNumberPhoneBytes(
             com.google.protobuf.ByteString value) {
@@ -837,7 +947,7 @@ public final class TtShortMessageProtos {
 
         private java.lang.Object message_ = "";
         /**
-         * <code>optional string message = 2;</code>
+         * <code>optional string message = 3;</code>
          */
         public java.lang.String getMessage() {
           java.lang.Object ref = message_;
@@ -852,7 +962,7 @@ public final class TtShortMessageProtos {
           }
         }
         /**
-         * <code>optional string message = 2;</code>
+         * <code>optional string message = 3;</code>
          */
         public com.google.protobuf.ByteString
             getMessageBytes() {
@@ -868,7 +978,7 @@ public final class TtShortMessageProtos {
           }
         }
         /**
-         * <code>optional string message = 2;</code>
+         * <code>optional string message = 3;</code>
          */
         public Builder setMessage(
             java.lang.String value) {
@@ -881,7 +991,7 @@ public final class TtShortMessageProtos {
           return this;
         }
         /**
-         * <code>optional string message = 2;</code>
+         * <code>optional string message = 3;</code>
          */
         public Builder clearMessage() {
           
@@ -890,7 +1000,7 @@ public final class TtShortMessageProtos {
           return this;
         }
         /**
-         * <code>optional string message = 2;</code>
+         * <code>optional string message = 3;</code>
          */
         public Builder setMessageBytes(
             com.google.protobuf.ByteString value) {
@@ -906,7 +1016,7 @@ public final class TtShortMessageProtos {
 
         private java.lang.Object time_ = "";
         /**
-         * <code>optional string time = 3;</code>
+         * <code>optional string time = 4;</code>
          */
         public java.lang.String getTime() {
           java.lang.Object ref = time_;
@@ -921,7 +1031,7 @@ public final class TtShortMessageProtos {
           }
         }
         /**
-         * <code>optional string time = 3;</code>
+         * <code>optional string time = 4;</code>
          */
         public com.google.protobuf.ByteString
             getTimeBytes() {
@@ -937,7 +1047,7 @@ public final class TtShortMessageProtos {
           }
         }
         /**
-         * <code>optional string time = 3;</code>
+         * <code>optional string time = 4;</code>
          */
         public Builder setTime(
             java.lang.String value) {
@@ -950,7 +1060,7 @@ public final class TtShortMessageProtos {
           return this;
         }
         /**
-         * <code>optional string time = 3;</code>
+         * <code>optional string time = 4;</code>
          */
         public Builder clearTime() {
           
@@ -959,7 +1069,7 @@ public final class TtShortMessageProtos {
           return this;
         }
         /**
-         * <code>optional string time = 3;</code>
+         * <code>optional string time = 4;</code>
          */
         public Builder setTimeBytes(
             com.google.protobuf.ByteString value) {
@@ -975,13 +1085,13 @@ public final class TtShortMessageProtos {
 
         private int type_ ;
         /**
-         * <code>optional int32 type = 4;</code>
+         * <code>optional int32 type = 5;</code>
          */
         public int getType() {
           return type_;
         }
         /**
-         * <code>optional int32 type = 4;</code>
+         * <code>optional int32 type = 5;</code>
          */
         public Builder setType(int value) {
           
@@ -990,7 +1100,7 @@ public final class TtShortMessageProtos {
           return this;
         }
         /**
-         * <code>optional int32 type = 4;</code>
+         * <code>optional int32 type = 5;</code>
          */
         public Builder clearType() {
           
@@ -1001,7 +1111,7 @@ public final class TtShortMessageProtos {
 
         private java.lang.Object name_ = "";
         /**
-         * <code>optional string name = 5;</code>
+         * <code>optional string name = 6;</code>
          */
         public java.lang.String getName() {
           java.lang.Object ref = name_;
@@ -1016,7 +1126,7 @@ public final class TtShortMessageProtos {
           }
         }
         /**
-         * <code>optional string name = 5;</code>
+         * <code>optional string name = 6;</code>
          */
         public com.google.protobuf.ByteString
             getNameBytes() {
@@ -1032,7 +1142,7 @@ public final class TtShortMessageProtos {
           }
         }
         /**
-         * <code>optional string name = 5;</code>
+         * <code>optional string name = 6;</code>
          */
         public Builder setName(
             java.lang.String value) {
@@ -1045,7 +1155,7 @@ public final class TtShortMessageProtos {
           return this;
         }
         /**
-         * <code>optional string name = 5;</code>
+         * <code>optional string name = 6;</code>
          */
         public Builder clearName() {
           
@@ -1054,7 +1164,7 @@ public final class TtShortMessageProtos {
           return this;
         }
         /**
-         * <code>optional string name = 5;</code>
+         * <code>optional string name = 6;</code>
          */
         public Builder setNameBytes(
             com.google.protobuf.ByteString value) {
@@ -1064,6 +1174,44 @@ public final class TtShortMessageProtos {
   checkByteStringIsUtf8(value);
           
           name_ = value;
+          onChanged();
+          return this;
+        }
+
+        private boolean isRead_ ;
+        /**
+         * <pre>
+         *是否已读
+         * </pre>
+         *
+         * <code>optional bool isRead = 7;</code>
+         */
+        public boolean getIsRead() {
+          return isRead_;
+        }
+        /**
+         * <pre>
+         *是否已读
+         * </pre>
+         *
+         * <code>optional bool isRead = 7;</code>
+         */
+        public Builder setIsRead(boolean value) {
+          
+          isRead_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <pre>
+         *是否已读
+         * </pre>
+         *
+         * <code>optional bool isRead = 7;</code>
+         */
+        public Builder clearIsRead() {
+          
+          isRead_ = false;
           onChanged();
           return this;
         }
@@ -1876,14 +2024,15 @@ public final class TtShortMessageProtos {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\024TtShortMessage.proto\022\tphonedata\"\321\001\n\016Tt" +
+      "\n\024TtShortMessage.proto\022\tphonedata\"\355\001\n\016Tt" +
       "ShortMessage\022\017\n\007request\030\001 \001(\010\022\020\n\010respons" +
       "e\030\002 \001(\010\022<\n\014shortMessage\030\003 \003(\0132&.phonedat" +
-      "a.TtShortMessage.ShortMessage\032^\n\014ShortMe" +
-      "ssage\022\023\n\013numberPhone\030\001 \001(\t\022\017\n\007message\030\002 " +
-      "\001(\t\022\014\n\004time\030\003 \001(\t\022\014\n\004type\030\004 \001(\005\022\014\n\004name\030" +
-      "\005 \001(\tB\'\n\017com.qzy.tt.dataB\024TtShortMessage" +
-      "Protosb\006proto3"
+      "a.TtShortMessage.ShortMessage\032z\n\014ShortMe" +
+      "ssage\022\n\n\002id\030\001 \001(\003\022\023\n\013numberPhone\030\002 \001(\t\022\017" +
+      "\n\007message\030\003 \001(\t\022\014\n\004time\030\004 \001(\t\022\014\n\004type\030\005 " +
+      "\001(\005\022\014\n\004name\030\006 \001(\t\022\016\n\006isRead\030\007 \001(\010B\'\n\017com" +
+      ".qzy.tt.dataB\024TtShortMessageProtosb\006prot" +
+      "o3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1908,7 +2057,7 @@ public final class TtShortMessageProtos {
     internal_static_phonedata_TtShortMessage_ShortMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_phonedata_TtShortMessage_ShortMessage_descriptor,
-        new java.lang.String[] { "NumberPhone", "Message", "Time", "Type", "Name", });
+        new java.lang.String[] { "Id", "NumberPhone", "Message", "Time", "Type", "Name", "IsRead", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

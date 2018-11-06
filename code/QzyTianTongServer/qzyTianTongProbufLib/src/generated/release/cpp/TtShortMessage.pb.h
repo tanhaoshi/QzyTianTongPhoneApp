@@ -105,9 +105,15 @@ class TtShortMessage_ShortMessage : public ::google::protobuf::Message /* @@prot
 
   // accessors -------------------------------------------------------
 
-  // optional string numberPhone = 1;
+  // optional int64 id = 1;
+  void clear_id();
+  static const int kIdFieldNumber = 1;
+  ::google::protobuf::int64 id() const;
+  void set_id(::google::protobuf::int64 value);
+
+  // optional string numberPhone = 2;
   void clear_numberphone();
-  static const int kNumberPhoneFieldNumber = 1;
+  static const int kNumberPhoneFieldNumber = 2;
   const ::std::string& numberphone() const;
   void set_numberphone(const ::std::string& value);
   void set_numberphone(const char* value);
@@ -116,9 +122,9 @@ class TtShortMessage_ShortMessage : public ::google::protobuf::Message /* @@prot
   ::std::string* release_numberphone();
   void set_allocated_numberphone(::std::string* numberphone);
 
-  // optional string message = 2;
+  // optional string message = 3;
   void clear_message();
-  static const int kMessageFieldNumber = 2;
+  static const int kMessageFieldNumber = 3;
   const ::std::string& message() const;
   void set_message(const ::std::string& value);
   void set_message(const char* value);
@@ -127,9 +133,9 @@ class TtShortMessage_ShortMessage : public ::google::protobuf::Message /* @@prot
   ::std::string* release_message();
   void set_allocated_message(::std::string* message);
 
-  // optional string time = 3;
+  // optional string time = 4;
   void clear_time();
-  static const int kTimeFieldNumber = 3;
+  static const int kTimeFieldNumber = 4;
   const ::std::string& time() const;
   void set_time(const ::std::string& value);
   void set_time(const char* value);
@@ -138,15 +144,15 @@ class TtShortMessage_ShortMessage : public ::google::protobuf::Message /* @@prot
   ::std::string* release_time();
   void set_allocated_time(::std::string* time);
 
-  // optional int32 type = 4;
+  // optional int32 type = 5;
   void clear_type();
-  static const int kTypeFieldNumber = 4;
+  static const int kTypeFieldNumber = 5;
   ::google::protobuf::int32 type() const;
   void set_type(::google::protobuf::int32 value);
 
-  // optional string name = 5;
+  // optional string name = 6;
   void clear_name();
-  static const int kNameFieldNumber = 5;
+  static const int kNameFieldNumber = 6;
   const ::std::string& name() const;
   void set_name(const ::std::string& value);
   void set_name(const char* value);
@@ -154,6 +160,12 @@ class TtShortMessage_ShortMessage : public ::google::protobuf::Message /* @@prot
   ::std::string* mutable_name();
   ::std::string* release_name();
   void set_allocated_name(::std::string* name);
+
+  // optional bool isRead = 7;
+  void clear_isread();
+  static const int kIsReadFieldNumber = 7;
+  bool isread() const;
+  void set_isread(bool value);
 
   // @@protoc_insertion_point(class_scope:phonedata.TtShortMessage.ShortMessage)
  private:
@@ -163,7 +175,9 @@ class TtShortMessage_ShortMessage : public ::google::protobuf::Message /* @@prot
   ::google::protobuf::internal::ArenaStringPtr message_;
   ::google::protobuf::internal::ArenaStringPtr time_;
   ::google::protobuf::internal::ArenaStringPtr name_;
+  ::google::protobuf::int64 id_;
   ::google::protobuf::int32 type_;
+  bool isread_;
   mutable int _cached_size_;
   friend void  protobuf_InitDefaults_TtShortMessage_2eproto_impl();
   friend void  protobuf_AddDesc_TtShortMessage_2eproto_impl();
@@ -290,7 +304,21 @@ extern ::google::protobuf::internal::ExplicitlyConstructed<TtShortMessage> TtSho
 #if !PROTOBUF_INLINE_NOT_IN_HEADERS
 // TtShortMessage_ShortMessage
 
-// optional string numberPhone = 1;
+// optional int64 id = 1;
+inline void TtShortMessage_ShortMessage::clear_id() {
+  id_ = GOOGLE_LONGLONG(0);
+}
+inline ::google::protobuf::int64 TtShortMessage_ShortMessage::id() const {
+  // @@protoc_insertion_point(field_get:phonedata.TtShortMessage.ShortMessage.id)
+  return id_;
+}
+inline void TtShortMessage_ShortMessage::set_id(::google::protobuf::int64 value) {
+  
+  id_ = value;
+  // @@protoc_insertion_point(field_set:phonedata.TtShortMessage.ShortMessage.id)
+}
+
+// optional string numberPhone = 2;
 inline void TtShortMessage_ShortMessage::clear_numberphone() {
   numberphone_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -334,7 +362,7 @@ inline void TtShortMessage_ShortMessage::set_allocated_numberphone(::std::string
   // @@protoc_insertion_point(field_set_allocated:phonedata.TtShortMessage.ShortMessage.numberPhone)
 }
 
-// optional string message = 2;
+// optional string message = 3;
 inline void TtShortMessage_ShortMessage::clear_message() {
   message_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -378,7 +406,7 @@ inline void TtShortMessage_ShortMessage::set_allocated_message(::std::string* me
   // @@protoc_insertion_point(field_set_allocated:phonedata.TtShortMessage.ShortMessage.message)
 }
 
-// optional string time = 3;
+// optional string time = 4;
 inline void TtShortMessage_ShortMessage::clear_time() {
   time_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -422,7 +450,7 @@ inline void TtShortMessage_ShortMessage::set_allocated_time(::std::string* time)
   // @@protoc_insertion_point(field_set_allocated:phonedata.TtShortMessage.ShortMessage.time)
 }
 
-// optional int32 type = 4;
+// optional int32 type = 5;
 inline void TtShortMessage_ShortMessage::clear_type() {
   type_ = 0;
 }
@@ -436,7 +464,7 @@ inline void TtShortMessage_ShortMessage::set_type(::google::protobuf::int32 valu
   // @@protoc_insertion_point(field_set:phonedata.TtShortMessage.ShortMessage.type)
 }
 
-// optional string name = 5;
+// optional string name = 6;
 inline void TtShortMessage_ShortMessage::clear_name() {
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -478,6 +506,20 @@ inline void TtShortMessage_ShortMessage::set_allocated_name(::std::string* name)
   }
   name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
   // @@protoc_insertion_point(field_set_allocated:phonedata.TtShortMessage.ShortMessage.name)
+}
+
+// optional bool isRead = 7;
+inline void TtShortMessage_ShortMessage::clear_isread() {
+  isread_ = false;
+}
+inline bool TtShortMessage_ShortMessage::isread() const {
+  // @@protoc_insertion_point(field_get:phonedata.TtShortMessage.ShortMessage.isRead)
+  return isread_;
+}
+inline void TtShortMessage_ShortMessage::set_isread(bool value) {
+  
+  isread_ = value;
+  // @@protoc_insertion_point(field_set:phonedata.TtShortMessage.ShortMessage.isRead)
 }
 
 inline const TtShortMessage_ShortMessage* TtShortMessage_ShortMessage::internal_default_instance() {

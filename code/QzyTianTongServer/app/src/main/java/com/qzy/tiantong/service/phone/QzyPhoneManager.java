@@ -14,10 +14,12 @@ import android.view.KeyEvent;
 
 import com.android.internal.telephony.ITelephony;
 import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tiantong.lib.utils.QzySystemUtils;
 import com.qzy.tiantong.service.contants.QzyTtContants;
 import com.qzy.tiantong.service.service.ITianTongServer;
 import com.qzy.tiantong.service.utils.PhoneUtils;
 import com.qzy.tiantong.service.utils.WifiUtils;
+import com.qzy.tt.data.TtPhoneWifiProtos;
 
 import java.lang.reflect.Method;
 import java.util.UUID;
@@ -34,28 +36,38 @@ public class QzyPhoneManager {
     private ITianTongServer mServer;
 
 
-
     public QzyPhoneManager(Context context, ITianTongServer server) {
         mContext = context;
         mServer = server;
 
+        String passwd = getWifiPasswdToSharedpref();
+        if(TextUtils.isEmpty(passwd)){
+            passwd = QzyTtContants.WIFI_PASSWD;
+        }
+
         //打开WiFi
-        WifiUtils.setWifiApEnabled(context, getSsidName(), QzyTtContants.WIFI_PASSWD, true);
+        WifiUtils.setWifiApEnabled(context, getSsidName(),passwd , true);
 
         setPhoneListener();
+    }
 
-
+    /**
+     * 设置wifi密码
+     */
+    public void setWifiPasswd(TtPhoneWifiProtos.TtWifi ttWifi){
+        setWifiPasswdToSharedpref(ttWifi.getPasswd());
+        WifiUtils.setWifiApEnabled(mContext, getSsidName(), ttWifi.getPasswd(), false);
+        WifiUtils.setWifiApEnabled(mContext, getSsidName(), ttWifi.getPasswd(), true);
     }
 
 
-
-
     private String getSsidName() {
-        String ssid = getSsidToSharedpref();
+        /*String ssid = getSsidToSharedpref();
         if (TextUtils.isEmpty(ssid)) {
-            ssid = QzyTtContants.WIFI_SSID + UUID.randomUUID().toString().substring(0, 6);
+            ssid = QzyTtContants.WIFI_SSID + QzySystemUtils.getEmmcId();
             setSsidToSharedpref(ssid);
-        }
+        }*/
+        String ssid = QzyTtContants.WIFI_SSID + QzySystemUtils.getEmmcId();
         return ssid;
     }
 
@@ -68,6 +80,17 @@ public class QzyPhoneManager {
         SharedPreferences sp = mContext.getSharedPreferences("tt_server_config", Context.MODE_PRIVATE);
         String ssid = sp.getString("wifi_ssid", "");
         return ssid;
+    }
+
+    private void setWifiPasswdToSharedpref(String passwd) {
+        SharedPreferences sp = mContext.getSharedPreferences("tt_server_config", Context.MODE_PRIVATE);
+        sp.edit().putString("wifi_passwd", passwd).commit();
+    }
+
+    private String getWifiPasswdToSharedpref() {
+        SharedPreferences sp = mContext.getSharedPreferences("tt_server_config", Context.MODE_PRIVATE);
+        String passwd = sp.getString("wifi_passwd", "");
+        return passwd;
     }
 
     /**
@@ -270,7 +293,7 @@ public class QzyPhoneManager {
     }
 
 
-    public void release(){
+    public void release() {
 
     }
 }

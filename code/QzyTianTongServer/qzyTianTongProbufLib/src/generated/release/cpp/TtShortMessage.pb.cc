@@ -55,12 +55,14 @@ void protobuf_AssignDesc_TtShortMessage_2eproto() {
       sizeof(TtShortMessage),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtShortMessage, _internal_metadata_));
   TtShortMessage_ShortMessage_descriptor_ = TtShortMessage_descriptor_->nested_type(0);
-  static const int TtShortMessage_ShortMessage_offsets_[5] = {
+  static const int TtShortMessage_ShortMessage_offsets_[7] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtShortMessage_ShortMessage, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtShortMessage_ShortMessage, numberphone_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtShortMessage_ShortMessage, message_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtShortMessage_ShortMessage, time_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtShortMessage_ShortMessage, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtShortMessage_ShortMessage, name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtShortMessage_ShortMessage, isread_),
   };
   TtShortMessage_ShortMessage_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -120,14 +122,15 @@ void protobuf_AddDesc_TtShortMessage_2eproto_impl() {
 
   protobuf_InitDefaults_TtShortMessage_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\024TtShortMessage.proto\022\tphonedata\"\321\001\n\016Tt"
+    "\n\024TtShortMessage.proto\022\tphonedata\"\355\001\n\016Tt"
     "ShortMessage\022\017\n\007request\030\001 \001(\010\022\020\n\010respons"
     "e\030\002 \001(\010\022<\n\014shortMessage\030\003 \003(\0132&.phonedat"
-    "a.TtShortMessage.ShortMessage\032^\n\014ShortMe"
-    "ssage\022\023\n\013numberPhone\030\001 \001(\t\022\017\n\007message\030\002 "
-    "\001(\t\022\014\n\004time\030\003 \001(\t\022\014\n\004type\030\004 \001(\005\022\014\n\004name\030"
-    "\005 \001(\tB\'\n\017com.qzy.tt.dataB\024TtShortMessage"
-    "Protosb\006proto3", 294);
+    "a.TtShortMessage.ShortMessage\032z\n\014ShortMe"
+    "ssage\022\n\n\002id\030\001 \001(\003\022\023\n\013numberPhone\030\002 \001(\t\022\017"
+    "\n\007message\030\003 \001(\t\022\014\n\004time\030\004 \001(\t\022\014\n\004type\030\005 "
+    "\001(\005\022\014\n\004name\030\006 \001(\t\022\016\n\006isRead\030\007 \001(\010B\'\n\017com"
+    ".qzy.tt.dataB\024TtShortMessageProtosb\006prot"
+    "o3", 322);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "TtShortMessage.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_TtShortMessage_2eproto);
@@ -158,11 +161,13 @@ static void MergeFromFail(int line) {
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int TtShortMessage_ShortMessage::kIdFieldNumber;
 const int TtShortMessage_ShortMessage::kNumberPhoneFieldNumber;
 const int TtShortMessage_ShortMessage::kMessageFieldNumber;
 const int TtShortMessage_ShortMessage::kTimeFieldNumber;
 const int TtShortMessage_ShortMessage::kTypeFieldNumber;
 const int TtShortMessage_ShortMessage::kNameFieldNumber;
+const int TtShortMessage_ShortMessage::kIsReadFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 TtShortMessage_ShortMessage::TtShortMessage_ShortMessage()
@@ -188,7 +193,8 @@ void TtShortMessage_ShortMessage::SharedCtor() {
   message_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   time_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  type_ = 0;
+  ::memset(&id_, 0, reinterpret_cast<char*>(&isread_) -
+    reinterpret_cast<char*>(&id_) + sizeof(isread_));
   _cached_size_ = 0;
 }
 
@@ -231,11 +237,31 @@ TtShortMessage_ShortMessage* TtShortMessage_ShortMessage::New(::google::protobuf
 
 void TtShortMessage_ShortMessage::Clear() {
 // @@protoc_insertion_point(message_clear_start:phonedata.TtShortMessage.ShortMessage)
+#if defined(__clang__)
+#define ZR_HELPER_(f) \
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(TtShortMessage_ShortMessage, f) \
+  _Pragma("clang diagnostic pop")
+#else
+#define ZR_HELPER_(f) reinterpret_cast<char*>(\
+  &reinterpret_cast<TtShortMessage_ShortMessage*>(16)->f)
+#endif
+
+#define ZR_(first, last) do {\
+  ::memset(&(first), 0,\
+           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
+} while (0)
+
+  ZR_(id_, isread_);
   numberphone_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   message_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   time_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  type_ = 0;
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+
+#undef ZR_HELPER_
+#undef ZR_
+
 }
 
 bool TtShortMessage_ShortMessage::MergePartialFromCodedStream(
@@ -248,9 +274,24 @@ bool TtShortMessage_ShortMessage::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional string numberPhone = 1;
+      // optional int64 id = 1;
       case 1: {
-        if (tag == 10) {
+        if (tag == 8) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &id_)));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(18)) goto parse_numberPhone;
+        break;
+      }
+
+      // optional string numberPhone = 2;
+      case 2: {
+        if (tag == 18) {
+         parse_numberPhone:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_numberphone()));
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
@@ -260,13 +301,13 @@ bool TtShortMessage_ShortMessage::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(18)) goto parse_message;
+        if (input->ExpectTag(26)) goto parse_message;
         break;
       }
 
-      // optional string message = 2;
-      case 2: {
-        if (tag == 18) {
+      // optional string message = 3;
+      case 3: {
+        if (tag == 26) {
          parse_message:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_message()));
@@ -277,13 +318,13 @@ bool TtShortMessage_ShortMessage::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(26)) goto parse_time;
+        if (input->ExpectTag(34)) goto parse_time;
         break;
       }
 
-      // optional string time = 3;
-      case 3: {
-        if (tag == 26) {
+      // optional string time = 4;
+      case 4: {
+        if (tag == 34) {
          parse_time:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_time()));
@@ -294,13 +335,13 @@ bool TtShortMessage_ShortMessage::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(32)) goto parse_type;
+        if (input->ExpectTag(40)) goto parse_type;
         break;
       }
 
-      // optional int32 type = 4;
-      case 4: {
-        if (tag == 32) {
+      // optional int32 type = 5;
+      case 5: {
+        if (tag == 40) {
          parse_type:
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
@@ -309,13 +350,13 @@ bool TtShortMessage_ShortMessage::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(42)) goto parse_name;
+        if (input->ExpectTag(50)) goto parse_name;
         break;
       }
 
-      // optional string name = 5;
-      case 5: {
-        if (tag == 42) {
+      // optional string name = 6;
+      case 6: {
+        if (tag == 50) {
          parse_name:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_name()));
@@ -323,6 +364,21 @@ bool TtShortMessage_ShortMessage::MergePartialFromCodedStream(
             this->name().data(), this->name().length(),
             ::google::protobuf::internal::WireFormatLite::PARSE,
             "phonedata.TtShortMessage.ShortMessage.name"));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(56)) goto parse_isRead;
+        break;
+      }
+
+      // optional bool isRead = 7;
+      case 7: {
+        if (tag == 56) {
+         parse_isRead:
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &isread_)));
         } else {
           goto handle_unusual;
         }
@@ -354,49 +410,59 @@ failure:
 void TtShortMessage_ShortMessage::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:phonedata.TtShortMessage.ShortMessage)
-  // optional string numberPhone = 1;
+  // optional int64 id = 1;
+  if (this->id() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->id(), output);
+  }
+
+  // optional string numberPhone = 2;
   if (this->numberphone().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->numberphone().data(), this->numberphone().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "phonedata.TtShortMessage.ShortMessage.numberPhone");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      1, this->numberphone(), output);
+      2, this->numberphone(), output);
   }
 
-  // optional string message = 2;
+  // optional string message = 3;
   if (this->message().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->message().data(), this->message().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "phonedata.TtShortMessage.ShortMessage.message");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      2, this->message(), output);
+      3, this->message(), output);
   }
 
-  // optional string time = 3;
+  // optional string time = 4;
   if (this->time().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->time().data(), this->time().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "phonedata.TtShortMessage.ShortMessage.time");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      3, this->time(), output);
+      4, this->time(), output);
   }
 
-  // optional int32 type = 4;
+  // optional int32 type = 5;
   if (this->type() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->type(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->type(), output);
   }
 
-  // optional string name = 5;
+  // optional string name = 6;
   if (this->name().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->name().data(), this->name().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "phonedata.TtShortMessage.ShortMessage.name");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      5, this->name(), output);
+      6, this->name(), output);
+  }
+
+  // optional bool isRead = 7;
+  if (this->isread() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(7, this->isread(), output);
   }
 
   // @@protoc_insertion_point(serialize_end:phonedata.TtShortMessage.ShortMessage)
@@ -406,7 +472,12 @@ void TtShortMessage_ShortMessage::SerializeWithCachedSizes(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
   // @@protoc_insertion_point(serialize_to_array_start:phonedata.TtShortMessage.ShortMessage)
-  // optional string numberPhone = 1;
+  // optional int64 id = 1;
+  if (this->id() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(1, this->id(), target);
+  }
+
+  // optional string numberPhone = 2;
   if (this->numberphone().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->numberphone().data(), this->numberphone().length(),
@@ -414,10 +485,10 @@ void TtShortMessage_ShortMessage::SerializeWithCachedSizes(
       "phonedata.TtShortMessage.ShortMessage.numberPhone");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->numberphone(), target);
+        2, this->numberphone(), target);
   }
 
-  // optional string message = 2;
+  // optional string message = 3;
   if (this->message().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->message().data(), this->message().length(),
@@ -425,10 +496,10 @@ void TtShortMessage_ShortMessage::SerializeWithCachedSizes(
       "phonedata.TtShortMessage.ShortMessage.message");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->message(), target);
+        3, this->message(), target);
   }
 
-  // optional string time = 3;
+  // optional string time = 4;
   if (this->time().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->time().data(), this->time().length(),
@@ -436,15 +507,15 @@ void TtShortMessage_ShortMessage::SerializeWithCachedSizes(
       "phonedata.TtShortMessage.ShortMessage.time");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        3, this->time(), target);
+        4, this->time(), target);
   }
 
-  // optional int32 type = 4;
+  // optional int32 type = 5;
   if (this->type() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->type(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->type(), target);
   }
 
-  // optional string name = 5;
+  // optional string name = 6;
   if (this->name().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->name().data(), this->name().length(),
@@ -452,7 +523,12 @@ void TtShortMessage_ShortMessage::SerializeWithCachedSizes(
       "phonedata.TtShortMessage.ShortMessage.name");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        5, this->name(), target);
+        6, this->name(), target);
+  }
+
+  // optional bool isRead = 7;
+  if (this->isread() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(7, this->isread(), target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:phonedata.TtShortMessage.ShortMessage)
@@ -463,39 +539,51 @@ size_t TtShortMessage_ShortMessage::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:phonedata.TtShortMessage.ShortMessage)
   size_t total_size = 0;
 
-  // optional string numberPhone = 1;
+  // optional int64 id = 1;
+  if (this->id() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int64Size(
+        this->id());
+  }
+
+  // optional string numberPhone = 2;
   if (this->numberphone().size() > 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::StringSize(
         this->numberphone());
   }
 
-  // optional string message = 2;
+  // optional string message = 3;
   if (this->message().size() > 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::StringSize(
         this->message());
   }
 
-  // optional string time = 3;
+  // optional string time = 4;
   if (this->time().size() > 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::StringSize(
         this->time());
   }
 
-  // optional int32 type = 4;
+  // optional int32 type = 5;
   if (this->type() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->type());
   }
 
-  // optional string name = 5;
+  // optional string name = 6;
   if (this->name().size() > 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::StringSize(
         this->name());
+  }
+
+  // optional bool isRead = 7;
+  if (this->isread() != 0) {
+    total_size += 1 + 1;
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -531,6 +619,9 @@ void TtShortMessage_ShortMessage::MergeFrom(const TtShortMessage_ShortMessage& f
 
 void TtShortMessage_ShortMessage::UnsafeMergeFrom(const TtShortMessage_ShortMessage& from) {
   GOOGLE_DCHECK(&from != this);
+  if (from.id() != 0) {
+    set_id(from.id());
+  }
   if (from.numberphone().size() > 0) {
 
     numberphone_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.numberphone_);
@@ -549,6 +640,9 @@ void TtShortMessage_ShortMessage::UnsafeMergeFrom(const TtShortMessage_ShortMess
   if (from.name().size() > 0) {
 
     name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
+  }
+  if (from.isread() != 0) {
+    set_isread(from.isread());
   }
 }
 
@@ -576,11 +670,13 @@ void TtShortMessage_ShortMessage::Swap(TtShortMessage_ShortMessage* other) {
   InternalSwap(other);
 }
 void TtShortMessage_ShortMessage::InternalSwap(TtShortMessage_ShortMessage* other) {
+  std::swap(id_, other->id_);
   numberphone_.Swap(&other->numberphone_);
   message_.Swap(&other->message_);
   time_.Swap(&other->time_);
   std::swap(type_, other->type_);
   name_.Swap(&other->name_);
+  std::swap(isread_, other->isread_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
@@ -918,7 +1014,21 @@ void TtShortMessage::InternalSwap(TtShortMessage* other) {
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
 // TtShortMessage_ShortMessage
 
-// optional string numberPhone = 1;
+// optional int64 id = 1;
+void TtShortMessage_ShortMessage::clear_id() {
+  id_ = GOOGLE_LONGLONG(0);
+}
+::google::protobuf::int64 TtShortMessage_ShortMessage::id() const {
+  // @@protoc_insertion_point(field_get:phonedata.TtShortMessage.ShortMessage.id)
+  return id_;
+}
+void TtShortMessage_ShortMessage::set_id(::google::protobuf::int64 value) {
+  
+  id_ = value;
+  // @@protoc_insertion_point(field_set:phonedata.TtShortMessage.ShortMessage.id)
+}
+
+// optional string numberPhone = 2;
 void TtShortMessage_ShortMessage::clear_numberphone() {
   numberphone_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -962,7 +1072,7 @@ void TtShortMessage_ShortMessage::set_allocated_numberphone(::std::string* numbe
   // @@protoc_insertion_point(field_set_allocated:phonedata.TtShortMessage.ShortMessage.numberPhone)
 }
 
-// optional string message = 2;
+// optional string message = 3;
 void TtShortMessage_ShortMessage::clear_message() {
   message_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1006,7 +1116,7 @@ void TtShortMessage_ShortMessage::set_allocated_message(::std::string* message) 
   // @@protoc_insertion_point(field_set_allocated:phonedata.TtShortMessage.ShortMessage.message)
 }
 
-// optional string time = 3;
+// optional string time = 4;
 void TtShortMessage_ShortMessage::clear_time() {
   time_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1050,7 +1160,7 @@ void TtShortMessage_ShortMessage::set_allocated_time(::std::string* time) {
   // @@protoc_insertion_point(field_set_allocated:phonedata.TtShortMessage.ShortMessage.time)
 }
 
-// optional int32 type = 4;
+// optional int32 type = 5;
 void TtShortMessage_ShortMessage::clear_type() {
   type_ = 0;
 }
@@ -1064,7 +1174,7 @@ void TtShortMessage_ShortMessage::set_type(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:phonedata.TtShortMessage.ShortMessage.type)
 }
 
-// optional string name = 5;
+// optional string name = 6;
 void TtShortMessage_ShortMessage::clear_name() {
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1106,6 +1216,20 @@ void TtShortMessage_ShortMessage::set_allocated_name(::std::string* name) {
   }
   name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
   // @@protoc_insertion_point(field_set_allocated:phonedata.TtShortMessage.ShortMessage.name)
+}
+
+// optional bool isRead = 7;
+void TtShortMessage_ShortMessage::clear_isread() {
+  isread_ = false;
+}
+bool TtShortMessage_ShortMessage::isread() const {
+  // @@protoc_insertion_point(field_get:phonedata.TtShortMessage.ShortMessage.isRead)
+  return isread_;
+}
+void TtShortMessage_ShortMessage::set_isread(bool value) {
+  
+  isread_ = value;
+  // @@protoc_insertion_point(field_set:phonedata.TtShortMessage.ShortMessage.isRead)
 }
 
 inline const TtShortMessage_ShortMessage* TtShortMessage_ShortMessage::internal_default_instance() {
