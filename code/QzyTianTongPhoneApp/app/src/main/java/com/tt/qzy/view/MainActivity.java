@@ -18,6 +18,7 @@ import com.tt.qzy.view.fragment.MailListFragment;
 import com.tt.qzy.view.fragment.MainFragment;
 import com.tt.qzy.view.fragment.ShortMessageFragment;
 import com.tt.qzy.view.layout.BadgeView;
+import com.tt.qzy.view.presenter.activity.MainActivityPresenter;
 import com.tt.qzy.view.view.MainActivityView;
 
 import butterknife.BindView;
@@ -42,6 +43,8 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
     // 记录是正常退出 还是 我们隐藏的按钮出现 back消失.
     private boolean isOnkeyDown = false;
 
+    private MainActivityPresenter mPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +60,8 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
     public void initView() {
         showMainFragment();
 //        remind(button,"12");
+        mPresenter = new MainActivityPresenter(this);
+        mPresenter.onBindView(this);
     }
 
     @Override
@@ -163,7 +168,7 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
     @Override
     protected void onStart() {
         super.onStart();
-
+        mPresenter.getAppversionRequest();
         startServcie();
     }
 

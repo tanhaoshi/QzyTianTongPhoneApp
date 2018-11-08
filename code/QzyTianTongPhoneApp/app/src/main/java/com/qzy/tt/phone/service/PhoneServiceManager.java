@@ -73,7 +73,6 @@ public class PhoneServiceManager {
 
     /**
      * 更新天通电话状态
-     *
      * @param cmd
      */
     private void updatePhoneState(PhoneCmd cmd) {
@@ -83,7 +82,7 @@ public class PhoneServiceManager {
                 stopProtocal();
                 break;
             case RING:
-//                startPlayerProtocal();
+                startPlayerProtocal();
                 break;
             case CALL:
                 startProtocal();
@@ -115,7 +114,7 @@ public class PhoneServiceManager {
      */
     public void startPlayerProtocal() {
         if (mAllLocalPcmManager != null) {
-            mAllLocalPcmManager.start();
+            mAllLocalPcmManager.startPlayer();
         }
 
     }

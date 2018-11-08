@@ -48,6 +48,12 @@ public class TtPhoneApplication extends Application {
     }
 
     @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
         sApp = this;
@@ -55,9 +61,8 @@ public class TtPhoneApplication extends Application {
             return;
         }
         LeakCanary.install(this);
-        MultiDex.install(this);
         initAppRefresh();
-//        refWatcher = setupLeakCanary();
+        refWatcher = setupLeakCanary();
     }
 
     public static TtPhoneApplication getInstance(){

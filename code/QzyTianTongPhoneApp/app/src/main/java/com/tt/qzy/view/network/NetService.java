@@ -1,6 +1,7 @@
 package com.tt.qzy.view.network;
 
 
+import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.http.Body;
@@ -11,7 +12,6 @@ import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Url;
-import rx.Observable;
 
 /**
  * @version 1.0
@@ -91,7 +91,6 @@ public interface NetService {
 
     //http://47.106.33.137:9097/TinTong/web/versionrecord/getNewestVersion
     @POST("versionrecord/getNewestVersion")
-    @FormUrlEncoded
-    Observable<ResponseBody> getAppVersion(
+    io.reactivex.Observable<ResponseBody> getAppVersion(
     );
 }

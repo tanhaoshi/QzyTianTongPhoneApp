@@ -258,6 +258,9 @@ public class PhoneNettyManager {
             File file = new File("/mnt/sdcard/tiantong_udate.zip");
             if(!file.exists()){
                 file.createNewFile();
+            }else{
+                file.delete();
+                file.createNewFile();
             }
             FileOutputStream outputStream = new FileOutputStream(file);
             byte[] read = new byte[1024 * 1024];
