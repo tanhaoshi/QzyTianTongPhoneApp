@@ -7,7 +7,9 @@ import android.content.IntentFilter;
 import android.text.TextUtils;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tiantong.service.contants.QzyTtContants;
 import com.qzy.tiantong.service.service.ITianTongServer;
+import com.qzy.tiantong.service.utils.WifiUtils;
 
 
 /**
@@ -35,6 +37,7 @@ public class BroadcastManager {
         intentFilter.addAction("com.test");
         intentFilter.addAction("com.test.close");
         intentFilter.addAction("com.qzy.phone.state");
+        intentFilter.addAction("com.qzy.tt.ACTION_RECOVERY_WIFI"); //清除WiFi密码
         mContext.registerReceiver(mReceiver, intentFilter);
     }
 
@@ -81,6 +84,10 @@ public class BroadcastManager {
                 //关闭设备
                // mServer.closeRecorderAndPlayer();
                 mServer.freeTtPcmDevice();
+
+            }else if(action.equals("com.qzy.tt.ACTION_RECOVERY_WIFI")){
+                WifiUtils.setWifiApEnabled(mContext, WifiUtils.getSsidName(), QzyTtContants.WIFI_PASSWD, false);
+                WifiUtils.setWifiApEnabled(mContext, WifiUtils.getSsidName(), QzyTtContants.WIFI_PASSWD, true);
             }
 
         }

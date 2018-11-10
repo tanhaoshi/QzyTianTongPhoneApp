@@ -44,13 +44,13 @@ public class QzyPhoneManager {
         mContext = context;
         mServer = server;
 
-        String passwd = getWifiPasswdToSharedpref();
+        String passwd = WifiUtils.getWifiPasswdToSharedpref(mContext);
         if(TextUtils.isEmpty(passwd)){
             passwd = QzyTtContants.WIFI_PASSWD;
         }
 
         //打开WiFi
-        WifiUtils.setWifiApEnabled(context, getSsidName(),passwd , true);
+        WifiUtils.setWifiApEnabled(context, WifiUtils.getSsidName(),passwd , true);
 
         setPhoneListener();
     }
@@ -59,43 +59,13 @@ public class QzyPhoneManager {
      * 设置wifi密码
      */
     public void setWifiPasswd(TtPhoneWifiProtos.TtWifi ttWifi){
-        setWifiPasswdToSharedpref(ttWifi.getPasswd());
-        WifiUtils.setWifiApEnabled(mContext, getSsidName(), ttWifi.getPasswd(), false);
-        WifiUtils.setWifiApEnabled(mContext, getSsidName(), ttWifi.getPasswd(), true);
+        WifiUtils.setWifiPasswdToSharedpref(mContext,ttWifi.getPasswd());
+        WifiUtils.setWifiApEnabled(mContext, WifiUtils.getSsidName(), ttWifi.getPasswd(), false);
+        WifiUtils.setWifiApEnabled(mContext, WifiUtils.getSsidName(), ttWifi.getPasswd(), true);
     }
 
 
-    private String getSsidName() {
-        /*String ssid = getSsidToSharedpref();
-        if (TextUtils.isEmpty(ssid)) {
-            ssid = QzyTtContants.WIFI_SSID + QzySystemUtils.getEmmcId();
-            setSsidToSharedpref(ssid);
-        }*/
-        String ssid = QzyTtContants.WIFI_SSID + QzySystemUtils.getEmmcId();
-        return ssid;
-    }
 
-    private void setSsidToSharedpref(String ssid) {
-        SharedPreferences sp = mContext.getSharedPreferences("tt_server_config", Context.MODE_PRIVATE);
-        sp.edit().putString("wifi_ssid", ssid).commit();
-    }
-
-    private String getSsidToSharedpref() {
-        SharedPreferences sp = mContext.getSharedPreferences("tt_server_config", Context.MODE_PRIVATE);
-        String ssid = sp.getString("wifi_ssid", "");
-        return ssid;
-    }
-
-    private void setWifiPasswdToSharedpref(String passwd) {
-        SharedPreferences sp = mContext.getSharedPreferences("tt_server_config", Context.MODE_PRIVATE);
-        sp.edit().putString("wifi_passwd", passwd).commit();
-    }
-
-    private String getWifiPasswdToSharedpref() {
-        SharedPreferences sp = mContext.getSharedPreferences("tt_server_config", Context.MODE_PRIVATE);
-        String passwd = sp.getString("wifi_passwd", "");
-        return passwd;
-    }
 
     /**
      * 设置电话监听

@@ -56,12 +56,22 @@ public class UpdateServiceManager implements IUpdateManager {
 
         initNettyManager();
 
-        mLocalUpdateSocketManager = new LocalUpdateSocketManager();
 
         if (mFtpServerManager == null) {
             mFtpServerManager = new FtpServerManager();
             mFtpServerManager.onStartServer();
         }
+
+        //升级协议
+        mLocalUpdateSocketManager = new LocalUpdateSocketManager(new LocalUpdateSocketManager.IDataListener(){
+
+            @Override
+            public void onData(byte[] data) {
+
+            }
+        });
+
+
 
     }
 
@@ -132,6 +142,7 @@ public class UpdateServiceManager implements IUpdateManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
 
