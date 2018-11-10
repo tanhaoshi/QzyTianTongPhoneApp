@@ -257,7 +257,7 @@ public class PhoneNettyManager {
         //开始下载
         try{
             InputStream inputStream = mContext.getAssets().open("tiantong_update.zip");
-            File file = new File("/mnt/sdcard/tiantong_udate.zip");
+            File file = new File("/mnt/sdcard/tiantong_update.zip");
             if(!file.exists()){
                 file.createNewFile();
             }else{
