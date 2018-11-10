@@ -1,8 +1,10 @@
 package com.qzy.tiantong.service.netty;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 
 import com.qzy.led.Netled;
@@ -16,11 +18,13 @@ import com.qzy.tiantong.service.phone.TtPhoneState;
 import com.qzy.tiantong.service.phone.data.SmsInfo;
 import com.qzy.tiantong.service.time.DateTimeManager;
 import com.qzy.tiantong.service.usb.TtUsbManager;
+import com.qzy.tiantong.service.utils.MobileDataUtils;
 import com.qzy.tiantong.service.utils.PhoneUtils;
 import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.CallPhoneStateProtos;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtPhoneBatteryProtos;
+import com.qzy.tt.data.TtPhoneMobileDataProtos;
 import com.qzy.tt.data.TtPhoneSignalProtos;
 import com.qzy.tt.data.TtPhoneSimCards;
 import com.qzy.tt.data.TtPhoneSmsProtos;
@@ -500,6 +504,36 @@ public class PhoneNettyManager {
         //控制信号灯
         Netled.setNetledState(false);
         Netled.destroy();
+    }
+
+    /**
+     * 打开天通猫移动数据
+     */
+    /**
+     * 打开天通猫移动数据
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
+    public void setEnablePhoneData(TtPhoneMobileDataProtos.TtPhoneMobileData ttPhoneMobileData){
+        try {
+            MobileDataUtils.setDataEnabled(1,ttPhoneMobileData.getIsEnableData(),mContext);
+            if(MobileDataUtils.getDataEnabled(1,mContext)){
+                //设置数据打开成功
+                sendMobileData(true);
+            }else{
+                //设置数据打开失败
+                sendMobileData(false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendMobileData(boolean isStatus){
+        TtPhoneMobileDataProtos.TtPhoneMobileData mobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.newBuilder()
+                .setResponseStatus(isStatus)
+                .build();
+        mNettyServerManager.sendData(null,PhoneCmd.getPhoneCmd
+                (PrototocalTools.IProtoClientIndex.response_phone_data_status,mobileData));
     }
 
     public void free() {

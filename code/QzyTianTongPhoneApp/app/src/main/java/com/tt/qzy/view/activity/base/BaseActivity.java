@@ -119,7 +119,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         tt_status = true;
         SPUtils.putShare(BaseActivity.this, Constans.TTM_STATUS,tt_status);
         img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nerwork));
-        img4.setImageDrawable(getResources().getDrawable(R.drawable.phone_network));
+//        img4.setImageDrawable(getResources().getDrawable(R.drawable.data_traffic));
     }
 
     /**
@@ -129,7 +129,6 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         tt_status = false;
         SPUtils.putShare(BaseActivity.this, Constans.TTM_STATUS,tt_status);
         img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonerwork));
-        img4.setImageDrawable(getResources().getDrawable(R.drawable.phone_nonetwork));
     }
 
     /**

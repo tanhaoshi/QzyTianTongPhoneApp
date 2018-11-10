@@ -16,6 +16,7 @@ import com.qzy.tt.data.TtBeiDouStatuss;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhoneBatteryProtos;
+import com.qzy.tt.data.TtPhoneMobileDataProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSignalProtos;
 import com.qzy.tt.data.TtPhoneSimCards;
@@ -150,6 +151,10 @@ public class CmdHandler {
                      TtTimeProtos.TtTime ttTime = TtTimeProtos.TtTime.parseDelimitedFrom(inputStream);
                      KLog.i( " look over the server time response !");
                     break;
+                 case PrototocalTools.IProtoClientIndex.response_phone_data_status:
+                     TtPhoneMobileDataProtos.TtPhoneMobileData mobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.parseDelimitedFrom(inputStream);
+                     sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_ENABLE_DATA,protoId,mobileData);
+                     break;
             }
         } catch (Exception e) {
             e.printStackTrace();

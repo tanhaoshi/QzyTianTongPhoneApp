@@ -12,6 +12,7 @@ import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
+import com.qzy.tt.data.TtPhoneMobileDataProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneUpdateResponseProtos;
 import com.qzy.tt.phone.common.CommonData;
@@ -22,6 +23,7 @@ import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.activity.UserEditorsActivity;
 import com.tt.qzy.view.bean.AppInfoModel;
 import com.tt.qzy.view.bean.DatetimeModel;
+import com.tt.qzy.view.bean.EnableDataModel;
 import com.tt.qzy.view.bean.ServerPortIp;
 import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
@@ -141,6 +143,14 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
                 new DatetimeModel(DateUtil.backTimeFomat(new Date()))));
     }
 
+    /**
+     * 打开天通猫移动数据
+     */
+    public void requestEnableData(boolean isSwitch){
+        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_ENABLE_DATA,
+                new EnableDataModel(isSwitch)));
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
@@ -151,9 +161,9 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
                 parseBeiDouSwitch(event.getObject());
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SUCCESS:
-                requestServerDatetime();
-                mView.get().updateConnectedState(true);
                 requestServerVersion();
+                mView.get().updateConnectedState(true);
+                requestServerDatetime();
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_FAILED:
                 mView.get().updateConnectedState(false);
@@ -164,6 +174,22 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__RESPONSE_SERVER_UPLOAD_FINSH:
                 parseAppUploadFinsh(event.getObject());
                 break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_ENABLE_DATA:
+                parseServerDataEnable(event.getObject());
+                break;
+        }
+    }
+
+    /**
+     * 天通猫打开数据流量失败或成功
+     */
+    private void parseServerDataEnable(Object o){
+        PhoneCmd cmd = (PhoneCmd)o;
+        TtPhoneMobileDataProtos.TtPhoneMobileData ttPhoneMobileData = (TtPhoneMobileDataProtos.TtPhoneMobileData)cmd.getMessage();
+        if(ttPhoneMobileData.getResponseStatus()){
+            NToast.shortToast(mContext,"打开天通猫数据成功!");
+        }else{
+            NToast.shortToast(mContext,"打开天通猫数据失败!");
         }
     }
 

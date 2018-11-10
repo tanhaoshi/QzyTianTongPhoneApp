@@ -26,6 +26,7 @@ public class PrototocalTools {
         int request_tt_time = 122;
         int request_phone_send_sms_read = 124;
         int request_phone_set_wifi_passwd = 126;
+        int request_phone_server_enable_data = 128;
     }
 
     public interface IProtoClientIndex{
@@ -45,6 +46,7 @@ public class PrototocalTools {
         int response_update_phone_aapinfo = 127;
         int response_update_send_zip = 129;
         int response_tt_time = 131;
+        int response_phone_data_status = 133;
     }
 
 

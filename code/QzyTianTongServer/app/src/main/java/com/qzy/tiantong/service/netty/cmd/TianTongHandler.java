@@ -1,13 +1,16 @@
 package com.qzy.tiantong.service.netty.cmd;
 
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.RequiresApi;
 
 import com.qzy.tiantong.service.service.ITianTongServer;
 import com.qzy.tt.data.CallPhoneProtos;
 import com.qzy.tt.data.ChangePcmPlayerDbProtos;
 import com.qzy.tt.data.TtBeiDouStatuss;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
+import com.qzy.tt.data.TtPhoneMobileDataProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.data.TtPhoneWifiProtos;
@@ -30,6 +33,7 @@ public class TianTongHandler extends Handler {
         mServer = server;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     @Override
     public void handleMessage(Message msg) {
 
@@ -75,6 +79,9 @@ public class TianTongHandler extends Handler {
                     break;
                 case PrototocalTools.IProtoServerIndex.request_phone_set_wifi_passwd:
                     mServer.getQzyPhoneManager().setWifiPasswd((TtPhoneWifiProtos.TtWifi) msg.obj);
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_phone_server_enable_data:
+                    mServer.getPhoneNettyManager().setEnablePhoneData((TtPhoneMobileDataProtos.TtPhoneMobileData) msg.obj);
                     break;
                 default:
                     break;

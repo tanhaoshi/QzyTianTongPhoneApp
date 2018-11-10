@@ -9,6 +9,7 @@ import com.qzy.tt.data.CallPhoneProtos;
 import com.qzy.tt.data.ChangePcmPlayerDbProtos;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhoneAudioDataProtos;
+import com.qzy.tt.data.TtPhoneMobileDataProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.data.TtPhoneWifiProtos;
@@ -104,6 +105,10 @@ public class CmdHandler implements ICmdHandler {
                 case PrototocalTools.IProtoServerIndex.request_phone_set_wifi_passwd:
                     TtPhoneWifiProtos.TtWifi ttWifi = TtPhoneWifiProtos.TtWifi.parseDelimitedFrom(inputStream);
                     senMsg(protoId, ttWifi);
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_phone_server_enable_data:
+                    TtPhoneMobileDataProtos.TtPhoneMobileData ttPhoneMobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.parseDelimitedFrom(inputStream);
+                    senMsg(protoId,ttPhoneMobileData);
                     break;
                 default:
                     break;

@@ -33,6 +33,9 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- 打开天通猫移动数据权限 -->
+    <uses-permission android:name="android.permission.MODIFY_PHONE_STATE"></uses-permission>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

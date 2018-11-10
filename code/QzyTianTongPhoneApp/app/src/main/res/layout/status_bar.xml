@@ -13,8 +13,9 @@
         android:layout_height="12dp"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
+        android:rotation="-180"
         app:batteryColor="@color/white"
-        app:batteryPower="50"
+        app:batteryPower="0"
         app:batteryOrientation="horizontal"/>
 
     <ImageView
@@ -37,21 +38,21 @@
         android:layout_height="12dp"/>
 
     <ImageView
-        android:id="@+id/img4"
-        android:visibility="gone"
-        android:src="@drawable/phone_nonetwork"
-        android:layout_centerVertical="true"
+        android:id="@+id/img5"
+        android:src="@drawable/search_nonerwork"
         android:layout_marginRight="6dp"
+        android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/img3"
         android:layout_width="22dp"
         android:layout_height="12dp"/>
 
     <ImageView
-        android:id="@+id/img5"
-        android:src="@drawable/search_nonerwork"
-        android:layout_marginRight="6dp"
+        android:id="@+id/img4"
+        android:visibility="gone"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/img4"
+        android:layout_marginRight="6dp"
+        android:layout_toLeftOf="@+id/img5"
+        android:src="@drawable/data_traffic"
         android:layout_width="22dp"
         android:layout_height="12dp"/>
 

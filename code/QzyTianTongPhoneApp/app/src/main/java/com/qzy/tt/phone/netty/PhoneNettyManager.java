@@ -16,6 +16,7 @@ import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.CallPhoneProtos;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
+import com.qzy.tt.data.TtPhoneMobileDataProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.data.TtPhoneUpdateAppInfoProtos;
@@ -32,6 +33,7 @@ import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.bean.AppInfoModel;
 import com.tt.qzy.view.bean.DatetimeModel;
+import com.tt.qzy.view.bean.EnableDataModel;
 import com.tt.qzy.view.bean.SMAgrementModel;
 import com.tt.qzy.view.bean.ServerPortIp;
 import com.tt.qzy.view.bean.TtBeidouOpenBean;
@@ -346,6 +348,17 @@ public class PhoneNettyManager {
         sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_update_send_zip,updateSendFile));
     }
 
+    /**
+     * 请求服务端打开天通猫移动数据
+     */
+    private void requestEnableData(Object o){
+        EnableDataModel dataModel = (EnableDataModel)o;
+        TtPhoneMobileDataProtos.TtPhoneMobileData mobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.newBuilder()
+                .setIsEnableData(dataModel.isEnableData())
+                .build();
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_phone_server_enable_data,mobileData));
+    }
+
     private NettyClientManager.INettyListener nettyListener = new NettyClientManager.INettyListener() {
         @Override
         public void onReceiveData(ByteBufInputStream inputStream) {
@@ -423,6 +436,9 @@ public class PhoneNettyManager {
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_WIFI_PASSWORD:
                 requestServerWifipassword(event.getObject());
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_ENABLE_DATA:
+                requestEnableData(event.getObject());
                 break;
         }
     }

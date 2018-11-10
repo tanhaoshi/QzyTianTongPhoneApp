@@ -48,6 +48,8 @@ public class MainFragment extends Fragment implements MainFragmentView{
     SwitchCompat main_location;
     @BindView(R.id.sc_settin_testxinlv)
     SwitchCompat sc_settin_testxinlv;
+    @BindView(R.id.sc_settin_data)
+    SwitchCompat sc_settin_data;
 
     private MainFragementPersenter mPresneter;
     private MainActivity mainActivity;
@@ -139,6 +141,21 @@ public class MainFragment extends Fragment implements MainFragmentView{
                         getActivity().startService(mIntent);
                     }else{
                         getActivity().stopService(mIntent);
+                    }
+                }else{
+                    NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
+                }
+            }
+        });
+        sc_settin_data.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(mainActivity.isConnectStatus()){
+                    if(isChecked){
+                        //去打开热点数据
+                        mainActivity.img4.setVisibility(View.VISIBLE);
+                    }else{
+                        //去关闭热点数据
                     }
                 }else{
                     NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));

@@ -59,4 +59,8 @@ public interface IMessageEventBustType {
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SHORT_MESSAGE = "event_bus_type_connect_tiantong_request_server_short_message";
     // 设置wifi密码
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_WIFI_PASSWORD = "event_bus_type_connect_tiantong_request_server_wifi_password";
+    // 打开天通猫移动数据
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_ENABLE_DATA = "event_bus_type_connect_tiantong_request_server_enable_data";
+    // 打开天通猫移动数据返回情况
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_ENABLE_DATA = "event_bus_type_connect_tiantong_response_server_enable_data";
 }
