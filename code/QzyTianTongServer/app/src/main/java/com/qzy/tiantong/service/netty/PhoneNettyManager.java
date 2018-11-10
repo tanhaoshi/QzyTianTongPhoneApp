@@ -248,7 +248,7 @@ public class PhoneNettyManager {
                 .setPhoneNumber(phoneNumber)
                 .build();
         String callInigIp = PhoneClientManager.getInstance().isCallingIp();
-        if (!TextUtils.isEmpty(callInigIp)) {
+        if (!TextUtils.isEmpty(callInigIp) && (phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.CALL  || phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.RING)) {
             mNettyServerManager.sendData(callInigIp, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
         } else {
             mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));

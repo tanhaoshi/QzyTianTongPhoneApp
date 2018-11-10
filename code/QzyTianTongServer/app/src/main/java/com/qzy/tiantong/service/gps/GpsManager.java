@@ -242,7 +242,7 @@ public class GpsManager {
      * @param location
      */
     private void sendLoactionToPhoneClient(Location location) {
-        LogUtils.d("isGpsOpen = " + isGpsOpen);
+        //LogUtils.d("isGpsOpen = " + isGpsOpen);
         TtPhonePositionProtos.TtPhonePosition ttPhonePosition = null;
         if (location == null) {
             ttPhonePosition = TtPhonePositionProtos.TtPhonePosition.newBuilder()
@@ -251,7 +251,6 @@ public class GpsManager {
                     .setLongItude("")
                     .setResponseStatus(true)
                     .build();
-
 
         } else {
             ttPhonePosition = TtPhonePositionProtos.TtPhonePosition.newBuilder()

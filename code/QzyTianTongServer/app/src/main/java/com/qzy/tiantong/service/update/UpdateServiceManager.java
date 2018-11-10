@@ -7,6 +7,7 @@ import com.qzy.ftpserver.FtpServerManager;
 import com.qzy.tiantong.lib.utils.IniFileUtils;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.lib.utils.MD5Utils;
+import com.qzy.tiantong.lib.utils.ZipUtils;
 import com.qzy.tiantong.service.netty.NettyServerManager;
 import com.qzy.tiantong.service.netty.cmd.CmdHandler;
 import com.qzy.tiantong.service.netty.cmd.CmdHandlerUpdate;
@@ -19,8 +20,15 @@ import com.qzy.tt.probuf.lib.data.PhoneCmd;
 import com.qzy.tt.probuf.lib.data.PrototocalTools;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import io.netty.buffer.ByteBufInputStream;
 
@@ -39,13 +47,18 @@ public class UpdateServiceManager implements IUpdateManager {
     //创建ftp上传文件
     private FtpServerManager mFtpServerManager;
 
+
+    private IUpdateLocalTool mLocalUpdateSocketManager;
+
     public UpdateServiceManager(Context context) {
         mContext = context;
         mIniFile = new IniFile();
 
         initNettyManager();
 
-        if(mFtpServerManager == null) {
+        mLocalUpdateSocketManager = new LocalUpdateSocketManager();
+
+        if (mFtpServerManager == null) {
             mFtpServerManager = new FtpServerManager();
             mFtpServerManager.onStartServer();
         }
@@ -106,7 +119,7 @@ public class UpdateServiceManager implements IUpdateManager {
                 updateConfigBean.setApp_version(appVer);
                 updateConfigBean.setServer_version(serverVer);
                 updateConfigBean.setZip_md(zipMd5);
-                mIniFile.setUpdateConfigBean(updateConfigBean);
+                mIniFile.setUpdateConfigBeanNew(updateConfigBean);
 
                 sendNeedUpdate(updateAppInfo.getIp(), true);
             } else {
@@ -133,25 +146,80 @@ public class UpdateServiceManager implements IUpdateManager {
             boolean isFinish = updateSendFile.getIsSendFileFinish();
             LogUtils.d("isFinish = " + isFinish + " fileName = " + fileName);
             if (isFinish) {
-                String md = mIniFile.getUpdateConfigBean(true).getZip_md();
+                String md = mIniFile.getUpdateConfigBeanNew(true).getZip_md();
                 String fileMd = MD5Utils.getFileMD5(file);
-                LogUtils.d("md5 = " + md  + " fileMd5 = " + fileMd);
+                LogUtils.d("md5 = " + md + " fileMd5 = " + fileMd);
                 if (fileMd.equals(md)) {
                     sendReceiveZipFileFinish(updateSendFile.getIp(), true);
                     //开始与底层进行通讯
                     ///
                     ///
                     ///
+                    if(!unzipUpdteZip(file.getAbsolutePath())){
+                        return;
+                    }
+                    if(!copyShFile()){
+                        return;
+                    }
+                    mLocalUpdateSocketManager.startLocalUpdte();
+
                 } else {
                     sendReceiveZipFileFinish(updateSendFile.getIp(), false);
                 }
             }
 
-
         } catch (Exception e) {
             e.printStackTrace();
             sendReceiveZipFileFinish(updateSendFile.getIp(), false);
         }
+
+    }
+
+
+    /**
+     * 解压文件
+     *
+     * @param fileName
+     */
+    private boolean unzipUpdteZip(String fileName) {
+        try {
+            ZipUtils.UnZipFolder(fileName,"/mnt/sdcard/update");
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * 复制脚本文件到操作区域
+     * @return
+     */
+    private boolean copyShFile(){
+        try {
+             File shFiles = new File("/mnt/sdcard/update/sh");
+             if(shFiles.exists()){
+                for(File file:shFiles.listFiles()){
+                    byte[] data = new byte[100 * 1024];
+                    int len = 0;
+                    FileInputStream inputStream = new FileInputStream(file);
+                    File file1 = new File("/mnt/sdcard/update/" + file.getName());
+                    FileOutputStream outputStream = new FileOutputStream(file1);
+                    while ((len = inputStream.read(data)) != -1){
+                        outputStream.write(Arrays.copyOf(data,len));
+                        outputStream.flush();
+                    }
+                    outputStream.close();
+                    inputStream.close();
+                    outputStream = null;
+                    inputStream = null;
+                }
+             }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
 
     }
 
@@ -192,6 +260,11 @@ public class UpdateServiceManager implements IUpdateManager {
      * 释放
      */
     public void free() {
+
+        if (mLocalUpdateSocketManager != null) {
+            mLocalUpdateSocketManager.free();
+        }
+
         freeNettyManager();
 
         if (mFtpServerManager != null) {

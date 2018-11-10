@@ -15,6 +15,11 @@ public class IniFile {
     private static final String server_version = "server_version";
     private static final String zip_md = "zip_md";
 
+    private static final String section_name_update = "tiantong_config_update";
+    private static final String app_vesion_update  = "app_vesion_update";
+    private static final String server_version_update  = "server_version_update";
+    private static final String zip_md_update  = "zip_md_update";
+
     public IniFile() {
         initWorkSpace();
         initIniFile();
@@ -22,7 +27,7 @@ public class IniFile {
 
     private void initWorkSpace() {
         try {
-            File file = new File("/mnt/sdcard/" + "tiantong_work/config");
+            File file = new File("/mnt/sdcard/" + "update/config");
             boolean isExsit = file.exists();
             if (!isExsit) {
                 file.mkdirs();
@@ -34,7 +39,7 @@ public class IniFile {
 
     private void initIniFile() {
         try {
-            File file = new File("/mnt/sdcard/tiantong_work/config/" + "config.ini");
+            File file = new File("/mnt/sdcard/update/config/" + "config.ini");
             boolean isExsit = file.exists();
             if (!isExsit) {
                 file.createNewFile();
@@ -47,6 +52,9 @@ public class IniFile {
                 mIni.set(section_name, app_vesion, "1.0.1");
                 mIni.set(section_name, server_version, "1");
                 mIni.set(section_name, zip_md, "");
+                mIni.set(section_name_update, app_vesion_update, "1.0.1");
+                mIni.set(section_name_update, server_version_update, "1");
+                mIni.set(section_name_update, zip_md_update, "");
                 mIni.save();
             }
 
@@ -90,5 +98,43 @@ public class IniFile {
             e.printStackTrace();
         }
     }
+
+
+    /**
+     * 获取配置
+     *
+     * @param flag true 强制读取一次
+     * @return
+     */
+    public UpdateConfigBean getUpdateConfigBeanNew(boolean flag) {
+        if (configBean == null) {
+            configBean = new UpdateConfigBean();
+            flag = true;
+        }
+        if (flag) {
+            configBean.setApp_version((String) mIni.get(section_name_update, app_vesion_update, ""));
+            configBean.setServer_version((String) mIni.get(section_name_update, server_version_update, ""));
+            configBean.setZip_md((String) mIni.get(section_name_update, zip_md_update, ""));
+        }
+        return configBean;
+    }
+
+
+    /**
+     * 存储信息
+     * @param bean
+     */
+    public void setUpdateConfigBeanNew(UpdateConfigBean bean) {
+        try{
+            mIni.set(section_name_update, app_vesion_update, bean.getApp_version());
+            mIni.set(section_name_update, server_version_update, bean.getServer_version());
+            mIni.set(section_name_update, zip_md_update, bean.getZip_md());
+            mIni.save();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
 }
