@@ -1,10 +1,13 @@
 package com.qzy.tiantong.service.utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tiantong.lib.utils.QzySystemUtils;
+import com.qzy.tiantong.service.contants.QzyTtContants;
 
 import java.lang.reflect.Method;
 
@@ -38,6 +41,39 @@ public class WifiUtils {
             e.printStackTrace();
             return false;
         }
+    }
+
+
+    public static String getSsidName() {
+        /*String ssid = getSsidToSharedpref();
+        if (TextUtils.isEmpty(ssid)) {
+            ssid = QzyTtContants.WIFI_SSID + QzySystemUtils.getEmmcId();
+            setSsidToSharedpref(ssid);
+        }*/
+        String ssid = QzyTtContants.WIFI_SSID + QzySystemUtils.getEmmcId();
+        return ssid;
+    }
+
+    public static void setSsidToSharedpref(Context context,String ssid) {
+        SharedPreferences sp = context.getSharedPreferences("tt_server_config", Context.MODE_PRIVATE);
+        sp.edit().putString("wifi_ssid", ssid).commit();
+    }
+
+    public static String getSsidToSharedpref(Context context) {
+        SharedPreferences sp = context.getSharedPreferences("tt_server_config", Context.MODE_PRIVATE);
+        String ssid = sp.getString("wifi_ssid", "");
+        return ssid;
+    }
+
+    public static void setWifiPasswdToSharedpref(Context context,String passwd) {
+        SharedPreferences sp = context.getSharedPreferences("tt_server_config", Context.MODE_PRIVATE);
+        sp.edit().putString("wifi_passwd", passwd).commit();
+    }
+
+    public static String getWifiPasswdToSharedpref(Context context) {
+        SharedPreferences sp = context.getSharedPreferences("tt_server_config", Context.MODE_PRIVATE);
+        String passwd = sp.getString("wifi_passwd", "");
+        return passwd;
     }
 
 

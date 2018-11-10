@@ -7,8 +7,11 @@ public class LocalUpdateSocketManager implements IUpdateLocalTool {
 
     private LocalSocketClient socketClient;
 
-    public LocalUpdateSocketManager() {
+    private IDataListener listener;
+    public LocalUpdateSocketManager(IDataListener listener) {
+        this.listener = listener;
         initSocket();
+
     }
 
     /**
@@ -29,6 +32,12 @@ public class LocalUpdateSocketManager implements IUpdateLocalTool {
             @Override
             public void readDataCallback(byte[] data) {
                 LogUtils.d("read update data = " + ByteUtils.byteArrToHexString(data));
+
+
+
+                if(listener != null){
+                    listener.onData(data);
+                }
             }
         });
         socketClient.startSocketConnect();
@@ -59,6 +68,10 @@ public class LocalUpdateSocketManager implements IUpdateLocalTool {
     @Override
     public void free() {
         socketClient.closeSocketConnect();
+    }
+
+    public interface IDataListener{
+        void onData(byte[] data);
     }
 
 
