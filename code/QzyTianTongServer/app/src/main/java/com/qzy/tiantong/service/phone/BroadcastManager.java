@@ -86,6 +86,7 @@ public class BroadcastManager {
                 mServer.freeTtPcmDevice();
 
             }else if(action.equals("com.qzy.tt.ACTION_RECOVERY_WIFI")){
+                WifiUtils.setWifiPasswdToSharedpref(mContext,QzyTtContants.WIFI_PASSWD);
                 WifiUtils.setWifiApEnabled(mContext, WifiUtils.getSsidName(), QzyTtContants.WIFI_PASSWD, false);
                 WifiUtils.setWifiApEnabled(mContext, WifiUtils.getSsidName(), QzyTtContants.WIFI_PASSWD, true);
             }

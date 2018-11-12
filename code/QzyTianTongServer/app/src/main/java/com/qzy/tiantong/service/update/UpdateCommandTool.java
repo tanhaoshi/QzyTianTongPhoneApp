@@ -29,22 +29,34 @@ import com.qzy.tiantong.lib.utils.ByteUtils;
 public class UpdateCommandTool {
 
     public static final byte[] head = new byte[]{(byte) 0xaa, (byte) 0xff};
-    public static final byte command_start = (byte) 0x01;  //升级
-    public static final byte command_recover = (byte) 0x03;  //恢复上一个版本
-    public static final byte command_restart = (byte) 0x02; // 服务程序 重启猫
+    public static final byte command_back_up = (byte) 0x01;  //备份
+    public static final byte command_update = (byte) 0x02;  //升级
+    public static final byte command_recover = (byte) 0x03; // 恢复
+    public static final byte command_reboot = (byte) 0x04; // 重启
 
     /**
-     * 开始升级
+     * 备份
      *
-     * @param index 脚本index
      * @return
      */
-    public static byte[] getStartCommand(int index) {
-        byte[] command = new byte[4];
+    public static byte[] getBackupCommand() {
+        byte[] command = new byte[3];
         command[0] = head[0];
         command[1] = head[1];
-        command[2] = command_start;
-        command[3] = ByteUtils.intToByte(index);
+        command[2] = command_back_up;
+        return command;
+    }
+
+    /**
+     * 升级
+     *
+     * @return
+     */
+    public static byte[] getUpdateCommand() {
+        byte[] command = new byte[3];
+        command[0] = head[0];
+        command[1] = head[1];
+        command[2] = command_update;
         return command;
     }
 
@@ -57,7 +69,7 @@ public class UpdateCommandTool {
         byte[] command = new byte[3];
         command[0] = head[0];
         command[1] = head[1];
-        command[2] = command_start;
+        command[2] = command_recover;
         return command;
     }
 
@@ -70,7 +82,7 @@ public class UpdateCommandTool {
         byte[] command = new byte[3];
         command[0] = head[0];
         command[1] = head[1];
-        command[2] = command_start;
+        command[2] = command_reboot;
         return command;
     }
 
