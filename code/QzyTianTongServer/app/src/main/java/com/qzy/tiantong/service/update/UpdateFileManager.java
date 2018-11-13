@@ -124,7 +124,7 @@ public class UpdateFileManager {
             for (File file : updateDirFiel.listFiles()) {
                 if (updateDirFiel.getName().equals("lib")) {
                     isSuccess = MD5Utils.checkFileMD5(file, new File("/system/lib/" + file.getName()));
-                    LogUtils.d("check file md5 fileName = " + file.getName() + " result = " + isSuccess);
+                    LogUtils.d("check file md5 fileName = " + file.getAbsolutePath() + " result = " + isSuccess);
                     if (!isSuccess) {
                         break;
                     }
@@ -132,7 +132,7 @@ public class UpdateFileManager {
 
                 if (updateDirFiel.getName().equals("server_apk")) {
                     isSuccess = MD5Utils.checkFileMD5(file, new File("/system/app/" + file.getName()));
-                    LogUtils.d("check file md5 fileName = " + file.getName() + " result = " + isSuccess);
+                    LogUtils.d("check file md5 fileName = " + file.getAbsolutePath() + " result = " + isSuccess);
                     if (!isSuccess) {
                         break;
                     }
@@ -140,13 +140,13 @@ public class UpdateFileManager {
 
                 if (updateDirFiel.getName().equals("server_bin")) {
                     isSuccess = MD5Utils.checkFileMD5(file, new File("/system/bin/" + file.getName()));
-                    LogUtils.d("check file md5 fileName = " + file.getName() + "  result = " + isSuccess);
+                    LogUtils.d("check file md5 fileName = " + file.getAbsolutePath() + "  result = " + isSuccess);
                     if (!isSuccess) {
                         break;
                     }
                 }
             }
-            LogUtils.d("check file md5 fileName = " + updateDirFiel.getName() + "  result = " + isSuccess);
+            LogUtils.d("check file md5 fileName = " + updateDirFiel.getAbsolutePath() + "  result = " + isSuccess);
             return isSuccess;
         } catch (Exception e) {
             e.printStackTrace();

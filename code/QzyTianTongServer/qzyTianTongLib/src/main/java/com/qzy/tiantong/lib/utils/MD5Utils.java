@@ -32,7 +32,8 @@ public class MD5Utils {
     public static boolean checkFileMD5(File file, File file1) {
         String md51 = MD5Utils.getFileMD5(file);
         String md52 = MD5Utils.getFileMD5(file1);
-        return md51 == md52 ? true : false;
+        boolean flag = md51.equals(md52) ? true : false;
+        return flag;
     }
 
 }

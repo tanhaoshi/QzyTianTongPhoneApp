@@ -101,11 +101,21 @@ public class UpdateServiceManager implements IUpdateManager {
             @Override
             public void onUpdateSuccess() {
                 if (UpdateFileManager.checkUpdateFileMD5("/mnt/sdcard/update")) {  //升级成功
+
+                    //升级成功将新的版本号和md5写到原始配置文件
+                    UpdateConfigBean updateConfigBean = mIniFile.getUpdateConfigBeanNew(true);
+                    mIniFile.setUpdateConfigBean(updateConfigBean);
+
+                    //设置升级成功标志位
                     UpdateLocalConfigBean localConfigBean = mIniFile.getUpdateLocalConfigBean(true);
                     localConfigBean.setUpdate("1");
                     localConfigBean.setUpdateStart(false);
                     mIniFile.setUpdateLocalConfigBean(localConfigBean);
+
+                    //发送手机端升级成功
                     sendUpdateSuccess();
+
+                    //重启
                     mLocalUpdateSocketManager.startLocalReboot();
                 }
             }
@@ -194,6 +204,7 @@ public class UpdateServiceManager implements IUpdateManager {
             LogUtils.d(" phoneAppVersion = " + phoneAppVersion + " serverAppVersion = " + serverAppVersion + " zipMd5 = " + zipMd5);
             UpdateConfigBean updateConfigBean = mIniFile.getUpdateConfigBean(true);
             int nowServerVersion = Integer.parseInt(updateConfigBean.getServer_version().replace(".", ""));
+            LogUtils.d(" nowServerVersion = " + nowServerVersion);
             if (serverAppVersion > nowServerVersion) {
                 //更新配置信息
                 updateConfigBean.setApp_version(appVer);
