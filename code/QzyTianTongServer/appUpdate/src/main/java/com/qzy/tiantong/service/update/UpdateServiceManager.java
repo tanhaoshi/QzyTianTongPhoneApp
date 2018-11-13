@@ -2,16 +2,11 @@ package com.qzy.tiantong.service.update;
 
 import android.content.Context;
 
-import com.google.protobuf.ByteString;
 import com.qzy.ftpserver.FtpServerManager;
-import com.qzy.tiantong.lib.utils.IniFileUtils;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.lib.utils.MD5Utils;
-import com.qzy.tiantong.lib.utils.ZipUtils;
 import com.qzy.tiantong.service.netty.NettyServerManager;
-import com.qzy.tiantong.service.netty.cmd.CmdHandler;
 import com.qzy.tiantong.service.netty.cmd.CmdHandlerUpdate;
-import com.qzy.tiantong.service.netty.cmd.TianTongHandler;
 import com.qzy.tiantong.service.netty.cmd.TianTongHandlerUpdate;
 import com.qzy.tt.data.TtPhoneUpdateAppInfoProtos;
 import com.qzy.tt.data.TtPhoneUpdateResponseProtos;
@@ -20,15 +15,6 @@ import com.qzy.tt.probuf.lib.data.PhoneCmd;
 import com.qzy.tt.probuf.lib.data.PrototocalTools;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import io.netty.buffer.ByteBufInputStream;
 
@@ -50,8 +36,13 @@ public class UpdateServiceManager implements IUpdateManager {
 
     private IUpdateLocalTool mLocalUpdateSocketManager;
 
+    //WiFi管理
+    private TiantongWifiManager mTiantongWifiManager;
+
     public UpdateServiceManager(Context context) {
         mContext = context;
+        mTiantongWifiManager = new TiantongWifiManager(context);
+
         mIniFile = new IniFile();
 
         initNettyManager();
@@ -76,7 +67,7 @@ public class UpdateServiceManager implements IUpdateManager {
 
             @Override
             public void onConnect(boolean state) {
-                if(state){
+                if (state) {
                     checkUpdateIniFile();
                 }
 
@@ -90,12 +81,11 @@ public class UpdateServiceManager implements IUpdateManager {
                     mIniFile.setUpdateLocalConfigBean(localConfigBean);
                     mLocalUpdateSocketManager.startLocalUpdte();
                 }
-
             }
 
             @Override
             public void onBackupFailed() {
-               // mLocalUpdateSocketManager.startLocalBackup();
+                 mLocalUpdateSocketManager.startLocalBackup();
             }
 
             @Override
@@ -152,8 +142,6 @@ public class UpdateServiceManager implements IUpdateManager {
 
         });
     }
-
-
 
 
     /**
@@ -277,25 +265,25 @@ public class UpdateServiceManager implements IUpdateManager {
     /**
      * 检查是否有升级异常发生
      */
-    private void checkUpdateIniFile(){
-        try{
+    private void checkUpdateIniFile() {
+        try {
             UpdateLocalConfigBean localConfigBean = mIniFile.getUpdateLocalConfigBean(true);
-            if(!localConfigBean.isUpdateStart()){
-               LogUtils.e("no update error ....");
+            if (!localConfigBean.isUpdateStart()) {
+                LogUtils.e("no update error ....");
                 return;
             }
-            if(localConfigBean.getBackup().equals("0")){
+            if (localConfigBean.getBackup().equals("0")) {
                 mLocalUpdateSocketManager.startLocalBackup();
                 return;
             }
 
-            if(localConfigBean.getUpdate().equals("0")){
+            if (localConfigBean.getUpdate().equals("0")) {
                 mLocalUpdateSocketManager.startLocalUpdte();
                 return;
             }
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -349,6 +337,10 @@ public class UpdateServiceManager implements IUpdateManager {
      * 释放
      */
     public void free() {
+
+        if (mTiantongWifiManager != null) {
+            mTiantongWifiManager.free();
+        }
 
         if (mLocalUpdateSocketManager != null) {
             mLocalUpdateSocketManager.free();

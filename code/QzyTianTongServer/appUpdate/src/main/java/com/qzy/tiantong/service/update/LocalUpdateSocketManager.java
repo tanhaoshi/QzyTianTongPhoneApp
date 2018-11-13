@@ -65,7 +65,7 @@ public class LocalUpdateSocketManager implements IUpdateLocalTool {
                     case UpdateCommandTool.command_back_up:
                         if (dataValue == (byte) 0x00) {
                             listener.onBackupSuccess();
-                        } else {
+                        } else if (dataValue == (byte) 0x02){
                             listener.onBackupFailed();
                         }
                         break;

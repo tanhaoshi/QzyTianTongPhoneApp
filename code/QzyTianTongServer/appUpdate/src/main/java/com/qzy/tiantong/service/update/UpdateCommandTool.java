@@ -1,8 +1,6 @@
 package com.qzy.tiantong.service.update;
 
 
-import com.qzy.tiantong.lib.utils.ByteUtils;
-
 /**
  * 升级说明：
  * APP与底层服务通过本地SOCKET通信

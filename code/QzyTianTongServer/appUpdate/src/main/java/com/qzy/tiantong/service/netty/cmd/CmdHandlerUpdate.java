@@ -2,21 +2,11 @@ package com.qzy.tiantong.service.netty.cmd;
 
 import android.os.Message;
 
-import com.google.protobuf.GeneratedMessageV3;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.netty.iinterface.ICmdHandler;
-import com.qzy.tt.data.CallPhoneProtos;
-import com.qzy.tt.data.ChangePcmPlayerDbProtos;
-import com.qzy.tt.data.TtOpenBeiDouProtos;
-import com.qzy.tt.data.TtPhoneAudioDataProtos;
-import com.qzy.tt.data.TtPhonePositionProtos;
-import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.data.TtPhoneUpdateAppInfoProtos;
 import com.qzy.tt.data.TtPhoneUpdateSendFileProtos;
-import com.qzy.tt.probuf.lib.data.PhoneAudioCmd;
 import com.qzy.tt.probuf.lib.data.PrototocalTools;
-
-import org.greenrobot.eventbus.EventBus;
 
 import io.netty.buffer.ByteBufInputStream;
 

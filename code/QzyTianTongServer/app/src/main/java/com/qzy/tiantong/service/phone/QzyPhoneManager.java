@@ -3,32 +3,20 @@ package com.qzy.tiantong.service.phone;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.IBinder;
-import android.support.annotation.RequiresApi;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 
 import com.android.internal.telephony.ITelephony;
 import com.qzy.tiantong.lib.utils.LogUtils;
-import com.qzy.tiantong.lib.utils.QzySystemUtils;
-import com.qzy.tiantong.service.contants.QzyTtContants;
 import com.qzy.tiantong.service.service.ITianTongServer;
-import com.qzy.tiantong.service.utils.MobileDataUtils;
 import com.qzy.tiantong.service.utils.PhoneUtils;
-import com.qzy.tiantong.service.utils.WifiUtils;
-import com.qzy.tt.data.TtPhoneMobileDataProtos;
 import com.qzy.tt.data.TtPhoneWifiProtos;
 
 import java.lang.reflect.Method;
-import java.util.UUID;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Created by yj.zhang on 2018/8/3/003.
@@ -44,27 +32,17 @@ public class QzyPhoneManager {
         mContext = context;
         mServer = server;
 
-        String passwd = WifiUtils.getWifiPasswdToSharedpref(mContext);
-        if(TextUtils.isEmpty(passwd)){
-            passwd = QzyTtContants.WIFI_PASSWD;
-        }
-
-        //打开WiFi
-        WifiUtils.setWifiApEnabled(context, WifiUtils.getSsidName(),passwd , true);
-
         setPhoneListener();
     }
 
     /**
      * 设置wifi密码
      */
-    public void setWifiPasswd(TtPhoneWifiProtos.TtWifi ttWifi){
-        WifiUtils.setWifiPasswdToSharedpref(mContext,ttWifi.getPasswd());
-        WifiUtils.setWifiApEnabled(mContext, WifiUtils.getSsidName(), ttWifi.getPasswd(), false);
-        WifiUtils.setWifiApEnabled(mContext, WifiUtils.getSsidName(), ttWifi.getPasswd(), true);
+    public void setWifiPasswd(TtPhoneWifiProtos.TtWifi ttWifi) {
+        Intent intent = new Intent("com.qzy.tt.ACTION_CHANGE_WIFI");
+        intent.putExtra("passwd", ttWifi.getPasswd());
+        mContext.sendBroadcast(intent);
     }
-
-
 
 
     /**
