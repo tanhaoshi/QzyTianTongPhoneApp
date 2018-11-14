@@ -1,11 +1,34 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:tools="http://schemas.android.com/tools"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:orientation="vertical"
              tools:context="com.tt.qzy.view.fragment.MainFragment">
 
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:visibility="gone"
+        android:background="@color/background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView
+            android:layout_gravity="center"
+            android:id="@+id/circle_loading_view"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:background="@color/background"
+            android:layout_centerInParent="true"
+            app:animCircleLoadingView_mainColor="@color/main_color"
+            app:animCircleLoadingView_secondaryColor="@color/secondary_color"
+            app:animCircleLoadingView_textColor="@android:color/white"
+            />
+
+    </FrameLayout>
+
     <ScrollView
+        android:id="@+id/scrollView"
         android:scrollbars="none"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -157,7 +180,7 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="16dp"
                         android:layout_weight="1"
-                        android:text="@string/TMT_sos"
+                        android:text="@string/TMT_mobileData"
                         android:drawableLeft="@drawable/main_data_trafic"/>
 
                     <android.support.v7.widget.SwitchCompat

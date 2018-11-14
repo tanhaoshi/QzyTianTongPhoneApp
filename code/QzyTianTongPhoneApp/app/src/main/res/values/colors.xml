@@ -38,4 +38,13 @@
     <color name="statusColor">#FF27A5D2</color>
 
     <color name="status_stander_color">#EFEFF0</color>
+    <!-- update dialog color -->
+    <color name="update_dialog_title">#FFFFFF</color>
+    <color name="update_dialog_divider">#11000000</color>
+    <color name="update_dialog_message">#FFFFFFFF</color>
+    <color name="update_dialog_dialogs">#3fc8c7</color>
+    <color name="background">#65828e</color>
+    <color name="main_color">#ff9a00</color>
+    <color name="secondary_color">#BDBDBD</color>
+
 </resources>

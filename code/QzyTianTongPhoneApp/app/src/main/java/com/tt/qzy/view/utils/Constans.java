@@ -29,4 +29,6 @@ public interface Constans {
 
     int ANSWER = 1;
     int PUTOUT = 2;
+
+    String fileName = "QzyTianTongPhone.apk";
 }

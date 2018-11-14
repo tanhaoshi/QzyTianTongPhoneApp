@@ -41,6 +41,7 @@ import com.tt.qzy.view.bean.WifiSettingModel;
 import com.tt.qzy.view.utils.AssetFileUtils;
 import com.tt.qzy.view.utils.DateUtil;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -307,6 +308,8 @@ public class PhoneNettyManager {
             @Override
             public void started() {
                 LogUtils.e("-----------------started");
+                EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_PERCENT
+                        ,Integer.valueOf(0)));
             }
 
             @Override
@@ -377,6 +380,7 @@ public class PhoneNettyManager {
         @Override
         public void onDisconnected() {
             KLog.i("netty disconnected ...");
+            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_NONCONNECT));
             if(mCmdHandler != null){
                 mCmdHandler.resetPhoneState();
             }

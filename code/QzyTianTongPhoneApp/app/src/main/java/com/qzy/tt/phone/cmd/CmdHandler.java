@@ -145,11 +145,11 @@ public class CmdHandler {
                     break;
                 case PrototocalTools.IProtoClientIndex.response_update_send_zip:
                     TtPhoneUpdateResponseProtos.UpdateResponse updateResponse1 = TtPhoneUpdateResponseProtos.UpdateResponse.parseDelimitedFrom(inputStream);
+                    KLog.i("zyj isfinish = " + updateResponse1.getIsUpdateFinish());
                     sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__RESPONSE_SERVER_UPLOAD_FINSH,protoId,updateResponse1);
                     break;
                  case PrototocalTools.IProtoClientIndex.response_tt_time:
                      TtTimeProtos.TtTime ttTime = TtTimeProtos.TtTime.parseDelimitedFrom(inputStream);
-                     KLog.i( " look over the server time response !");
                     break;
                  case PrototocalTools.IProtoClientIndex.response_phone_data_status:
                      TtPhoneMobileDataProtos.TtPhoneMobileData mobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.parseDelimitedFrom(inputStream);

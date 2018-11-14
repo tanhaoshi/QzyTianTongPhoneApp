@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.qzy.data.PhoneCmd;
 import com.qzy.eventbus.IMessageEventBustType;
@@ -35,6 +36,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     public ImageView img4;
     public ImageView img5;
     public RelativeLayout statusLayout;
+    public TextView percentBaterly;
 
     private Unbinder m;
     private BaseActivityPresenter mPresenter;
@@ -63,6 +65,8 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         img4 = (ImageView) findViewById(R.id.img4);
         img5 = (ImageView) findViewById(R.id.img5);
         statusLayout = (RelativeLayout) findViewById(R.id.statusLayout);
+        percentBaterly = (TextView)findViewById(R.id.percent);
+        percentBaterly.setText("0%");
     }
 
     @Override
@@ -158,6 +162,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         KLog.i("look over intLevel value = " + intLevel + " and " + " intScale value = " + intScale);
         int percent = intLevel * 100 / intScale;
         img1.setPower(percent);
+        percentBaterly.setText(percent+"%");
     }
 
     /**

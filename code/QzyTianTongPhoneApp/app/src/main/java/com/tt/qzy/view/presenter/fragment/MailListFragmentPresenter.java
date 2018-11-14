@@ -3,16 +3,19 @@ package com.tt.qzy.view.presenter.fragment;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
+import com.tt.qzy.view.activity.ContactsActivity;
 import com.tt.qzy.view.adapter.SortAdapter;
 import com.tt.qzy.view.bean.MallListModel;
 import com.tt.qzy.view.db.dao.MailListDao;
 import com.tt.qzy.view.db.manager.MailListManager;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
+import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.PinyinComparator;
 import com.tt.qzy.view.utils.MallListUtils;
 import com.tt.qzy.view.utils.PinyinUtils;
@@ -184,4 +187,9 @@ public class MailListFragmentPresenter extends BasePresenter<MailListView>{
         return list;
     }
 
+    public void startTargetActivity(Context context ,String phone){
+        Intent intent = new Intent(context, ContactsActivity.class);
+        intent.putExtra("phone",phone);
+        context.startActivity(intent);
+    }
 }

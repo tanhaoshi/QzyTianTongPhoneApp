@@ -9,26 +9,45 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 
+import com.alibaba.fastjson.JSON;
+import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
+import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
 import com.qzy.tt.phone.service.TtPhoneService;
+import com.socks.library.KLog;
 import com.tt.qzy.view.activity.base.BaseActivity;
+import com.tt.qzy.view.bean.VersionCodeModel;
 import com.tt.qzy.view.fragment.AidlPhoneFragment;
 import com.tt.qzy.view.fragment.MailListFragment;
 import com.tt.qzy.view.fragment.MainFragment;
 import com.tt.qzy.view.fragment.ShortMessageFragment;
 import com.tt.qzy.view.layout.BadgeView;
+import com.tt.qzy.view.layout.NiftyExpandDialog;
 import com.tt.qzy.view.presenter.activity.MainActivityPresenter;
+import com.tt.qzy.view.utils.AppUtils;
+import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.view.MainActivityView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.netty.handler.codec.http.multipart.FileUpload;
 
-public class MainActivity extends BaseActivity<MainActivityView> implements ShortMessageFragment.OnKeyDownListener{
+public class MainActivity extends BaseActivity<MainActivityView> implements ShortMessageFragment.OnKeyDownListener,MainActivityView{
 
     @BindView(R.id.shortMessage)
     Button button;
+    @BindView(R.id.frameLayout)
+    FrameLayout mFrameLayout;
+    @BindView(R.id.circle_loading_view)
+    AnimatedCircleLoadingView mCircleLoadingView;
+    @BindView(R.id.linearLayout)
+    LinearLayout mLinearLayout;
+    @BindView(R.id.bottomBar)
+    FrameLayout bottomBar;
 
     private MainFragment mMainFragment;
 
@@ -44,6 +63,10 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
     private boolean isOnkeyDown = false;
 
     private MainActivityPresenter mPresenter;
+
+    public FrameLayout getBottomBar() {
+        return bottomBar;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,20 +192,20 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
     protected void onStart() {
         super.onStart();
         mPresenter.getAppversionRequest();
-        startServcie();
+        startService();
     }
 
     /**
-     * 开启服务
+     * start service
      */
-    private void startServcie() {
+    private void startService() {
         startService(new Intent(this, TtPhoneService.class));
     }
 
     /**
-     * 停止服务
+     * stop service
      */
-    private void stopServcie() {
+    private void stopService() {
         stopService(new Intent(this, TtPhoneService.class));
     }
 
@@ -195,7 +218,8 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
     protected void onDestroy() {
         super.onDestroy();
        // CommonData.relase();
-        stopServcie();
+        NiftyExpandDialog.getInstance(MainActivity.this).release();
+        stopService();
         System.exit(0);
     }
 
@@ -234,4 +258,66 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
     public void loadData(boolean pullToRefresh) {
     }
 
+    @Override
+    public void getAppVersionCode(VersionCodeModel versionCodeModel) {
+        if(mPresenter.checkUpdate(versionCodeModel)){
+            niftyDialog(versionCodeModel);
+        }
+    }
+
+    private void niftyDialog(final VersionCodeModel versionCodeModel){
+        final NiftyExpandDialog dialogBuilder = NiftyExpandDialog.getInstance(MainActivity.this).initDialogBuilder();
+        dialogBuilder.nonCanceDismiss(false)
+                .setButton1Click(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startDownLoader(versionCodeModel);
+                        dialogBuilder.niftyDismiss();
+                    }
+                })
+                .setButton2Click(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialogBuilder.niftyDismiss();
+                    }
+                })
+                .show();
+        TextView content = (TextView)dialogBuilder.getNiftyDialogBuilder().findViewById(R.id.content);
+        content.setText(versionCodeModel.getData().getChangeContent());
+    }
+
+    public void startDownLoader(VersionCodeModel versionCodeModel){
+        mPresenter.startUploader(versionCodeModel.getData().getLoadUrl());
+    }
+
+    public void viewTransition(boolean isChange){
+        if(isChange){
+            mLinearLayout.setVisibility(View.GONE);
+            mFrameLayout.setVisibility(View.VISIBLE);
+        }else{
+            mLinearLayout.setVisibility(View.VISIBLE);
+            mFrameLayout.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onStartDownloader() {
+        viewTransition(true);
+        mCircleLoadingView.startDeterminate();
+    }
+
+    @Override
+    public void onProgressPercent(int progressPercent) {
+        mCircleLoadingView.setPercent(progressPercent);
+    }
+
+    @Override
+    public void onCompelete(String installPath) {
+        AppUtils.installApk(MainActivity.this,installPath);
+    }
+
+    @Override
+    public void onError(String errorMessage) {
+        NToast.shortToast(MainActivity.this,errorMessage);
+    }
 }

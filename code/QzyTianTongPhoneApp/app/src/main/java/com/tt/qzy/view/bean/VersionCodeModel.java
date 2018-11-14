@@ -1,119 +1,114 @@
 package com.tt.qzy.view.bean;
 
-import java.sql.Date;
-
 public class VersionCodeModel {
-    //下载路径
-    private String loadUrl;
-    //版本号
-    private String versionCode;
-    //版本名称
-    private String versionName;
-    //更新标题
-    private String titleName;
-    //更新内容
-    private String changeContent;
-    //时间
-    private Date createDate;
 
-    public String getLoadUrl() {
-        return loadUrl;
+    /**
+     * code : 200
+     * data : {"id":"3","loadUrl":"http://qzytest.oss-cn-shenzhen.aliyuncs.com/0.apk","versionCode":"3838438","versionName":"美国纽约","titleName":"独立日","changeContent":"外星人超大宇宙飞船","createDate":"2018-11-07 15:15:56"}
+     * message : 查询成功!
+     */
+
+    private String code;
+    private DataBean data;
+    private String message;
+
+    public String getCode() {
+        return code;
     }
 
-    public void setLoadUrl(String loadUrl) {
-        this.loadUrl = loadUrl;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getVersionCode() {
-        return versionCode;
+    public DataBean getData() {
+        return data;
     }
 
-    public void setVersionCode(String versionCode) {
-        this.versionCode = versionCode;
+    public void setData(DataBean data) {
+        this.data = data;
     }
 
-    public String getVersionName() {
-        return versionName;
+    public String getMessage() {
+        return message;
     }
 
-    public void setVersionName(String versionName) {
-        this.versionName = versionName;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public String getTitleName() {
-        return titleName;
-    }
+    public static class DataBean {
+        /**
+         * id : 3
+         * loadUrl : http://qzytest.oss-cn-shenzhen.aliyuncs.com/0.apk
+         * versionCode : 3838438
+         * versionName : 美国纽约
+         * titleName : 独立日
+         * changeContent : 外星人超大宇宙飞船
+         * createDate : 2018-11-07 15:15:56
+         */
 
-    public void setTitleName(String titleName) {
-        this.titleName = titleName;
-    }
-
-    public String getChangeContent() {
-        return changeContent;
-    }
-
-    public void setChangeContent(String changeContent) {
-        this.changeContent = changeContent;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    private VersionCodeModel(Builder builder){
-
-    }
-
-    public static class Builder{
-        //下载路径
+        private String id;
         private String loadUrl;
-        //版本号
         private String versionCode;
-        //版本名称
         private String versionName;
-        //更新标题
         private String titleName;
-        //更新内容
         private String changeContent;
-        //时间
-        private Date createDate;
+        private String createDate;
 
-        public Builder setLoadUrl(String loadUrl){
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getLoadUrl() {
+            return loadUrl;
+        }
+
+        public void setLoadUrl(String loadUrl) {
             this.loadUrl = loadUrl;
-            return this;
         }
 
-        public Builder setVersionCode(String versionCode){
+        public String getVersionCode() {
+            return versionCode;
+        }
+
+        public void setVersionCode(String versionCode) {
             this.versionCode = versionCode;
-            return this;
         }
 
-        public Builder setVersionName(String versionName){
+        public String getVersionName() {
+            return versionName;
+        }
+
+        public void setVersionName(String versionName) {
             this.versionName = versionName;
-            return this;
         }
 
-        public Builder setTitleName(String titleName){
+        public String getTitleName() {
+            return titleName;
+        }
+
+        public void setTitleName(String titleName) {
             this.titleName = titleName;
-            return this;
         }
 
-        public Builder setChangeContent(String changeContent){
+        public String getChangeContent() {
+            return changeContent;
+        }
+
+        public void setChangeContent(String changeContent) {
             this.changeContent = changeContent;
-            return this;
         }
 
-        public Builder setCreateDate(Date date){
-            this.createDate = date;
-            return this;
+        public String getCreateDate() {
+            return createDate;
         }
 
-        public VersionCodeModel build(){
-            return new VersionCodeModel(this);
+        public void setCreateDate(String createDate) {
+            this.createDate = createDate;
         }
     }
 }

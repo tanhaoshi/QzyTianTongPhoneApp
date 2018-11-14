@@ -63,4 +63,8 @@ public interface IMessageEventBustType {
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_ENABLE_DATA = "event_bus_type_connect_tiantong_request_server_enable_data";
     // 打开天通猫移动数据返回情况
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_ENABLE_DATA = "event_bus_type_connect_tiantong_response_server_enable_data";
+    // 服务端升级apk进度条展示
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_PERCENT = "event_bus_type_connect_tiantong_response_server_percent";
+    // 服务端APK升级出现断链接
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_NONCONNECT = "event_bus_type_connect_tiantong_response_server_nonconnect";
 }

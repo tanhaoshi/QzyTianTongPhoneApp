@@ -138,9 +138,9 @@ public class IniFile {
             flag = true;
         }
         if (flag) {
-            configBean.setApp_version((String) mIni.get(section_name, app_vesion, ""));
-            configBean.setServer_version((String) mIni.get(section_name, server_version, ""));
-            configBean.setZip_md((String) mIni.get(section_name, zip_md, ""));
+            configBean.setApp_version((String) mIni.get(section_name, app_vesion, "1"));
+            configBean.setServer_version((String) mIni.get(section_name, server_version, "1"));
+            configBean.setZip_md((String) mIni.get(section_name, zip_md, "1"));
         }
         return configBean;
     }
@@ -175,9 +175,9 @@ public class IniFile {
             flag = true;
         }
         if (flag) {
-            configBean.setApp_version((String) mIni.get(section_name_update, app_vesion_update, ""));
-            configBean.setServer_version((String) mIni.get(section_name_update, server_version_update, ""));
-            configBean.setZip_md((String) mIni.get(section_name_update, zip_md_update, ""));
+            configBean.setApp_version((String) mIni.get(section_name_update, app_vesion_update, "1"));
+            configBean.setServer_version((String) mIni.get(section_name_update, server_version_update, "1"));
+            configBean.setZip_md((String) mIni.get(section_name_update, zip_md_update, "1"));
         }
         return configBean;
     }

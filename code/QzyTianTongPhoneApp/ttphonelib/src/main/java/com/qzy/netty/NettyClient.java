@@ -1,6 +1,10 @@
 package com.qzy.netty;
 
+import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.utils.LogUtils;
+import com.socks.library.KLog;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.net.InetSocketAddress;
 
@@ -116,6 +120,7 @@ public class NettyClient {
         @Override
         public void channelInactive(ChannelHandlerContext ctx) throws Exception {
             LogUtils.e("channelInactive" );
+            KLog.i(" no connect client netty ");
             connectHanlerCtx = null;
             if(connectedReadDataListener != null){
                 connectedReadDataListener.onConnectedState(false);

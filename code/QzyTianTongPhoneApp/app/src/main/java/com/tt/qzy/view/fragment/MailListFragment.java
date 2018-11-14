@@ -44,7 +44,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MailListFragment extends Fragment implements PopWindow.OnDismissListener,MailListView,PopMallListWindow.OpenWindowListener{
+public class MailListFragment extends Fragment implements PopWindow.OnDismissListener,MailListView,PopMallListWindow.OpenWindowListener
+,SortAdapter.OnItemClickListener{
 
     @BindView(R.id.base_tv_toolbar_title)
     TextView base_tv_toolbar_title;
@@ -142,6 +143,7 @@ public class MailListFragment extends Fragment implements PopWindow.OnDismissLis
         final LinearLayoutManager manager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         mRecyclerView.setLayoutManager(manager);
         adapter = new SortAdapter(getActivity(), listModels);
+        adapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(adapter);
 
         mSideBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
@@ -238,4 +240,10 @@ public class MailListFragment extends Fragment implements PopWindow.OnDismissLis
         mHUD.show();
         mPresenter.getContactsMallList(getActivity());
     }
+
+    @Override
+    public void onItemClick(View view, int position , List<MallListModel> mData) {
+       mPresenter.startTargetActivity(getActivity(),mData.get(position).getPhone());
+    }
+
 }

@@ -6,6 +6,8 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
 
+import com.downloader.PRDownloader;
+import com.downloader.PRDownloaderConfig;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreater;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreater;
@@ -30,6 +32,36 @@ public class TtPhoneApplication extends Application {
 
     public static TtPhoneApplication sApp;
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        sApp = this;
+        if(LeakCanary.isInAnalyzerProcess(this)){
+            return;
+        }
+        LeakCanary.install(this);
+        initAppRefresh();
+        refWatcher = setupLeakCanary();
+        initPRDownloader();
+    }
+
+    public static TtPhoneApplication getInstance(){
+        return sApp;
+    }
+
+    private void checkActivityMemory(){
+        if(LeakCanary.isInAnalyzerProcess(this)){
+            return;
+        }
+        LeakCanary.install(this);
+    }
+
     private void initAppRefresh(){
         SmartRefreshLayout.setDefaultRefreshHeaderCreater(new DefaultRefreshHeaderCreater() {
             @NonNull
@@ -47,35 +79,6 @@ public class TtPhoneApplication extends Application {
         });
     }
 
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        sApp = this;
-        if(LeakCanary.isInAnalyzerProcess(this)){
-            return;
-        }
-        LeakCanary.install(this);
-        initAppRefresh();
-        refWatcher = setupLeakCanary();
-    }
-
-    public static TtPhoneApplication getInstance(){
-        return sApp;
-    }
-
-    private void checkActivityMemory(){
-        if(LeakCanary.isInAnalyzerProcess(this)){
-            return;
-        }
-        LeakCanary.install(this);
-    }
-
     private RefWatcher setupLeakCanary() {
         if (LeakCanary.isInAnalyzerProcess(this)) {
             return RefWatcher.DISABLED;
@@ -88,4 +91,10 @@ public class TtPhoneApplication extends Application {
         return leakApplication.refWatcher;
     }
 
+    public void initPRDownloader(){
+        PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
+                .setDatabaseEnabled(true)
+                .build();
+        PRDownloader.initialize(this, config);
+    }
 }

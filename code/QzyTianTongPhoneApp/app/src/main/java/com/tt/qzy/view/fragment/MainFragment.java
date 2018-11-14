@@ -8,14 +8,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
+import com.qzy.eventbus.EventBusUtils;
+import com.qzy.eventbus.IMessageEventBustType;
+import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
+import com.socks.library.KLog;
 import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.SettingsActivity;
+import com.tt.qzy.view.bean.ServerPortIp;
 import com.tt.qzy.view.layout.CircleImageView;
+import com.tt.qzy.view.layout.NiftyExpandDialog;
 import com.tt.qzy.view.presenter.fragment.MainFragementPersenter;
 import com.tt.qzy.view.service.TimerService;
 import com.tt.qzy.view.utils.Constans;
@@ -50,11 +59,19 @@ public class MainFragment extends Fragment implements MainFragmentView{
     SwitchCompat sc_settin_testxinlv;
     @BindView(R.id.sc_settin_data)
     SwitchCompat sc_settin_data;
+    @BindView(R.id.frameLayout)
+    FrameLayout mFrameLayout;
+    @BindView(R.id.circle_loading_view)
+    AnimatedCircleLoadingView mAnimatedCircleLoadingView;
+    @BindView(R.id.scrollView)
+    ScrollView mScrollView;
 
     private MainFragementPersenter mPresneter;
     private MainActivity mainActivity;
 
     private Intent mIntent;
+
+    private boolean isServerChange;
 
     public MainFragment() {
     }
@@ -152,10 +169,10 @@ public class MainFragment extends Fragment implements MainFragmentView{
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(mainActivity.isConnectStatus()){
                     if(isChecked){
-                        //去打开热点数据
+                        mPresneter.requestEnableData(true);
                         mainActivity.img4.setVisibility(View.VISIBLE);
                     }else{
-                        //去关闭热点数据
+                        mPresneter.requestEnableData(false);
                     }
                 }else{
                     NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
@@ -239,6 +256,90 @@ public class MainFragment extends Fragment implements MainFragmentView{
     }
 
     @Override
+    public void upgradleServerApp() {
+        final NiftyExpandDialog dialogBuilder = NiftyExpandDialog.getInstance(getActivity()).initDialogBuilder();
+        dialogBuilder.nonCanceDismiss(false)
+                .setButton1Click(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        viewTransition(true);
+                        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_UPLOAD_APP
+                                ,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));
+                        dialogBuilder.niftyDismiss();
+
+                    }
+                })
+                .setButton2Click(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialogBuilder.niftyDismiss();
+                    }
+                })
+                .show();
+    }
+
+    public void viewTransition(boolean isChange){
+        if(isChange){
+            mScrollView.setVisibility(View.GONE);
+            mFrameLayout.setVisibility(View.VISIBLE);
+            mAnimatedCircleLoadingView.startDeterminate();
+            mainActivity.statusLayout.setVisibility(View.GONE);
+            mainActivity.getBottomBar().setVisibility(View.GONE);
+        }else{
+            mScrollView.setVisibility(View.VISIBLE);
+            mFrameLayout.setVisibility(View.GONE);
+            mainActivity.statusLayout.setVisibility(View.VISIBLE);
+            mainActivity.getBottomBar().setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void serverAppUpgradlePercent(Integer i) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1500);
+                    for (int i = 0; i <= 100; i++) {
+                        Thread.sleep(140);
+                        changePercent(i);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        new Thread(runnable).start();
+        mAnimatedCircleLoadingView.setPercent(i);
+    }
+
+    @Override
+    public void isServerUpdate(boolean isStatus) {
+        this.isServerChange = isStatus;
+        if(isStatus){
+            viewTransition(false);
+            NToast.shortToast(getActivity(),"请重新链接wifi！");
+        }else{
+            NToast.shortToast(getActivity(),"更新失败,请重新更新!");
+        }
+    }
+
+    @Override
+    public void upgradleNonconnect() {
+        viewTransition(false);
+        NToast.shortToast(getActivity(),"WIFI链接中断,请重新更新!");
+    }
+
+    private void changePercent(final int i){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mAnimatedCircleLoadingView.setPercent(i);
+            }
+        });
+    }
+
+    @Override
     public void showProgress(boolean isTrue) {
     }
 
@@ -253,4 +354,5 @@ public class MainFragment extends Fragment implements MainFragmentView{
     @Override
     public void loadData(boolean pullToRefresh) {
     }
+
 }

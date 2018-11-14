@@ -51,7 +51,7 @@ public class SortAdapter extends RecyclerView.Adapter<SortAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
 
-                    mOnItemClickListener.onItemClick(holder.itemView, position);
+                    mOnItemClickListener.onItemClick(holder.itemView, position,mData);
                 }
             });
 
@@ -62,7 +62,8 @@ public class SortAdapter extends RecyclerView.Adapter<SortAdapter.ViewHolder> {
         holder.tvName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NToast.shortToast(mContext,mData.get(position).getName());
+
+                mOnItemClickListener.onItemClick(holder.itemView, position,mData);
             }
         });
 
@@ -75,7 +76,7 @@ public class SortAdapter extends RecyclerView.Adapter<SortAdapter.ViewHolder> {
 
     //**********************itemClick************************
     public interface OnItemClickListener {
-        void onItemClick(View view, int position);
+        void onItemClick(View view, int position,List<MallListModel> mData);
     }
 
     private OnItemClickListener mOnItemClickListener;

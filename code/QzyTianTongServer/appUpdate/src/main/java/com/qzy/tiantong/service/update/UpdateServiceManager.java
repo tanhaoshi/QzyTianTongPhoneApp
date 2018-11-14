@@ -15,6 +15,7 @@ import com.qzy.tt.probuf.lib.data.PhoneCmd;
 import com.qzy.tt.probuf.lib.data.PrototocalTools;
 
 import java.io.File;
+import java.security.Key;
 
 import io.netty.buffer.ByteBufInputStream;
 
@@ -105,8 +106,20 @@ public class UpdateServiceManager implements IUpdateManager {
                     //发送手机端升级成功
                     sendUpdateSuccess();
 
-                    //重启
-                    mLocalUpdateSocketManager.startLocalReboot();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try{
+                                Thread.sleep(3000);
+
+                                //重启
+                                mLocalUpdateSocketManager.startLocalReboot();
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+
                 }
             }
 
@@ -191,6 +204,10 @@ public class UpdateServiceManager implements IUpdateManager {
             String zipMd5 = updateAppInfo.getTiantongUpdateMd();
             LogUtils.d(" phoneAppVersion = " + phoneAppVersion + " serverAppVersion = " + serverAppVersion + " zipMd5 = " + zipMd5);
             UpdateConfigBean updateConfigBean = mIniFile.getUpdateConfigBean(true);
+            if(null == updateConfigBean.getServer_version()){
+                updateConfigBean.setServer_version("1");
+            }
+            LogUtils.d("server Version = "+updateConfigBean.getServer_version());
             int nowServerVersion = Integer.parseInt(updateConfigBean.getServer_version().replace(".", ""));
             LogUtils.d(" nowServerVersion = " + nowServerVersion);
             if (serverAppVersion > nowServerVersion) {
@@ -296,7 +313,7 @@ public class UpdateServiceManager implements IUpdateManager {
             TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = TtPhoneUpdateResponseProtos.UpdateResponse.newBuilder()
                     .setIsUpdateFinish(true)
                     .build();
-            mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.response_update_phone_aapinfo, updateResponse));
+            mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.response_update_send_zip, updateResponse));
         }
 
     }

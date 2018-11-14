@@ -8,6 +8,7 @@
     <string name="TMT_energy">天通猫电量</string>
     <string name="TMT_quantity">天通猫信号</string>
     <string name="TMT_sos">SOS</string>
+    <string name="TMT_mobileData">数据</string>
     <string name="TMT_location">定位</string>
     <string name="TMT_settings">设置</string>
     <string name="TMT_title">地理坐标</string>
@@ -109,4 +110,6 @@
     <string name="TMT_UNKNOW_STATUS">未接通</string>
     <string name="TMT_wifi_password_notnull">WIFI密码不能为空</string>
     <string name="TMT_wifi_length_greatethan_eight">WIFI密码不能少于8位</string>
+    <string name="TMT_the_change_content">更新内容如下:</string>
+    <string name="TMT_the_update_dialog_title">APP新版本</string>
 </resources>

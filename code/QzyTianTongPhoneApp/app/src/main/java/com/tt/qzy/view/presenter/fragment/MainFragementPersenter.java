@@ -51,7 +51,6 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
 
     private Context mContext;
 
-
     public MainFragementPersenter(Context context) {
         mContext = context;
         EventBus.getDefault().register(this);
@@ -103,7 +102,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
             return;
         }
 
-        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.PORT)));
+        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));
     }
 
     /**
@@ -177,7 +176,28 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_ENABLE_DATA:
                 parseServerDataEnable(event.getObject());
                 break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_PERCENT:
+                parseServerPercent(event.getObject());
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_NONCONNECT:
+                upgradleBreakoff();
+                break;
         }
+    }
+
+    /**
+     * 服务端升级出现链接中断
+     */
+    private void upgradleBreakoff(){
+        mView.get().upgradleNonconnect();
+    }
+
+    /**
+     * 解析服务端升级的进度条
+     */
+    private void parseServerPercent(Object o){
+        Integer i = (Integer) o;
+        mView.get().serverAppUpgradlePercent(i);
     }
 
     /**
@@ -199,8 +219,11 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
     private void parseAppUploadFinsh(Object o){
         PhoneCmd cmd = (PhoneCmd)o;
         TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse)cmd.getMessage();
-        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_DISCONNECT_TIANTONG));
-        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.PORT)));
+        if(updateResponse.getIsUpdateFinish()){
+            mView.get().isServerUpdate(true);
+            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_DISCONNECT_TIANTONG));
+            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.PORT)));
+        }
     }
 
     /**
@@ -209,14 +232,9 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
     private void parseServerAppVersion(Object o){
         PhoneCmd cmd = (PhoneCmd)o;
         TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse)cmd.getMessage();
-        KLog.i(" look over logcat println ... ");
         if(updateResponse.getIsUpdate()){
-            //关闭前一个链接
-//            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_DISCONNECT_TIANTONG));
-            //开启一个新链接
-            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_UPLOAD_APP,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));
+            mView.get().upgradleServerApp();
         }else{
-            //链接我们正常端口
             EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.PORT)));
         }
     }

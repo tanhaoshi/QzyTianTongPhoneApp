@@ -515,8 +515,8 @@ public class PhoneNettyManager {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     public void setEnablePhoneData(TtPhoneMobileDataProtos.TtPhoneMobileData ttPhoneMobileData){
         try {
-            MobileDataUtils.setDataEnabled(1,ttPhoneMobileData.getIsEnableData(),mContext);
-            if(MobileDataUtils.getDataEnabled(1,mContext)){
+            MobileDataUtils.setDataEnabled(0,ttPhoneMobileData.getIsEnableData(),mContext);
+            if(MobileDataUtils.getDataEnabled(0,mContext)){
                 //设置数据打开成功
                 sendMobileData(true);
             }else{
