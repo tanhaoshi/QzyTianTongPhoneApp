@@ -92,7 +92,7 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
         mPersenter.onBindView(this);
         initView();
         initAdapter();
-        loadData(true);
+//        loadData(true);
         return view;
     }
 
@@ -191,6 +191,7 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
         MainActivity mainActivity = (MainActivity) getActivity();
         if(!mainActivity.isCallStatus()){
             mPersenter.dialPhone(diapadNumber);
+
         }else{
             NToast.shortToast(getActivity(),getString(R.string.TMT_be_occupied));
         }
@@ -217,6 +218,11 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
 
     @Override
     public void onLongClick(int position) {
+    }
+
+    @Override
+    public void onClickSeeDetails(int position) {
+        mPersenter.startTargetActivity(getActivity(),mModelList.get(position).getPhoneNumber());
     }
 
     @Override
@@ -267,6 +273,14 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     @Override
     public void loadData(boolean pullToRefresh) {
         showProgress(true);
+        mPersenter.getCallHistroy(0,20);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        showProgress(true);
+        KLog.i("AidlPhone fragment come in !");
         mPersenter.getCallHistroy(0,20);
     }
 

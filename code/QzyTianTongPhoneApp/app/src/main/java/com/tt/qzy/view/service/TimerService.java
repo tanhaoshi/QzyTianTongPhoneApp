@@ -22,11 +22,18 @@ public class TimerService extends Service {
     private String receive = "";
     private String content = "";
 
+    private String latitude = "";  // 纬度
+    private String longitude = ""; // 经度
+
     public TimerService() {
     }
 
     @Override
     public IBinder onBind(Intent intent) {
+        if(null != intent.getExtras()){
+            latitude = intent.getStringExtra("lat");
+            longitude = intent.getStringExtra("long");
+        }
         return null;
     }
 
@@ -35,7 +42,8 @@ public class TimerService extends Service {
         super.onCreate();
 
         receive = SPUtils.getShare(getApplicationContext(), Constans.CRY_HELP_PHONE,"").toString();
-        content = SPUtils.getShare(getApplicationContext(),Constans.CRY_HELP_SHORTMESSAGE,"").toString();
+        content = SPUtils.getShare(getApplicationContext(),Constans.CRY_HELP_SHORTMESSAGE,"").toString() + "经度:"+longitude
+           +"," +"纬度:"+latitude;
 
         if(mTimeTask == null){
             mTimeTask = new TimeTask(60000, new TimerTask() {

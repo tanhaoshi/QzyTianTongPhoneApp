@@ -182,6 +182,21 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_NONCONNECT:
                 upgradleBreakoff();
                 break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_UPGRADLE:
+                parseServerUpgradleFailed(event.getObject());
+                break;
+        }
+    }
+
+    /**
+     * 服务器验证MD5文件失败
+     */
+    private void parseServerUpgradleFailed(Object o){
+        PhoneCmd cmd = (PhoneCmd)o;
+        TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse)cmd.getMessage();
+        if(updateResponse.getIsSendFileFinish()){
+            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_UPLOAD_APP
+                    ,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));
         }
     }
 

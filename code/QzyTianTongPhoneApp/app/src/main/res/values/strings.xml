@@ -39,9 +39,9 @@
     <string name="TMT_finshLoad">已下载城市</string>
     <string name="TMT_notify">当前为WI-FI网络,切换至运营商流量会自动暂停下载</string>
     <string name="TMT_net_notify">当前为运营商网络,建议切换至WI-FI网络下载</string>
-    <string name="TMT_version">天地通版本</string>
-    <string name="TMT_soft_version">天地软件版本</string>
-    <string name="TMT_fixed_version">固件版本</string>
+    <string name="TMT_version">天地互联版本</string>
+    <string name="TMT_soft_version">天地互联软件版本</string>
+    <string name="TMT_fixed_version">天地互联固件版本</string>
     <string name="TMT_number">序列号</string>
     <string name="TMT_hantInput">拨号或使用拼音搜索</string>
     <string name="TMT_jilu">拼音搜索或字母搜索</string>
@@ -82,7 +82,7 @@
     <string name="TMT_please_input_shortMessage">求救短信</string>
     <string name="TMT_please_input_timetimer">发送间隔(秒)</string>
     <string name="TMT_is_empty_null">手机号不能为空!</string>
-    <string name="TMT_COME_ON_HELP_ME">赶快来救我!</string>
+    <string name="TMT_COME_ON_HELP_ME">help me !!!</string>
     <string name="TMT_save_succeed">保存成功!</string>
     <string name="TMT_remind">请先去完成SOS设置!</string>
     <string name="TMT_dataisnull">没有更多的数据了!</string>

@@ -86,7 +86,6 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
         ButterKnife.bind(this, view);
         mPresenter.onBindView(this);
         initView();
-        loadData(true);
         return view;
     }
 
@@ -213,6 +212,13 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
     public void showError(String msg, boolean pullToRefresh) {
         mHUD.dismiss();
         NToast.shortToast(getActivity(),msg);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        KLog.i("Short Message Come in !");
+        loadData(true);
     }
 
     @Override

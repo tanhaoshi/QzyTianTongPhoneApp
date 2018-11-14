@@ -25,7 +25,8 @@ public interface Constans {
     int UPLOAD_PORT = 9998;
     int PORT = 9999;
 
-    String SERVER_APP_VERSION = "3";
+    String SERVER_APP_VERSION = "1";
+    String SERVER_APP_VERSION_NAME = "1.0";
 
     int ANSWER = 1;
     int PUTOUT = 2;

@@ -14,6 +14,8 @@ import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.phone.common.CommonData;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
+import com.tt.qzy.view.activity.AidlContactsActivity;
+import com.tt.qzy.view.activity.ContactsActivity;
 import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.bean.MallListModel;
 import com.tt.qzy.view.db.dao.CallRecordDao;
@@ -83,6 +85,9 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
 
         EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber));
 
+        CallRecordDao callRecordDao = new CallRecordDao(phoneNumber,"","","2",DateUtil.backTimeFomat(new Date()),20);
+
+        CallRecordManager.getInstance(mContext).insertCallRecord(callRecordDao,mContext);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -259,6 +264,12 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
             }
         });
         return mList;
+    }
+
+    public void startTargetActivity(Context context ,String phone){
+        Intent intent = new Intent(context, AidlContactsActivity.class);
+        intent.putExtra("phone",phone);
+        context.startActivity(intent);
     }
 
     public void release(){

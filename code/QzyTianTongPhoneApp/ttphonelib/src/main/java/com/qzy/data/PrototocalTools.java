@@ -45,6 +45,7 @@ public class PrototocalTools {
         int response_update_send_zip = 129;
         int response_tt_time = 131;
         int response_phone_data_status = 133;
+        int response_update_send_failed = 135;
     }
 
     public static boolean readToFour0x5aHeaderByte(ByteBufInputStream stream) throws IOException {

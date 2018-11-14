@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.bean.ContactsModel;
+import com.tt.qzy.view.bean.MallListModel;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ import butterknife.ButterKnife;
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactsViewHolder>{
 
     private Context mContext;
-    private List<ContactsModel> mContactsModelns;
+    private List<MallListModel> mContactsModelns;
     private LayoutInflater inflater;
 
     public ContactsAdapter(Context mContext) {
@@ -31,7 +32,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
         inflater = LayoutInflater.from(mContext);
     }
 
-    public void setMsgs(List<ContactsModel> msgs) {
+    public void setMsgs(List<MallListModel> msgs) {
         this.mContactsModelns = msgs;
         notifyDataSetChanged();
     }
@@ -67,10 +68,10 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
         }
 
         public void bindTo(int position) {
-            ContactsModel model = mContactsModelns.get(position);
-            date.setText(model.getDate());
-            content.setText(model.getPhoneNumber());
-            state.setText(model.getState());
+            MallListModel model = mContactsModelns.get(position);
+            date.setText("暂无时间");
+            content.setText(model.getPhone());
+            state.setText("暂无状态");
         }
     }
 }

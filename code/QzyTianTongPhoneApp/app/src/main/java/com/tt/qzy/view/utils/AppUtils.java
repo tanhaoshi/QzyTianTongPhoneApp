@@ -4,8 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.icu.text.DecimalFormat;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 
 import java.io.File;
@@ -63,5 +66,10 @@ public final class AppUtils {
         context.startActivity(intent);
     }
 
-
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static String decimalDouble(double latItude){
+        DecimalFormat df = new DecimalFormat("##0.0000");
+        String handleValue = df.format(latItude);
+        return handleValue;
+    }
 }

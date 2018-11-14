@@ -177,13 +177,25 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
                 showMainFragment();
                 break;
             case R.id.tab_aidl:
-                showAidlPhoneFragment();
+                if(tt_status){
+                    showAidlPhoneFragment();
+                }else{
+                    NToast.shortToast(this,"不可操作,请连接天通猫!");
+                }
                 break;
             case R.id.tab_messager:
-                showShortMeesageFragmnet();
+                if(tt_status){
+                    showShortMeesageFragmnet();
+                }else{
+                    NToast.shortToast(this,"不可操作,请连接天通猫!");
+                }
                 break;
             case R.id.tab_mail:
-                showMailListFragmnet();
+                if(tt_status){
+                    showMailListFragmnet();
+                }else{
+                    NToast.shortToast(this,"不可操作,请连接天通猫!");
+                }
                 break;
         }
     }
@@ -191,7 +203,7 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
     @Override
     protected void onStart() {
         super.onStart();
-        mPresenter.getAppversionRequest();
+//        mPresenter.getAppversionRequest();
         startService();
     }
 

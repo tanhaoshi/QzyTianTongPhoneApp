@@ -41,6 +41,9 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     private Unbinder m;
     private BaseActivityPresenter mPresenter;
 
+    // 记录是否初始化所有操作
+    public boolean isInitView = false;
+
     public boolean tt_status = false;
     public boolean tt_beidou_status = false;
     public boolean tt_call_status = false;
@@ -53,9 +56,11 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         EventBus.getDefault().register(this);
         mPresenter = new BaseActivityPresenter(this);
         mPresenter.onBindView(this);
-        initStatusBar();
-        initView();
-        initData();
+        if(!isInitView){
+            initStatusBar();
+            initView();
+            initData();
+        }
     }
 
     private void initStatusBar(){
@@ -90,7 +95,6 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEventBus event) {
-        KLog.i(" look over type : = " + event.getType() );
         switch (event.getType()) {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SUCCESS:
                 connectTianTongSuccess();
@@ -113,8 +117,26 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_CALL_STATE:
                 onTianTongCallStatus(event.getObject());
                 break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_NONCONNECT:
+                recoverView();
+                break;
         }
     }
+
+    /**
+     * 主动断开时将view进行改变
+     */
+    private void recoverView() {
+        img1.setPower(0);
+        img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_noconnect));
+        img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
+        img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonerwork));
+        percentBaterly.setText(0+"%");
+    }
+
+    /**
+     *
+     */
 
     /**
      * 连接天通猫成功

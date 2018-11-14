@@ -90,4 +90,11 @@ public class MailListManager {
         MailListDaoDao daoDao = daoSession.getMailListDaoDao();
         daoDao.deleteByKey(id);
     }
+
+    public List<MailListDao> getByPhoneList(String phone){
+        MailListDaoDao dao = daoSession.getMailListDaoDao();
+        QueryBuilder<MailListDao> qb = dao.queryBuilder().where(MailListDaoDao.Properties.Phone.eq(phone));
+        List<MailListDao> list = qb.list();
+        return list;
+    }
 }

@@ -82,6 +82,18 @@ public class CallRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         mOnItemClickListener.onClick(position,mModelList.get(position).getPhoneNumber());
                     }
                 });
+                callRecordViewHolder.mobile.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mOnItemClickListener.onClick(position,mModelList.get(position).getPhoneNumber());
+                    }
+                });
+                callRecordViewHolder.see_detail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mOnItemClickListener.onClickSeeDetails(position);
+                    }
+                });
                 break;
         }
     }
@@ -138,6 +150,7 @@ public class CallRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public interface OnItemClickListener{
         void onClick( int position,String phoneNumber);
         void onLongClick( int position);
+        void onClickSeeDetails(int position);
     }
     public void setOnItemClickListener(OnItemClickListener onItemClickListener ){
         this. mOnItemClickListener=onItemClickListener;

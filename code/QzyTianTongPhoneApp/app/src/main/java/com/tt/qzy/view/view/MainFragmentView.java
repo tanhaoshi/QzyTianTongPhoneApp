@@ -19,4 +19,5 @@ public interface MainFragmentView extends BaseView{
     void isServerUpdate(boolean isStatus);
 
     void upgradleNonconnect();
+
 }

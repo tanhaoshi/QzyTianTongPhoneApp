@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.tt.qzy.view.activity.ContactsActivity">
+    tools:context="com.tt.qzy.view.activity.AidlContactsActivity">
 
     <include layout="@layout/status_bar"/>
 
@@ -24,30 +23,30 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="123dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="123dp">
 
-            <ImageView
-                android:id="@+id/mine"
-                android:src="@drawable/mine_default_avatar"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="24dp"
-                android:layout_width="53dp"
-                android:layout_height="53dp"/>
+                <ImageView
+                    android:id="@+id/mine"
+                    android:src="@drawable/mine_default_avatar"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="24dp"
+                    android:layout_width="53dp"
+                    android:layout_height="53dp"/>
 
-            <TextView
-                android:id="@+id/userName"
-                android:layout_below="@+id/mine"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:text="A-测试1"
-                android:textSize="13sp"
-                android:textColor="#333333"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/userName"
+                    android:layout_below="@+id/mine"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:text="A-测试1"
+                    android:textSize="13sp"
+                    android:textColor="#333333"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
-        </RelativeLayout>
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/record"
@@ -212,3 +211,4 @@
     </ScrollView>
 
 </LinearLayout>
+

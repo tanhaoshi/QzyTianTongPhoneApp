@@ -1,5 +1,6 @@
 package com.tt.qzy.view.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,13 +11,20 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
+import com.tt.qzy.view.activity.base.BaseActivity;
 import com.tt.qzy.view.adapter.ContactsAdapter;
 import com.tt.qzy.view.bean.ContactsModel;
+import com.tt.qzy.view.bean.MallListModel;
 import com.tt.qzy.view.layout.PopContactsWindow;
 import com.tt.qzy.view.layout.PopWindow;
+import com.tt.qzy.view.presenter.activity.ContactsActivityPresenter;
+import com.tt.qzy.view.view.ContactsActivityView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ContactsActivity extends AppCompatActivity implements PopWindow.OnDismissListener{
+public class ContactsActivity extends BaseActivity<ContactsActivityView> implements PopWindow.OnDismissListener,ContactsActivityView{
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -39,26 +47,59 @@ public class ContactsActivity extends AppCompatActivity implements PopWindow.OnD
     TextView loding_more;
     @BindView(R.id.take_up)
     TextView take_up;
+    @BindView(R.id.userName)
+    TextView userName;
+    @BindView(R.id.record)
+    LinearLayout mLinearLayout;
+    @BindView(R.id.email)
+    TextView email;
+    @BindView(R.id.qq)
+    TextView qq;
+    @BindView(R.id.send)
+    TextView send;
 
-    private List<ContactsModel> mModelList = new ArrayList<>();
-    private List<ContactsModel> openList = new ArrayList<>();
+    private ContactsActivityPresenter mPresenter;
+
+    private List<MallListModel> mModelList = new ArrayList<>();
+    private List<MallListModel> openList = new ArrayList<>();
     private ContactsAdapter contactsAdapter;
 
     private PopContactsWindow mPopContactsWindow;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contacts);
+    public int getContentView() {
+        return R.layout.activity_contacts;
+    }
+
+    private void getIntentDataValue(){
+        Intent intent = getIntent();
+        if(null != intent.getExtras()){
+            String phone = intent.getStringExtra("phone");
+            mModelList = mPresenter.getPhoneKeyForList(phone);
+            userName.setText(mModelList.get(0).getName());
+            mLinearLayout.setVisibility(View.GONE);
+            email.setText("");
+            qq.setText("");
+            send.setText("");
+        }
+    }
+
+    @Override
+    public void initView() {
+        mPresenter = new ContactsActivityPresenter(ContactsActivity.this);
+        mPresenter.onBindView(this);
+        getIntentDataValue();
         ButterKnife.bind(this);
-        initView();
         initAdapter();
     }
 
-    private void initView() {
+    @Override
+    public void initData() {
+        statusLayout.setBackgroundColor(getResources().getColor(R.color.tab_stander));
         base_tv_toolbar_title.setText(getResources().getString(R.string.TMT_contacts));
         base_iv_back.setImageDrawable(getResources().getDrawable(R.drawable.iv_back));
-        base_tv_toolbar_right.setImageDrawable(getResources().getDrawable(R.drawable.more));
+        base_tv_toolbar_right.setVisibility(View.GONE);
+//        base_tv_toolbar_right.setImageDrawable(getResources().getDrawable(R.drawable.more));
     }
 
     private void initAdapter(){
@@ -66,11 +107,6 @@ public class ContactsActivity extends AppCompatActivity implements PopWindow.OnD
         mRecyclerView.setLayoutManager(layoutManager);
         contactsAdapter = new ContactsAdapter(this);
         mRecyclerView.setAdapter(contactsAdapter);
-        mModelList.add(new ContactsModel("2018年8月20日 11时:36分","13786686688","未接通"));
-        mModelList.add(new ContactsModel("2018年8月20日 11时:36分","13786686688","呼出42秒"));
-        mModelList.add(new ContactsModel("2018年8月20日 11时:36分","13786686688","未接通"));
-        mModelList.add(new ContactsModel("2018年8月20日 11时:36分","13786686688","呼出42秒"));
-        mModelList.add(new ContactsModel("2018年8月20日 11时:36分","13786686688","未接通"));
         setAdapter(mModelList);
     }
 
@@ -106,7 +142,7 @@ public class ContactsActivity extends AppCompatActivity implements PopWindow.OnD
         }
     }
 
-    private void setAdapter(List<ContactsModel> list){
+    private void setAdapter(List<MallListModel> list){
         if(list.size() > 3){
             loding_more.setVisibility(View.VISIBLE);
             openList = new ArrayList<>();
@@ -129,5 +165,21 @@ public class ContactsActivity extends AppCompatActivity implements PopWindow.OnD
     @Override
     public void onDismiss() {
         setWindowAttibus(1f);
+    }
+
+    @Override
+    public void showProgress(boolean isTrue) {
+    }
+
+    @Override
+    public void hideProgress() {
+    }
+
+    @Override
+    public void showError(String msg, boolean pullToRefresh) {
+    }
+
+    @Override
+    public void loadData(boolean pullToRefresh) {
     }
 }

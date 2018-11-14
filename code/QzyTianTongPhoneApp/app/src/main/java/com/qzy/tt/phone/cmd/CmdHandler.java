@@ -155,6 +155,10 @@ public class CmdHandler {
                      TtPhoneMobileDataProtos.TtPhoneMobileData mobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.parseDelimitedFrom(inputStream);
                      sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_ENABLE_DATA,protoId,mobileData);
                      break;
+                 case PrototocalTools.IProtoClientIndex.response_update_send_failed:
+                     TtPhoneUpdateResponseProtos.UpdateResponse updateResponse2 = TtPhoneUpdateResponseProtos.UpdateResponse.parseDelimitedFrom(inputStream);
+                     sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_UPGRADLE,protoId,updateResponse2);
+                     break;
             }
         } catch (Exception e) {
             e.printStackTrace();

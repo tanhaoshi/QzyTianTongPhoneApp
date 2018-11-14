@@ -2,6 +2,7 @@ package com.tt.qzy.view.db.manager;
 
 import android.content.Context;
 
+import com.tt.qzy.view.activity.ContactsActivity;
 import com.tt.qzy.view.db.CallRecordDaoDao;
 import com.tt.qzy.view.db.DaoMaster;
 import com.tt.qzy.view.db.DaoSession;
@@ -48,6 +49,13 @@ public class CallRecordManager {
         return list;
     }
 
+    public List<CallRecordDao> queryKeyOnPhoneNumber(String phone){
+        CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
+        QueryBuilder<CallRecordDao> qb = dao.queryBuilder().where(CallRecordDaoDao.Properties.PhoneNumber.eq(phone));
+        List<CallRecordDao> list = qb.list();
+        return list;
+    }
+
     public void deleteRecordList(){
         CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
         dao.deleteAll();
@@ -62,6 +70,16 @@ public class CallRecordManager {
         CallRecordDaoDao callRecordDao = daoSession.getCallRecordDaoDao();
 //        callRecordDao.insertOrReplaceInTx(callRecordDaos);
         callRecordDao.insertInTx(callRecordDaos);
+    }
+
+    public void insertCallRecord(CallRecordDao dao, Context context){
+        if( null == dao){
+            return;
+        }
+        DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
+        DaoSession daoSession = daoMaster.newSession();
+        CallRecordDaoDao callRecordDao = daoSession.getCallRecordDaoDao();
+        callRecordDao.insert(dao);
     }
 
     public List<CallRecordDao> limitCallRecordList(int offset,int limit){

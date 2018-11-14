@@ -344,7 +344,7 @@ public class UpdateServiceManager implements IUpdateManager {
                     .setIp(ip)
                     .setIsSendFileFinish(flag)
                     .build();
-            mNettyServerManager.sendData(ip, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.response_update_send_zip, updateResponse));
+            mNettyServerManager.sendData(ip, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.response_update_send_failed, updateResponse));
         }
 
     }

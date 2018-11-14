@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.utils.APKVersionCodeUtils;
+import com.tt.qzy.view.utils.Constans;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,6 +18,12 @@ public class MainAboutActivity extends AppCompatActivity {
 
     @BindView(R.id.about_version)
     TextView about_version;
+    @BindView(R.id.about_soft_version)
+    TextView about_soft_version;
+    @BindView(R.id.about_fixed_version)
+    TextView about_fixed_version;
+    @BindView(R.id.about_number)
+    TextView about_number;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +34,8 @@ public class MainAboutActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        about_version.setText(String.valueOf(APKVersionCodeUtils.getVersionCode(this)));
+        about_version.setText(String.valueOf(APKVersionCodeUtils.getVerName(this)));
+        about_soft_version.setText(Constans.SERVER_APP_VERSION_NAME);
     }
 
     @OnClick({R.id.main_quantity})

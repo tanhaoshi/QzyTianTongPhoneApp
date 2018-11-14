@@ -46,15 +46,25 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
 
     private SettingsPresenter mPresenter;
 
+    private boolean isConnect;
+
     @Override
     public int getContentView() {
         return R.layout.activity_settings;
+    }
+
+    private void getIntentData(){
+        Intent intent = getIntent();
+        if(null != intent.getExtras()){
+            isConnect = intent.getBooleanExtra("connect",false);
+        }
     }
 
     public void initView() {
         ButterKnife.bind(this);
         mPresenter = new SettingsPresenter(this);
         mPresenter.onBindView(this);
+        getIntentData();
         mSwitchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -66,9 +76,16 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
                     }
                 }else{
                     NToast.shortToast(SettingsActivity.this,getString(R.string.TMT_connect_tiantong_please));
+                    mSwitchCompat.setChecked(false);
                 }
             }
         });
+        statusLayout.setBackgroundColor(getResources().getColor(R.color.tab_stander));
+        if(isConnect){
+            img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nerwork));
+        }else{
+            img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonerwork));
+        }
     }
 
     @Override

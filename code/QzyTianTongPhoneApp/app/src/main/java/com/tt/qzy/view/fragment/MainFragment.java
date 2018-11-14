@@ -1,6 +1,8 @@
 package com.tt.qzy.view.fragment;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SwitchCompat;
@@ -27,6 +29,7 @@ import com.tt.qzy.view.layout.CircleImageView;
 import com.tt.qzy.view.layout.NiftyExpandDialog;
 import com.tt.qzy.view.presenter.fragment.MainFragementPersenter;
 import com.tt.qzy.view.service.TimerService;
+import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.NetworkUtil;
@@ -141,6 +144,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
                     }
                 }else{
                     NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
+                    main_location.setChecked(false);
                 }
             }
         });
@@ -148,6 +152,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(!SPUtils.containsShare(getActivity(), Constans.CRY_HELP_PHONE)){
+                    sc_settin_testxinlv.setChecked(false);
                     NToast.shortToast(getActivity(),getString(R.string.TMT_remind));
                     return;
                 }
@@ -155,12 +160,17 @@ public class MainFragment extends Fragment implements MainFragmentView{
                     if(isChecked){
                         mPresneter.dialPhone(SPUtils.getShare(getActivity(),Constans.CRY_HELP_PHONE,"").toString());
                         mIntent = new Intent(getActivity(),TimerService.class);
+                        mIntent.putExtra("lat",main_latitude.getText().toString());
+                        mIntent.putExtra("long",main_longitude.getText().toString());
                         getActivity().startService(mIntent);
+                        mPresneter.requestGpsPosition(true);
+                        main_location.setChecked(true);
                     }else{
                         getActivity().stopService(mIntent);
                     }
                 }else{
                     NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
+                    sc_settin_testxinlv.setChecked(false);
                 }
             }
         });
@@ -176,6 +186,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
                     }
                 }else{
                     NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
+                    sc_settin_data.setChecked(false);
                 }
             }
         });
@@ -192,8 +203,13 @@ public class MainFragment extends Fragment implements MainFragmentView{
                 }
                 break;
             case R.id.main_settings:
-                Intent settings_intent = new Intent(getActivity(), SettingsActivity.class);
-                startActivity(settings_intent);
+                if(mainActivity.isConnectStatus()){
+                    Intent settings_intent = new Intent(getActivity(), SettingsActivity.class);
+                    settings_intent.putExtra("connect",mainActivity.isConnectStatus());
+                    startActivity(settings_intent);
+                }else{
+                    NToast.shortToast(getActivity(),"不可操作,请链接天通猫!");
+                }
                 break;
             case R.id.tmt_noEntry:
                 break;
@@ -231,11 +247,12 @@ public class MainFragment extends Fragment implements MainFragmentView{
         mPresneter.release();
     }
 
+    @TargetApi(Build.VERSION_CODES.N)
     @Override
     public void getTtPhonePosition(TtPhonePositionProtos.TtPhonePosition ttPhonePosition) {
         if(ttPhonePosition.getResponseStatus()){
-            main_latitude.setText(ttPhonePosition.getLatItude());
-            main_longitude.setText(ttPhonePosition.getLongItude());
+            main_latitude.setText(AppUtils.decimalDouble(Double.valueOf(ttPhonePosition.getLatItude())));
+            main_longitude.setText(AppUtils.decimalDouble(Double.valueOf(ttPhonePosition.getLongItude())));
         }else{
             NToast.shortToast(getActivity(),getActivity().getString(R.string.TMT_gps_position_filed));
         }

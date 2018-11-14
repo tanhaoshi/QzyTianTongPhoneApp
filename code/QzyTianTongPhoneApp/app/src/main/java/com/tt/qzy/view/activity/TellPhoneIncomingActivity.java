@@ -14,10 +14,13 @@ import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 import com.qzy.ring.RingManager;
+import com.qzy.tt.data.CallPhoneBackProtos;
+import com.qzy.tt.phone.common.CommonData;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.presenter.activity.TellPhoneActivityPresenter;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -49,7 +52,6 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         phoneNumber= getIntent().getStringExtra("diapadNumber");
         txtv_phoneNumber.setText(phoneNumber);
         if (!TextUtils.isEmpty(phoneNumber) && phoneNumber.length() >= 3) {
-
         }
         mTellPhoneActivityPresenter = new TellPhoneActivityPresenter(this);
         EventBusUtils.register(this);
@@ -67,7 +69,6 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
                 onEndCallState();
                 break;
         }
-
     }
 
 
@@ -77,6 +78,24 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_STATE:
                 updatePhoneState((PhoneCmd) event.getObject());
                 break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_CALL_STATE:
+                onTianTongCallStatus(event.getObject());
+                break;
+        }
+    }
+
+    public void onTianTongCallStatus(Object o){
+        PhoneCmd cmd = (PhoneCmd) o;
+        CallPhoneBackProtos.CallPhoneBack callPhoneBack = (CallPhoneBackProtos.CallPhoneBack)cmd.getMessage();
+        KLog.i("tt_call_status is = " + callPhoneBack.getIsCalling());
+        if(callPhoneBack.getIsCalling()){
+            if(callPhoneBack.getIp().equals(CommonData.getInstance().getLocalWifiIp())){
+
+            }else{
+                finish();
+            }
+        }else{
+            finish();
         }
     }
 
