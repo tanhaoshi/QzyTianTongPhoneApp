@@ -64,24 +64,28 @@ public class GpsManager {
     }
 
     private void initLocationManager() {
-        String serviceName = Context.LOCATION_SERVICE;
-        locationManager = (LocationManager) mContext.getSystemService(serviceName);
-        // 查找到服务信息
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE); // 高精度
-        criteria.setAltitudeRequired(true);
-        criteria.setBearingRequired(true);
-        criteria.setCostAllowed(true);
-        criteria.setPowerRequirement(Criteria.POWER_HIGH); // 低功耗
+        try {
+            String serviceName = Context.LOCATION_SERVICE;
+            locationManager = (LocationManager) mContext.getSystemService(serviceName);
+            // 查找到服务信息
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_FINE); // 高精度
+            criteria.setAltitudeRequired(true);
+            criteria.setBearingRequired(true);
+            criteria.setCostAllowed(true);
+            criteria.setPowerRequirement(Criteria.POWER_HIGH); // 低功耗
 
-        String provider = locationManager.getBestProvider(criteria, true); // 获取GPS信息
-        mCurrenLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER); // 通过GPS获取位置
-        //updateToNewLocation(location);
-        // 设置监听器，自动更新的最小时间为间隔N秒(1秒为1*1000，这样写主要为了方便)或最小位移变化超过N米
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1 * 1000, 1, listener);
-        //location.getLatitude();
-        if (mCurrenLocation != null) {
-            LogUtils.d("initLocationManager lat =" + mCurrenLocation.getLatitude() + " lng =" + mCurrenLocation.getLongitude());
+            String provider = locationManager.getBestProvider(criteria, true); // 获取GPS信息
+            mCurrenLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER); // 通过GPS获取位置
+            //updateToNewLocation(location);
+            // 设置监听器，自动更新的最小时间为间隔N秒(1秒为1*1000，这样写主要为了方便)或最小位移变化超过N米
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1 * 1000, 1, listener);
+            //location.getLatitude();
+            if (mCurrenLocation != null) {
+                LogUtils.d("initLocationManager lat =" + mCurrenLocation.getLatitude() + " lng =" + mCurrenLocation.getLongitude());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -134,7 +138,7 @@ public class GpsManager {
 
             openGps();
 
-            GpsUtils.openGPS(mContext,Settings.Secure.LOCATION_MODE_OFF,Settings.Secure.LOCATION_MODE_HIGH_ACCURACY);
+            GpsUtils.openGPS(mContext, Settings.Secure.LOCATION_MODE_OFF, Settings.Secure.LOCATION_MODE_HIGH_ACCURACY);
 
             sendLoactionToPhoneClient(mCurrenLocation);
 
@@ -142,7 +146,7 @@ public class GpsManager {
 
             closeGps();
 
-            GpsUtils.closeGPS(mContext,Settings.Secure.LOCATION_MODE_HIGH_ACCURACY,Settings.Secure.LOCATION_MODE_OFF);
+            GpsUtils.closeGPS(mContext, Settings.Secure.LOCATION_MODE_HIGH_ACCURACY, Settings.Secure.LOCATION_MODE_OFF);
 
         }
 
@@ -219,7 +223,7 @@ public class GpsManager {
                         mCurrenLocation = null;
                         isGpsOpen = false;
                     } else {
-                       // isGpsOpen = true;
+                        // isGpsOpen = true;
                     }
 
                 }
@@ -231,7 +235,7 @@ public class GpsManager {
     /**
      * 定时发送经纬度状态给手机
      */
-    public void sendGpsState(){
+    public void sendGpsState() {
         sendLoactionToPhoneClient(mCurrenLocation);
     }
 
@@ -273,18 +277,16 @@ public class GpsManager {
 
     //打开或者关闭gps
     public void openGPS(boolean open) {
-        if (Build.VERSION.SDK_INT <19) {
+        if (Build.VERSION.SDK_INT < 19) {
             Settings.Secure.setLocationProviderEnabled(mContext.getContentResolver(), LocationManager.GPS_PROVIDER, open);
-        }else{
-            if(!open){
+        } else {
+            if (!open) {
                 Settings.Secure.putInt(mContext.getContentResolver(), Settings.Secure.LOCATION_MODE, android.provider.Settings.Secure.LOCATION_MODE_OFF);
-            }else{
+            } else {
                 Settings.Secure.putInt(mContext.getContentResolver(), Settings.Secure.LOCATION_MODE, android.provider.Settings.Secure.LOCATION_MODE_BATTERY_SAVING);
             }
         }
     }
-
-
 
 
     public void free() {
