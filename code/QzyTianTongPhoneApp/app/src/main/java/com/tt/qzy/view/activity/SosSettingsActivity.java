@@ -7,11 +7,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.qzy.eventbus.IMessageEventBustType;
+import com.qzy.eventbus.MessageEventBus;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.base.BaseActivity;
+import com.tt.qzy.view.bean.SosSendMessageModel;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.SPUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -77,6 +82,9 @@ public class SosSettingsActivity extends BaseActivity {
             SPUtils.putShare(SosSettingsActivity.this,Constans.CRY_HELP_TIMETIMER,defaultValue);
         }
 
+        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_SENDMESSAGE,new
+                SosSendMessageModel(cryhelp_message.getText().toString(),cryhelp_phone.getText().toString(),Integer.valueOf(cryhelp_timer.getText().toString()))));
+
         NToast.shortToast(SosSettingsActivity.this,getString(R.string.TMT_save_succeed));
 
         finish();
@@ -88,21 +96,21 @@ public class SosSettingsActivity extends BaseActivity {
              cryhelp_phone.setText(SPUtils.getShare(SosSettingsActivity.this,
                      Constans.CRY_HELP_PHONE,getString(R.string.TMT_please_input_phone)).toString());
          }else{
-             cryhelp_phone.setText(getString(R.string.TMT_please_input_phone));
+             cryhelp_phone.setHint(getString(R.string.TMT_please_input_phone));
          }
 
          if(SPUtils.containsShare(SosSettingsActivity.this,Constans.CRY_HELP_SHORTMESSAGE)){
              cryhelp_message.setText(SPUtils.getShare(SosSettingsActivity.this,
                      Constans.CRY_HELP_SHORTMESSAGE,getString(R.string.TMT_please_input_shortMessage)).toString());
          }else{
-             cryhelp_phone.setText(getString(R.string.TMT_please_input_shortMessage));
+             cryhelp_phone.setHint(getString(R.string.TMT_please_input_shortMessage));
          }
 
          if(SPUtils.containsShare(SosSettingsActivity.this,Constans.CRY_HELP_TIMETIMER)){
              cryhelp_timer.setText(SPUtils.getShare(SosSettingsActivity.this,
                      Constans.CRY_HELP_TIMETIMER,getString(R.string.TMT_please_input_timetimer)).toString());
          }else{
-             cryhelp_timer.setText(getString(R.string.TMT_please_input_timetimer));
+             cryhelp_timer.setHint(getString(R.string.TMT_please_input_timetimer));
          }
 
     }

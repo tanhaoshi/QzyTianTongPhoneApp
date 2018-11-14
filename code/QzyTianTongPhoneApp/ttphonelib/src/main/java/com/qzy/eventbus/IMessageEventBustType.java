@@ -71,4 +71,12 @@ public interface IMessageEventBustType {
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_NONCONNECT = "event_bus_type_connect_tiantong_request_server_nonconnect";
     // 服务验证MD5不通过
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_UPGRADLE = "event_bus_type_connect_tiantong_response_server_upgradle";
+    // 请求服务器返回服务器版本号及序列号
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_VERSION = "event_bus_type_connect_tiantong_request_server_version";
+    // 服务器返回服务器版本号及序列号
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_VERSION = "event_bus_type_connect_tiantong_response_server_version";
+    // 天通猫恢复出厂设置
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_RECOVER_SYSTEM = "event_bus_type_connect_tiantong_requst_server_recover_system";
+    // sos底下信息保存并设置
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_SENDMESSAGE = "event_bus_type_connect_tiantong_requst_server_sos_sendmessgae";
 }

@@ -39,8 +39,8 @@
     <string name="TMT_finshLoad">已下载城市</string>
     <string name="TMT_notify">当前为WI-FI网络,切换至运营商流量会自动暂停下载</string>
     <string name="TMT_net_notify">当前为运营商网络,建议切换至WI-FI网络下载</string>
-    <string name="TMT_version">天地互联版本</string>
-    <string name="TMT_soft_version">天地互联软件版本</string>
+    <string name="TMT_version">天地互联APP版本</string>
+    <string name="TMT_soft_version">天地互联服务版本</string>
     <string name="TMT_fixed_version">天地互联固件版本</string>
     <string name="TMT_number">序列号</string>
     <string name="TMT_hantInput">拨号或使用拼音搜索</string>

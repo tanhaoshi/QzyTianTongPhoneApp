@@ -92,7 +92,7 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
     public void initData() {
     }
 
-    @OnClick({R.id.settings_sos,R.id.setting_map,R.id.setting_about,R.id.main_quantity,R.id.settings_wifi,R.id.settings_date_time})
+    @OnClick({R.id.settings_sos,R.id.setting_map,R.id.setting_about,R.id.main_quantity,R.id.settings_wifi,R.id.settings_date_time,R.id.setting_factroy_reset})
     public void onClick(View view){
         switch (view.getId()){
             case R.id.settings_sos:
@@ -115,7 +115,15 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
             case R.id.settings_date_time:
                 initDateDialog();
                 break;
+            case R.id.setting_factroy_reset:
+                EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_RECOVER_SYSTEM));
+                NToast.shortToast(this,"恢复成功,请等待天通猫重启!");
+                break;
         }
+    }
+
+    private void recoverSystem(){
+
     }
 
     private void jumpSosSetting(){

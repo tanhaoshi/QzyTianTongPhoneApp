@@ -16,6 +16,7 @@ import com.qzy.tt.data.TtBeiDouStatuss;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhoneBatteryProtos;
+import com.qzy.tt.data.TtPhoneGetServerVersionProtos;
 import com.qzy.tt.data.TtPhoneMobileDataProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSignalProtos;
@@ -158,6 +159,11 @@ public class CmdHandler {
                  case PrototocalTools.IProtoClientIndex.response_update_send_failed:
                      TtPhoneUpdateResponseProtos.UpdateResponse updateResponse2 = TtPhoneUpdateResponseProtos.UpdateResponse.parseDelimitedFrom(inputStream);
                      sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_UPGRADLE,protoId,updateResponse2);
+                     break;
+                 case PrototocalTools.IProtoClientIndex.response_server_version_info:
+                     TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion ttPhoneGetServerVersion = TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion
+                             .parseDelimitedFrom(inputStream);
+                     sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_VERSION,protoId,ttPhoneGetServerVersion);
                      break;
             }
         } catch (Exception e) {

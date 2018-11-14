@@ -16,9 +16,12 @@ import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.CallPhoneProtos;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
+import com.qzy.tt.data.TtPhoneGetServerVersionProtos;
 import com.qzy.tt.data.TtPhoneMobileDataProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
+import com.qzy.tt.data.TtPhoneRecoverSystemProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
+import com.qzy.tt.data.TtPhoneSosMessageProtos;
 import com.qzy.tt.data.TtPhoneUpdateAppInfoProtos;
 import com.qzy.tt.data.TtPhoneUpdateSendFileProtos;
 import com.qzy.tt.data.TtPhoneWifiProtos;
@@ -36,6 +39,7 @@ import com.tt.qzy.view.bean.DatetimeModel;
 import com.tt.qzy.view.bean.EnableDataModel;
 import com.tt.qzy.view.bean.SMAgrementModel;
 import com.tt.qzy.view.bean.ServerPortIp;
+import com.tt.qzy.view.bean.SosSendMessageModel;
 import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.bean.WifiSettingModel;
 import com.tt.qzy.view.utils.AssetFileUtils;
@@ -362,6 +366,42 @@ public class PhoneNettyManager {
         sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_phone_server_enable_data,mobileData));
     }
 
+    /**
+     * 请求服务端版本号
+     */
+    private void requestServerVersion(){
+        TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion ttPhoneGetServerVersion = TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion.newBuilder()
+                .setIsRequest(true)
+                .setIp(CommonData.getInstance().getLocalWifiIp())
+                .build();
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_version_info,ttPhoneGetServerVersion));
+    }
+
+    /**
+     * 天通猫服务端sos设置保存
+     */
+    private void requestSosSendMessage(Object o){
+        SosSendMessageModel sosSendMessageModel = (SosSendMessageModel)o;
+        TtPhoneSosMessageProtos.TtPhoneSosMessage ttPhoneSosMessage = TtPhoneSosMessageProtos.TtPhoneSosMessage.newBuilder()
+                .setMessageContent(sosSendMessageModel.getMessageContent())
+                .setPhoneNumber(sosSendMessageModel.getPhoneNumber())
+                .setDelaytime(sosSendMessageModel.getDelaytime())
+                .setIp(CommonData.getInstance().getLocalWifiIp())
+                .build();
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_sos_message_send,ttPhoneSosMessage));
+    }
+
+    /**
+     * 恢复天通猫出厂设置
+     */
+    private void requestServerRecoverSystem(){
+        TtPhoneRecoverSystemProtos.TtPhoneRecoverSystem recoverSystem = TtPhoneRecoverSystemProtos.TtPhoneRecoverSystem.newBuilder()
+                .setIsRecover(true)
+                .setIp(CommonData.getInstance().getLocalWifiIp())
+                .build();
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_recover_system,recoverSystem));
+    }
+
     private NettyClientManager.INettyListener nettyListener = new NettyClientManager.INettyListener() {
         @Override
         public void onReceiveData(ByteBufInputStream inputStream) {
@@ -390,7 +430,6 @@ public class PhoneNettyManager {
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(MessageEventBus event) {
-//        KLog.i("event type = " + event.getType());
         switch (event.getType()) {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG:
                 ServerPortIp serverPortIp = (ServerPortIp) event.getObject();
@@ -443,6 +482,15 @@ public class PhoneNettyManager {
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_ENABLE_DATA:
                 requestEnableData(event.getObject());
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_VERSION:
+                requestServerVersion();
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_RECOVER_SYSTEM:
+                requestServerRecoverSystem();
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_SENDMESSAGE:
+                requestSosSendMessage(event.getObject());
                 break;
         }
     }
