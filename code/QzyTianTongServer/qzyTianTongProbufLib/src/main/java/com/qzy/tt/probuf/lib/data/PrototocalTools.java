@@ -27,6 +27,9 @@ public class PrototocalTools {
         int request_phone_send_sms_read = 124;
         int request_phone_set_wifi_passwd = 126;
         int request_phone_server_enable_data = 128;
+        int request_server_version_info = 130;
+        int request_server_recover_system = 132;
+        int request_sos_message_send = 134;
     }
 
     public interface IProtoClientIndex{
@@ -48,6 +51,7 @@ public class PrototocalTools {
         int response_tt_time = 131;
         int response_phone_data_status = 133;
         int response_update_send_failed = 135;
+        int response_server_version_info = 137;
     }
 
 
