@@ -203,7 +203,7 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
     @Override
     protected void onStart() {
         super.onStart();
-//        mPresenter.getAppversionRequest();
+        mPresenter.getAppversionRequest();
         startService();
     }
 
@@ -272,6 +272,7 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
 
     @Override
     public void getAppVersionCode(VersionCodeModel versionCodeModel) {
+        KLog.i("getAppVersion value = " +JSON.toJSONString(versionCodeModel));
         if(mPresenter.checkUpdate(versionCodeModel)){
             niftyDialog(versionCodeModel);
         }

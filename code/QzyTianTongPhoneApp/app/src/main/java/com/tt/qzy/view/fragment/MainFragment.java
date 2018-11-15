@@ -251,6 +251,12 @@ public class MainFragment extends Fragment implements MainFragmentView{
     @Override
     public void getTtPhonePosition(TtPhonePositionProtos.TtPhonePosition ttPhonePosition) {
         if(ttPhonePosition.getResponseStatus()){
+            if(ttPhonePosition.getLatItude().length() == 0 || ttPhonePosition.getLatItude() == null){
+                return;
+            }
+            if(ttPhonePosition.getLongItude().length() == 0 || ttPhonePosition.getLongItude() == null){
+                return;
+            }
             main_latitude.setText(AppUtils.decimalDouble(Double.valueOf(ttPhonePosition.getLatItude())));
             main_longitude.setText(AppUtils.decimalDouble(Double.valueOf(ttPhonePosition.getLongItude())));
         }else{
