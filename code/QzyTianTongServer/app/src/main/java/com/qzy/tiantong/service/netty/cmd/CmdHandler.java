@@ -9,9 +9,12 @@ import com.qzy.tt.data.CallPhoneProtos;
 import com.qzy.tt.data.ChangePcmPlayerDbProtos;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhoneAudioDataProtos;
+import com.qzy.tt.data.TtPhoneGetServerVersionProtos;
 import com.qzy.tt.data.TtPhoneMobileDataProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
+import com.qzy.tt.data.TtPhoneRecoverSystemProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
+import com.qzy.tt.data.TtPhoneSosMessageProtos;
 import com.qzy.tt.data.TtPhoneWifiProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.data.TtTimeProtos;
@@ -109,6 +112,18 @@ public class CmdHandler implements ICmdHandler {
                 case PrototocalTools.IProtoServerIndex.request_phone_server_enable_data:
                     TtPhoneMobileDataProtos.TtPhoneMobileData ttPhoneMobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.parseDelimitedFrom(inputStream);
                     senMsg(protoId,ttPhoneMobileData);
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_server_version_info:
+                    TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion ttPhoneGetServerVersion = TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion.parseDelimitedFrom(inputStream);
+                    senMsg(protoId,ttPhoneGetServerVersion);
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_server_recover_system:
+                    TtPhoneRecoverSystemProtos.TtPhoneRecoverSystem recoverSystem = TtPhoneRecoverSystemProtos.TtPhoneRecoverSystem.parseDelimitedFrom(inputStream);
+                    senMsg(protoId,recoverSystem);
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_sos_message_send:
+                    TtPhoneSosMessageProtos.TtPhoneSosMessage ttPhoneSosMessage = TtPhoneSosMessageProtos.TtPhoneSosMessage.parseDelimitedFrom(inputStream);
+                    senMsg(protoId,ttPhoneSosMessage);
                     break;
                 default:
                     break;

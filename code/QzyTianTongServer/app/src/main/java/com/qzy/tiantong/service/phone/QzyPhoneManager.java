@@ -197,7 +197,7 @@ public class QzyPhoneManager {
                     break;
                 case TelephonyManager.CALL_STATE_OFFHOOK:
                     LogUtils.e("======get call 1111======== ");
-                    mServer.initTtPcmDevice();
+                    //mServer.initTtPcmDevice();
                     mServer.onPhoneStateChange(TtPhoneState.RING);
                     break;
                 case TelephonyManager.CALL_STATE_IDLE:

@@ -13,12 +13,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
+import android.view.KeyEvent;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.phone.data.SmsInfo;
+import com.qzy.tiantong.service.phone.data.SosMessage;
 import com.qzy.tiantong.service.phone.obersever.SmsDatabaseChaneObserver;
 import com.qzy.tiantong.service.utils.PhoneUtils;
 import com.qzy.tt.data.TtPhoneSmsProtos;
+import com.qzy.tt.data.TtPhoneSosMessageProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 
 import java.util.List;
@@ -73,6 +76,11 @@ public class SmsPhoneManager {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(SMS_ACTION_RECEIVER);
         mContext.registerReceiver(mReceiverSms, intentFilter);
+
+        //接收按键值 目前sos
+        IntentFilter intentFilter1 = new IntentFilter();
+        intentFilter1.addAction("android.intent.action.GLOBAL_BUTTON");
+        mContext.registerReceiver(mReceiverSms, intentFilter1);
 
         registerSmsDatabaseChangeObserver(mContext);
 
@@ -148,6 +156,12 @@ public class SmsPhoneManager {
                 }*/
 
 
+            }else if(action.equals("android.intent.action.GLOBAL_BUTTON")){
+                KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+                LogUtils.d("keyevent = " + event.getKeyCode());
+                if((event.getKeyCode() == KeyEvent.KEYCODE_TV )&& (event.getFlags() == KeyEvent.FLAG_LONG_PRESS)){
+                    startSendSosMsg();
+                }
             }
         }
     };
@@ -300,6 +314,72 @@ public class SmsPhoneManager {
         }
     }
 
+    /**
+     * 存储sos 短信
+     *
+     * @param ttPhoneSosMessage
+     */
+    public void getSaveSosMsg(TtPhoneSosMessageProtos.TtPhoneSosMessage ttPhoneSosMessage) {
+        LogUtils.d("getSaveSosMsg");
+        try {
+            TtPhoneSystemanager.saveSosMessage(ttPhoneSosMessage);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 发送sos短信
+     */
+    private Thread mThreadSendSos = null;
+    public void startSendSosMsg() {
+        try {
+            final SosMessage sosMessage = TtPhoneSystemanager.getSosMessage();
+            if(sosMessage == null){
+                LogUtils.e("sosMessage is null ....");
+                return;
+            }
+            LogUtils.d("sosMessage = " + sosMessage);
+            final int delayTime = sosMessage.getDelayTime();
+            mThreadSendSos = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true){
+
+                        try {
+                            sendSms("192.168.43.1",sosMessage.getPhoneNumber(),sosMessage.getMessage());
+                            Thread.sleep(delayTime);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+            });
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 停止发送sos短信
+     */
+    public void stopSendSosMsg() {
+        try {
+            if(mThreadSendSos != null && mThreadSendSos.isAlive()){
+                mThreadSendSos.interrupt();
+            }
+            mThreadSendSos = null;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * 释放
@@ -307,6 +387,7 @@ public class SmsPhoneManager {
     public void free() {
 
         unregisterSms();
+        stopSendSosMsg();
     }
 
     public interface IOnSMSCallback {
