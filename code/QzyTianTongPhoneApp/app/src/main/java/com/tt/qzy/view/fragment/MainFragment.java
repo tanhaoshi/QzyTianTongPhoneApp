@@ -245,6 +245,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
     public void onDestroyView() {
         super.onDestroyView();
         mPresneter.release();
+        KLog.i();
     }
 
     @TargetApi(Build.VERSION_CODES.N)
