@@ -1,6 +1,7 @@
 package com.tt.qzy.view.activity;
 
 
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -36,17 +37,32 @@ public class SosSettingsActivity extends BaseActivity {
     @BindView(R.id.cryhelp_timer)
     EditText cryhelp_timer;
 
+    private boolean isConnect;
+
     @Override
     public int getContentView() {
         return R.layout.activity_sos_settings;
     }
 
+    private void getIntentData(){
+        Intent intent = getIntent();
+        if(null != intent.getExtras()){
+            isConnect = intent.getBooleanExtra("connect",false);
+        }
+    }
+
     @Override
     public void initView() {
+        getIntentData();
         statusLayout.setBackgroundColor(getResources().getColor(R.color.tab_stander));
         base_tv_toolbar_title.setText(getString(R.string.TMT_sos_setting));
         base_iv_back.setImageDrawable(getResources().getDrawable(R.drawable.iv_back));
         base_tv_toolbar_right.setVisibility(View.GONE);
+        if(isConnect){
+            img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nerwork));
+        }else{
+            img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonerwork));
+        }
     }
 
     @OnClick({R.id.base_iv_back,R.id.btn_yes})

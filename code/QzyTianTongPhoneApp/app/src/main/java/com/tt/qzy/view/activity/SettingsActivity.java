@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.base.BaseActivity;
 import com.tt.qzy.view.bean.DatetimeModel;
@@ -122,12 +123,9 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
         }
     }
 
-    private void recoverSystem(){
-
-    }
-
     private void jumpSosSetting(){
         Intent intent = new Intent(SettingsActivity.this,SosSettingsActivity.class);
+        intent.putExtra("connect",isConnect);
         startActivity(intent);
     }
 
