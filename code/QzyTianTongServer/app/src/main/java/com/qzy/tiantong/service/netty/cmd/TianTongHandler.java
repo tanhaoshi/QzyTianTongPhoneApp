@@ -5,14 +5,18 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
 
+import com.qzy.tiantong.service.phone.TtPhoneSystemanager;
 import com.qzy.tiantong.service.service.ITianTongServer;
 import com.qzy.tt.data.CallPhoneProtos;
 import com.qzy.tt.data.ChangePcmPlayerDbProtos;
 import com.qzy.tt.data.TtBeiDouStatuss;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
+import com.qzy.tt.data.TtPhoneGetServerVersionProtos;
 import com.qzy.tt.data.TtPhoneMobileDataProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
+import com.qzy.tt.data.TtPhoneRecoverSystemProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
+import com.qzy.tt.data.TtPhoneSosMessageProtos;
 import com.qzy.tt.data.TtPhoneWifiProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.data.TtTimeProtos;
@@ -82,6 +86,15 @@ public class TianTongHandler extends Handler {
                     break;
                 case PrototocalTools.IProtoServerIndex.request_phone_server_enable_data:
                     mServer.getPhoneNettyManager().setEnablePhoneData((TtPhoneMobileDataProtos.TtPhoneMobileData) msg.obj);
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_server_version_info:
+                    mServer.getPhoneNettyManager().getServerVerion((TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion) msg.obj);
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_server_recover_system:
+                    mServer.getPhoneNettyManager().getRecoverSystem((TtPhoneRecoverSystemProtos.TtPhoneRecoverSystem) msg.obj);
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_sos_message_send:
+                    mServer.getPhoneNettyManager().getmSmsPhoneManager().getSaveSosMsg((TtPhoneSosMessageProtos.TtPhoneSosMessage) msg.obj);
                     break;
                 default:
                     break;

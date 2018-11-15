@@ -3,6 +3,7 @@ package com.qzy.tiantong.lib.utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.lang.reflect.Method;
 
 /**
  * Created by Administrator on 2018/5/21/021.
@@ -23,6 +24,22 @@ public class QzySystemUtils {
        return emmcid;
     }
 
+
+    /**
+     * 获取串口
+     * @return
+     */
+    public static String getSerialNumberCustom(){
+        String serial="";
+        try{
+            Class<?>c= Class.forName("android.os.SystemProperties");
+            Method get =c.getMethod("get",String.class);
+            return (String)get.invoke(c,"ro.serialno");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return serial;
+    }
 
 
 

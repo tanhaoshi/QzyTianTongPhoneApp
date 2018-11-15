@@ -10,11 +10,14 @@ import android.text.TextUtils;
 import com.qzy.led.Netled;
 import com.qzy.tiantong.lib.eventbus.MessageEvent;
 import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tiantong.lib.utils.QzySystemUtils;
+import com.qzy.tiantong.service.BuildConfig;
 import com.qzy.tiantong.service.phone.BatteryManager;
 import com.qzy.tiantong.service.gps.GpsManager;
 import com.qzy.tiantong.service.phone.PhoneClientManager;
 import com.qzy.tiantong.service.phone.SmsPhoneManager;
 import com.qzy.tiantong.service.phone.TtPhoneState;
+import com.qzy.tiantong.service.phone.TtPhoneSystemanager;
 import com.qzy.tiantong.service.phone.data.SmsInfo;
 import com.qzy.tiantong.service.time.DateTimeManager;
 import com.qzy.tiantong.service.usb.TtUsbManager;
@@ -24,10 +27,13 @@ import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.CallPhoneStateProtos;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtPhoneBatteryProtos;
+import com.qzy.tt.data.TtPhoneGetServerVersionProtos;
 import com.qzy.tt.data.TtPhoneMobileDataProtos;
+import com.qzy.tt.data.TtPhoneRecoverSystemProtos;
 import com.qzy.tt.data.TtPhoneSignalProtos;
 import com.qzy.tt.data.TtPhoneSimCards;
 import com.qzy.tt.data.TtPhoneSmsProtos;
+import com.qzy.tt.data.TtPhoneSosMessageProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.probuf.lib.data.PhoneAudioCmd;
 import com.qzy.tt.probuf.lib.data.PhoneCmd;
@@ -75,6 +81,8 @@ public class PhoneNettyManager {
 
     private Timer timerCalling;
 
+    private boolean isG4Test = false;
+
     public PhoneNettyManager(Context context, NettyServerManager manager) {
         mContext = context;
         mNettyServerManager = manager;
@@ -86,7 +94,9 @@ public class PhoneNettyManager {
 
         EventBus.getDefault().register(this);
 
-        initSignal();
+        if(!isG4Test) {
+            initSignal();
+        }
 
         initSendThread();
 
@@ -183,6 +193,52 @@ public class PhoneNettyManager {
         return false;
     }
 
+    /**
+     * 返回版本号信息给app
+     *
+     * @param ttPhoneGetServerVersion
+     */
+    public void getServerVerion(TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion ttPhoneGetServerVersion) {
+        LogUtils.d("getServerVerion versionName ");
+        try {
+
+            if(checkNettManagerIsNull()){
+                return;
+            }
+            LogUtils.d("getServerVerion versionName ");
+            String versionName = BuildConfig.VERSION_NAME;
+            String sieralNo = QzySystemUtils.getSerialNumberCustom();
+            LogUtils.d(" ip = " + ttPhoneGetServerVersion.getIp() + " versionName = " + versionName + " sieralNo = " + sieralNo);
+            TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion ttPhoneGetServerVersion1 = TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion.newBuilder()
+                    .setIp(ttPhoneGetServerVersion.getIp())
+                    .setServerApkVersionName(versionName)
+                    .setServerSieralNo(sieralNo)
+                    .build();
+            mNettyServerManager.sendData(ttPhoneGetServerVersion.getIp(),PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.response_server_version_info, ttPhoneGetServerVersion1));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    /**
+     * 恢复出厂设置
+     *
+     * @param ttPhoneRecoverSystem
+     */
+    public void getRecoverSystem(TtPhoneRecoverSystemProtos.TtPhoneRecoverSystem ttPhoneRecoverSystem) {
+        LogUtils.d("getRecoverSystem");
+        try {
+            TtPhoneSystemanager.doMasterClear(mContext);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
 
     /**
      * 控制信号灯初始化
@@ -252,7 +308,7 @@ public class PhoneNettyManager {
                 .setPhoneNumber(phoneNumber)
                 .build();
         String callInigIp = PhoneClientManager.getInstance().isCallingIp();
-        if (!TextUtils.isEmpty(callInigIp) && (phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.CALL  || phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.RING)) {
+        if (!TextUtils.isEmpty(callInigIp) && (phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.CALL)) {
             mNettyServerManager.sendData(callInigIp, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
         } else {
             mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
@@ -295,7 +351,10 @@ public class PhoneNettyManager {
      */
     public void sendTtCallPhoneSignalToClient(int value) {
         currentSignalValue = value;
-        controlSignal(value);
+        if(!isG4Test) {
+            controlSignal(value);
+        }
+
         sendSignalToPhoneClient(value);
     }
 
@@ -491,6 +550,7 @@ public class PhoneNettyManager {
 
     /**
      * 获取短信管理工具
+     *
      * @return
      */
     public SmsPhoneManager getmSmsPhoneManager() {
@@ -513,13 +573,13 @@ public class PhoneNettyManager {
      * 打开天通猫移动数据
      */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
-    public void setEnablePhoneData(TtPhoneMobileDataProtos.TtPhoneMobileData ttPhoneMobileData){
+    public void setEnablePhoneData(TtPhoneMobileDataProtos.TtPhoneMobileData ttPhoneMobileData) {
         try {
-            MobileDataUtils.setDataEnabled(0,ttPhoneMobileData.getIsEnableData(),mContext);
-            if(MobileDataUtils.getDataEnabled(0,mContext)){
+            MobileDataUtils.setDataEnabled(0, ttPhoneMobileData.getIsEnableData(), mContext);
+            if (MobileDataUtils.getDataEnabled(0, mContext)) {
                 //设置数据打开成功
                 sendMobileData(true);
-            }else{
+            } else {
                 //设置数据打开失败
                 sendMobileData(false);
             }
@@ -528,12 +588,12 @@ public class PhoneNettyManager {
         }
     }
 
-    private void sendMobileData(boolean isStatus){
+    private void sendMobileData(boolean isStatus) {
         TtPhoneMobileDataProtos.TtPhoneMobileData mobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.newBuilder()
                 .setResponseStatus(isStatus)
                 .build();
-        mNettyServerManager.sendData(null,PhoneCmd.getPhoneCmd
-                (PrototocalTools.IProtoClientIndex.response_phone_data_status,mobileData));
+        mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd
+                (PrototocalTools.IProtoClientIndex.response_phone_data_status, mobileData));
     }
 
     public void free() {
