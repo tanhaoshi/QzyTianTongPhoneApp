@@ -47,6 +47,8 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     public boolean tt_status = false;
     public boolean tt_beidou_status = false;
     public boolean tt_call_status = false;
+    public boolean tt_isSim = false;
+    public boolean tt_isSignal = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -130,7 +132,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         img1.setPower(0);
         img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_noconnect));
         img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
-        img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonerwork));
+        img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonetwork));
         percentBaterly.setText(0+"%");
     }
 
@@ -144,8 +146,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     private void connectTianTongSuccess(){
         tt_status = true;
         SPUtils.putShare(BaseActivity.this, Constans.TTM_STATUS,tt_status);
-        img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nerwork));
-//        img4.setImageDrawable(getResources().getDrawable(R.drawable.data_traffic));
+        img5.setImageDrawable(getResources().getDrawable(R.drawable.search_network));
     }
 
     /**
@@ -154,7 +155,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     private void connectTianTongFailed(){
         tt_status = false;
         SPUtils.putShare(BaseActivity.this, Constans.TTM_STATUS,tt_status);
-        img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonerwork));
+        img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonetwork));
     }
 
     /**
@@ -162,8 +163,10 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
      */
     private void getTianTongSimcardStatsu(boolean status){
         if(status){
+            tt_isSim = true;
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
         }else{
+            tt_isSim = false;
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_noconnect));
         }
     }
@@ -181,7 +184,6 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     }
 
     private void onBatteryInfoReceiver(int intLevel, int intScale) {
-        KLog.i("look over intLevel value = " + intLevel + " and " + " intScale value = " + intScale);
         int percent = intLevel * 100 / intScale;
         img1.setPower(percent);
         percentBaterly.setText(percent+"%");
@@ -204,18 +206,25 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
      */
     private void onTiantongInfoReceiver(int intLevel) {
         if (intLevel == 97) {
+            tt_isSignal = false;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
         } else if (intLevel == 98) {
+            tt_isSignal = false;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
         } else if (intLevel == 99) {
+            tt_isSignal = false;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
         } else if (intLevel >= 0 && intLevel <= 1) {
+            tt_isSignal = true;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_one));
         }else if (intLevel >= 2 && intLevel <= 4) {
+            tt_isSignal = true;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_two));
         }else if (intLevel >= 5 && intLevel <= 7) {
+            tt_isSignal = true;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_three));
         }else if (intLevel >= 8) {
+            tt_isSignal = true;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_four));
         }
     }

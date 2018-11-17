@@ -101,7 +101,6 @@ public class CmdHandler {
                     break;
                 case PrototocalTools.IProtoClientIndex.phone_send_sms_callback:
                     TtPhoneSmsProtos.TtPhoneSms ttPhoneSms = TtPhoneSmsProtos.TtPhoneSms.parseDelimitedFrom(inputStream);
-                    startSystemRingTone(ttPhoneSms);
                     sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS_STATE,protoId, ttPhoneSms);
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_phone_battery:
@@ -134,6 +133,7 @@ public class CmdHandler {
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_receiver_short_message:
                     TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessageSignal = TtShortMessageProtos.TtShortMessage.ShortMessage.parseDelimitedFrom(inputStream);
+                    startSystemRingTone();
                     mSyncManager.syncShortMessageSignal(protoId,ttShortMessageSignal,ttShortMessageSignal);
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_call_phone_back:
@@ -164,6 +164,10 @@ public class CmdHandler {
                      TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion ttPhoneGetServerVersion = TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion
                              .parseDelimitedFrom(inputStream);
                      sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_VERSION,protoId,ttPhoneGetServerVersion);
+                     break;
+                 case PrototocalTools.IProtoClientIndex.response_server_mobile_data_init:
+                     TtPhoneMobileDataProtos.TtPhoneMobileData ttPhoneMobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.parseDelimitedFrom(inputStream);
+                     sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_MOBILE_STATUS,protoId,ttPhoneMobileData);
                      break;
             }
         } catch (Exception e) {
@@ -196,10 +200,8 @@ public class CmdHandler {
     /**
      *收到短信播放系统铃声
      */
-    private void startSystemRingTone(TtPhoneSmsProtos.TtPhoneSms ttPhoneSms){
-       if(ttPhoneSms.getIsSendSuccess()){
-           RingManager.playDefaultCallMediaPlayer(context);
-       }
+    private void startSystemRingTone(){
+        RingToneUtils.playRingtone(context);
     }
 
 }

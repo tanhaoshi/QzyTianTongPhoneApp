@@ -1,5 +1,6 @@
 package com.tt.qzy.view.utils;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -12,6 +13,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 
 import java.io.File;
+import java.util.List;
 import java.util.Locale;
 
 public final class AppUtils {
@@ -71,5 +73,22 @@ public final class AppUtils {
         DecimalFormat df = new DecimalFormat("##0.0000");
         String handleValue = df.format(latItude);
         return handleValue;
+    }
+
+    /**
+     * 判断服务是否处于运行状态.
+     * @param servicename
+     * @param context
+     * @return
+     */
+    public static boolean isServiceRunning(String servicename,Context context){
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> infos = am.getRunningServices(100);
+        for(ActivityManager.RunningServiceInfo info: infos){
+            if(servicename.equals(info.service.getClassName())){
+                return true;
+            }
+        }
+        return false;
     }
 }

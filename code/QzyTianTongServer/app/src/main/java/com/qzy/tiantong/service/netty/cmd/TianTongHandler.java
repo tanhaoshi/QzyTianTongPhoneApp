@@ -96,6 +96,9 @@ public class TianTongHandler extends Handler {
                 case PrototocalTools.IProtoServerIndex.request_sos_message_send:
                     mServer.getPhoneNettyManager().getmSmsPhoneManager().getSaveSosMsg((TtPhoneSosMessageProtos.TtPhoneSosMessage) msg.obj);
                     break;
+                case PrototocalTools.IProtoServerIndex.request_phone_server_mobile_init:
+                    mServer.getPhoneNettyManager().getServerMobileDataStatus();
+                    break;
                 default:
                     break;
             }

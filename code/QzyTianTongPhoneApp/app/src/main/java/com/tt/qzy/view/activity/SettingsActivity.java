@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
-import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.base.BaseActivity;
 import com.tt.qzy.view.bean.DatetimeModel;
@@ -48,6 +47,8 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
     private SettingsPresenter mPresenter;
 
     private boolean isConnect;
+    private boolean isSim;
+    private boolean isSignal;
 
     @Override
     public int getContentView() {
@@ -58,6 +59,8 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
         Intent intent = getIntent();
         if(null != intent.getExtras()){
             isConnect = intent.getBooleanExtra("connect",false);
+            isSim = intent.getBooleanExtra("isSim",false);
+            isSignal = intent.getBooleanExtra("isSignal",false);
         }
     }
 
@@ -83,9 +86,19 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
         });
         statusLayout.setBackgroundColor(getResources().getColor(R.color.tab_stander));
         if(isConnect){
-            img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nerwork));
+            img5.setImageDrawable(getResources().getDrawable(R.drawable.search_network));
         }else{
-            img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonerwork));
+            img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonetwork));
+        }
+        if(isSim){
+            img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
+        }else{
+            img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_noconnect));
+        }
+        if(isSignal){
+            img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_one));
+        }else{
+            img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
         }
     }
 
@@ -244,8 +257,9 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
         mPresenter.release();
+        mPresenter = null;
     }
 }

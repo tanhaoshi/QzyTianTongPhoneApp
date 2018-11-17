@@ -64,7 +64,7 @@
             android:layout_height="19dp"
             android:layout_marginTop="7dp"
             android:gravity="center"
-            android:text="@string/TMT_dial_dialing"
+            android:text=""
             android:textColor="@color/white"/>
 
     </LinearLayout>

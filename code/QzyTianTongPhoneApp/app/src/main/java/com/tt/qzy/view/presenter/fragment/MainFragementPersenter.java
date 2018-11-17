@@ -103,6 +103,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
         }
 
         EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));
+
     }
 
     /**
@@ -150,6 +151,13 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
                 new EnableDataModel(isSwitch)));
     }
 
+    /**
+     * 获取服务初始化数据状态
+     */
+    public void requestServerMobileStatus(){
+        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_MOBILE_STATUS));
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
@@ -160,9 +168,11 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
                 parseBeiDouSwitch(event.getObject());
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SUCCESS:
+                saveLocalWIFIIP();
                 requestServerVersion();
                 mView.get().updateConnectedState(true);
                 requestServerDatetime();
+//                requestServerMobileStatus();
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_FAILED:
                 mView.get().updateConnectedState(false);
@@ -185,7 +195,26 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_UPGRADLE:
                 parseServerUpgradleFailed(event.getObject());
                 break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_MOBILE_STATUS:
+                parseServerMobileDataInit(event.getObject());
+                break;
         }
+    }
+
+    /**
+     * 保存链接wifi后的ip地址
+     */
+    private void saveLocalWIFIIP(){
+        CommonData.getInstance().setLocalWifiIp(IPUtil.getLocalIPAddress(mContext));
+    }
+
+    /**
+     * 解析初始化服务底层数据状态
+     */
+    private void parseServerMobileDataInit(Object o){
+        PhoneCmd cmd = (PhoneCmd)o;
+        TtPhoneMobileDataProtos.TtPhoneMobileData ttPhoneMobileData = (TtPhoneMobileDataProtos.TtPhoneMobileData)cmd.getMessage();
+        mView.get().getSetverInitMobileStatus(ttPhoneMobileData.getResponseStatus());
     }
 
     /**

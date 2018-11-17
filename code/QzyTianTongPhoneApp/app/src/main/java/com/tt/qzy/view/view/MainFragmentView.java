@@ -20,4 +20,6 @@ public interface MainFragmentView extends BaseView{
 
     void upgradleNonconnect();
 
+    void getSetverInitMobileStatus(boolean isInitStatus);
+
 }

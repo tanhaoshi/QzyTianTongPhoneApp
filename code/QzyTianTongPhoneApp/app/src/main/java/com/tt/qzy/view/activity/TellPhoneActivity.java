@@ -26,6 +26,8 @@ import com.tt.qzy.view.presenter.activity.TellPhoneActivityPresenter;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.lang.ref.WeakReference;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -57,6 +59,11 @@ public class TellPhoneActivity extends AppCompatActivity {
         KLog.e("onCreate");
         ButterKnife.bind(this);
         String number = getIntent().getStringExtra("diapadNumber");
+        boolean isFlag = getIntent().getBooleanExtra("acceptCall",false);
+        if(isFlag){
+            text_state.setText("正在接听");
+            onCallingState();
+        }
         phoneNumber.setText(number);
         if (!TextUtils.isEmpty(number) && number.length() >= 3) {
 
@@ -106,30 +113,39 @@ public class TellPhoneActivity extends AppCompatActivity {
         text_state.setText(getString(R.string.TMT_dial_dialing));
     }
 
-    private Handler mHandler = new Handler() {
+    private WorkHandler mHandler = new WorkHandler(this);
 
+    static class WorkHandler extends Handler{
 
+        private WeakReference<TellPhoneActivity> mWeakReference;
         private int time = 0;
+
+        public WorkHandler(TellPhoneActivity tellPhoneActivity){
+            mWeakReference = new WeakReference<TellPhoneActivity>(tellPhoneActivity);
+        }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what) {
-                case msg_calling_time:
-                    time += 1000;
-                    showCallingTime(time);
-                    mHandler.sendEmptyMessageDelayed(1, 1000);
-                    break;
-                case msg_calling_time_remove:
-                    if (mHandler.hasMessages(1)) {
-                        mHandler.removeMessages(1);
-                    }
-                    time = 0;
-                    showDailing();
-                    break;
+            TellPhoneActivity activity = mWeakReference.get();
+            if(null != activity){
+                switch (msg.what) {
+                    case msg_calling_time:
+                        time += 1000;
+                        activity.showCallingTime(time);
+                        sendEmptyMessageDelayed(1, 1000);
+                        break;
+                    case msg_calling_time_remove:
+                        if (hasMessages(1)) {
+                            removeMessages(1);
+                        }
+                        time = 0;
+                        activity.showDailing();
+                        break;
+                }
             }
         }
-    };
+    }
 
     long startTime = 0;
     int count = 5;
@@ -211,7 +227,6 @@ public class TellPhoneActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        KLog.e("onStop");
         isFinsh = false;
         mQzySensorManager.freeSenerState();
         EventBusUtils.unregister(TellPhoneActivity.this);
@@ -221,8 +236,6 @@ public class TellPhoneActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        KLog.e("onDestroy");
-
-
+        mHandler = null;
     }
 }

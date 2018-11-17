@@ -101,22 +101,6 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
         }
     }
 
-    /**
-     * 解析与处理 电话状态
-     * @param o
-     */
-    private void parseCallBack(Object o){
-        PhoneCmd cmd = (PhoneCmd) o;
-        CallPhoneBackProtos.CallPhoneBack callPhoneBack = (CallPhoneBackProtos.CallPhoneBack)cmd.getMessage();
-        if(!callPhoneBack.getIsCalling()){
-            Intent intent = new Intent(mContext, TellPhoneActivity.class);
-            intent.putExtra("diapadNumber", phone);
-            mContext.startActivity(intent);
-        }else{
-            NToast.shortToast(mContext,mContext.getResources().getString(R.string.loading));
-        }
-    }
-
     public void getCallHistroy(final int offset,final int limit){
         Observable.create(new ObservableOnSubscribe<List<CallRecordDao>>() {
             @Override

@@ -75,7 +75,6 @@ public class PhoneNettyManager {
 
     public PhoneNettyManager(Context context) {
         mContext = context;
-        CommonData.getInstance().setLocalWifiIp(IPUtil.getLocalIPAddress(context));
         EventBusUtils.register(this);
         mNettyClientManager = new NettyClientManager(nettyListener);
         mCmdHandler = new CmdHandler(context);
@@ -374,6 +373,7 @@ public class PhoneNettyManager {
                 .setIsRequest(true)
                 .setIp(CommonData.getInstance().getLocalWifiIp())
                 .build();
+        KLog.i("ip : "+CommonData.getInstance().getLocalWifiIp());
         sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_version_info,ttPhoneGetServerVersion));
     }
 
@@ -400,6 +400,15 @@ public class PhoneNettyManager {
                 .setIp(CommonData.getInstance().getLocalWifiIp())
                 .build();
         sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_recover_system,recoverSystem));
+    }
+
+    /**
+     * 获取天通猫移动数据状态
+     */
+    private void reuqestServerMobileStatus(){
+        TtPhoneMobileDataProtos.TtPhoneMobileData mobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.newBuilder()
+                .build();
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_phone_server_mobile_init,mobileData));
     }
 
     private NettyClientManager.INettyListener nettyListener = new NettyClientManager.INettyListener() {
@@ -491,6 +500,9 @@ public class PhoneNettyManager {
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_SENDMESSAGE:
                 requestSosSendMessage(event.getObject());
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_MOBILE_STATUS:
+                reuqestServerMobileStatus();
                 break;
         }
     }

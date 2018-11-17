@@ -220,7 +220,8 @@ public class PhoneNettyManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+//        ip = 192.168.1.103 versionName = 1.0.0 sieralNo =
+//        ip = 192.168.43.164 versionName = 1.0.0 sieralNo =
     }
 
 
@@ -568,8 +569,22 @@ public class PhoneNettyManager {
     }
 
     /**
-     * 打开天通猫移动数据
+     * 获取天通猫初始状态 , 并发送
      */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
+    public void getServerMobileDataStatus(){
+        try {
+            boolean isStatus = MobileDataUtils.getDataEnabled(0, mContext);
+            TtPhoneMobileDataProtos.TtPhoneMobileData mobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.newBuilder()
+                    .setResponseStatus(isStatus)
+                    .build();
+            mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd
+                    (PrototocalTools.IProtoClientIndex.response_server_mobile_data_init, mobileData));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 打开天通猫移动数据
      */

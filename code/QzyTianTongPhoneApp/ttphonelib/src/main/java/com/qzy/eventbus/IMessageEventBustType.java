@@ -79,4 +79,8 @@ public interface IMessageEventBustType {
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_RECOVER_SYSTEM = "event_bus_type_connect_tiantong_requst_server_recover_system";
     // sos底下信息保存并设置
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_SENDMESSAGE = "event_bus_type_connect_tiantong_requst_server_sos_sendmessgae";
+    // 获取底层服务数据状态
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_MOBILE_STATUS = "event_bus_type_connect_tiantong_requst_server_mobile_status";
+    // 获取服务底层数据状态
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_MOBILE_STATUS = "event_bus_type_connect_tiantong_response_server_mobile_status";
 }

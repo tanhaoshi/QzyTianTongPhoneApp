@@ -44,6 +44,11 @@ public class MainAboutActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
         initView();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         initData();
     }
 

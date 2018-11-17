@@ -58,7 +58,6 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         RingManager.playDefaultCallMediaPlayer(this);
     }
 
-
     @OnClick({R.id.btn_accept, R.id.btn_endcall})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -106,6 +105,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         Intent intent = new Intent(TellPhoneIncomingActivity.this, TellPhoneActivity.class);
        // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("diapadNumber", phoneNumber);
+        intent.putExtra("acceptCall",true);
         startActivity(intent);
         RingManager.stopDefaultCallMediaPlayer(this);
         mTellPhoneActivityPresenter.acceptCall();

@@ -59,9 +59,9 @@ public class SosSettingsActivity extends BaseActivity {
         base_iv_back.setImageDrawable(getResources().getDrawable(R.drawable.iv_back));
         base_tv_toolbar_right.setVisibility(View.GONE);
         if(isConnect){
-            img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nerwork));
+            img5.setImageDrawable(getResources().getDrawable(R.drawable.search_network));
         }else{
-            img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonerwork));
+            img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonetwork));
         }
     }
 

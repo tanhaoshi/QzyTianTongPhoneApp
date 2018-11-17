@@ -159,9 +159,8 @@ public class MainFragment extends Fragment implements MainFragmentView{
                 if(mainActivity.isConnectStatus()){
                     if(isChecked){
                         mPresneter.dialPhone(SPUtils.getShare(getActivity(),Constans.CRY_HELP_PHONE,"").toString());
-                        mIntent = new Intent(getActivity(),TimerService.class);
-                        mIntent.putExtra("lat",main_latitude.getText().toString());
-                        mIntent.putExtra("long",main_longitude.getText().toString());
+                        TimerService timerService = new TimerService(MainFragment.this);
+                        mIntent = new Intent(getActivity(),timerService.getClass());
                         getActivity().startService(mIntent);
                         mPresneter.requestGpsPosition(true);
                         main_location.setChecked(true);
@@ -206,6 +205,8 @@ public class MainFragment extends Fragment implements MainFragmentView{
                 if(mainActivity.isConnectStatus()){
                     Intent settings_intent = new Intent(getActivity(), SettingsActivity.class);
                     settings_intent.putExtra("connect",mainActivity.isConnectStatus());
+                    settings_intent.putExtra("isSim",mainActivity.tt_isSim);
+                    settings_intent.putExtra("isSignal",mainActivity.tt_isSignal);
                     startActivity(settings_intent);
                 }else{
                     NToast.shortToast(getActivity(),"不可操作,请链接天通猫!");
@@ -259,6 +260,11 @@ public class MainFragment extends Fragment implements MainFragmentView{
             }
             main_latitude.setText(AppUtils.decimalDouble(Double.valueOf(ttPhonePosition.getLatItude())));
             main_longitude.setText(AppUtils.decimalDouble(Double.valueOf(ttPhonePosition.getLongItude())));
+
+            if(AppUtils.isServiceRunning("com.tt.qzy.view.service.TimerService",getActivity())){
+                mGpsCallback.setGpsValue(main_latitude.getText().toString(),main_longitude.getText().toString());
+            }
+
         }else{
             NToast.shortToast(getActivity(),getActivity().getString(R.string.TMT_gps_position_filed));
         }
@@ -353,6 +359,11 @@ public class MainFragment extends Fragment implements MainFragmentView{
         NToast.shortToast(getActivity(),"WIFI链接中断,请重新更新!");
     }
 
+    @Override
+    public void getSetverInitMobileStatus(boolean isInitStatus) {
+        sc_settin_data.setChecked(isInitStatus);
+    }
+
     private void changePercent(final int i){
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -376,6 +387,16 @@ public class MainFragment extends Fragment implements MainFragmentView{
 
     @Override
     public void loadData(boolean pullToRefresh) {
+    }
+
+    private GpsCallback mGpsCallback;
+
+    public void setGpsCallback(GpsCallback gpsCallback){
+        this.mGpsCallback = gpsCallback;
+    }
+
+    public interface GpsCallback{
+        void setGpsValue(String lat,String longitude);
     }
 
 }
