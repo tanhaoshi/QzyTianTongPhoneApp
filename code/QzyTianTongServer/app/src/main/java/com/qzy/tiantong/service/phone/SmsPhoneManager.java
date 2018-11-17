@@ -8,14 +8,17 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tiantong.service.gps.GpsManager;
 import com.qzy.tiantong.service.phone.data.SmsInfo;
 import com.qzy.tiantong.service.phone.data.SosMessage;
 import com.qzy.tiantong.service.phone.obersever.SmsDatabaseChaneObserver;
@@ -46,8 +49,11 @@ public class SmsPhoneManager {
     private SmsDatabaseChaneObserver mSmsDBChangeObserver;
 
 
-    public SmsPhoneManager(Context context, IOnSMSCallback callback) {
+    private GpsManager mGpsManager;
+
+    public SmsPhoneManager(Context context,GpsManager gpsManager, IOnSMSCallback callback) {
         mContext = context;
+        mGpsManager = gpsManager;
         mCallback = callback;
         registerSms();
     }
@@ -346,10 +352,31 @@ public class SmsPhoneManager {
             mThreadSendSos = new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    if(mGpsManager != null){
+                        mGpsManager .openGps();
+                    }
                     while (true){
 
                         try {
-                            sendSms("192.168.43.1",sosMessage.getPhoneNumber(),sosMessage.getMessage());
+                            Location location = null;
+                            if(mGpsManager != null){
+                                location = mGpsManager.getmCurrenLocation();
+                            }
+                            String message = sosMessage.getMessage();
+
+                            if(location != null){
+                                message = message + " lat:"  + location.getLatitude() + " lng:" + location.getLongitude();
+                            }
+
+                            if(TextUtils.isEmpty(message)){
+                                message = "help !!!";
+                            }
+
+                            String phone = sosMessage.getPhoneNumber();
+                            if(!TextUtils.isEmpty(phone)){
+                                sendSms("192.168.43.1",phone,message);
+                            }
+
                             Thread.sleep(delayTime);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -402,6 +429,8 @@ public class SmsPhoneManager {
         void onReceiveSms(String phoneNumber, String smsBody);
 
         void onReceiveSms(SmsInfo smsInfo);
+
+
     }
 
 }

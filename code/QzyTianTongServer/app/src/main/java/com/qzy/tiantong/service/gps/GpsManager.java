@@ -288,6 +288,13 @@ public class GpsManager {
         }
     }
 
+    /**
+     * 获取当前经纬度
+     * @return
+     */
+    public Location getmCurrenLocation() {
+        return mCurrenLocation;
+    }
 
     public void free() {
         mContext.unregisterReceiver(mReceiver);
