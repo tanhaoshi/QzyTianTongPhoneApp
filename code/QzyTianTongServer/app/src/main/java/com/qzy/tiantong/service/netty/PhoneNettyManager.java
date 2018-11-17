@@ -88,8 +88,9 @@ public class PhoneNettyManager {
         mNettyServerManager = manager;
 
         mDateTimeManager = new DateTimeManager(context, mNettyServerManager);
-        mSmsPhoneManager = new SmsPhoneManager(context, iOnSMSCallback);
         mGpsManager = new GpsManager(mContext, mNettyServerManager);
+        mSmsPhoneManager = new SmsPhoneManager(context, mGpsManager,iOnSMSCallback);
+
         mTtUsbManager = new TtUsbManager(mContext, mNettyServerManager);
 
         EventBus.getDefault().register(this);
