@@ -5,6 +5,7 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.widget.TextView;
 
 
@@ -15,6 +16,7 @@ import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 
+import com.qzy.utils.AndroidVoiceManager;
 import com.qzy.utils.LogUtils;
 import com.qzy.utils.TimeToolUtils;
 import com.socks.library.KLog;
@@ -22,6 +24,7 @@ import com.tt.qzy.view.R;
 import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.layout.dialpad.InputPwdViewCall;
 import com.tt.qzy.view.presenter.activity.TellPhoneActivityPresenter;
+import com.tt.qzy.view.utils.NToast;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -88,6 +91,7 @@ public class TellPhoneActivity extends AppCompatActivity {
 
         countTime();
 
+        AndroidVoiceManager.setVoiceCall(this);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -225,6 +229,15 @@ public class TellPhoneActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) { //按下的如果是BACK，同时没有重复
+            NToast.shortToast(TellPhoneActivity.this,"请点击挂断键,完成退出!");
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         isFinsh = false;
@@ -237,5 +250,6 @@ public class TellPhoneActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mHandler = null;
+        AndroidVoiceManager.setVoiceMusic(this);
     }
 }

@@ -217,7 +217,6 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
     @Override
     public void onStart() {
         super.onStart();
-        KLog.i("Short Message Come in !");
         loadData(true);
     }
 

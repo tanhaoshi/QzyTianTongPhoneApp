@@ -310,8 +310,23 @@ public class PhoneNettyManager {
                 .setPhoneNumber(phoneNumber)
                 .build();
         String callInigIp = PhoneClientManager.getInstance().isCallingIp();
-        if (!TextUtils.isEmpty(callInigIp) && (phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.CALL)) {
-            mNettyServerManager.sendData(callInigIp, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
+//        if (phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.CALL) {
+//            if(!TextUtils.isEmpty(callInigIp)){
+//                mNettyServerManager.sendData(callInigIp, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
+//            }
+//        } else {
+//            mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
+//        }
+//        if (!TextUtils.isEmpty(callInigIp) && (phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.CALL)) {
+//            mNettyServerManager.sendData(callInigIp, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
+//        } else {
+//            mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
+//        }
+
+        if ((phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.CALL) || (phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.RING)) {
+            if(!TextUtils.isEmpty(callInigIp)){
+                mNettyServerManager.sendData(callInigIp, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
+            }
         } else {
             mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
         }

@@ -72,7 +72,8 @@ public class ShortMessageManager {
 
     public List<ShortMessageDao> queryShortMessageCondition(String phone){
        ShortMessageDaoDao daoDao = daoSession.getShortMessageDaoDao();
-       QueryBuilder<ShortMessageDao> qb = daoDao.queryBuilder().where(ShortMessageDaoDao.Properties.NumberPhone.eq(phone));
+       QueryBuilder<ShortMessageDao> qb = daoDao.queryBuilder().
+               where(ShortMessageDaoDao.Properties.NumberPhone.eq(phone)).orderAsc(ShortMessageDaoDao.Properties.Time);
        List<ShortMessageDao> list = qb.list();
        return list;
     }

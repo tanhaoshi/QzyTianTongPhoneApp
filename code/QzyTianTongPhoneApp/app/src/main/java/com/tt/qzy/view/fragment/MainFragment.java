@@ -159,8 +159,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
                 if(mainActivity.isConnectStatus()){
                     if(isChecked){
                         mPresneter.dialPhone(SPUtils.getShare(getActivity(),Constans.CRY_HELP_PHONE,"").toString());
-                        TimerService timerService = new TimerService(MainFragment.this);
-                        mIntent = new Intent(getActivity(),timerService.getClass());
+                        mIntent = new Intent(getActivity(),TimerService.class);
                         getActivity().startService(mIntent);
                         mPresneter.requestGpsPosition(true);
                         main_location.setChecked(true);

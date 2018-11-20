@@ -26,8 +26,7 @@ public class TimerService extends Service implements MainFragment.GpsCallback{
     private String latitude = "";  // 纬度
     private String longitude = ""; // 经度
 
-    public TimerService(MainFragment mainFragment) {
-        mainFragment.setGpsCallback(this);
+    public TimerService() {
     }
 
     @Override
@@ -38,7 +37,8 @@ public class TimerService extends Service implements MainFragment.GpsCallback{
     @Override
     public void onCreate() {
         super.onCreate();
-
+        MainFragment mainFragment = MainFragment.newInstance();
+        mainFragment.setGpsCallback(this);
         if(mTimeTask == null){
             mTimeTask = new TimeTask(60000, new TimerTask() {
                 @Override

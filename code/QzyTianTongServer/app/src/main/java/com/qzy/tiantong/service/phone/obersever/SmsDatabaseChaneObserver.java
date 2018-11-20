@@ -74,7 +74,13 @@ public class SmsDatabaseChaneObserver extends ContentObserver {
                 final int smsid = cursor.getInt(cursor.getColumnIndex(DB_FIELD_ID));
 
                 String smsDate = cursor.getString(cursor.getColumnIndex("date"));
-                final int isRead = cursor.getInt(cursor.getColumnIndex("read"));
+
+                final int isRead;
+                if(cursor.getColumnIndex("read") == -1){
+                     isRead = 0;
+                }else{
+                     isRead = cursor.getInt(cursor.getColumnIndex("read"));
+                }
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                 Date d = new Date(Long.parseLong(smsDate));

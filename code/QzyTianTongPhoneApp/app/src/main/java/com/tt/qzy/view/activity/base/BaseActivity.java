@@ -137,10 +137,6 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     }
 
     /**
-     *
-     */
-
-    /**
      * 连接天通猫成功
      */
     private void connectTianTongSuccess(){
@@ -217,15 +213,19 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         } else if (intLevel >= 0 && intLevel <= 1) {
             tt_isSignal = true;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_one));
+            img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
         }else if (intLevel >= 2 && intLevel <= 4) {
             tt_isSignal = true;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_two));
+            img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
         }else if (intLevel >= 5 && intLevel <= 7) {
             tt_isSignal = true;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_three));
+            img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
         }else if (intLevel >= 8) {
             tt_isSignal = true;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_four));
+            img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
         }
     }
 
@@ -237,7 +237,6 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
             if(callPhoneBack.getIp().equals(CommonData.getInstance().getLocalWifiIp())){
                 tt_call_status = true;
                 EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE));
-
             }else{
                 tt_call_status = true;
                /// NToast.shortToast(this,"当前天通猫被占用");

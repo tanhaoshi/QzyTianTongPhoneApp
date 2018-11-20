@@ -6,8 +6,8 @@ package com.tt.qzy.view.bean;
 
 public class MsgModel {
 
-    public static final int TYPE_SENT = 1;//接受短信
-    public static final int TYPE_RECEIVE = 2;//发送短信
+    public static final int TYPE_SENT = 1;//发送短信
+    public static final int TYPE_RECEIVE = 2;//接受短信
     private String content;
     private int type;
 

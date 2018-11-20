@@ -23,6 +23,7 @@ import com.qzy.tt.phone.data.SmsBean;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.MsgAdapter;
+import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.bean.MsgModel;
 import com.tt.qzy.view.bean.SMAgrementModel;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
@@ -97,6 +98,12 @@ public class SendShortMessageActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new MsgAdapter(msgList);
         mRecyclerView.setAdapter(adapter);
+        if (msgList.size()-1 != -1) {
+            mRecyclerView.scrollToPosition(msgList.size()-1);
+            LinearLayoutManager mLayoutManager =
+                    (LinearLayoutManager) mRecyclerView.getLayoutManager();
+            mLayoutManager.scrollToPositionWithOffset(msgList.size()-1, 0);
+        }
     }
 
     @OnClick({R.id.sms_main_quantity, R.id.send, R.id.sms_base_tv_toolbar_right})
@@ -106,7 +113,7 @@ public class SendShortMessageActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.send:
-                sendMessage(MsgModel.TYPE_SENT);
+                sendMessage(MsgModel.TYPE_RECEIVE);
                 break;
             case R.id.sms_base_tv_toolbar_right:
                 Intent intent = new Intent(SendShortMessageActivity.this,SelectContactsActivity.class);
@@ -146,7 +153,7 @@ public class SendShortMessageActivity extends AppCompatActivity {
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS_STATE:
-                RingManager.stopDefaultCallMediaPlayer(this);
+                RingManager.stopDefaultCallMediaPlayer(TtPhoneApplication.getInstance());
                 parseSmsState(event.getObject());
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SHORT_MESSAGE:
@@ -164,8 +171,9 @@ public class SendShortMessageActivity extends AppCompatActivity {
         PhoneCmd cmd = (PhoneCmd) object;
         TtPhoneSmsProtos.TtPhoneSms ttPhoneSms = (TtPhoneSmsProtos.TtPhoneSms) cmd.getMessage();
         if (ttPhoneSms.getIsSendSuccess()) {
-            RingToneUtils.stopRingtone(SendShortMessageActivity.this);
+            RingToneUtils.stopRingtone(TtPhoneApplication.getInstance());
             NToast.shortToast(this, R.string.TMT_sendMessage_success);
+
         }else{
             NToast.shortToast(this, R.string.TMT_sendMessage_failed);
         }
@@ -185,10 +193,15 @@ public class SendShortMessageActivity extends AppCompatActivity {
         PhoneCmd cmd = (PhoneCmd) object;
         TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage =
                 (TtShortMessageProtos.TtShortMessage.ShortMessage) cmd.getMessage();
-        KLog.i("查看内容:"+shortMessage.getMessage()+"----------"+"查看type:"+shortMessage.getType());
         MsgModel msgModel = new MsgModel(shortMessage.getMessage(),shortMessage.getType());
-        msgList.add(msgList.size()-1,msgModel);
+        msgList.add(msgList.size(),msgModel);
         adapter.setData(msgList);
+        if (msgList.size()-1 != -1) {
+            mRecyclerView.scrollToPosition(msgList.size()-1);
+            LinearLayoutManager mLayoutManager =
+                    (LinearLayoutManager) mRecyclerView.getLayoutManager();
+            mLayoutManager.scrollToPositionWithOffset(msgList.size()-1, 0);
+        }
     }
 
     @Override

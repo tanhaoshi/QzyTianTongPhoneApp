@@ -64,7 +64,7 @@
             android:layout_height="19dp"
             android:layout_marginTop="7dp"
             android:gravity="center"
-            android:text=""
+            android:text="正在拨号"
             android:textColor="@color/white"/>
 
     </LinearLayout>

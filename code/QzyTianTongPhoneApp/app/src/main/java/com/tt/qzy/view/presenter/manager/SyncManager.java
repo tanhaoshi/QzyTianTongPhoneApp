@@ -79,11 +79,9 @@ public class SyncManager {
     }
 
     private void dataMerging(List<TtCallRecordProtos.TtCallRecordProto.CallRecord> list){
-        KLog.i("look at ttcallrecord size is = "+list.size());
         List<CallRecordDao> callRecordDaos = handlerCallRecordAgrementData(list);
         CallRecordManager.getInstance(mContext).deleteRecordList();
         CallRecordManager.getInstance(mContext).insertCallRecordList(callRecordDaos,mContext);
-        KLog.i("look at running state ...");
     }
 
     public List<CallRecordDao> handlerCallRecordAgrementData(List<TtCallRecordProtos.TtCallRecordProto.CallRecord> list){
@@ -163,6 +161,7 @@ public class SyncManager {
             }
             @Override
             public void onError(Throwable e) {
+                KLog.i("onError handleShortMessageSignal  = "+ e.getMessage().toString());
             }
 
             @Override
