@@ -217,7 +217,11 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
     @Override
     public void onStart() {
         super.onStart();
+        KLog.i("the system process come in !");
         loadData(true);
+        if(shortMessageAdapter != null){
+            shortMessageAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -245,5 +249,13 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
 
     public interface OnKeyDownListener{
         void setOnkeyDown(boolean isKeyDown);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden){
+            KLog.i("是否可见!");
+        }
     }
 }

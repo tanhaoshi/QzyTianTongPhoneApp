@@ -37,7 +37,7 @@ public class ShortMessageManager {
 
     public List<ShortMessageDao> queryShortMessageList() {
         ShortMessageDaoDao dao = daoSession.getShortMessageDaoDao();
-        QueryBuilder<ShortMessageDao> qb = dao.queryBuilder().where(
+        QueryBuilder<ShortMessageDao> qb = dao.queryBuilder().orderDesc().where(
                 new WhereCondition.StringCondition(
                         " _id in " + "(select min(_id) from SHORT_MESSAGE_DAO group by NUMBER_PHONE)")
         );

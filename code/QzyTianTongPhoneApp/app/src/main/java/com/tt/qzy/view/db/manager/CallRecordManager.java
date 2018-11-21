@@ -41,7 +41,7 @@ public class CallRecordManager {
 
     public List<CallRecordDao> queryCallRecordList() {
         CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
-        QueryBuilder<CallRecordDao> qb = dao.queryBuilder().where(
+        QueryBuilder<CallRecordDao> qb = dao.queryBuilder().orderDesc().where(
                 new WhereCondition.StringCondition(
                          " _id in " + "(select min(_id) from CALL_RECORD_DAO group by PHONE_NUMBER)")
         );
@@ -51,7 +51,7 @@ public class CallRecordManager {
 
     public List<CallRecordDao> queryKeyOnPhoneNumber(String phone){
         CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
-        QueryBuilder<CallRecordDao> qb = dao.queryBuilder().where(CallRecordDaoDao.Properties.PhoneNumber.eq(phone));
+        QueryBuilder<CallRecordDao> qb = dao.queryBuilder().orderDesc().where(CallRecordDaoDao.Properties.PhoneNumber.eq(phone));
         List<CallRecordDao> list = qb.list();
         return list;
     }

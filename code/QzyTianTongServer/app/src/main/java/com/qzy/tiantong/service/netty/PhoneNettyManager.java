@@ -328,6 +328,9 @@ public class PhoneNettyManager {
                 mNettyServerManager.sendData(callInigIp, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
             }
         } else {
+            if (TextUtils.isEmpty(callInigIp) && (phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.CALL)){
+                return;
+            }
             mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
         }
     }

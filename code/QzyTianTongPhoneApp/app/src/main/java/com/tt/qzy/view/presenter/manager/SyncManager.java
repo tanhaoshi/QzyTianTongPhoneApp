@@ -2,6 +2,7 @@ package com.tt.qzy.view.presenter.manager;
 
 import android.content.Context;
 
+import com.alibaba.fastjson.JSON;
 import com.google.protobuf.GeneratedMessageV3;
 import com.qzy.data.PhoneCmd;
 import com.qzy.eventbus.EventBusUtils;
@@ -80,6 +81,7 @@ public class SyncManager {
 
     private void dataMerging(List<TtCallRecordProtos.TtCallRecordProto.CallRecord> list){
         List<CallRecordDao> callRecordDaos = handlerCallRecordAgrementData(list);
+        KLog.i("look over list data  = " + JSON.toJSONString(callRecordDaos));
         CallRecordManager.getInstance(mContext).deleteRecordList();
         CallRecordManager.getInstance(mContext).insertCallRecordList(callRecordDaos,mContext);
     }

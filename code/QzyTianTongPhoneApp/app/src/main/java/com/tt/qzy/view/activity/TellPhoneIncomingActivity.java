@@ -18,6 +18,7 @@ import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.phone.common.CommonData;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
+import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.presenter.activity.TellPhoneActivityPresenter;
 
 import org.greenrobot.eventbus.EventBus;
@@ -55,7 +56,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         }
         mTellPhoneActivityPresenter = new TellPhoneActivityPresenter(this);
         EventBusUtils.register(this);
-        RingManager.playDefaultCallMediaPlayer(this);
+        RingManager.playDefaultCallMediaPlayer(TtPhoneApplication.getInstance());
     }
 
     @OnClick({R.id.btn_accept, R.id.btn_endcall})
@@ -107,7 +108,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         intent.putExtra("diapadNumber", phoneNumber);
         intent.putExtra("acceptCall",true);
         startActivity(intent);
-        RingManager.stopDefaultCallMediaPlayer(this);
+        RingManager.stopDefaultCallMediaPlayer(TtPhoneApplication.getInstance());
         mTellPhoneActivityPresenter.acceptCall();
         finish();
     }
@@ -116,7 +117,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
      * 挂断状态
      */
     private void onEndCallState() {
-        RingManager.stopDefaultCallMediaPlayer(this);
+        RingManager.stopDefaultCallMediaPlayer(TtPhoneApplication.getInstance());
         mTellPhoneActivityPresenter.endCall();
         finish();
     }
@@ -151,7 +152,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        RingManager.stopDefaultCallMediaPlayer(this);
+        RingManager.stopDefaultCallMediaPlayer(TtPhoneApplication.getInstance());
         EventBusUtils.unregister(this);
     }
 }

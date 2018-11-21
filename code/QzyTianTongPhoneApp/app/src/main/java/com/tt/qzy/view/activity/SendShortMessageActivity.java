@@ -29,6 +29,7 @@ import com.tt.qzy.view.bean.SMAgrementModel;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
 import com.tt.qzy.view.db.manager.ShortMessageManager;
 import com.tt.qzy.view.utils.Constans;
+import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.RingToneUtils;
 
@@ -37,6 +38,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -153,7 +155,6 @@ public class SendShortMessageActivity extends AppCompatActivity {
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS_STATE:
-                RingManager.stopDefaultCallMediaPlayer(TtPhoneApplication.getInstance());
                 parseSmsState(event.getObject());
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SHORT_MESSAGE:
@@ -177,12 +178,6 @@ public class SendShortMessageActivity extends AppCompatActivity {
         }else{
             NToast.shortToast(this, R.string.TMT_sendMessage_failed);
         }
-
-//        if (ttPhoneSms.getIsReceiverSuccess()) {
-//            NToast.shortToast(this, R.string.TMT_sendMessage_receiver);
-//        }else{
-//            NToast.shortToast(this, R.string.TMT_sendMessage_receiver_failed);
-//        }
     }
 
     /**
@@ -193,6 +188,10 @@ public class SendShortMessageActivity extends AppCompatActivity {
         PhoneCmd cmd = (PhoneCmd) object;
         TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage =
                 (TtShortMessageProtos.TtShortMessage.ShortMessage) cmd.getMessage();
+        ShortMessageDao shortMessageDao = new ShortMessageDao(shortMessage.getNumberPhone(),shortMessage.getMessage(),
+                DateUtil.backTimeFomat(new Date()),String.valueOf(shortMessage.getType()),shortMessage.getName(),
+                shortMessage.getId(),shortMessage.getIsRead());
+        ShortMessageManager.getInstance(SendShortMessageActivity.this).insertShortMessage(shortMessageDao,SendShortMessageActivity.this);
         MsgModel msgModel = new MsgModel(shortMessage.getMessage(),shortMessage.getType());
         msgList.add(msgList.size(),msgModel);
         adapter.setData(msgList);
