@@ -1,6 +1,7 @@
 package com.tt.qzy.view.layout;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -10,6 +11,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.tt.qzy.view.R;
+import com.tt.qzy.view.activity.DeleteSignalRecordActivity;
 import com.tt.qzy.view.utils.NToast;
 
 
@@ -80,7 +82,8 @@ public class PopWindow extends PopupWindow {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NToast.shortToast(mContext,"删除");
+                Intent intent = new Intent(mContext, DeleteSignalRecordActivity.class);
+                mContext.startActivity(intent);
                 dismiss();
             }
         });
@@ -88,7 +91,7 @@ public class PopWindow extends PopupWindow {
         delete_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NToast.shortToast(mContext,"删除全部");
+                mOpenPictureListener.deleteAllRecord();
                 dismiss();
             }
         });
@@ -99,6 +102,6 @@ public class PopWindow extends PopupWindow {
     }
 
     public interface OpenPictureListener{
-        void popupDismiss();
+        void deleteAllRecord();
     }
 }

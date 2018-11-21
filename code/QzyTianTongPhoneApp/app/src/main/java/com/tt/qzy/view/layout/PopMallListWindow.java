@@ -91,7 +91,7 @@ public class PopMallListWindow extends PopWindow{
         delete_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NToast.shortToast(mContext,"删除全部");
+                mListener.deleteAllMailList();
                 dismiss();
             }
         });
@@ -111,5 +111,6 @@ public class PopMallListWindow extends PopWindow{
 
     public interface OpenWindowListener{
         void importPhoneMailList();
+        void deleteAllMailList();
     }
 }

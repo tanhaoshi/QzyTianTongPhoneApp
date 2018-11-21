@@ -19,6 +19,10 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 
 /**
  * Created by yj.zhang on 2018/7/31/031.
@@ -83,7 +87,9 @@ public class NettyClient {
         @Override
         protected void initChannel(SocketChannel ch) throws Exception {
             LogUtils.d("initChannel ch=" + ch.localAddress());
-
+           /* ch.pipeline().addLast(new ProtobufVarint32FrameDecoder());
+            ch.pipeline().addLast(new ProtobufVarint32LengthFieldPrepender());
+            ch.pipeline().addLast(new ProtobufEncoder());*/
             ch.pipeline().addLast(connectedChannelHandler);
             ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE,4,4,-8,0));
         }

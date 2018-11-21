@@ -256,6 +256,10 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
         context.startActivity(intent);
     }
 
+    public void deleteAllRecord(){
+        CallRecordManager.getInstance(mContext).deleteRecordList();
+    }
+
     public void release(){
         EventBus.getDefault().unregister(this);
     }

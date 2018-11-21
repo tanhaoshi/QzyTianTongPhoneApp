@@ -7,6 +7,7 @@ import com.tt.qzy.view.db.CallRecordDaoDao;
 import com.tt.qzy.view.db.DaoMaster;
 import com.tt.qzy.view.db.DaoSession;
 import com.tt.qzy.view.db.MailListDaoDao;
+import com.tt.qzy.view.db.ShortMessageDaoDao;
 import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.MailListDao;
 
@@ -104,5 +105,10 @@ public class CallRecordManager {
             List<CallRecordDao> list = queryBuilder.list();
             return list;
         }
+    }
+
+    public void deleteShortMessageOfPrimaryKey(Long id){
+        CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
+        dao.deleteByKey(id);
     }
 }

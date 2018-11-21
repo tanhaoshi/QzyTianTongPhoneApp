@@ -91,6 +91,7 @@
     <string name="TMT_connect_succeed_notice">已连接天通</string>
     <string name="TMT_dial_number_notmull">电话号码不能为空</string>
     <string name="TMT_dial_dialing">正在拨号</string>
+    <string name="TMT_dial_endcall">正在挂断</string>
     <string name="TMT_gps_position_filed">获取天通猫定位失败!</string>
 
     <string name="TMT_tt_signal_scan">正在搜星中...</string>
@@ -102,6 +103,7 @@
     <string name="TMT_loading">加载中...</string>
     <string name="TMT_usb_swtich">USB切换</string>
     <string name="TMT_select_shortMessage">选择短信</string>
+    <string name="TMT_select_record">选择通话记录</string>
     <string name="TMT_please_select_shortMessage">请先选择短信!</string>
     <string name="TMT_setting_content_server_date"> 点击确定,将手机时间同步到设备中当前时间:</string>
     <string name="TMT_ANSWER">来电</string>

@@ -300,9 +300,12 @@ public class SmsPhoneManager {
      * @param ttShortMessage
      */
     public void updateSmsRead(TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessage) {
-        long id = ttShortMessage.getId();
-        LogUtils.d("id = " + id);
-        PhoneUtils.writeSmsRead(mContext, id);
+        boolean isFlag = false;
+        if(isFlag){
+            long id = ttShortMessage.getId();
+            LogUtils.d("id = " + id);
+            PhoneUtils.writeSmsRead(mContext, id);
+        }
     }
 
     /**

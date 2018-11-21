@@ -20,10 +20,11 @@ public class CallRecordDao {
     private int isTitle;
     private String titleName;
     private int count;
-    @Generated(hash = 1973110022)
+    private boolean isCheck;
+    @Generated(hash = 942043692)
     public CallRecordDao(Long id, String phoneNumber, String name, String address,
             String state, String date, long duration, int isTitle, String titleName,
-            int count) {
+            int count, boolean isCheck) {
         this.id = id;
         this.phoneNumber = phoneNumber;
         this.name = name;
@@ -34,6 +35,7 @@ public class CallRecordDao {
         this.isTitle = isTitle;
         this.titleName = titleName;
         this.count = count;
+        this.isCheck = isCheck;
     }
 
     public CallRecordDao(String phoneNumber, String name, String address,
@@ -125,5 +127,21 @@ public class CallRecordDao {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public boolean isCheck() {
+        return isCheck;
+    }
+
+    public void setCheck(boolean check) {
+        isCheck = check;
+    }
+
+    public boolean getIsCheck() {
+        return this.isCheck;
+    }
+
+    public void setIsCheck(boolean isCheck) {
+        this.isCheck = isCheck;
     }
 }

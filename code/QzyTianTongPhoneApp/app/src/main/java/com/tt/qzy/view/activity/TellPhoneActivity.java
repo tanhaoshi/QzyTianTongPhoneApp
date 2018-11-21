@@ -117,6 +117,13 @@ public class TellPhoneActivity extends AppCompatActivity {
         text_state.setText(getString(R.string.TMT_dial_dialing));
     }
 
+    /**
+     * 挂断中
+     */
+    private void endCallDailing(){
+        text_state.setText(getString(R.string.TMT_dial_endcall));
+    }
+
     private WorkHandler mHandler = new WorkHandler(this);
 
     static class WorkHandler extends Handler{
@@ -144,7 +151,7 @@ public class TellPhoneActivity extends AppCompatActivity {
                             removeMessages(1);
                         }
                         time = 0;
-                        activity.showDailing();
+                        activity.endCallDailing();
                         break;
                 }
             }

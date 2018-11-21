@@ -39,7 +39,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissListener,InputPwdView.InputPwdListener
-      ,CallRecordAdapter.OnItemClickListener,CallRecordView{
+      ,CallRecordAdapter.OnItemClickListener,CallRecordView,PopWindow.OpenPictureListener{
 
     @BindView(R.id.base_iv_back)
     ImageView base_iv_back;
@@ -162,6 +162,7 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
                 if(mPopWindow == null){
                     mPopWindow = new PopWindow(getActivity());
                     mPopWindow.setOnDismissListener(this);
+                    mPopWindow.setOpenPictureListener(this);
                     setWindowAttibus(0.5f);
                     mPopWindow.showAtLocation(getActivity().findViewById(R.id.recyclerView),
                             Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
@@ -277,14 +278,20 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     @Override
     public void onStart() {
         super.onStart();
-        showProgress(true);
-        KLog.i("AidlPhone fragment come in !");
-        mPersenter.getCallHistroy(0,20);
+        loadData(true);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mPersenter.release();
+    }
+
+    @Override
+    public void deleteAllRecord() {
+        mPersenter.deleteAllRecord();
+        if(null != mCallRecordAdapter){
+            mCallRecordAdapter.notifyDataSetChanged();
+        }
     }
 }

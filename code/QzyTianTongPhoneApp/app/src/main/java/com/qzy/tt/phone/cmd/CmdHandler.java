@@ -30,6 +30,7 @@ import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.activity.TellPhoneIncomingActivity;
+import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.presenter.manager.SyncManager;
 import com.tt.qzy.view.utils.RingToneUtils;
 
@@ -146,7 +147,6 @@ public class CmdHandler {
                     break;
                 case PrototocalTools.IProtoClientIndex.response_update_send_zip:
                     TtPhoneUpdateResponseProtos.UpdateResponse updateResponse1 = TtPhoneUpdateResponseProtos.UpdateResponse.parseDelimitedFrom(inputStream);
-                    KLog.i("zyj isfinish = " + updateResponse1.getIsUpdateFinish());
                     sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__RESPONSE_SERVER_UPLOAD_FINSH,protoId,updateResponse1);
                     break;
                  case PrototocalTools.IProtoClientIndex.response_tt_time:
@@ -201,7 +201,7 @@ public class CmdHandler {
      *收到短信播放系统铃声
      */
     private void startSystemRingTone(){
-        RingToneUtils.playRingtone(context);
+        RingToneUtils.playRing(TtPhoneApplication.getInstance());
     }
 
 }

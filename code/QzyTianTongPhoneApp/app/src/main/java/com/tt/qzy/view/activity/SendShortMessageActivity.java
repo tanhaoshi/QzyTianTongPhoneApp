@@ -149,6 +149,11 @@ public class SendShortMessageActivity extends AppCompatActivity {
             custom_input.setText("");
             EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS, new SmsBean(receive, content)));
         }
+
+        ShortMessageDao shortMessageDao = new ShortMessageDao(sms_et_name.getText().toString().trim(),content,
+                DateUtil.backTimeFomat(new Date()),0,"",String.valueOf(MsgModel.TYPE_RECEIVE),"未知姓名");
+
+        ShortMessageManager.getInstance(SendShortMessageActivity.this).insertShortMessage(shortMessageDao,SendShortMessageActivity.this);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -172,9 +177,7 @@ public class SendShortMessageActivity extends AppCompatActivity {
         PhoneCmd cmd = (PhoneCmd) object;
         TtPhoneSmsProtos.TtPhoneSms ttPhoneSms = (TtPhoneSmsProtos.TtPhoneSms) cmd.getMessage();
         if (ttPhoneSms.getIsSendSuccess()) {
-            RingToneUtils.stopRingtone(TtPhoneApplication.getInstance());
             NToast.shortToast(this, R.string.TMT_sendMessage_success);
-
         }else{
             NToast.shortToast(this, R.string.TMT_sendMessage_failed);
         }

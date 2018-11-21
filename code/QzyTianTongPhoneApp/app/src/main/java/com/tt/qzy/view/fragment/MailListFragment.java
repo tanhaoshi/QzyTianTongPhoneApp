@@ -217,7 +217,6 @@ public class MailListFragment extends Fragment implements PopWindow.OnDismissLis
     @Override
     public void onStart() {
         super.onStart();
-        KLog.i("MailList fragment Come in !");
         loadData(true);
     }
 
@@ -240,6 +239,13 @@ public class MailListFragment extends Fragment implements PopWindow.OnDismissLis
     public void importPhoneMailList() {
         mHUD.show();
         mPresenter.getContactsMallList(getActivity());
+    }
+
+    @Override
+    public void deleteAllMailList() {
+        mHUD.show();
+        mPresenter.deleteAllMailList();
+        loadData(true);
     }
 
     @Override

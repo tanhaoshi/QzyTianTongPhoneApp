@@ -2,6 +2,8 @@ package com.tt.qzy.view.db.manager;
 
 import android.content.Context;
 
+import com.alibaba.fastjson.JSON;
+import com.socks.library.KLog;
 import com.tt.qzy.view.db.CallRecordDaoDao;
 import com.tt.qzy.view.db.DaoMaster;
 import com.tt.qzy.view.db.DaoSession;
@@ -36,6 +38,16 @@ public class ShortMessageManager {
    }
 
     public List<ShortMessageDao> queryShortMessageList() {
+        ShortMessageDaoDao dao = daoSession.getShortMessageDaoDao();
+        QueryBuilder<ShortMessageDao> qb = dao.queryBuilder().orderDesc().where(
+                new WhereCondition.StringCondition(
+                        " _id in " + "(select min(_id) from SHORT_MESSAGE_DAO group by NUMBER_PHONE)")
+        );
+        List<ShortMessageDao> list = qb.list();
+        return list;
+    }
+
+    public List<ShortMessageDao> queryShortMessageLists(){
         ShortMessageDaoDao dao = daoSession.getShortMessageDaoDao();
         QueryBuilder<ShortMessageDao> qb = dao.queryBuilder().orderDesc().where(
                 new WhereCondition.StringCondition(

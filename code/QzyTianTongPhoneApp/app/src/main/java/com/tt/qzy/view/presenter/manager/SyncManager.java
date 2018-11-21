@@ -34,6 +34,8 @@ import io.reactivex.schedulers.Schedulers;
 public class SyncManager {
 
     private Context mContext;
+    private boolean isRecord = true;
+    private boolean isShortMessage = true;
 
     public SyncManager(Context context){
         this.mContext = context;
@@ -81,8 +83,10 @@ public class SyncManager {
 
     private void dataMerging(List<TtCallRecordProtos.TtCallRecordProto.CallRecord> list){
         List<CallRecordDao> callRecordDaos = handlerCallRecordAgrementData(list);
-        KLog.i("look over list data  = " + JSON.toJSONString(callRecordDaos));
-        CallRecordManager.getInstance(mContext).deleteRecordList();
+        if(isRecord){
+            CallRecordManager.getInstance(mContext).deleteRecordList();
+            isRecord = false;
+        }
         CallRecordManager.getInstance(mContext).insertCallRecordList(callRecordDaos,mContext);
     }
 
@@ -125,7 +129,10 @@ public class SyncManager {
 
     private void dateMerging(List<TtShortMessageProtos.TtShortMessage.ShortMessage> list){
         List<ShortMessageDao> shortMessagList = handlerShortMessageAgrementData(list);
-        ShortMessageManager.getInstance(mContext).deleteShortMessageList();
+        if(isShortMessage){
+            ShortMessageManager.getInstance(mContext).deleteShortMessageList();
+            isShortMessage = false;
+        }
         ShortMessageManager.getInstance(mContext).insertShortMessageList(shortMessagList,mContext);
     }
 

@@ -19,6 +19,9 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 
 /**
  * Created by yj.zhang on 2018/8/3/003.
@@ -81,6 +84,9 @@ public class NettyServer {
     private ChannelInitializer connectChannelInitializer = new ChannelInitializer<SocketChannel>() {
         @Override
         public void initChannel(SocketChannel ch) throws Exception {
+           /* ch.pipeline().addLast(new ProtobufVarint32FrameDecoder());
+            ch.pipeline().addLast(new ProtobufVarint32LengthFieldPrepender());
+            ch.pipeline().addLast(new ProtobufEncoder());*/
             ch.pipeline().addLast(new ChannelHander());
         }
     };

@@ -74,6 +74,13 @@ public class MailListManager {
         mailListDaoDao.delete(dao);
     }
 
+    public void deleteAllMail(Context context){
+        DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
+        DaoSession daoSession = daoMaster.newSession();
+        MailListDaoDao mailListDaoDao = daoSession.getMailListDaoDao();
+        mailListDaoDao.deleteAll();
+    }
+
     public List<MailListDao> fuzzyMailSearch(String value){
         MailListDaoDao dao = daoSession.getMailListDaoDao();
         QueryBuilder<MailListDao> db = dao.queryBuilder().where(MailListDaoDao.Properties.Name.like("%"+value+"%"));

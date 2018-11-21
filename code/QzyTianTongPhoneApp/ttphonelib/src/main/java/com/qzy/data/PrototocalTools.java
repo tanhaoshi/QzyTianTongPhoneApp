@@ -54,7 +54,7 @@ public class PrototocalTools {
         int response_server_mobile_data_init = 139;
     }
 
-    public static boolean readToFour0x5aHeaderByte(ByteBufInputStream stream) throws IOException {
+   /* public static boolean readToFour0x5aHeaderByte(ByteBufInputStream stream) throws IOException {
         int repeatTimes = 0;
 
         while (repeatTimes <= 3) {
@@ -82,6 +82,50 @@ public class PrototocalTools {
         }
 
         return false;
+    }*/
+
+    public static boolean readToFour0x5aHeaderByte(ByteBufInputStream stream) throws IOException {
+        int countIndex = 0;
+        boolean isProtocal = false;
+        while (true) {
+            byte val = stream.readByte();
+            if(!isStartHeaderByte(val)){
+                continue;
+            }
+            countIndex += 1;
+
+            val = stream.readByte();
+            if(!isStartHeaderByte(val)){
+                countIndex = 0;
+                continue;
+            }
+
+            countIndex += 1;
+
+            val = stream.readByte();
+            if(!isStartHeaderByte(val)){
+                countIndex = 0;
+                continue;
+            }
+
+            countIndex += 1;
+
+            val = stream.readByte();
+            if(!isStartHeaderByte(val)){
+                countIndex = 0;
+                continue;
+            }
+
+            countIndex += 1;
+            if(countIndex > 3){
+                isProtocal = true;
+                break;
+            }
+
+
+        }
+
+        return isProtocal;
     }
 
     private static boolean isStartHeaderByte(byte val) {

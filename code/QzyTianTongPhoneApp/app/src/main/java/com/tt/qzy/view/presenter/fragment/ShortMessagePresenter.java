@@ -83,11 +83,12 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
 //        getShortMessageData(ttShortMessage.getShortMessageList());
     }
 
-    public void getShortMessageData(){
+    public void getShortMessageDataList(){
         Observable.create(new ObservableOnSubscribe<List<ShortMessageDao>>() {
             @Override
             public void subscribe(ObservableEmitter<List<ShortMessageDao>> e){
                 List<ShortMessageDao> messageDaoList = ShortMessageManager.getInstance(mContext).queryShortMessageList();
+                KLog.i("look over shortMessgae list data =  " +JSON.toJSONString(messageDaoList));
                 e.onNext(arrangementData(messageDaoList));
             }
         })

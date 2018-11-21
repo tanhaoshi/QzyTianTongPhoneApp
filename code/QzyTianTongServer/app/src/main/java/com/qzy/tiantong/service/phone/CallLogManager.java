@@ -28,7 +28,7 @@ public class CallLogManager {
             @Override
             public void run() {
                 int page = 0;
-                int pageCount = 30;
+                int pageCount = 10;
                 while (true) {
                     LogUtils.e("getCall log sync .....");
                     List<CallLogInfo> callLogInfo = PhoneUtils.getCallLog(context, page, pageCount);
@@ -41,7 +41,7 @@ public class CallLogManager {
                     LogUtils.e("callLogInfo size  = " + callLogInfo.size());
                     TtCallRecordProtos.TtCallRecordProto.Builder listRecorder = TtCallRecordProtos.TtCallRecordProto.newBuilder();
                     for (CallLogInfo callInfo : callLogInfo) {
-                        // LogUtils.e("callInfo = " + callInfo.toString());
+                        LogUtils.e("callInfo = " + callInfo.toString());
                         TtCallRecordProtos.TtCallRecordProto.CallRecord callRecord = TtCallRecordProtos.TtCallRecordProto.CallRecord.newBuilder()
                                 .setPhoneNumber(callInfo.getNumber())
                                 .setDate(callInfo.getDate())
@@ -75,7 +75,7 @@ public class CallLogManager {
             @Override
             public void run() {
                 int page = 0;
-                int pageCount = 30;
+                int pageCount = 10;
                 while (true) {
                     LogUtils.e("getSms sync .....");
                     List<SmsInfo> smsList = PhoneUtils.getSms(context, page, pageCount);

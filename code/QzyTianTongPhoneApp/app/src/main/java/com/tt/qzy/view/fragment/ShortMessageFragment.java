@@ -116,7 +116,7 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
             public void onRefresh(RefreshLayout refreshlayout) {
                //  refresh
                 refreshlayout.finishRefresh(200);
-                mPresenter.getShortMessageData();
+                mPresenter.getShortMessageDataList();
             }
         });
     }
@@ -217,17 +217,13 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
     @Override
     public void onStart() {
         super.onStart();
-        KLog.i("the system process come in !");
         loadData(true);
-        if(shortMessageAdapter != null){
-            shortMessageAdapter.notifyDataSetChanged();
-        }
     }
 
     @Override
     public void loadData(boolean pullToRefresh) {
         showProgress(true);
-        mPresenter.getShortMessageData();
+        mPresenter.getShortMessageDataList();
     }
 
     private void initProgress(){
@@ -251,11 +247,4 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
         void setOnkeyDown(boolean isKeyDown);
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if(!hidden){
-            KLog.i("是否可见!");
-        }
-    }
 }

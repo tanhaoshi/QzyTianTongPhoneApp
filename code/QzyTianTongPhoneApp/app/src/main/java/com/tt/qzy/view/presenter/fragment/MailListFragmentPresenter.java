@@ -192,4 +192,8 @@ public class MailListFragmentPresenter extends BasePresenter<MailListView>{
         intent.putExtra("phone",phone);
         context.startActivity(intent);
     }
+
+    public void deleteAllMailList(){
+        MailListManager.getInstance(mContext).deleteAllMail(mContext);
+    }
 }

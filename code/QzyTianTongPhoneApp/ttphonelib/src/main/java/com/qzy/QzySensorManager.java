@@ -49,9 +49,10 @@ public class QzySensorManager {
      */
     public void freeSenerState(){
         sensorManager.unregisterListener(sensorEventListener);
-
-        if (mWakeLock.isHeld())
-            mWakeLock.release();
+        if(mWakeLock != null){
+            if (mWakeLock.isHeld())
+                mWakeLock.release();
+        }
         mSensor = null;
         mWakeLock = null;
     }
