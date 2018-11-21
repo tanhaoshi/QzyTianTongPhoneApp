@@ -51,7 +51,7 @@ public class SmsPhoneManager {
 
     private GpsManager mGpsManager;
 
-    public SmsPhoneManager(Context context,GpsManager gpsManager, IOnSMSCallback callback) {
+    public SmsPhoneManager(Context context, GpsManager gpsManager, IOnSMSCallback callback) {
         mContext = context;
         mGpsManager = gpsManager;
         mCallback = callback;
@@ -162,11 +162,22 @@ public class SmsPhoneManager {
                 }*/
 
 
-            }else if(action.equals("android.intent.action.GLOBAL_BUTTON")){
+            } else if (action.equals("android.intent.action.GLOBAL_BUTTON")) {
                 KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
                 LogUtils.d("keyevent = " + event.getKeyCode());
-                if((event.getKeyCode() == KeyEvent.KEYCODE_TV )&& (event.getFlags() == KeyEvent.FLAG_LONG_PRESS)){
-                    startSendSosMsg();
+                if ((event.getKeyCode() == KeyEvent.KEYCODE_TV)) {
+                    if (KeyEvent.ACTION_DOWN == event.getAction()) {
+                        downEventCount++;
+                    } else if (KeyEvent.ACTION_UP == event.getAction()) {
+                        if (downEventCount > 5) {
+                            downEventCount = 0;
+                            startSendSosMsg();
+                        } else {
+                            stopSendSosMsg();
+                        }
+
+                    }
+
                 }
             }
         }
@@ -340,10 +351,12 @@ public class SmsPhoneManager {
      * 发送sos短信
      */
     private Thread mThreadSendSos = null;
+    private int downEventCount = 0;
+
     public void startSendSosMsg() {
         try {
             final SosMessage sosMessage = TtPhoneSystemanager.getSosMessage();
-            if(sosMessage == null){
+            if (sosMessage == null) {
                 LogUtils.e("sosMessage is null ....");
                 return;
             }
@@ -352,29 +365,29 @@ public class SmsPhoneManager {
             mThreadSendSos = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    if(mGpsManager != null){
-                        mGpsManager .openGps();
+                    if (mGpsManager != null) {
+                        mGpsManager.openGps();
                     }
-                    while (true){
+                    while (true) {
 
                         try {
                             Location location = null;
-                            if(mGpsManager != null){
+                            if (mGpsManager != null) {
                                 location = mGpsManager.getmCurrenLocation();
                             }
                             String message = sosMessage.getMessage();
 
-                            if(location != null){
-                                message = message + " lat:"  + location.getLatitude() + " lng:" + location.getLongitude();
+                            if (location != null) {
+                                message = message + " lat:" + location.getLatitude() + " lng:" + location.getLongitude();
                             }
 
-                            if(TextUtils.isEmpty(message)){
+                            if (TextUtils.isEmpty(message)) {
                                 message = "help !!!";
                             }
 
                             String phone = sosMessage.getPhoneNumber();
-                            if(!TextUtils.isEmpty(phone)){
-                                sendSms("192.168.43.1",phone,message);
+                            if (!TextUtils.isEmpty(phone)) {
+                                sendSms("192.168.43.1", phone, message);
                             }
 
                             Thread.sleep(delayTime);
@@ -397,7 +410,8 @@ public class SmsPhoneManager {
      */
     public void stopSendSosMsg() {
         try {
-            if(mThreadSendSos != null && mThreadSendSos.isAlive()){
+            downEventCount = 0;
+            if (mThreadSendSos != null && mThreadSendSos.isAlive()) {
                 mThreadSendSos.interrupt();
             }
             mThreadSendSos = null;
