@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.qzy.data.PhoneCmd;
 import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
@@ -67,6 +68,8 @@ public class SendShortMessageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_short_message);
+        List<ShortMessageDao> list = ShortMessageManager.getInstance(SendShortMessageActivity.this).queryList();
+        KLog.i("look over list data = " + JSON.toJSONString(list));
         ButterKnife.bind(this);
         EventBusUtils.register(this);
         initView();
@@ -191,14 +194,12 @@ public class SendShortMessageActivity extends AppCompatActivity {
         PhoneCmd cmd = (PhoneCmd) object;
         TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage =
                 (TtShortMessageProtos.TtShortMessage.ShortMessage) cmd.getMessage();
-        ShortMessageDao shortMessageDao = new ShortMessageDao(shortMessage.getNumberPhone(),shortMessage.getMessage(),
-                DateUtil.backTimeFomat(new Date()),String.valueOf(shortMessage.getType()),shortMessage.getName(),
-                shortMessage.getId(),shortMessage.getIsRead());
-        ShortMessageManager.getInstance(SendShortMessageActivity.this).insertShortMessage(shortMessageDao,SendShortMessageActivity.this);
         MsgModel msgModel = new MsgModel(shortMessage.getMessage(),shortMessage.getType());
         msgList.add(msgList.size(),msgModel);
         adapter.setData(msgList);
-        if (msgList.size()-1 != -1) {
+        List<ShortMessageDao> list = ShortMessageManager.getInstance(SendShortMessageActivity.this).queryList();
+        KLog.i("look over list data = " + JSON.toJSONString(list));
+        if (msgList.size()-1 != 0) {
             mRecyclerView.scrollToPosition(msgList.size()-1);
             LinearLayoutManager mLayoutManager =
                     (LinearLayoutManager) mRecyclerView.getLayoutManager();

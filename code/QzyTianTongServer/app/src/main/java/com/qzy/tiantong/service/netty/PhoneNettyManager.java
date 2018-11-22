@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Keep;
 import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 
@@ -592,10 +593,11 @@ public class PhoneNettyManager {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     public void getServerMobileDataStatus(){
         try {
-            boolean isStatus = MobileDataUtils.getDataEnabled(0, mContext);
+            boolean isStatus = MobileDataUtils.getMobileDataState(mContext);
             TtPhoneMobileDataProtos.TtPhoneMobileData mobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.newBuilder()
                     .setResponseStatus(isStatus)
                     .build();
+            LogUtils.i("getServerMobileDataStatus look over status = " + isStatus);
             mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd
                     (PrototocalTools.IProtoClientIndex.response_server_mobile_data_init, mobileData));
         } catch (Exception e) {
@@ -609,8 +611,8 @@ public class PhoneNettyManager {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     public void setEnablePhoneData(TtPhoneMobileDataProtos.TtPhoneMobileData ttPhoneMobileData) {
         try {
-            MobileDataUtils.setDataEnabled(0, ttPhoneMobileData.getIsEnableData(), mContext);
-            if (MobileDataUtils.getDataEnabled(0, mContext)) {
+            MobileDataUtils.setMobileDataState( mContext,ttPhoneMobileData.getIsEnableData());
+            if (MobileDataUtils.getMobileDataState(mContext)) {
                 //设置数据打开成功
                 sendMobileData(true);
             } else {

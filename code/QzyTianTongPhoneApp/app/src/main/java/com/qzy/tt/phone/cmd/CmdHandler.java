@@ -204,4 +204,8 @@ public class CmdHandler {
         RingToneUtils.playRing(TtPhoneApplication.getInstance());
     }
 
+    public void release(){
+        mSyncManager.release();
+    }
+
 }

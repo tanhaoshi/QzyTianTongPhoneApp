@@ -172,7 +172,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
                 requestServerVersion();
                 mView.get().updateConnectedState(true);
                 requestServerDatetime();
-//                requestServerMobileStatus();
+                requestServerMobileStatus();
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_FAILED:
                 mView.get().updateConnectedState(false);

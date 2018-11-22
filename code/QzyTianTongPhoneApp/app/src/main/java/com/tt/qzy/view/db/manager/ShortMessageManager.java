@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.alibaba.fastjson.JSON;
 import com.socks.library.KLog;
+import com.tt.qzy.view.activity.SendShortMessageActivity;
 import com.tt.qzy.view.db.CallRecordDaoDao;
 import com.tt.qzy.view.db.DaoMaster;
 import com.tt.qzy.view.db.DaoSession;
@@ -39,21 +40,25 @@ public class ShortMessageManager {
 
     public List<ShortMessageDao> queryShortMessageList() {
         ShortMessageDaoDao dao = daoSession.getShortMessageDaoDao();
-        QueryBuilder<ShortMessageDao> qb = dao.queryBuilder().orderDesc().where(
+        QueryBuilder<ShortMessageDao> qb = dao.queryBuilder().orderDesc(ShortMessageDaoDao.Properties.Time).where(
                 new WhereCondition.StringCondition(
-                        " _id in " + "(select min(_id) from SHORT_MESSAGE_DAO group by NUMBER_PHONE)")
+                        " _id in " + "(select max(_id) from SHORT_MESSAGE_DAO group by NUMBER_PHONE)")
         );
         List<ShortMessageDao> list = qb.list();
         return list;
     }
 
-    public List<ShortMessageDao> queryShortMessageLists(){
+    public List<ShortMessageDao> queryList(){
         ShortMessageDaoDao dao = daoSession.getShortMessageDaoDao();
-        QueryBuilder<ShortMessageDao> qb = dao.queryBuilder().orderDesc().where(
-                new WhereCondition.StringCondition(
-                        " _id in " + "(select min(_id) from SHORT_MESSAGE_DAO group by NUMBER_PHONE)")
-        );
-        List<ShortMessageDao> list = qb.list();
+        QueryBuilder<ShortMessageDao> qb = dao.queryBuilder().orderDesc(ShortMessageDaoDao.Properties.Time);
+        List<ShortMessageDao> daoList = qb.list();
+        return daoList;
+    }
+
+    public List<ShortMessageDao> limitShortMessageList(int offset,int limit){
+        ShortMessageDaoDao dao = daoSession.getShortMessageDaoDao();
+        List<ShortMessageDao> list = dao.queryBuilder().orderDesc(ShortMessageDaoDao.Properties.Time).where(new WhereCondition.StringCondition(
+                " _id in " + "(select max(_id) from SHORT_MESSAGE_DAO group by NUMBER_PHONE)")).offset(offset).limit(limit).list();
         return list;
     }
 
@@ -80,6 +85,8 @@ public class ShortMessageManager {
         DaoSession daoSession = daoMaster.newSession();
         ShortMessageDaoDao shortMessageDaoDao = daoSession.getShortMessageDaoDao();
         shortMessageDaoDao.insert(shortMessageDao);
+        List<ShortMessageDao> list = ShortMessageManager.getInstance(context).queryList();
+        KLog.i("look over list data = " + JSON.toJSONString(list));
     }
 
     public List<ShortMessageDao> queryShortMessageCondition(String phone){

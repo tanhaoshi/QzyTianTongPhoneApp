@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
@@ -60,6 +61,10 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
     private OnKeyDownListener mOnKeyDownListener;
     private KProgressHUD mHUD;
     private ShortMessagePresenter mPresenter;
+
+    private int offset = 0;
+    private int daoListSize = 0;
+    private int dateSize = 0;
 
     public ShortMessageFragment() {
     }
@@ -108,15 +113,26 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
                 // load more
-                refreshlayout.finishLoadmore(200);
-                NToast.shortToast(getActivity(),getString(R.string.TMT_dataisnull));
+                int count = daoListSize - offset;
+                if(count > 0){
+                    if(count < 20){
+                        mPresenter.getLoadShortMessageMore(0,offset+count);
+                        refreshlayout.finishLoadmore(200);
+                    }else{
+                        mPresenter.getLoadShortMessageMore(0,offset+20);
+                        refreshlayout.finishLoadmore(200);
+                    }
+                }else if(count == 0){
+                    NToast.shortToast(getActivity(),getString(R.string.TMT_dataisnull));
+                    refreshlayout.finishLoadmore(200);
+                }
             }
 
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-               //  refresh
+                //  refresh
                 refreshlayout.finishRefresh(200);
-                mPresenter.getShortMessageDataList();
+                mPresenter.getLoadShortMessageFresh(0,offset);
             }
         });
     }
@@ -195,7 +211,37 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
     @Override
     public void getShortMessageData(List<ShortMessageDao> list) {
         this.models = list;
-        shortMessageAdapter.setData(list);
+        KLog.i("getShortMessageData data list = " + JSON.toJSONString(list));
+        shortMessageAdapter.setData(models);
+    }
+
+    @Override
+    public void getLoadRefresh(List<ShortMessageDao> list) {
+        models.clear();
+        this.models = list;
+        shortMessageAdapter.setData(models);
+    }
+
+    @Override
+    public void getListSize(int listSize) {
+        offset = listSize;
+    }
+
+    @Override
+    public void getDaoListSize(int daoListSize) {
+        this.daoListSize = daoListSize;
+    }
+
+    @Override
+    public void getDateSize(int dateSize) {
+        this.dateSize = dateSize;
+    }
+
+    @Override
+    public void getLoadMore(List<ShortMessageDao> list) {
+        models.clear();
+        this.models = list;
+        shortMessageAdapter.setData(models);
     }
 
     @Override
@@ -223,7 +269,7 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
     @Override
     public void loadData(boolean pullToRefresh) {
         showProgress(true);
-        mPresenter.getShortMessageDataList();
+        mPresenter.getShortMessageDataList(0,20);
     }
 
     private void initProgress(){

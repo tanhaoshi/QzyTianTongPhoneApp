@@ -11,6 +11,7 @@ import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.socks.library.KLog;
+import com.tt.qzy.view.bean.MsgModel;
 import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
 import com.tt.qzy.view.db.manager.CallRecordManager;
@@ -18,6 +19,8 @@ import com.tt.qzy.view.db.manager.ShortMessageManager;
 import com.tt.qzy.view.utils.DateUtil;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,6 +42,7 @@ public class SyncManager {
 
     public SyncManager(Context context){
         this.mContext = context;
+        EventBus.getDefault().register(this);
     }
 
     public void syncCallRecord(TtCallRecordProtos.TtCallRecordProto ttCallRecordProto ){
@@ -180,9 +184,22 @@ public class SyncManager {
     }
 
     private ShortMessageDao meragingShortMessage(TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage){
-        ShortMessageDao shortMessageDao = new ShortMessageDao(shortMessage.getNumberPhone(),shortMessage.getMessage(),
-                DateUtil.backTimeFomat(new Date()),String.valueOf(shortMessage.getType()),shortMessage.getName(),
-                shortMessage.getId(),shortMessage.getIsRead());
+          ShortMessageDao shortMessageDao = new ShortMessageDao(shortMessage.getNumberPhone(),shortMessage.getMessage(),
+                  DateUtil.backTimeFomat(new Date()),0,"",String.valueOf(shortMessage.getType()),"");
         return shortMessageDao;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEventBus event) {
+        switch (event.getType()) {
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_NONCONNECT:
+                isShortMessage = true;
+                isRecord = true;
+                break;
+        }
+    }
+
+    public void release(){
+        EventBus.getDefault().unregister(this);
     }
 }

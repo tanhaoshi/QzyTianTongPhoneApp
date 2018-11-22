@@ -527,6 +527,7 @@ public class PhoneNettyManager {
             mNettyClientManager.release();
         }
         CommonData.getInstance().free();
+        mCmdHandler.release();
     }
 
 

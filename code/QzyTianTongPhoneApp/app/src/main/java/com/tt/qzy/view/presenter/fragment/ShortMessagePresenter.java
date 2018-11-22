@@ -58,37 +58,14 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
         ShortMessageManager.getInstance(mContext).deleteShortMessageList();
     }
 
-    /**
-     * 请求天通猫短信记录
-     */
-    public void requestShortMessage(){
-        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SHORT_MESSGAE));
-    }
-
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onMessageEvent(MessageEventBus event) {
-//        switch (event.getType()) {
-//            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SHORT_MESSAGE:
-//                parseShortMessage(event.getObject());
-//                break;
-//        }
-//    }
-
-    /**
-     * 解析与处理 协议数据
-     */
-    private void parseShortMessage(Object o){
-        PhoneCmd cmd = (PhoneCmd) o;
-        TtShortMessageProtos.TtShortMessage ttShortMessage = (TtShortMessageProtos.TtShortMessage)cmd.getMessage();
-//        getShortMessageData(ttShortMessage.getShortMessageList());
-    }
-
-    public void getShortMessageDataList(){
+    public void getShortMessageDataList(final int offset,final int limit){
         Observable.create(new ObservableOnSubscribe<List<ShortMessageDao>>() {
             @Override
             public void subscribe(ObservableEmitter<List<ShortMessageDao>> e){
-                List<ShortMessageDao> messageDaoList = ShortMessageManager.getInstance(mContext).queryShortMessageList();
-                KLog.i("look over shortMessgae list data =  " +JSON.toJSONString(messageDaoList));
+                List<ShortMessageDao> daoList = ShortMessageManager.getInstance(mContext).queryShortMessageList();
+                mView.get().getDaoListSize(daoList.size());
+                List<ShortMessageDao> messageDaoList = ShortMessageManager.getInstance(mContext).limitShortMessageList(offset,limit);
+                mView.get().getListSize(messageDaoList.size());
                 e.onNext(arrangementData(messageDaoList));
             }
         })
@@ -98,9 +75,7 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
                 .subscribe(new Observer<List<ShortMessageDao>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
                     }
-
                     @Override
                     public void onNext(List<ShortMessageDao> value) {
                         mView.get().getShortMessageData(value);
@@ -119,6 +94,73 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
                     }
                 });
     }
+
+    public void getLoadShortMessageFresh(final int offset,final int limit){
+        Observable.create(new ObservableOnSubscribe<List<ShortMessageDao>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<ShortMessageDao>> e){
+                List<ShortMessageDao> messageDaoList = ShortMessageManager.getInstance(mContext).limitShortMessageList(offset,limit);
+                mView.get().getListSize(messageDaoList.size());
+                e.onNext(arrangementData(messageDaoList));
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<ShortMessageDao>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+                    @Override
+                    public void onNext(List<ShortMessageDao> value) {
+                        mView.get().getLoadRefresh(value);
+                        onComplete();
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        KLog.i("look over shortmessage presenter error string value = " + e.getMessage());
+                        mView.get().showError(e.getMessage().toString(),true);
+                    }
+                    @Override
+                    public void onComplete() {
+                        mView.get().hideProgress();
+                    }
+                });
+    }
+
+    public void getLoadShortMessageMore(final int offset,final int limit){
+        Observable.create(new ObservableOnSubscribe<List<ShortMessageDao>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<ShortMessageDao>> e){
+                List<ShortMessageDao> messageDaoList = ShortMessageManager.getInstance(mContext).limitShortMessageList(offset,limit);
+                mView.get().getListSize(messageDaoList.size());
+                e.onNext(arrangementData(messageDaoList));
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<ShortMessageDao>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+                    @Override
+                    public void onNext(List<ShortMessageDao> value) {
+                        mView.get().getLoadRefresh(value);
+                        onComplete();
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        KLog.i("look over shortmessage presenter error string value = " + e.getMessage());
+                        mView.get().showError(e.getMessage().toString(),true);
+                    }
+                    @Override
+                    public void onComplete() {
+                        mView.get().hideProgress();
+                    }
+                });
+    }
+
 
     public List<ShortMessageDao> dataMerging(List<TtShortMessageProtos.TtShortMessage.ShortMessage> list){
 
@@ -194,6 +236,9 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
                 }
             }
         }
+        mView.get().getDateSize(mModelList.size() - list.size());
+        isYesterday = true;
+        isEarlier = true;
         return mModelList;
     }
 

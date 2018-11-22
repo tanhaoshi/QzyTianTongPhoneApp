@@ -89,7 +89,7 @@ public class PopShortMessageWindow extends PopWindow {
         delete_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NToast.shortToast(mContext,"删除全部");
+                mSignalListener.deleteAllList();
                 dismiss();
             }
         });
