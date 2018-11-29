@@ -22,4 +22,7 @@ public interface MainFragmentView extends BaseView{
 
     void getSetverInitMobileStatus(boolean isInitStatus);
 
+    void getMobileDataShow(boolean isShow);
+
+    void getServerSosStatus(boolean isSwitch);
 }

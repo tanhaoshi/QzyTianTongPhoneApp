@@ -10,7 +10,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 22
         versionCode 1
-        versionName "1.0.0"
+        versionName "1.1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -33,7 +33,7 @@ android {
             url = 'https://dl.bintray.com/yuancloud/maven/'
         }
     }
-
+//    output.outputFile.parent,"app_device_v"+defaultConfig.versionName+"_"+new Date().format("yyyy-MM-dd")+"_"+buildType.name+".apk"
     greendao {
         schemaVersion 7
         targetGenDir 'src/main/java'
@@ -46,7 +46,7 @@ android {
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
                 //这里修改apk文件名
                 //def fileName = "demo_${variant.productFlavors[0].name}-${defaultConfig.versionCode}-${defaultConfig.versionName}-${releaseTime() }.apk"
-                def fileName = "QzyTianTongPhone.apk"
+                def fileName = "QzyTianTongPhone" + "_" + defaultConfig.versionName + "_" + new Date().format("yyyy-MM-dd") + "_" + buildType.name + ".apk"
                 output.outputFile = new File(outputFile.parent, fileName)
             }
         }

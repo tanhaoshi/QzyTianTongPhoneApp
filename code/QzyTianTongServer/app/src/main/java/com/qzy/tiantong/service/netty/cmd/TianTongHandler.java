@@ -17,6 +17,7 @@ import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneRecoverSystemProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.data.TtPhoneSosMessageProtos;
+import com.qzy.tt.data.TtPhoneSosStateProtos;
 import com.qzy.tt.data.TtPhoneWifiProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.data.TtTimeProtos;
@@ -98,6 +99,12 @@ public class TianTongHandler extends Handler {
                     break;
                 case PrototocalTools.IProtoServerIndex.request_phone_server_mobile_init:
                     mServer.getPhoneNettyManager().getServerMobileDataStatus();
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_server_sos_status:
+                    mServer.getPhoneNettyManager().getServerSosInitStatus();
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_server_sos_close:
+                    mServer.getPhoneNettyManager().closeServerSos((TtPhoneSosStateProtos.TtPhoneSosState) msg.obj);
                     break;
                 default:
                     break;

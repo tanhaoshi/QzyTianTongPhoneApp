@@ -14,6 +14,7 @@ import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhoneMobileDataProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
+import com.qzy.tt.data.TtPhoneSosStateProtos;
 import com.qzy.tt.data.TtPhoneUpdateResponseProtos;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.utils.IPUtil;
@@ -158,6 +159,20 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
         EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_MOBILE_STATUS));
     }
 
+    /**
+     * 查询天通猫sos初始状态
+     */
+    public void requestServerSosStatus(){
+        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_STATUS));
+    }
+
+    /**
+     * 关闭天通猫SOS
+     */
+    public void closeServerSos(){
+        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_CLOSE));
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
@@ -173,6 +188,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
                 mView.get().updateConnectedState(true);
                 requestServerDatetime();
                 requestServerMobileStatus();
+                requestServerSosStatus();
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_FAILED:
                 mView.get().updateConnectedState(false);
@@ -198,6 +214,20 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_MOBILE_STATUS:
                 parseServerMobileDataInit(event.getObject());
                 break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_SOS_STATUS:
+                getServerSosStatus(event.getObject());
+                break;
+        }
+    }
+
+    /**
+     * 解析天通猫初始化状态
+     */
+    private void getServerSosStatus(Object o){
+        PhoneCmd cmd = (PhoneCmd)o;
+        TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState = (TtPhoneSosStateProtos.TtPhoneSosState)cmd.getMessage();
+        if(ttPhoneSosState.getIsResponse()){
+            mView.get().getServerSosStatus(ttPhoneSosState.getIsSwitch());
         }
     }
 
@@ -251,9 +281,11 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
         PhoneCmd cmd = (PhoneCmd)o;
         TtPhoneMobileDataProtos.TtPhoneMobileData ttPhoneMobileData = (TtPhoneMobileDataProtos.TtPhoneMobileData)cmd.getMessage();
         if(ttPhoneMobileData.getResponseStatus()){
-            NToast.shortToast(mContext,"打开天通猫数据成功!");
+            mView.get().getMobileDataShow(true);
+//            NToast.shortToast(mContext,"打开天通猫数据成功!");
         }else{
-            NToast.shortToast(mContext,"打开天通猫数据失败!");
+            mView.get().getMobileDataShow(false);
+//            NToast.shortToast(mContext,"打开天通猫数据失败!");
         }
     }
 

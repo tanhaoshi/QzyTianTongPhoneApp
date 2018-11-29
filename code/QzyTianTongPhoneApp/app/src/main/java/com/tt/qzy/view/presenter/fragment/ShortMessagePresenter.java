@@ -62,7 +62,7 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
         Observable.create(new ObservableOnSubscribe<List<ShortMessageDao>>() {
             @Override
             public void subscribe(ObservableEmitter<List<ShortMessageDao>> e){
-                List<ShortMessageDao> daoList = ShortMessageManager.getInstance(mContext).queryShortMessageList();
+                List<ShortMessageDao> daoList = ShortMessageManager.getInstance(mContext).queryList();
                 mView.get().getDaoListSize(daoList.size());
                 List<ShortMessageDao> messageDaoList = ShortMessageManager.getInstance(mContext).limitShortMessageList(offset,limit);
                 mView.get().getListSize(messageDaoList.size());
@@ -166,7 +166,7 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
 
         List<ShortMessageDao> shortMessagList = handlerAgrementData(list);
 
-        List<ShortMessageDao> messageDaoList = ShortMessageManager.getInstance(mContext).queryShortMessageList();
+        List<ShortMessageDao> messageDaoList = ShortMessageManager.getInstance(mContext).queryList();
         //当协议数据大小为0或集合为空
         if(shortMessagList.size() == 0 || shortMessagList == null){
             //当数据库数据大于0且不等于空

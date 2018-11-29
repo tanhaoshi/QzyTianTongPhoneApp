@@ -9,10 +9,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
+import com.qzy.tt.data.TtCallRecordProtos;
 import com.tt.qzy.view.activity.ContactsActivity;
+import com.tt.qzy.view.activity.ImportMailActivity;
 import com.tt.qzy.view.adapter.SortAdapter;
 import com.tt.qzy.view.bean.MallListModel;
+import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.MailListDao;
+import com.tt.qzy.view.db.manager.CallRecordManager;
 import com.tt.qzy.view.db.manager.MailListManager;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
 import com.tt.qzy.view.utils.Constans;
@@ -64,7 +68,6 @@ public class MailListFragmentPresenter extends BasePresenter<MailListView>{
               @Override
               public void onSubscribe(Disposable d) {
               }
-
               @Override
               public void onNext(List<MallListModel> value) {
                   mView.get().loadData(value);
@@ -84,37 +87,8 @@ public class MailListFragmentPresenter extends BasePresenter<MailListView>{
     }
 
     public void getContactsMallList(final Context context){
-        Observable.create(new ObservableOnSubscribe<List<MallListModel>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<MallListModel>> e) throws Exception {
-                List<MallListModel> listModels = MallListUtils.readContacts(context);
-                saveInSqlite(context,listModels);
-                e.onNext(handleData(listModels,context));
-            }
-        }).subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<MallListModel>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                    }
-
-                    @Override
-                    public void onNext(List<MallListModel> value) {
-                        mView.get().loadData(value);
-                        onComplete();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mView.get().showError(e.getMessage().toString(),true);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        mView.get().hideProgress();
-                    }
-                });
+        Intent intent = new Intent(context, ImportMailActivity.class);
+        context.startActivity(intent);
     }
 
     public void filterData(List<MallListModel> sourceDateList , String filterStr , PinyinComparator pinyinComparator, SortAdapter sortAdapter) {
@@ -145,8 +119,6 @@ public class MailListFragmentPresenter extends BasePresenter<MailListView>{
             listModels.add(new MallListModel(mailListDao.getPhone(),mailListDao.getName(),mailListDao.getId()));
         }
         return listModels;
-//        listModels.addAll(MallListUtils.readContacts(context));
-//        return removeDuplicate(listModels);
     }
 
     private List<MallListModel> handleData(List<MallListModel> listDaos,Context context){
@@ -155,8 +127,6 @@ public class MailListFragmentPresenter extends BasePresenter<MailListView>{
             listModels.add(new MallListModel(mailListDao.getPhone(),mailListDao.getName(),mailListDao.getId()));
         }
         return listModels;
-//        listModels.addAll(MallListUtils.readContacts(context));
-//        return removeDuplicate(listModels);
     }
 
     private void saveInSqlite(Context context,List<MallListModel> list){

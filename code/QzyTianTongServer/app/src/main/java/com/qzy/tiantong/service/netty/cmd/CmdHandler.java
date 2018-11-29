@@ -15,6 +15,7 @@ import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneRecoverSystemProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.data.TtPhoneSosMessageProtos;
+import com.qzy.tt.data.TtPhoneSosStateProtos;
 import com.qzy.tt.data.TtPhoneWifiProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.data.TtTimeProtos;
@@ -128,6 +129,14 @@ public class CmdHandler implements ICmdHandler {
                 case PrototocalTools.IProtoServerIndex.request_phone_server_mobile_init:
                     TtPhoneMobileDataProtos.TtPhoneMobileData ttPhoneMobileDataInit = TtPhoneMobileDataProtos.TtPhoneMobileData.parseDelimitedFrom(inputStream);
                     senMsg(protoId,ttPhoneMobileDataInit);
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_server_sos_status:
+                    TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState = TtPhoneSosStateProtos.TtPhoneSosState.parseDelimitedFrom(inputStream);
+                    senMsg(protoId,ttPhoneSosState);
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_server_sos_close:
+                    TtPhoneSosStateProtos.TtPhoneSosState ttSosClose = TtPhoneSosStateProtos.TtPhoneSosState.parseDelimitedFrom(inputStream);
+                    senMsg(protoId,ttSosClose);
                     break;
                 default:
                     break;

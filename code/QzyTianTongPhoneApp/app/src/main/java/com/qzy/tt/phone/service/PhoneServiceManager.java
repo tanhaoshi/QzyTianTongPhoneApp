@@ -61,7 +61,6 @@ public class PhoneServiceManager {
         mAllLocalPcmManager = AllLocalPcmManager.getInstance();
     }
 
-
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {

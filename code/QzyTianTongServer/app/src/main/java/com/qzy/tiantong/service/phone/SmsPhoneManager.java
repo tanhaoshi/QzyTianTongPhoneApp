@@ -371,6 +371,9 @@ public class SmsPhoneManager {
                     if (mGpsManager != null) {
                         mGpsManager.openGps();
                     }
+                    if (mCallback != null) {
+                          mCallback.onSosState(true);
+                    }
                     while (true) {
 
                         try {
@@ -419,9 +422,24 @@ public class SmsPhoneManager {
             }
             mThreadSendSos = null;
 
+            if (mCallback != null) {
+                mCallback.onSosState(false);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 获取天通猫初始化状态
+     * @return
+     */
+    public boolean isSosState(){
+        if(mThreadSendSos == null){
+            return false;
+        }
+        return true;
     }
 
 
@@ -446,6 +464,8 @@ public class SmsPhoneManager {
         void onReceiveSms(String phoneNumber, String smsBody);
 
         void onReceiveSms(SmsInfo smsInfo);
+
+        void onSosState(boolean isStart);
 
 
     }

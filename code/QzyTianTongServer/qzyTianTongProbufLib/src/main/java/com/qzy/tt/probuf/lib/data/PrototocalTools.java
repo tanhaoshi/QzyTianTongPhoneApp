@@ -31,6 +31,8 @@ public class PrototocalTools {
         int request_server_recover_system = 132;
         int request_sos_message_send = 134;
         int request_phone_server_mobile_init = 136;
+        int request_server_sos_status = 138;
+        int request_server_sos_close = 140;
     }
 
     public interface IProtoClientIndex{
@@ -54,6 +56,7 @@ public class PrototocalTools {
         int response_update_send_failed = 135;
         int response_server_version_info = 137;
         int response_server_mobile_data_init = 139;
+        int response_server_sos_init_status = 141;
     }
 
 

@@ -22,6 +22,7 @@ import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneRecoverSystemProtos;
 import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.data.TtPhoneSosMessageProtos;
+import com.qzy.tt.data.TtPhoneSosStateProtos;
 import com.qzy.tt.data.TtPhoneUpdateAppInfoProtos;
 import com.qzy.tt.data.TtPhoneUpdateSendFileProtos;
 import com.qzy.tt.data.TtPhoneWifiProtos;
@@ -411,6 +412,27 @@ public class PhoneNettyManager {
         sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_phone_server_mobile_init,mobileData));
     }
 
+    /**
+     * 获取天通猫SOS初始状态
+     */
+    private void requestServerSosStatus(){
+        TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState = TtPhoneSosStateProtos.TtPhoneSosState.newBuilder()
+                .setIsRequest(true)
+                .build();
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_sos_status,ttPhoneSosState));
+    }
+
+    /**
+     * 关闭服务天通猫SOS
+     */
+    private void requestServerSosClose(){
+        TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState = TtPhoneSosStateProtos.TtPhoneSosState.newBuilder()
+                .setIsRequest(true)
+                .setIsSwitch(false)
+                .build();
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_sos_close,ttPhoneSosState));
+    }
+
     private NettyClientManager.INettyListener nettyListener = new NettyClientManager.INettyListener() {
         @Override
         public void onReceiveData(ByteBufInputStream inputStream) {
@@ -503,6 +525,12 @@ public class PhoneNettyManager {
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_MOBILE_STATUS:
                 reuqestServerMobileStatus();
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_STATUS:
+                requestServerSosStatus();
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_CLOSE:
+                requestServerSosClose();
                 break;
         }
     }

@@ -49,6 +49,7 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
     private boolean isConnect;
     private boolean isSim;
     private boolean isSignal;
+    private int baterly = 0;
 
     @Override
     public int getContentView() {
@@ -61,6 +62,7 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
             isConnect = intent.getBooleanExtra("connect",false);
             isSim = intent.getBooleanExtra("isSim",false);
             isSignal = intent.getBooleanExtra("isSignal",false);
+            baterly = intent.getIntExtra("baterly",0);
         }
     }
 
@@ -100,6 +102,7 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
         }else{
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
         }
+        percentBaterly.setText(baterly+"%");
     }
 
     @Override
@@ -139,6 +142,9 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
     private void jumpSosSetting(){
         Intent intent = new Intent(SettingsActivity.this,SosSettingsActivity.class);
         intent.putExtra("connect",isConnect);
+        intent.putExtra("isSim",isSim);
+        intent.putExtra("isSignal",isSignal);
+        intent.putExtra("baterly",baterly);
         startActivity(intent);
     }
 

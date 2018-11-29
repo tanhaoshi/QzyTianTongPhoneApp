@@ -68,13 +68,11 @@ public class SendShortMessageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_short_message);
-        List<ShortMessageDao> list = ShortMessageManager.getInstance(SendShortMessageActivity.this).queryList();
-        KLog.i("look over list data = " + JSON.toJSONString(list));
         ButterKnife.bind(this);
         EventBusUtils.register(this);
         initView();
-        initMsgs();
         initAdapter();
+        initMsgs();
     }
 
     private void initView() {
@@ -93,6 +91,13 @@ public class SendShortMessageActivity extends AppCompatActivity {
             for(ShortMessageDao shortMessageDao : daoList){
                 MsgModel msgModel = new MsgModel(shortMessageDao.getMessage(), Integer.valueOf(shortMessageDao.getState()));
                 msgList.add(msgModel);
+                adapter.setData(msgList);
+//                if (msgList.size()-1 != 0) {
+//                    mRecyclerView.scrollToPosition(msgList.size()-1);
+//                    LinearLayoutManager mLayoutManager =
+//                            (LinearLayoutManager) mRecyclerView.getLayoutManager();
+//                    mLayoutManager.scrollToPositionWithOffset(msgList.size()-1, 0);
+//                }
             }
             EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SHORT_MESSAGE,new
                     SMAgrementModel(intent.getLongExtra(Constans.SHORT_MESSAGE_ID,-1))));
@@ -103,12 +108,6 @@ public class SendShortMessageActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new MsgAdapter(msgList);
         mRecyclerView.setAdapter(adapter);
-        if (msgList.size()-1 != -1) {
-            mRecyclerView.scrollToPosition(msgList.size()-1);
-            LinearLayoutManager mLayoutManager =
-                    (LinearLayoutManager) mRecyclerView.getLayoutManager();
-            mLayoutManager.scrollToPositionWithOffset(msgList.size()-1, 0);
-        }
     }
 
     @OnClick({R.id.sms_main_quantity, R.id.send, R.id.sms_base_tv_toolbar_right})
@@ -197,8 +196,6 @@ public class SendShortMessageActivity extends AppCompatActivity {
         MsgModel msgModel = new MsgModel(shortMessage.getMessage(),shortMessage.getType());
         msgList.add(msgList.size(),msgModel);
         adapter.setData(msgList);
-        List<ShortMessageDao> list = ShortMessageManager.getInstance(SendShortMessageActivity.this).queryList();
-        KLog.i("look over list data = " + JSON.toJSONString(list));
         if (msgList.size()-1 != 0) {
             mRecyclerView.scrollToPosition(msgList.size()-1);
             LinearLayoutManager mLayoutManager =

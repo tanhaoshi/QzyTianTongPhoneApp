@@ -66,7 +66,11 @@ public class CallRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 break;
             case NORMAL_VALUE:
                 CallRecordViewHolder callRecordViewHolder = (CallRecordViewHolder)holder;
-                callRecordViewHolder.phoneNumber.setText(mModelList.get(position).getPhoneNumber());
+                if(null != mModelList.get(position).getName() && mModelList.get(position).getName().length() >= 1 && !"未知号码".equals(mModelList.get(position).getName())){
+                    callRecordViewHolder.phoneNumber.setText(mModelList.get(position).getName());
+                }else{
+                    callRecordViewHolder.phoneNumber.setText(mModelList.get(position).getPhoneNumber());
+                }
                 callRecordViewHolder.duration.setText("通话时长:"+DateUtil.secondToDate(mModelList.get(position).getDuration(),"mm:ss"));
                 callRecordViewHolder.date.setText(mModelList.get(position).getDate());
                 if(Constans.ANSWER == Integer.valueOf(mModelList.get(position).getState())){

@@ -42,10 +42,17 @@ public class ShortMessageManager {
         ShortMessageDaoDao dao = daoSession.getShortMessageDaoDao();
         QueryBuilder<ShortMessageDao> qb = dao.queryBuilder().orderDesc(ShortMessageDaoDao.Properties.Time).where(
                 new WhereCondition.StringCondition(
-                        " _id in " + "(select max(_id) from SHORT_MESSAGE_DAO group by NUMBER_PHONE)")
+                        " time in " + "(select max(time) from SHORT_MESSAGE_DAO group by NUMBER_PHONE)")
         );
         List<ShortMessageDao> list = qb.list();
         return list;
+    }
+
+    public List<ShortMessageDao> queryPrimaryOfPhone(String phone){
+       ShortMessageDaoDao dao = daoSession.getShortMessageDaoDao();
+       QueryBuilder<ShortMessageDao> queryBuilder = dao.queryBuilder().orderDesc().where(ShortMessageDaoDao.Properties.NumberPhone.eq(phone));
+       List<ShortMessageDao> shortMessageDaos = queryBuilder.list();
+       return shortMessageDaos;
     }
 
     public List<ShortMessageDao> queryList(){
@@ -55,10 +62,16 @@ public class ShortMessageManager {
         return daoList;
     }
 
+    public void updateShortMessageName(ShortMessageDao shortMessageDao){
+       ShortMessageDaoDao daoDao = daoSession.getShortMessageDaoDao();
+       daoDao.update(shortMessageDao);
+    }
+
     public List<ShortMessageDao> limitShortMessageList(int offset,int limit){
         ShortMessageDaoDao dao = daoSession.getShortMessageDaoDao();
-        List<ShortMessageDao> list = dao.queryBuilder().orderDesc(ShortMessageDaoDao.Properties.Time).where(new WhereCondition.StringCondition(
-                " _id in " + "(select max(_id) from SHORT_MESSAGE_DAO group by NUMBER_PHONE)")).offset(offset).limit(limit).list();
+        List<ShortMessageDao> list = dao.queryBuilder().
+                orderDesc(ShortMessageDaoDao.Properties.Time).where(new WhereCondition.StringCondition(
+                " time in " + "(select max(time) from SHORT_MESSAGE_DAO group by NUMBER_PHONE)")).offset(offset).limit(limit).list();
         return list;
     }
 
@@ -85,8 +98,6 @@ public class ShortMessageManager {
         DaoSession daoSession = daoMaster.newSession();
         ShortMessageDaoDao shortMessageDaoDao = daoSession.getShortMessageDaoDao();
         shortMessageDaoDao.insert(shortMessageDao);
-        List<ShortMessageDao> list = ShortMessageManager.getInstance(context).queryList();
-        KLog.i("look over list data = " + JSON.toJSONString(list));
     }
 
     public List<ShortMessageDao> queryShortMessageCondition(String phone){
@@ -100,5 +111,10 @@ public class ShortMessageManager {
     public void deleteShortMessageOfPrimaryKey(Long id){
        ShortMessageDaoDao daoDao = daoSession.getShortMessageDaoDao();
        daoDao.deleteByKey(id);
+    }
+
+    public void deleteShortMessageOfPhone(List<ShortMessageDao> list){
+        ShortMessageDaoDao daoDao = daoSession.getShortMessageDaoDao();
+        daoDao.deleteInTx(list);
     }
 }

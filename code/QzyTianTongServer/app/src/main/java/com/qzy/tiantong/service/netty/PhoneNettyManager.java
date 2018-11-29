@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Keep;
 import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 
@@ -13,6 +12,7 @@ import com.qzy.tiantong.lib.eventbus.MessageEvent;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.lib.utils.QzySystemUtils;
 import com.qzy.tiantong.service.BuildConfig;
+import com.qzy.tiantong.service.mobiledata.IMobileDataManager;
 import com.qzy.tiantong.service.phone.BatteryManager;
 import com.qzy.tiantong.service.gps.GpsManager;
 import com.qzy.tiantong.service.phone.PhoneClientManager;
@@ -22,7 +22,7 @@ import com.qzy.tiantong.service.phone.TtPhoneSystemanager;
 import com.qzy.tiantong.service.phone.data.SmsInfo;
 import com.qzy.tiantong.service.time.DateTimeManager;
 import com.qzy.tiantong.service.usb.TtUsbManager;
-import com.qzy.tiantong.service.utils.MobileDataUtils;
+import com.qzy.tiantong.service.mobiledata.MobileDataManager;
 import com.qzy.tiantong.service.utils.PhoneUtils;
 import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.CallPhoneStateProtos;
@@ -34,7 +34,7 @@ import com.qzy.tt.data.TtPhoneRecoverSystemProtos;
 import com.qzy.tt.data.TtPhoneSignalProtos;
 import com.qzy.tt.data.TtPhoneSimCards;
 import com.qzy.tt.data.TtPhoneSmsProtos;
-import com.qzy.tt.data.TtPhoneSosMessageProtos;
+import com.qzy.tt.data.TtPhoneSosStateProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.probuf.lib.data.PhoneAudioCmd;
 import com.qzy.tt.probuf.lib.data.PhoneCmd;
@@ -50,7 +50,7 @@ import java.util.Timer;
  * Created by yj.zhang on 2018/8/9.
  */
 
-public class PhoneNettyManager {
+public class PhoneNettyManager implements IMobileDataManager{
 
     //服务端netty管理工具
     private NettyServerManager mNettyServerManager;
@@ -78,6 +78,9 @@ public class PhoneNettyManager {
      * 电量获取
      */
     private BatteryManager mBatteryManager;
+
+    private MobileDataManager mMobileDataManager;
+
     private TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery;
 
     private Timer timerCalling;
@@ -93,6 +96,8 @@ public class PhoneNettyManager {
         mSmsPhoneManager = new SmsPhoneManager(context, mGpsManager,iOnSMSCallback);
 
         mTtUsbManager = new TtUsbManager(mContext, mNettyServerManager);
+
+        mMobileDataManager = new MobileDataManager(mContext,this);
 
         EventBus.getDefault().register(this);
 
@@ -247,9 +252,21 @@ public class PhoneNettyManager {
      * 控制信号灯初始化
      */
     private void initSignal() {
-        Netled.init();
-        Netled.setNetledState(true);
-        Netled.setNetledFlash(true);
+        try {
+            Netled.init();
+
+            boolean isSimIn = PhoneUtils.ishasSimCard(mContext);
+            LogUtils.d("isSimIn = " + isSimIn);
+            if(isSimIn){
+                Netled.setNetledState(true);
+                Netled.setNetledFlash(true);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -409,7 +426,16 @@ public class PhoneNettyManager {
     private void sendSimStateToPhoneClient() {
         if (checkNettManagerIsNull()) return;
         boolean hasSim = PhoneUtils.ishasSimCard(mContext);
-        // LogUtils.d("hasSim = " + hasSim);
+       //  LogUtils.d("hasSim = " + hasSim + " currentSignalValue = " + currentSignalValue);
+        if(!isG4Test) {
+            if(hasSim) {
+                Netled.setNetledState(true);
+                controlSignal(currentSignalValue); // 检测卡的状态来控制灯的闪烁
+            }else{
+                Netled.setNetledState(false);
+                Netled.setNetledFlash(false);
+            }
+        }
         TtPhoneSimCards.TtPhoneSimCard simCard = TtPhoneSimCards.TtPhoneSimCard.newBuilder()
                 .setIsSimCard(hasSim)
                 .build();
@@ -516,6 +542,11 @@ public class PhoneNettyManager {
                     .build();
             mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_receiver_short_message, shortMessage));
         }
+
+        @Override
+        public void onSosState(boolean isStart) {
+            sendSosinitStatus(isStart);
+        }
     };
 
     public void sendPhoneAudioData(PhoneAudioCmd cmd) {
@@ -593,7 +624,7 @@ public class PhoneNettyManager {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     public void getServerMobileDataStatus(){
         try {
-            boolean isStatus = MobileDataUtils.getMobileDataState(mContext);
+            boolean isStatus = mMobileDataManager.getMobileDataState(mContext);
             TtPhoneMobileDataProtos.TtPhoneMobileData mobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.newBuilder()
                     .setResponseStatus(isStatus)
                     .build();
@@ -611,17 +642,27 @@ public class PhoneNettyManager {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     public void setEnablePhoneData(TtPhoneMobileDataProtos.TtPhoneMobileData ttPhoneMobileData) {
         try {
-            MobileDataUtils.setMobileDataState( mContext,ttPhoneMobileData.getIsEnableData());
-            if (MobileDataUtils.getMobileDataState(mContext)) {
-                //设置数据打开成功
-                sendMobileData(true);
-            } else {
-                //设置数据打开失败
-                sendMobileData(false);
-            }
+            mMobileDataManager.setMobileDataState( mContext,ttPhoneMobileData.getIsEnableData());
+//            if (mMobileDataManager.getMobileDataState(mContext)) {
+//                //这个是打开了的
+//                sendMobileData(true);
+//            } else {
+//                //这个是关闭了的
+//                sendMobileData(false);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void getMobileDataSwitch(boolean isSwitch) {
+        if(mMobileDataManager.getMobileDataState(mContext)){
+            LogUtils.i("the physical is open mobile data");
+        }else{
+            LogUtils.i("the physical mobile data is close");
+        }
+        sendMobileData(isSwitch);
     }
 
     private void sendMobileData(boolean isStatus) {
@@ -630,6 +671,39 @@ public class PhoneNettyManager {
                 .build();
         mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd
                 (PrototocalTools.IProtoClientIndex.response_phone_data_status, mobileData));
+    }
+
+    /**
+     * 获取天通猫sos初始状态
+     */
+    public void getServerSosInitStatus(){
+        if(mSmsPhoneManager.isSosState()){
+            //打开
+            sendSosinitStatus(true);
+        }else{
+            //关闭
+            sendSosinitStatus(false);
+        }
+    }
+
+    private void sendSosinitStatus(boolean isSwitch){
+        TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState = TtPhoneSosStateProtos.TtPhoneSosState.newBuilder()
+                .setIsResponse(true)
+                .setIsSwitch(isSwitch)
+                .build();
+        mNettyServerManager.sendData(null,PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.response_server_sos_init_status,
+                ttPhoneSosState));
+
+    }
+
+    /**
+     * 关闭服务天通猫服务
+     */
+    public void closeServerSos(TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState){
+        if(ttPhoneSosState == null){
+            return;
+        }
+       mSmsPhoneManager.stopSendSosMsg();
     }
 
     public void free() {

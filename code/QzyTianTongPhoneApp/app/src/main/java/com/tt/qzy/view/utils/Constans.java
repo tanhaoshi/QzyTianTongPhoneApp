@@ -9,6 +9,7 @@ public interface Constans {
     String STANDARD_WIFI_NAME = "HWA_6200_";
     String CRY_HELP_PHONE = "cry_help_phone";
     String CRY_HELP_SHORTMESSAGE = "cry_help_shortmessage";
+    String HELP_SHORTMESSAGE = "help_shortmessage";
     String CRY_HELP_TIMETIMER = "cry_help_time_timer";
 
     String SHORT_MESSAGE_NAME = "name";

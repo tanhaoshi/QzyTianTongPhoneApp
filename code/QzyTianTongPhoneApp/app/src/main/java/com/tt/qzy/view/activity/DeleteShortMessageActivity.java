@@ -43,6 +43,7 @@ public class DeleteShortMessageActivity extends AppCompatActivity implements Del
     private DeleteShortMessageAdapter mShortMessageAdapter;
 
     private Long id = null;
+    private String phone = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +81,8 @@ public class DeleteShortMessageActivity extends AppCompatActivity implements Del
                 if(null == id){
                     NToast.shortToast(this,getString(R.string.TMT_please_select_shortMessage));
                 }else{
-                    ShortMessageManager.getInstance(DeleteShortMessageActivity.this).deleteShortMessageOfPrimaryKey(id);
+                    List<ShortMessageDao> daoList = ShortMessageManager.getInstance(DeleteShortMessageActivity.this).queryShortMessageCondition(phone);
+                    ShortMessageManager.getInstance(DeleteShortMessageActivity.this).deleteShortMessageOfPhone(daoList);
                     NToast.shortToast(DeleteShortMessageActivity.this,getString(R.string.TMT_delete_succeed));
                     finish();
                 }
@@ -124,11 +126,13 @@ public class DeleteShortMessageActivity extends AppCompatActivity implements Del
     }
 
     @Override
-    public void onItemClick(View view, int position, boolean isFlag, Long id) {
+    public void onItemClick(View view, int position, boolean isFlag, Long id,String phone) {
         if(isFlag){
             this.id = id;
+            this.phone = phone;
         }else{
             this.id = null;
+            this.phone = phone;
         }
     }
 }

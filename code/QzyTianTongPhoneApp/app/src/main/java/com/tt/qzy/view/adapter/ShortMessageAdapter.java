@@ -65,7 +65,11 @@ public class ShortMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case NORMAL_VALUE:
                 final MessageViewHolder messageViewHolder = (MessageViewHolder)holder;
                 messageViewHolder.message.setText(mModelList.get(position).getMessage());
-                messageViewHolder.phoneNumber.setText(mModelList.get(position).getNumberPhone());
+                if(null != mModelList.get(position).getName() && mModelList.get(position).getName().length() >= 1 && !"未知号码".equals(mModelList.get(position).getName())){
+                    messageViewHolder.phoneNumber.setText(mModelList.get(position).getName());
+                }else{
+                    messageViewHolder.phoneNumber.setText(mModelList.get(position).getNumberPhone());
+                }
                 messageViewHolder.time.setText(mModelList.get(position).getTime());
                 if(mModelList.get(position).getIsStatus()){
                     messageViewHolder.dot.setVisibility(View.INVISIBLE);

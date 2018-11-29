@@ -22,6 +22,7 @@ import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSignalProtos;
 import com.qzy.tt.data.TtPhoneSimCards;
 import com.qzy.tt.data.TtPhoneSmsProtos;
+import com.qzy.tt.data.TtPhoneSosStateProtos;
 import com.qzy.tt.data.TtPhoneUpdateResponseProtos;
 import com.qzy.tt.data.TtPhoneUpdateSendFileProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
@@ -168,6 +169,10 @@ public class CmdHandler {
                  case PrototocalTools.IProtoClientIndex.response_server_mobile_data_init:
                      TtPhoneMobileDataProtos.TtPhoneMobileData ttPhoneMobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.parseDelimitedFrom(inputStream);
                      sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_MOBILE_STATUS,protoId,ttPhoneMobileData);
+                     break;
+                 case PrototocalTools.IProtoClientIndex.response_server_sos_init_status:
+                     TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState = TtPhoneSosStateProtos.TtPhoneSosState.parseDelimitedFrom(inputStream);
+                     sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_SOS_STATUS,protoId,ttPhoneSosState);
                      break;
             }
         } catch (Exception e) {

@@ -40,7 +40,7 @@ public class TimerService extends Service implements MainFragment.GpsCallback{
         MainFragment mainFragment = MainFragment.newInstance();
         mainFragment.setGpsCallback(this);
         if(mTimeTask == null){
-            mTimeTask = new TimeTask(60000, new TimerTask() {
+            mTimeTask = new TimeTask(10000, new TimerTask() {
                 @Override
                 public void run() {
                     timerSendMessage();

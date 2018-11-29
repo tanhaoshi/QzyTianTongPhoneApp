@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
+import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
@@ -51,7 +52,8 @@ public class QzyPhoneManager {
     private void setPhoneListener() {
         TelephonyManager tManager = (TelephonyManager) mContext.getSystemService(Service.TELEPHONY_SERVICE);
         tManager.listen(new MyTelephoneListener(), PhoneStateListener.LISTEN_CALL_STATE);
-        tManager.listen(new PhoneSignalStatListener(), PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+        tManager.listen(new MyTelephoneListener(), PhoneStateListener.LISTEN_SERVICE_STATE);
+        tManager.listen(new MyTelephoneListener(), PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
     }
 
 
@@ -209,11 +211,6 @@ public class QzyPhoneManager {
                     break;
             }
         }
-    }
-
-    //电话信号强度监听
-    private class PhoneSignalStatListener extends PhoneStateListener {
-        //获取信号强度
 
         @Override
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
@@ -240,6 +237,20 @@ public class QzyPhoneManager {
                     break;
                 case -1:
                     LogUtils.e("network type -1,signaleS = " + gsmSignalStrength);
+                    break;
+            }
+        }
+
+        @Override
+        public void onServiceStateChanged(ServiceState serviceState) {
+            super.onServiceStateChanged(serviceState);
+            LogUtils.i("service state = " + serviceState.getState());
+            switch (serviceState.getState()) {
+                case ServiceState.STATE_IN_SERVICE:
+                    mServer.onPhoneSignalStrengthChange(8);
+                    break;
+                case ServiceState.STATE_OUT_OF_SERVICE:
+                    mServer.onPhoneSignalStrengthChange(99);
                     break;
             }
         }

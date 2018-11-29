@@ -145,20 +145,25 @@
             android:exported="true">
         </service>
 
-        <activity android:name=".activity.DeleteShortMessageActivity"
-                  android:configChanges="keyboardHidden|orientation"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/CommonViewStyle">
+        <activity
+            android:name=".activity.DeleteShortMessageActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonViewStyle">
         </activity>
-        <activity android:name=".activity.AidlContactsActivity"
-                  android:configChanges="keyboardHidden|orientation"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/CommonViewStyle">
+        <activity
+            android:name=".activity.AidlContactsActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonViewStyle">
         </activity>
-        <activity android:name=".activity.DeleteSignalRecordActivity"
-                  android:configChanges="keyboardHidden|orientation"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/CommonViewStyle">
+        <activity
+            android:name=".activity.DeleteSignalRecordActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonViewStyle">
+        </activity>
+        <activity android:name=".activity.ImportMailActivity">
         </activity>
     </application>
 

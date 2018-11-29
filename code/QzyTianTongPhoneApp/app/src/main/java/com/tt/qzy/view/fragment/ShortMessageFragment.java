@@ -24,6 +24,7 @@ import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.SendShortMessageActivity;
 import com.tt.qzy.view.adapter.ShortMessageAdapter;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
+import com.tt.qzy.view.db.manager.ShortMessageManager;
 import com.tt.qzy.view.layout.PopShortMessageWindow;
 import com.tt.qzy.view.layout.PopWindow;
 import com.tt.qzy.view.presenter.fragment.ShortMessagePresenter;
@@ -211,7 +212,6 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
     @Override
     public void getShortMessageData(List<ShortMessageDao> list) {
         this.models = list;
-        KLog.i("getShortMessageData data list = " + JSON.toJSONString(list));
         shortMessageAdapter.setData(models);
     }
 

@@ -83,4 +83,10 @@ public interface IMessageEventBustType {
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_MOBILE_STATUS = "event_bus_type_connect_tiantong_requst_server_mobile_status";
     // 获取服务底层数据状态
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_MOBILE_STATUS = "event_bus_type_connect_tiantong_response_server_mobile_status";
+    // 查询天通猫SOS状态
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_STATUS = "event_bus_type_connect_tiantong_request_server_sos_status";
+    // 返回天通猫SOS状态
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_SOS_STATUS = "event_bus_type_connect_tiantong_response_server_sos_status";
+    // 关闭服务天通猫SOS
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_CLOSE = "event_bus_type_connect_tiantong_request_server_sos_close";
 }

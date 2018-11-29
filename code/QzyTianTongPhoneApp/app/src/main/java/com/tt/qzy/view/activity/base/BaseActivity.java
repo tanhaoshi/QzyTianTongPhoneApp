@@ -49,6 +49,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     public boolean tt_call_status = false;
     public boolean tt_isSim = false;
     public boolean tt_isSignal = false;
+    public int tt_baterly = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -183,6 +184,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         int percent = intLevel * 100 / intScale;
         img1.setPower(percent);
         percentBaterly.setText(percent+"%");
+        tt_baterly = percent;
     }
 
     /**

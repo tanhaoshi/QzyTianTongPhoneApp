@@ -49,10 +49,10 @@ public class DeleteShortMessageAdapter extends RecyclerView.Adapter<RecyclerView
                 if(mDaoList.get(position).getIsCheck()){
                     messageViewHolder.mRadioButton.setChecked(false);
                     mDaoList.get(position).setIsCheck(false);
-                    mOnItemClickListener.onItemClick(v,position,false,null);
+                    mOnItemClickListener.onItemClick(v,position,false,null,"");
                 }else{
                     mDaoList.get(position).setIsCheck(true);
-                    mOnItemClickListener.onItemClick(v,position,true,mDaoList.get(position).getId());
+                    mOnItemClickListener.onItemClick(v,position,true,mDaoList.get(position).getId(),mDaoList.get(position).getNumberPhone());
                     messageViewHolder.mRadioButton.setChecked(true);
                 }
             }
@@ -71,7 +71,7 @@ public class DeleteShortMessageAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     public interface OnItemClickListener {
-        void onItemClick(View view, int position, boolean isFlag, Long id);
+        void onItemClick(View view, int position, boolean isFlag, Long id,String phone);
     }
 
     private OnItemClickListener mOnItemClickListener;

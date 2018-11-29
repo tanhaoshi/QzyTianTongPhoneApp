@@ -20,6 +20,7 @@ import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
+import com.qzy.tt.phone.data.SmsBean;
 import com.socks.library.KLog;
 import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
@@ -165,6 +166,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
                         main_location.setChecked(true);
                     }else{
                         getActivity().stopService(mIntent);
+                        mPresneter.closeServerSos();
                     }
                 }else{
                     NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
@@ -178,7 +180,6 @@ public class MainFragment extends Fragment implements MainFragmentView{
                 if(mainActivity.isConnectStatus()){
                     if(isChecked){
                         mPresneter.requestEnableData(true);
-                        mainActivity.img4.setVisibility(View.VISIBLE);
                     }else{
                         mPresneter.requestEnableData(false);
                     }
@@ -206,6 +207,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
                     settings_intent.putExtra("connect",mainActivity.isConnectStatus());
                     settings_intent.putExtra("isSim",mainActivity.tt_isSim);
                     settings_intent.putExtra("isSignal",mainActivity.tt_isSignal);
+                    settings_intent.putExtra("baterly",mainActivity.tt_baterly);
                     startActivity(settings_intent);
                 }else{
                     NToast.shortToast(getActivity(),"不可操作,请链接天通猫!");
@@ -260,9 +262,12 @@ public class MainFragment extends Fragment implements MainFragmentView{
             main_latitude.setText(AppUtils.decimalDouble(Double.valueOf(ttPhonePosition.getLatItude())));
             main_longitude.setText(AppUtils.decimalDouble(Double.valueOf(ttPhonePosition.getLongItude())));
 
-            if(AppUtils.isServiceRunning("com.tt.qzy.view.service.TimerService",getActivity())){
-                mGpsCallback.setGpsValue(main_latitude.getText().toString(),main_longitude.getText().toString());
-            }
+            SPUtils.removeShare(getActivity(),Constans.CRY_HELP_SHORTMESSAGE);
+                SPUtils.putShare(getActivity(),Constans.CRY_HELP_SHORTMESSAGE,
+                        SPUtils.getShare(getActivity(),Constans.HELP_SHORTMESSAGE,"").toString()+
+                                "经度:"+main_longitude.getText().toString()
+                                +"," +"纬度:"+main_latitude.getText().toString());
+//            }
 
         }else{
             NToast.shortToast(getActivity(),getActivity().getString(R.string.TMT_gps_position_filed));
@@ -361,6 +366,22 @@ public class MainFragment extends Fragment implements MainFragmentView{
     @Override
     public void getSetverInitMobileStatus(boolean isInitStatus) {
         sc_settin_data.setChecked(isInitStatus);
+    }
+
+    @Override
+    public void getMobileDataShow(boolean isShow) {
+        if(isShow){
+            sc_settin_data.setChecked(true);
+            mainActivity.img4.setVisibility(View.VISIBLE);
+        }else{
+            sc_settin_data.setChecked(false);
+            mainActivity.img4.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void getServerSosStatus(boolean isSwitch) {
+        sc_settin_testxinlv.setChecked(isSwitch);
     }
 
     private void changePercent(final int i){

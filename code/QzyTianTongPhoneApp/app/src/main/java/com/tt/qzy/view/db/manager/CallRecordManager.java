@@ -57,6 +57,11 @@ public class CallRecordManager {
         return list;
     }
 
+    public void updateRecordName(CallRecordDao callRecordDao){
+        CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
+        dao.update(callRecordDao);
+    }
+
     public void deleteRecordList(){
         CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
         dao.deleteAll();

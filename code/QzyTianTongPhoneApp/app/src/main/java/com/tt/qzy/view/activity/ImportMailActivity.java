@@ -1,31 +1,33 @@
 package com.tt.qzy.view.activity;
 
-import android.support.v7.app.AppCompatActivity;
+
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
-import com.tt.qzy.view.adapter.DeleteContactsAdapter;
-import com.tt.qzy.view.application.TtPhoneApplication;
+import com.tt.qzy.view.adapter.ImportMailAdapter;
 import com.tt.qzy.view.bean.MallListModel;
+import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.MailListDao;
+import com.tt.qzy.view.db.dao.ShortMessageDao;
+import com.tt.qzy.view.db.manager.CallRecordManager;
 import com.tt.qzy.view.db.manager.MailListManager;
+import com.tt.qzy.view.db.manager.ShortMessageManager;
 import com.tt.qzy.view.layout.ClearEditText;
-import com.tt.qzy.view.presenter.activity.DeleteContactsPresenter;
-import com.tt.qzy.view.layout.PopDeleteContactsWindow;
-import com.tt.qzy.view.layout.PopWindow;
 import com.tt.qzy.view.layout.SideBar;
+import com.tt.qzy.view.presenter.activity.ImportMailPresenter;
 import com.tt.qzy.view.utils.NToast;
-import com.tt.qzy.view.view.DeleteContactsView;
+import com.tt.qzy.view.view.ImportMailView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,8 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DeleteContactsActivity extends AppCompatActivity implements DeleteContactsAdapter.OnItemClickListener,PopDeleteContactsWindow.DeleteEntryListener
-      ,PopWindow.OnDismissListener,DeleteContactsView{
+public class ImportMailActivity extends AppCompatActivity implements ImportMailView,ImportMailAdapter.OnItemClickListener{
 
     @BindView(R.id.base_tv_toolbar_title)
     TextView base_tv_toolbar_title;
@@ -55,23 +56,20 @@ public class DeleteContactsActivity extends AppCompatActivity implements DeleteC
 
     private List<MallListModel> SourceDateList = new ArrayList<>();
 
-    private List<MailListDao> mMailListDaos = new ArrayList<>();
-
-    private DeleteContactsAdapter adapter;
+    private ImportMailAdapter adapter;
     private KProgressHUD mHUD;
 
-    private String selectContacts="";
-    private Long id;
-    private int position;
+    private final List<Long> mLongList = new ArrayList<>();
+    private final List<Integer> mIntegers = new ArrayList<>();
 
-    private DeleteContactsPresenter mContactsPresenter;
+    private ImportMailPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_contacts);
-        mContactsPresenter = new DeleteContactsPresenter(this);
-        mContactsPresenter.onBindView(this);
+        mPresenter = new ImportMailPresenter(this);
+        mPresenter.onBindView(this);
         initProgress();
         ButterKnife.bind(this);
         initView();
@@ -85,14 +83,7 @@ public class DeleteContactsActivity extends AppCompatActivity implements DeleteC
                 finish();
                 break;
             case R.id.base_tv_toolbar_right:
-                if(!TextUtils.isEmpty(selectContacts.trim())){
-                    MailListManager.getInstance(TtPhoneApplication.getInstance())
-                            .deleteByPrimaryKey(id);
-                    NToast.shortToast(DeleteContactsActivity.this,getResources().getString(R.string.TMT_delete_succeed));
-                    finish();
-                }else{
-                    NToast.shortToast(this,getResources().getString(R.string.TMT_please_select));
-                }
+                saveContactsMailList(ImportMailActivity.this,mLongList,mIntegers,SourceDateList);
                 break;
         }
     }
@@ -109,14 +100,13 @@ public class DeleteContactsActivity extends AppCompatActivity implements DeleteC
 
         final LinearLayoutManager manager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(manager);
-        adapter = new DeleteContactsAdapter(this, SourceDateList);
+        adapter = new ImportMailAdapter(this, SourceDateList);
         adapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(adapter);
 
         mSideBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
             @Override
             public void onTouchingLetterChanged(String s) {
-                //该字母首次出现的位置
                 int position = adapter.getPositionForSection(s.charAt(0));
                 if (position != -1) {
                     manager.scrollToPositionWithOffset(position, 0);
@@ -127,8 +117,6 @@ public class DeleteContactsActivity extends AppCompatActivity implements DeleteC
         mClearEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //当输入框里面的值为空，更新为原来的列表，否则为过滤数据列表
-//                filterData(s.toString());
             }
 
             @Override
@@ -145,22 +133,12 @@ public class DeleteContactsActivity extends AppCompatActivity implements DeleteC
     @Override
     public void onItemClick(View view, int position,boolean isFlag,Long id) {
         if(isFlag){
-            selectContacts = SourceDateList.get(position).getName();
-            this.id = id;
-            this.position = position;
+            mLongList.add(id);
+            mIntegers.add(position);
+        }else{
+            mLongList.remove(id);
+            mIntegers.remove(Integer.valueOf(position));
         }
-    }
-
-    @Override
-    public void getContactsList(List<MallListModel> listModels) {
-        this.SourceDateList = listModels;
-        Collections.sort(SourceDateList);
-        adapter.updateList(SourceDateList);
-    }
-
-    @Override
-    public void getContactsDao(List<MailListDao> mailListDaos) {
-        this.mMailListDaos = mailListDaos;
     }
 
     @Override
@@ -182,7 +160,7 @@ public class DeleteContactsActivity extends AppCompatActivity implements DeleteC
     @Override
     public void loadData(boolean pullToRefresh) {
         showProgress(true);
-        mContactsPresenter.getMallList(this);
+        mPresenter.getContactsMallList(this);
     }
 
     private void initProgress() {
@@ -195,10 +173,47 @@ public class DeleteContactsActivity extends AppCompatActivity implements DeleteC
     }
 
     @Override
-    public void onDismiss() {
+    public void getContactsMallList(List<MallListModel> listModels) {
+        this.SourceDateList = listModels;
+        Collections.sort(SourceDateList);
+        adapter.updateList(SourceDateList);
     }
 
-    @Override
-    public void deleteEntry() {
+    private void saveContactsMailList(Activity context , List<Long> mLongList , List<Integer> mIntegers,List<MallListModel> listModels){
+        if(null != mLongList && mLongList.size() > 0){
+            for(int i=0;i<mLongList.size();i++){
+                MailListDao mailListDao = new MailListDao();
+                mailListDao.setPhone(SourceDateList.get(mIntegers.get(i)).getPhone());
+                mailListDao.setName(SourceDateList.get(mIntegers.get(i)).getName());
+                MailListManager.getInstance(context).insertMailListSignal(mailListDao,context);
+            }
+            importLocalLinkName();
+            NToast.shortToast(ImportMailActivity.this,"导入成功!");
+            finish();
+        }else{
+            NToast.shortToast(ImportMailActivity.this,"请选中导入的联系人!");
+        }
+    }
+
+    public void importLocalLinkName(){
+        List<MailListDao> listModels = MailListManager.getInstance(ImportMailActivity.this).queryMailList();
+        for(MailListDao mallListModel : listModels){
+            String phone = mallListModel.getPhone();
+            String name = mallListModel.getName();
+            List<CallRecordDao> daoList = CallRecordManager.getInstance(ImportMailActivity.this).queryKeyOnPhoneNumber(phone);
+            if(null != daoList && daoList.size() > 0){
+                for(CallRecordDao callRecordDao : daoList){
+                    callRecordDao.setName(name);
+                    CallRecordManager.getInstance(ImportMailActivity.this).updateRecordName(callRecordDao);
+                }
+            }
+            List<ShortMessageDao> shortMessageDaos = ShortMessageManager.getInstance(ImportMailActivity.this).queryPrimaryOfPhone(phone);
+            if(null != daoList && daoList.size() > 0){
+                for(ShortMessageDao shortMessageDao : shortMessageDaos){
+                    shortMessageDao.setName(name);
+                    ShortMessageManager.getInstance(ImportMailActivity.this).updateShortMessageName(shortMessageDao);
+                }
+            }
+        }
     }
 }
