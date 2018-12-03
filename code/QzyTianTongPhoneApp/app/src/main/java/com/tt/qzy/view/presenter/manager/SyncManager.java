@@ -176,7 +176,6 @@ public class SyncManager {
             public void onError(Throwable e) {
                 KLog.i("onError handleShortMessageSignal  = "+ e.getMessage().toString());
             }
-
             @Override
             public void onComplete() {
             }

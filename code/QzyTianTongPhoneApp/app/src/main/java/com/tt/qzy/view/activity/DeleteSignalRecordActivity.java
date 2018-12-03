@@ -83,7 +83,7 @@ public class DeleteSignalRecordActivity extends AppCompatActivity implements Del
                 break;
             case R.id.base_tv_toolbar_right:
                 if(null == id){
-                    NToast.shortToast(this,getString(R.string.TMT_please_select_shortMessage));
+                    NToast.shortToast(this,getString(R.string.TMT_select_record));
                 }else{
                     CallRecordManager.getInstance(DeleteSignalRecordActivity.this).deleteShortMessageOfPrimaryKey(id);
                     NToast.shortToast(DeleteSignalRecordActivity.this,getString(R.string.TMT_delete_succeed));

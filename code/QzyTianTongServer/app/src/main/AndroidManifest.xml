@@ -36,6 +36,11 @@
     <!-- 打开天通猫移动数据权限 -->
     <uses-permission android:name="android.permission.MODIFY_PHONE_STATE"></uses-permission>
 
+    <!-- 写入消息 -->
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <!-- 接收消息 -->
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

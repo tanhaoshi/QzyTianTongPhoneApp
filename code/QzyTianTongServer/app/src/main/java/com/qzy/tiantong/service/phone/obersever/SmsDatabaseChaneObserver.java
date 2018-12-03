@@ -77,7 +77,7 @@ public class SmsDatabaseChaneObserver extends ContentObserver {
 
                 final int isRead;
                 if(cursor.getColumnIndex("read") == -1){
-                     isRead = 0;
+                     isRead = 1;
                 }else{
                      isRead = cursor.getInt(cursor.getColumnIndex("read"));
                 }

@@ -12,7 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tt.qzy.view.R;
+import com.tt.qzy.view.db.dao.MailListDao;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
+import com.tt.qzy.view.db.manager.MailListManager;
 
 import java.util.List;
 
@@ -68,7 +70,12 @@ public class ShortMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 if(null != mModelList.get(position).getName() && mModelList.get(position).getName().length() >= 1 && !"未知号码".equals(mModelList.get(position).getName())){
                     messageViewHolder.phoneNumber.setText(mModelList.get(position).getName());
                 }else{
-                    messageViewHolder.phoneNumber.setText(mModelList.get(position).getNumberPhone());
+                    String name = getPhoneKeyForName(mModelList.get(position).getNumberPhone());
+                    if(null != name && name.length() > 0){
+                        messageViewHolder.phoneNumber.setText(name);
+                    }else{
+                        messageViewHolder.phoneNumber.setText(mModelList.get(position).getNumberPhone());
+                    }
                 }
                 messageViewHolder.time.setText(mModelList.get(position).getTime());
                 if(mModelList.get(position).getIsStatus()){
@@ -76,35 +83,12 @@ public class ShortMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }else{
                     messageViewHolder.dot.setVisibility(View.VISIBLE);
                 }
-//                messageViewHolder.mLinearLayout.setOnLongClickListener(new View.OnLongClickListener() {
-//                    @Override
-//                    public boolean onLongClick(View v) {
-//                        for(Integer integer : mHashMap.keySet()){
-//                            mHashMap.get(integer).setVisibility(View.VISIBLE);
-//                        }
-//                        mOnItemClickListener.onLongClick(position);
-//                        return false;
-//                    }
-//                });
                 messageViewHolder.mLinearLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mOnItemClickListener.onClick(position);
                     }
                 });
-//                messageViewHolder.mCompatButton.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        if(mModelList.get(position).getIsCheck()){
-//                            messageViewHolder.mCompatButton.setChecked(false);
-//                            mModelList.get(position).setIsCheck(((RadioButton)v).isChecked());
-//                        }else{
-//                            messageViewHolder.mCompatButton.setChecked(true);
-//                            mModelList.get(position).setIsCheck(((RadioButton)v).isChecked());
-//                            mOnItemClickListener.onClick(position);
-//                        }
-//                    }
-//                });
                 if(mModelList.get(position).getIsCheck()){
                     messageViewHolder.mCompatButton.setChecked(true);
                     messageViewHolder.mCompatButton.setVisibility(View.VISIBLE);
@@ -114,6 +98,17 @@ public class ShortMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
                 break;
         }
+    }
+
+    private String getPhoneKeyForName(String phone){
+        List<MailListDao> listModels = MailListManager.getInstance(mContext).getByPhoneList(phone);
+        String name;
+        if(listModels.size() > 0){
+            name = listModels.get(0).getName();
+        }else{
+            name =  "";
+        }
+        return name;
     }
 
     @Override

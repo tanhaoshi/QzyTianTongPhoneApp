@@ -12,6 +12,7 @@ import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.phone.IPhoneDataSyncListener;
@@ -162,28 +163,50 @@ public class PhoneUtils {
      * @param context
      * @return
      */
-    public static boolean writeSmsRead(Context context, long id) {
-        try {
-            String[] projection = new String[]{"_id", "address", "person", "body", "date", "type", "read"};
-            String where = "id=?";
-            String[] whereS = new String[]{id + ""};
-            Uri smsUri = Uri.parse("content://sms/");
-            Cursor cursor = context.getContentResolver().query(smsUri, projection, where, whereS, "date desc");
-            if (cursor != null) {
-                cursor.moveToFirst();
-                ContentValues values = new ContentValues();
-                values.put("read", "1");
-                int sate = context.getContentResolver().update(smsUri, values, where, whereS);
-                cursor.close();
-                return true;
-            }
+//    public static boolean writeSmsRead(Context context, long id) {
+//        try {
+//            String[] projection = new String[]{"_id", "address", "person", "body", "date", "type", "read"};
+//            String where = "id=?";
+//            String[] whereS = new String[]{id + ""};
+//            Uri smsUri = Uri.parse("content://sms/");
+//            Cursor cursor = context.getContentResolver().query(smsUri, projection, where, whereS, "date desc");
+//            if (cursor != null) {
+//                cursor.moveToFirst();
+//                ContentValues values = new ContentValues();
+//                values.put("read", "1");
+//                int sate = context.getContentResolver().update(smsUri, values, where, whereS);
+//                cursor.close();
+//                return true;
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//
+//        return false;
+//    }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+    public static void writeSmsRead(Context context, long id) {
+        Uri uri = Uri.parse("content://sms/inbox");
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+        LogUtils.e("writeSmsRead size = "+cursor.getColumnCount());
+        try{
+            while (cursor.moveToNext()) {
+//                if ((cursor.getString(cursor.getColumnIndex("address")).equals(number)) && (cursor.getInt(cursor.getColumnIndex("read")) == 0)) {
+//                    if (cursor.getString(cursor.getColumnIndex("body")).startsWith(body)) {
+//                        String SmsMessageId = cursor.getString(cursor.getColumnIndex("_id"));
+                        ContentValues values = new ContentValues();
+                        values.put("read", 1);
+                        context.getContentResolver().update(Uri.parse("content://sms/inbox"), values, "_id=" + id, null);
+                        return;
+                    }
+//                }
+//            }
+        }catch(Exception e)
+        {
+            Log.e("Mark Read", "Error in Read: "+e.toString());
         }
-
-        return false;
     }
 
     /**

@@ -3,8 +3,11 @@ package com.qzy.tt.phone.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.socks.library.KLog;
+import com.tt.qzy.view.activity.TellPhoneIncomingActivity;
+import com.tt.qzy.view.utils.AppUtils;
 
 public class TtPhoneService extends Service {
 
@@ -30,7 +33,4 @@ public class TtPhoneService extends Service {
             mPhoneServiceManager.relese();
         }
     }
-
-
-
 }

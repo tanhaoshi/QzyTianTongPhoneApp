@@ -290,8 +290,6 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     @Override
     public void deleteAllRecord() {
         mPersenter.deleteAllRecord();
-        if(null != mCallRecordAdapter){
-            mCallRecordAdapter.notifyDataSetChanged();
-        }
+        mCallRecordAdapter.setData(null);
     }
 }

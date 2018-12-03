@@ -92,15 +92,14 @@ public class SendShortMessageActivity extends AppCompatActivity {
                 MsgModel msgModel = new MsgModel(shortMessageDao.getMessage(), Integer.valueOf(shortMessageDao.getState()));
                 msgList.add(msgModel);
                 adapter.setData(msgList);
-//                if (msgList.size()-1 != 0) {
-//                    mRecyclerView.scrollToPosition(msgList.size()-1);
-//                    LinearLayoutManager mLayoutManager =
-//                            (LinearLayoutManager) mRecyclerView.getLayoutManager();
-//                    mLayoutManager.scrollToPositionWithOffset(msgList.size()-1, 0);
-//                }
             }
-            EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SHORT_MESSAGE,new
-                    SMAgrementModel(intent.getLongExtra(Constans.SHORT_MESSAGE_ID,-1))));
+            if(daoList.size() == 0){
+                return;
+            }else{
+                EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.
+                        EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SHORT_MESSAGE,new
+                        SMAgrementModel(daoList.get(daoList.size() - 1).getServerId())));
+            }
         }
     }
 

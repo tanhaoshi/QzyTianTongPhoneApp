@@ -109,7 +109,8 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
     public void initData() {
     }
 
-    @OnClick({R.id.settings_sos,R.id.setting_map,R.id.setting_about,R.id.main_quantity,R.id.settings_wifi,R.id.settings_date_time,R.id.setting_factroy_reset})
+    @OnClick({R.id.settings_sos,R.id.setting_map,R.id.setting_about,R.id.main_quantity,R.id.settings_wifi,
+            R.id.settings_date_time,R.id.setting_factroy_reset,R.id.setting_check})
     public void onClick(View view){
         switch (view.getId()){
             case R.id.settings_sos:
@@ -133,8 +134,11 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
                 initDateDialog();
                 break;
             case R.id.setting_factroy_reset:
-                EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_RECOVER_SYSTEM));
-                NToast.shortToast(this,"恢复成功,请等待天通猫重启!");
+                initSystemResetDialog();
+                break;
+            case R.id.setting_check:
+                Intent checkUpdateIntent = new Intent(SettingsActivity.this,CheckUpdateActivity.class);
+                startActivity(checkUpdateIntent);
                 break;
         }
     }
@@ -226,6 +230,39 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
                 EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_TIME_DATE,
                         new DatetimeModel(DateUtil.backTimeFomat(new Date()))));
                 NToast.shortToast(SettingsActivity.this,getResources().getString(R.string.TMT_date_sync_succeed));
+                dateDialog.dismiss();
+            }
+        });
+    }
+
+    private void initSystemResetDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
+        LayoutInflater inflater = LayoutInflater.from(SettingsActivity.this);
+        View v = inflater.inflate(R.layout.dialog_datetime_settings, null);
+        final TextView custom_input = (TextView) v.findViewById(R.id.custom_input);
+        final TextView custom_cannel = (TextView)v.findViewById(R.id.custom_cannel);
+        final TextView custom_yes = (TextView)v.findViewById(R.id.custom_yes);
+        final TextView title = (TextView)v.findViewById(R.id.title);
+        dateDialog = builder.create();
+        dateDialog.setView(inflater.inflate(R.layout.customied_dialog_style, null));
+        dateDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        dateDialog.show();
+        dateDialog.getWindow().setContentView(v);
+        dateDialog.getWindow().setGravity(Gravity.BOTTOM);
+        title.setText("天通猫恢复出厂设置");
+        custom_input.setText("温馨提示:是否要将天通猫进行恢复出厂设置?");
+        custom_cannel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dateDialog.dismiss();
+            }
+        });
+
+        custom_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_RECOVER_SYSTEM));
+                NToast.shortToast(SettingsActivity.this,"恢复成功,请等待天通猫重启!");
                 dateDialog.dismiss();
             }
         });

@@ -1,6 +1,7 @@
 package com.tt.qzy.view.utils;
 
 import android.app.ActivityManager;
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -9,6 +10,7 @@ import android.icu.text.DecimalFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.PowerManager;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 

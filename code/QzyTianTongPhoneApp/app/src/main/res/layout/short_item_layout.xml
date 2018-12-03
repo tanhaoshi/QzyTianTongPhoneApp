@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:text="181-2644-0000"
                     android:textColor="#F95972"
-                    android:textSize="12sp"/>
+                    />
 
                 <TextView
                     android:id="@+id/isTime"

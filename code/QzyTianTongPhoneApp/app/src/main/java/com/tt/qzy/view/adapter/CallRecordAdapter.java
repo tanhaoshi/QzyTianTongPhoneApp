@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.db.dao.CallRecordDao;
+import com.tt.qzy.view.db.dao.MailListDao;
+import com.tt.qzy.view.db.manager.MailListManager;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.DateUtil;
 
@@ -38,8 +40,10 @@ public class CallRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void setData(List<CallRecordDao> list){
-        mModelList.clear();
-        this.mModelList = list;
+        if(mModelList != null){
+            mModelList.clear();
+            this.mModelList = list;
+        }
         notifyDataSetChanged();
     }
 
@@ -69,7 +73,12 @@ public class CallRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if(null != mModelList.get(position).getName() && mModelList.get(position).getName().length() >= 1 && !"未知号码".equals(mModelList.get(position).getName())){
                     callRecordViewHolder.phoneNumber.setText(mModelList.get(position).getName());
                 }else{
-                    callRecordViewHolder.phoneNumber.setText(mModelList.get(position).getPhoneNumber());
+                    String name = getPhoneKeyForName(mModelList.get(position).getPhoneNumber());
+                    if(null != name && name.length() > 0){
+                        callRecordViewHolder.phoneNumber.setText(name);
+                    }else{
+                        callRecordViewHolder.phoneNumber.setText(mModelList.get(position).getPhoneNumber());
+                    }
                 }
                 callRecordViewHolder.duration.setText("通话时长:"+DateUtil.secondToDate(mModelList.get(position).getDuration(),"mm:ss"));
                 callRecordViewHolder.date.setText(mModelList.get(position).getDate());
@@ -100,6 +109,17 @@ public class CallRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
                 break;
         }
+    }
+
+    private String getPhoneKeyForName(String phone){
+        List<MailListDao> listModels = MailListManager.getInstance(mContext).getByPhoneList(phone);
+        String name;
+        if(listModels.size() > 0){
+            name = listModels.get(0).getName();
+        }else{
+            name =  "";
+        }
+        return name;
     }
 
     @Override

@@ -49,6 +49,8 @@ public class TellPhoneActivity extends AppCompatActivity {
     TextView text_state;
     @BindView(R.id.input_call)
     InputPwdViewCall input_call;
+    @BindView(R.id.aidlName)
+    TextView aidlName;
 
     private TellPhoneActivityPresenter mTellPhoneActivityPresenter;
 
@@ -69,23 +71,22 @@ public class TellPhoneActivity extends AppCompatActivity {
         }
         phoneNumber.setText(number);
         if (!TextUtils.isEmpty(number) && number.length() >= 3) {
-
         }
         mTellPhoneActivityPresenter = new TellPhoneActivityPresenter(this);
+        if(mTellPhoneActivityPresenter.getPhoneKeyForName(number) != null && mTellPhoneActivityPresenter.getPhoneKeyForName(number).length() > 0){
+            aidlName.setText(mTellPhoneActivityPresenter.getPhoneKeyForName(number));
+        }
         EventBusUtils.register(TellPhoneActivity.this);
-
 
         input_call.setListener(new InputPwdViewCall.InputPwdListener() {
             @Override
             public void inputString(String diapadNumber) {
-
                 //挂断
                 onEndCallState();
             }
 
             @Override
             public void buttonClick(int keyCode) {
-
             }
         });
 

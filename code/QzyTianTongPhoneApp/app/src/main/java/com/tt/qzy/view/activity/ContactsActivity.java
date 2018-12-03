@@ -1,6 +1,7 @@
 package com.tt.qzy.view.activity;
 
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.qzy.eventbus.IMessageEventBustType;
+import com.qzy.eventbus.MessageEventBus;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.base.BaseActivity;
@@ -26,6 +29,10 @@ import com.tt.qzy.view.layout.PopWindow;
 import com.tt.qzy.view.presenter.activity.ContactsActivityPresenter;
 import com.tt.qzy.view.view.ContactsActivityView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +40,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ContactsActivity extends BaseActivity<ContactsActivityView> implements PopWindow.OnDismissListener,ContactsActivityView{
+public class ContactsActivity extends AppCompatActivity implements PopWindow.OnDismissListener,ContactsActivityView{
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -67,8 +74,17 @@ public class ContactsActivity extends BaseActivity<ContactsActivityView> impleme
     private PopContactsWindow mPopContactsWindow;
 
     @Override
-    public int getContentView() {
-        return R.layout.activity_contacts;
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_contacts);
+        ButterKnife.bind(this);
+        mPresenter = new ContactsActivityPresenter(ContactsActivity.this);
+        mPresenter.onBindView(this);
+        getIntentDataValue();
+        initAdapter();
+        base_tv_toolbar_title.setText(getResources().getString(R.string.TMT_contacts));
+        base_iv_back.setImageDrawable(getResources().getDrawable(R.drawable.iv_back));
+        base_tv_toolbar_right.setVisibility(View.GONE);
     }
 
     private void getIntentDataValue(){
@@ -82,24 +98,6 @@ public class ContactsActivity extends BaseActivity<ContactsActivityView> impleme
             qq.setText("");
             send.setText("");
         }
-    }
-
-    @Override
-    public void initView() {
-        mPresenter = new ContactsActivityPresenter(ContactsActivity.this);
-        mPresenter.onBindView(this);
-        getIntentDataValue();
-        ButterKnife.bind(this);
-        initAdapter();
-    }
-
-    @Override
-    public void initData() {
-        statusLayout.setBackgroundColor(getResources().getColor(R.color.tab_stander));
-        base_tv_toolbar_title.setText(getResources().getString(R.string.TMT_contacts));
-        base_iv_back.setImageDrawable(getResources().getDrawable(R.drawable.iv_back));
-        base_tv_toolbar_right.setVisibility(View.GONE);
-//        base_tv_toolbar_right.setImageDrawable(getResources().getDrawable(R.drawable.more));
     }
 
     private void initAdapter(){

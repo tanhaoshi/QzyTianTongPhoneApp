@@ -19,7 +19,9 @@ import com.tt.qzy.view.activity.ContactsActivity;
 import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.bean.MallListModel;
 import com.tt.qzy.view.db.dao.CallRecordDao;
+import com.tt.qzy.view.db.dao.MailListDao;
 import com.tt.qzy.view.db.manager.CallRecordManager;
+import com.tt.qzy.view.db.manager.MailListManager;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
 import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.utils.NToast;
@@ -85,9 +87,30 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
 
         EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber));
 
-        CallRecordDao callRecordDao = new CallRecordDao(phoneNumber,"","","2",DateUtil.backTimeFomat(new Date()),20);
+        String name = getPhoneKeyForName(phone);
 
-        CallRecordManager.getInstance(mContext).insertCallRecord(callRecordDao,mContext);
+        if(null != name && name.length() > 0){
+
+            CallRecordDao callRecordDao = new CallRecordDao(phoneNumber,name,"","2",DateUtil.backTimeFomat(new Date()),20);
+
+            CallRecordManager.getInstance(mContext).insertCallRecord(callRecordDao,mContext);
+        }else{
+
+            CallRecordDao callRecordDao = new CallRecordDao(phoneNumber,"","","2",DateUtil.backTimeFomat(new Date()),20);
+
+            CallRecordManager.getInstance(mContext).insertCallRecord(callRecordDao,mContext);
+        }
+    }
+
+    public String getPhoneKeyForName(String phone){
+        List<MailListDao> listModels = MailListManager.getInstance(mContext).getByPhoneList(phone);
+        String name;
+        if(listModels.size() > 0){
+            name = listModels.get(0).getName();
+        }else{
+            name = "";
+        }
+        return name;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

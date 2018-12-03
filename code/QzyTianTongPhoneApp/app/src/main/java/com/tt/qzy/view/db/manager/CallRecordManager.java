@@ -44,7 +44,7 @@ public class CallRecordManager {
         CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
         QueryBuilder<CallRecordDao> qb = dao.queryBuilder().orderDesc().where(
                 new WhereCondition.StringCondition(
-                         " _id in " + "(select min(_id) from CALL_RECORD_DAO group by PHONE_NUMBER)")
+                         " date in " + "(select max(date) from CALL_RECORD_DAO group by PHONE_NUMBER)")
         );
         List<CallRecordDao> list = qb.list();
         return list;
@@ -90,8 +90,9 @@ public class CallRecordManager {
 
     public List<CallRecordDao> limitCallRecordList(int offset,int limit){
         CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
-        List<CallRecordDao> list = dao.queryBuilder().where(new WhereCondition.StringCondition(
-                " _id in " + "(select min(_id) from CALL_RECORD_DAO group by PHONE_NUMBER)")).offset(offset).limit(limit).orderDesc().list();
+        List<CallRecordDao> list = dao.queryBuilder().orderDesc(CallRecordDaoDao.Properties.Date)
+                .where(new WhereCondition.StringCondition(
+                " date in " + "(select max(date) from CALL_RECORD_DAO group by PHONE_NUMBER)")).offset(offset).limit(limit).list();
         return list;
     }
 
@@ -99,14 +100,14 @@ public class CallRecordManager {
         CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
         QueryBuilder<CallRecordDao> db = dao.queryBuilder().where(CallRecordDaoDao.Properties.Name.like("%"+value+"%"))
                 .where(new WhereCondition.StringCondition(
-                        " _id in " + "(select min(_id) from CALL_RECORD_DAO group by PHONE_NUMBER)"));
+                        " date in " + "(select max(date) from CALL_RECORD_DAO group by PHONE_NUMBER)"));
         List<CallRecordDao> daoList = db.list();
         if(daoList.size() > 0){
             return daoList;
         }else{
             QueryBuilder<CallRecordDao> queryBuilder = dao.queryBuilder().where(CallRecordDaoDao.Properties.PhoneNumber.
                     like("%"+value+"%")).where(new WhereCondition.StringCondition(
-                    " _id in " + "(select min(_id) from CALL_RECORD_DAO group by PHONE_NUMBER)"));
+                    " date in " + "(select max(date) from CALL_RECORD_DAO group by PHONE_NUMBER)"));
             List<CallRecordDao> list = queryBuilder.list();
             return list;
         }

@@ -300,7 +300,7 @@ public class SmsPhoneManager {
      * @param ttShortMessage
      */
     public void updateSmsRead(TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessage) {
-        boolean isFlag = false;
+        boolean isFlag = true;
         if(isFlag){
             long id = ttShortMessage.getId();
             LogUtils.d("id = " + id);

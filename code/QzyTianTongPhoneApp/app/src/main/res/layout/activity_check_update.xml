@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.tt.qzy.view.activity.CheckUpdateActivity">
+
+    <include layout="@layout/left_toobar_layout"/>
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:visibility="gone"
+        android:background="@color/background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView
+            android:layout_gravity="center"
+            android:id="@+id/circle_loading_view"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:background="@color/background"
+            android:layout_centerInParent="true"
+            app:animCircleLoadingView_mainColor="@color/main_color"
+            app:animCircleLoadingView_secondaryColor="@color/secondary_color"
+            app:animCircleLoadingView_textColor="@android:color/white"
+            />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:src="@drawable/icon"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="68dp"
+            android:layout_width="94dp"
+            android:layout_height="70dp"/>
+
+        <TextView
+            android:layout_marginTop="24dp"
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            android:layout_gravity="center_horizontal"
+            android:text="当前版本号:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <FrameLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/checkUpdate"
+            android:text="检 查 更 新"
+            android:textColor="@color/white"
+            android:background="@color/blue"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginLeft="24dp"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
