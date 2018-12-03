@@ -26,7 +26,7 @@ android {
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
                 //这里修改apk文件名
 //                def fileName = "qzytt_server.apk_${variant.productFlavors[0].name}-${defaultConfig.versionCode}-${defaultConfig.versionName}-${releaseTime() }.apk"
-                def fileName = "qzytt_server"+"_"+defaultConfig.versionName+"_"+new Date().format("yyyy-MM-dd")+"_"+buildType.name+".apk"
+                def fileName = "qzytt_server.apk"
                 output.outputFile = new File(outputFile.parent, fileName)
             }
         }

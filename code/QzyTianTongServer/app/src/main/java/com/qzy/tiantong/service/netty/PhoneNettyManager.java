@@ -426,14 +426,11 @@ public class PhoneNettyManager implements IMobileDataManager{
     private void sendSimStateToPhoneClient() {
         if (checkNettManagerIsNull()) return;
         boolean hasSim = PhoneUtils.ishasSimCard(mContext);
-       //  LogUtils.d("hasSim = " + hasSim + " currentSignalValue = " + currentSignalValue);
+        // LogUtils.d("hasSim = " + hasSim + " currentSignalValue = " + currentSignalValue);
         if(!isG4Test) {
             if(hasSim) {
                 Netled.setNetledState(true);
                 controlSignal(currentSignalValue); // 检测卡的状态来控制灯的闪烁
-            }else{
-                Netled.setNetledState(false);
-                Netled.setNetledFlash(false);
             }
         }
         TtPhoneSimCards.TtPhoneSimCard simCard = TtPhoneSimCards.TtPhoneSimCard.newBuilder()
