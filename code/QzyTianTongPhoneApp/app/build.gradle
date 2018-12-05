@@ -13,6 +13,13 @@ android {
         versionName "1.2.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath = true
+            }
+        }
+
     }
     buildTypes {
         release {
@@ -25,7 +32,6 @@ android {
         repositories {
             maven { url "https://jitpack.io" }
         }
-
     }
 
     repositories {
@@ -104,4 +110,5 @@ dependencies {
     compile project(path: ':ftpClient')
     compile project(path: ':prdownloader')
     compile project(path: ':library')
+    compile project(path: ':hellodaemon')
 }

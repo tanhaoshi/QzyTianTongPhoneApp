@@ -1,8 +1,6 @@
 package com.qzy.tt.phone.netty;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.UserHandle;
 
 import com.google.protobuf.ByteString;
 import com.qzy.androidftp.FtpClienManager;
@@ -12,7 +10,6 @@ import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 import com.qzy.netty.NettyClientManager;
-import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.CallPhoneProtos;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
@@ -31,8 +28,6 @@ import com.qzy.tt.data.TtTimeProtos;
 import com.qzy.tt.phone.cmd.CmdHandler;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.SmsBean;
-import com.qzy.tt.phone.netty.fileupload.FileUploadClient;
-import com.qzy.utils.IPUtil;
 import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.bean.AppInfoModel;
@@ -43,19 +38,16 @@ import com.tt.qzy.view.bean.ServerPortIp;
 import com.tt.qzy.view.bean.SosSendMessageModel;
 import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.bean.WifiSettingModel;
-import com.tt.qzy.view.utils.AssetFileUtils;
-import com.tt.qzy.view.utils.DateUtil;
+import com.tt.qzy.view.utils.Constans;
+import com.tt.qzy.view.utils.SPUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Arrays;
 
 import io.netty.buffer.ByteBufInputStream;
 import it.sauronsoftware.ftp4j.FTPDataTransferListener;
@@ -79,6 +71,11 @@ public class PhoneNettyManager {
         EventBusUtils.register(this);
         mNettyClientManager = new NettyClientManager(nettyListener);
         mCmdHandler = new CmdHandler(context);
+        KLog.i("TtPhoneService boolean flag value = " + (Boolean) SPUtils.getShare(mContext, Constans.SERVER_FLAG,false));
+        if((Boolean) SPUtils.getShare(mContext, Constans.SERVER_FLAG,false)){
+            connect(Constans.PORT,Constans.IP);
+            SPUtils.putShare(mContext,Constans.SERVER_FLAG,false);
+        }
     }
 
     /**

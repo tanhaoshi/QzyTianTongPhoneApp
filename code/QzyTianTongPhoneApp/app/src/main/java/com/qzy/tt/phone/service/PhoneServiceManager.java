@@ -28,7 +28,6 @@ public class PhoneServiceManager {
 
     private Context mContext;
 
-
     /**
      * 服务通讯
      */
@@ -153,8 +152,5 @@ public class PhoneServiceManager {
 //        if (mQzySensorManager != null) {
 //            mQzySensorManager.freeSenerState();
 //        }
-
     }
-
-
 }

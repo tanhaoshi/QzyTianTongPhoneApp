@@ -16,7 +16,7 @@ import com.tt.qzy.view.utils.TimeTask;
 
 import java.util.TimerTask;
 
-public class TimerService extends Service implements MainFragment.GpsCallback{
+public class TimerService extends Service{
 
     private TimeTask mTimeTask;
 
@@ -37,8 +37,6 @@ public class TimerService extends Service implements MainFragment.GpsCallback{
     @Override
     public void onCreate() {
         super.onCreate();
-        MainFragment mainFragment = MainFragment.newInstance();
-        mainFragment.setGpsCallback(this);
         String timerStr =  (String) SPUtils.getShare(this,Constans.CRY_HELP_TIMETIMER,"60");
         Long timerDuration = Long.valueOf(timerStr) * 1000 ;
         KLog.i(" look over duration value = " + timerDuration);
@@ -67,22 +65,5 @@ public class TimerService extends Service implements MainFragment.GpsCallback{
     public void onDestroy() {
         super.onDestroy();
         mTimeTask.stop();
-    }
-
-
-    @Override
-    public void setGpsValue(String lat, String longitude) {
-        if(lat.length() == 0 || longitude == null){
-            return;
-        }
-        if(longitude.length() == 0 || longitude == null){
-            return;
-        }
-        this.latitude = lat;
-        this.longitude = longitude;
-        SPUtils.putShare(getApplicationContext(),Constans.CRY_HELP_SHORTMESSAGE,
-                SPUtils.getShare(getApplicationContext(),Constans.CRY_HELP_SHORTMESSAGE,"").toString()+ "经度:"+longitude
-                        +"," +"纬度:"+latitude);
-
     }
 }

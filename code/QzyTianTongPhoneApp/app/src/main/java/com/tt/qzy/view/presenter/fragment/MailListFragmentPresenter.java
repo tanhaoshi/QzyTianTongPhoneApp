@@ -59,7 +59,7 @@ public class MailListFragmentPresenter extends BasePresenter<MailListView>{
             @Override
             public void subscribe(ObservableEmitter<List<MallListModel>> e) throws Exception {
                 List<MailListDao> listDaos = MailListManager.getInstance(context).queryMailList();
-                e.onNext(mergeData(listDaos,context));
+                e.onNext(removeDuplicate(mergeData(listDaos,context)));
             }
         }).subscribeOn(Schedulers.io())
           .unsubscribeOn(Schedulers.io())
@@ -73,12 +73,10 @@ public class MailListFragmentPresenter extends BasePresenter<MailListView>{
                   mView.get().loadData(value);
                   onComplete();
               }
-
               @Override
               public void onError(Throwable e) {
                   mView.get().showError(e.getMessage().toString(),true);
               }
-
               @Override
               public void onComplete() {
                   mView.get().hideProgress();
@@ -143,13 +141,13 @@ public class MailListFragmentPresenter extends BasePresenter<MailListView>{
     public List<MallListModel> removeDuplicate(List<MallListModel> list)  {
         for  ( int  i  =   0 ; i  <  list.size()  -   1 ; i ++ )  {
             for  ( int  j  =  list.size()  -   1 ; j  >  i; j -- )  {
-                if(list.get(j).getPhone() != null && list.get(i).getPhone()!=null){
-                    if  (list.get(j).getPhone().equals(list.get(i).getPhone()))  {
+                if(list.get(j).getName() != null && list.get(i).getName()!=null){
+                    if  (list.get(j).getName().equals(list.get(i).getName()))  {
                         list.remove(j);
                     }
-                }else if(list.get(j).getPhone() == null){
+                }else if(list.get(j).getName() == null){
                     list.remove(j);
-                }else if(list.get(i).getPhone() == null){
+                }else if(list.get(i).getName() == null){
                     list.remove(i);
                 }
             }

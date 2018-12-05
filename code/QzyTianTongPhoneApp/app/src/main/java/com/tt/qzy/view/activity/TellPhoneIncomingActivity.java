@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,7 +49,13 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav
+                | View.SYSTEM_UI_FLAG_IMMERSIVE);
         setContentView(R.layout.activity_tell_phone_incoming);
+        RingManager.playDefaultCallMediaPlayer(TtPhoneApplication.getInstance());
         ButterKnife.bind(this);
         phoneNumber= getIntent().getStringExtra("diapadNumber");
         txtv_phoneNumber.setText(phoneNumber);
@@ -56,7 +63,6 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         }
         mTellPhoneActivityPresenter = new TellPhoneActivityPresenter(this);
         EventBusUtils.register(this);
-        RingManager.playDefaultCallMediaPlayer(TtPhoneApplication.getInstance());
     }
 
     @OnClick({R.id.btn_accept, R.id.btn_endcall})

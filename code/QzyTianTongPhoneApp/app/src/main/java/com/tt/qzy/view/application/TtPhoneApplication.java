@@ -2,7 +2,6 @@ package com.tt.qzy.view.application;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
 
@@ -19,8 +18,8 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
-import com.tt.qzy.view.MainActivity;
-import com.tt.qzy.view.R;
+import com.tt.qzy.view.trace.TraceServiceImpl;
+import com.xdandroid.hellodaemon.DaemonEnv;
 
 /**
  * Created by yj.zhang on 2018/8/25.
@@ -42,6 +41,9 @@ public class TtPhoneApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sApp = this;
+        DaemonEnv.initialize(this, TraceServiceImpl.class, DaemonEnv.DEFAULT_WAKE_UP_INTERVAL);
+        TraceServiceImpl.sShouldStopService = false;
+        DaemonEnv.startServiceMayBind(TraceServiceImpl.class);
         if(LeakCanary.isInAnalyzerProcess(this)){
             return;
         }

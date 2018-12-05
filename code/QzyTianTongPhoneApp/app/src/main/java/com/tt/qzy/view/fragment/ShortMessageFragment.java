@@ -17,23 +17,34 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.qzy.data.PhoneCmd;
+import com.qzy.eventbus.IMessageEventBustType;
+import com.qzy.eventbus.MessageEventBus;
+import com.qzy.tt.data.TtShortMessageProtos;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.SendShortMessageActivity;
 import com.tt.qzy.view.adapter.ShortMessageAdapter;
+import com.tt.qzy.view.bean.MsgModel;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
 import com.tt.qzy.view.db.manager.ShortMessageManager;
 import com.tt.qzy.view.layout.PopShortMessageWindow;
 import com.tt.qzy.view.layout.PopWindow;
 import com.tt.qzy.view.presenter.fragment.ShortMessagePresenter;
 import com.tt.qzy.view.utils.Constans;
+import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.PinyinUtils;
 import com.tt.qzy.view.view.ShortMessageView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -59,7 +70,6 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
     private PopShortMessageWindow mPopShortMessageWindow;
     private List<ShortMessageDao> models = new ArrayList<>();
     private ShortMessageAdapter shortMessageAdapter;
-    private OnKeyDownListener mOnKeyDownListener;
     private KProgressHUD mHUD;
     private ShortMessagePresenter mPresenter;
 
@@ -92,6 +102,7 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
         ButterKnife.bind(this, view);
         mPresenter.onBindView(this);
         initView();
+        EventBus.getDefault().register(this);
         return view;
     }
 
@@ -188,25 +199,6 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
     public void onLongClick(int position) {
         mFloatingActionButton.setVisibility(View.GONE);
         PinyinUtils.Vibrate(getActivity(),100);
-        mOnKeyDownListener.setOnkeyDown(true);
-    }
-
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == event.KEYCODE_BACK
-                && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if(models != null){
-                for(ShortMessageDao shortMessageModel : models){
-                    shortMessageModel.setIsCheck(false);
-                }
-                shortMessageAdapter.notifyDataSetChanged();
-            }
-            return true;
-        }
-        return false;
-    }
-
-    public void setOnKeyDownListener(OnKeyDownListener onKeyDownListener){
-        this.mOnKeyDownListener = onKeyDownListener;
     }
 
     @Override
@@ -289,8 +281,31 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
         shortMessageAdapter.setData(null);
     }
 
-    public interface OnKeyDownListener{
-        void setOnkeyDown(boolean isKeyDown);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEventBus event) {
+        switch (event.getType()) {
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SHORT_MESSAGE:
+                parseSmsreciver(event.getObject());
+                break;
+        }
     }
 
+    /**
+     * 解析收到短息
+     * @param object
+     */
+    private void parseSmsreciver(Object object){
+        PhoneCmd cmd = (PhoneCmd) object;
+        TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage =
+                (TtShortMessageProtos.TtShortMessage.ShortMessage) cmd.getMessage();
+        if(mPresenter != null){
+            mPresenter.getShortMessageDataList(0,20);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

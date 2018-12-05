@@ -32,4 +32,6 @@ public interface Constans {
     int PUTOUT = 2;
 
     String fileName = "QzyTianTongPhone.apk";
+
+    String SERVER_FLAG = "server_flag";
 }

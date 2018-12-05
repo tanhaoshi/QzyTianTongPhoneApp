@@ -110,7 +110,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
 
         if (!NetworkUtil.isWifiEnabled(getActivity())) {
 
-            connect.setText(getResources().getString(R.string.TMT_click_connect));
+            connect.setText(getActivity().getResources().getString(R.string.TMT_click_connect));
 
         } else {
 
@@ -179,9 +179,10 @@ public class MainFragment extends Fragment implements MainFragmentView{
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(mainActivity.isConnectStatus()){
                     if(isChecked){
-                        mPresneter.requestEnableData(true);
+                          mainActivity.stopService();
+//                        mPresneter.requestEnableData(true);
                     }else{
-                        mPresneter.requestEnableData(false);
+//                        mPresneter.requestEnableData(false);
                     }
                 }else{
                     NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
@@ -408,15 +409,4 @@ public class MainFragment extends Fragment implements MainFragmentView{
     @Override
     public void loadData(boolean pullToRefresh) {
     }
-
-    private GpsCallback mGpsCallback;
-
-    public void setGpsCallback(GpsCallback gpsCallback){
-        this.mGpsCallback = gpsCallback;
-    }
-
-    public interface GpsCallback{
-        void setGpsValue(String lat,String longitude);
-    }
-
 }

@@ -5,7 +5,10 @@ import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -16,10 +19,10 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
-import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
 import com.qzy.tt.phone.service.TtPhoneService;
 import com.socks.library.KLog;
 import com.tt.qzy.view.activity.base.BaseActivity;
+import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.bean.VersionCodeModel;
 import com.tt.qzy.view.fragment.AidlPhoneFragment;
 import com.tt.qzy.view.fragment.MailListFragment;
@@ -31,12 +34,13 @@ import com.tt.qzy.view.presenter.activity.MainActivityPresenter;
 import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.view.MainActivityView;
+import com.xdandroid.hellodaemon.IntentWrapper;
+
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.netty.handler.codec.http.multipart.FileUpload;
 
-public class MainActivity extends BaseActivity<MainActivityView> implements ShortMessageFragment.OnKeyDownListener,MainActivityView{
+public class MainActivity extends BaseActivity<MainActivityView> implements MainActivityView{
 
     @BindView(R.id.shortMessage)
     Button button;
@@ -57,12 +61,8 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
 
     private MailListFragment mMailListFragment;
 
-    //用于记录当前显示的fragment;
-    private Fragment mFragment;
-    // 记录是正常退出 还是 我们隐藏的按钮出现 back消失.
-    private boolean isOnkeyDown = false;
-
     private MainActivityPresenter mPresenter;
+    private AlertDialog dateDialog;
 
     public FrameLayout getBottomBar() {
         return bottomBar;
@@ -71,7 +71,7 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
 
     @Override
@@ -120,7 +120,6 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
         hideAllFragment(fragmentTransaction);
         if(mShortMessageFragment == null){
             mShortMessageFragment = mShortMessageFragment.newInstance();
-            mShortMessageFragment.setOnKeyDownListener(this);
             fragmentTransaction.add(R.id.fragmentContent, mShortMessageFragment);
         }
         commitShowFragment(fragmentTransaction,mShortMessageFragment);
@@ -143,7 +142,6 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
     public void commitShowFragment(FragmentTransaction fragmentTransaction, Fragment fragment){
         fragmentTransaction.show(fragment);
         fragmentTransaction.commit();
-        mFragment = fragment;
     }
 
     public void hideAllFragment(FragmentTransaction fragmentTransaction){
@@ -217,7 +215,7 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
     /**
      * stop service
      */
-    private void stopService() {
+    public void stopService() {
         stopService(new Intent(this, TtPhoneService.class));
     }
 
@@ -231,27 +229,47 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
         super.onDestroy();
        // CommonData.relase();
         NiftyExpandDialog.getInstance(MainActivity.this).release();
-        stopService();
-        System.exit(0);
+//        stopService();
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (mFragment instanceof ShortMessageFragment) {
-            if(isOnkeyDown){
-                ((ShortMessageFragment) mFragment).onKeyDown(keyCode, event);
-                isOnkeyDown = false;
-                return true;
-            }else{
-                return super.onKeyDown(keyCode,event);
-            }
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            initDateDialog();
         }
         return super.onKeyDown(keyCode,event);
     }
 
-    @Override
-    public void setOnkeyDown(boolean isKeyDown) {
-         this.isOnkeyDown = isKeyDown;
+    private void initDateDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+        View v = inflater.inflate(R.layout.dialog_datetime_settings, null);
+        final TextView custom_input = (TextView) v.findViewById(R.id.custom_input);
+        final TextView custom_cannel = (TextView)v.findViewById(R.id.custom_cannel);
+        final TextView custom_yes = (TextView)v.findViewById(R.id.custom_yes);
+        final TextView title = (TextView)v.findViewById(R.id.title);
+        dateDialog = builder.create();
+        dateDialog.setView(inflater.inflate(R.layout.customied_dialog_style, null));
+        dateDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        dateDialog.show();
+        dateDialog.getWindow().setContentView(v);
+        dateDialog.getWindow().setGravity(Gravity.CENTER);
+        title.setText("提示");
+        custom_input.setText("温馨提示:您确定是否退出吗?");
+        custom_cannel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dateDialog.dismiss();
+            }
+        });
+
+        custom_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dateDialog.dismiss();
+                finish();
+            }
+        });
     }
 
     @Override
@@ -333,4 +351,11 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Shor
     public void onError(String errorMessage) {
         NToast.shortToast(MainActivity.this,errorMessage);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        IntentWrapper.onBackPressed(this);
+    }
+
 }

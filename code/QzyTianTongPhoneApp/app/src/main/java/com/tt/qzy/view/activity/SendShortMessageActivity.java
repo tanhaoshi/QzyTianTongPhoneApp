@@ -99,6 +99,12 @@ public class SendShortMessageActivity extends AppCompatActivity {
                 EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.
                         EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SHORT_MESSAGE,new
                         SMAgrementModel(daoList.get(daoList.size() - 1).getServerId())));
+
+                ShortMessageDao shortMessageDao = daoList.get(daoList.size() -1);
+
+                shortMessageDao.setIsStatus(true);
+
+                ShortMessageManager.getInstance(SendShortMessageActivity.this).updateShortMessageName(shortMessageDao);
             }
         }
     }

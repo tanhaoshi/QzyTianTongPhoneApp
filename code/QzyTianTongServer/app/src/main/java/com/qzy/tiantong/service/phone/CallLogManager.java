@@ -87,7 +87,7 @@ public class CallLogManager {
                     LogUtils.e("getSms sync size = " + smsList.size());
                     TtShortMessageProtos.TtShortMessage.Builder ttShortMessage = TtShortMessageProtos.TtShortMessage.newBuilder();
                     for (SmsInfo smsInfo : smsList) {
-                        //LogUtils.d("smsInfo  = " + smsInfo.toString());
+                       // LogUtils.d("smsInfo  = " + smsInfo.toString());
                         TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage = TtShortMessageProtos.TtShortMessage.ShortMessage.newBuilder()
                                 .setId(smsInfo.getId())
                                 .setNumberPhone(smsInfo.getNumber())

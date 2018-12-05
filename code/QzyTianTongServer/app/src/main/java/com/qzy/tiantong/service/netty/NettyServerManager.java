@@ -103,7 +103,6 @@ public class NettyServerManager implements NettyServer.IServerListener {
             if (ctx != null) {
                 sendData(ctx, cmd);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

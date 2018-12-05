@@ -89,7 +89,7 @@ public class BatteryView extends View {
             paint.setColor(Color.WHITE);
         }
 
-        if (mPower < 30) {
+        if (mPower < 20) {
             paint.setColor(Color.RED);
         }
 //        if (mPower >= 30 && mPower < 50) {

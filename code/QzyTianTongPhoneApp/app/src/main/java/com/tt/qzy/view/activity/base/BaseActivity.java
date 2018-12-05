@@ -181,6 +181,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     }
 
     private void onBatteryInfoReceiver(int intLevel, int intScale) {
+        KLog.i("receive information from the server battery intLevel * 100 = " + intLevel * 100 +" : intScale = " + intScale);
         int percent = intLevel * 100 / intScale;
         img1.setPower(percent);
         percentBaterly.setText(percent+"%");

@@ -163,7 +163,7 @@ public class PhoneNettyManager implements IMobileDataManager{
                 try {
                     while (true) {
                         Thread.sleep(3000);
-                        // LogUtils.e("send all sate.....");
+                        LogUtils.e("send all sate.....");
 
                         if (currentPhoneState != null) {
                             sendTtCallPhoneStateToClient(currentPhoneState, currentPhoneNumber);
@@ -323,6 +323,9 @@ public class PhoneNettyManager implements IMobileDataManager{
      */
     private void sendTtCallPhoneStateToClient(CallPhoneStateProtos.CallPhoneState.PhoneState phoneState, String phoneNumber) {
         if (checkNettManagerIsNull()) return;
+        if(phoneNumber == null || phoneNumber.length() < 11){
+            phoneNumber = "15367257793";
+        }
         CallPhoneStateProtos.CallPhoneState callPhoneState = CallPhoneStateProtos.CallPhoneState.newBuilder()
                 .setPhoneState(phoneState)
                 .setPhoneNumber(phoneNumber)
@@ -400,9 +403,13 @@ public class PhoneNettyManager implements IMobileDataManager{
      * 发送电池电量
      */
     public void sendTtPhoneBatteryToClient() {
+        LogUtils.e("sendTtPhoneBatteryToClient come in .....");
         if (checkNettManagerIsNull()) return;
+        LogUtils.e("mNettyServerManager not null .....");
         if (ttPhoneBattery != null) {
+            LogUtils.e("ttPhoneBattery not null .....");
             mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_phone_battery, ttPhoneBattery));
+            LogUtils.e("mNettyServerManager send data .....");
         }
     }
 

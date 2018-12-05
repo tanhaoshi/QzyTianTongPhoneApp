@@ -103,6 +103,7 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
         }
         percentBaterly.setText(baterly+"%");
+        img1.setPower(baterly);
     }
 
     @Override

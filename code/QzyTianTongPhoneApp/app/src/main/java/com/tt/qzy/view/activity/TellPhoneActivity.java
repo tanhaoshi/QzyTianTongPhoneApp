@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 
@@ -24,6 +26,7 @@ import com.tt.qzy.view.R;
 import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.layout.dialpad.InputPwdViewCall;
 import com.tt.qzy.view.presenter.activity.TellPhoneActivityPresenter;
+import com.tt.qzy.view.utils.AnswerBellManager;
 import com.tt.qzy.view.utils.NToast;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -55,20 +58,21 @@ public class TellPhoneActivity extends AppCompatActivity {
     private TellPhoneActivityPresenter mTellPhoneActivityPresenter;
 
     private QzySensorManager mQzySensorManager;
+    private AnswerBellManager mAnswerBellManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav
+                | View.SYSTEM_UI_FLAG_IMMERSIVE);
         setContentView(R.layout.activity_tell_phone);
+
         mQzySensorManager = new QzySensorManager(TtPhoneApplication.getInstance());
-        KLog.e("onCreate");
         ButterKnife.bind(this);
         String number = getIntent().getStringExtra("diapadNumber");
-        boolean isFlag = getIntent().getBooleanExtra("acceptCall",false);
-        if(isFlag){
-            text_state.setText("正在接听");
-            onCallingState();
-        }
         phoneNumber.setText(number);
         if (!TextUtils.isEmpty(number) && number.length() >= 3) {
         }
@@ -93,6 +97,15 @@ public class TellPhoneActivity extends AppCompatActivity {
         countTime();
 
         AndroidVoiceManager.setVoiceCall(this);
+
+        boolean isFlag = getIntent().getBooleanExtra("acceptCall",false);
+
+        if(isFlag){
+            text_state.setText("正在接听");
+            onCallingState();
+        }else{
+            mAnswerBellManager = new AnswerBellManager(TtPhoneApplication.getInstance());
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -202,6 +215,9 @@ public class TellPhoneActivity extends AppCompatActivity {
                         break;
                     }
                 }
+                if(mAnswerBellManager != null){
+                    mAnswerBellManager.stopPlay();
+                }
                 onEndCallState();
                 break;
             case RING:
@@ -212,6 +228,9 @@ public class TellPhoneActivity extends AppCompatActivity {
                     if(timeDuration < 5 * 1000){
                         break;
                     }
+                }
+                if(mAnswerBellManager != null){
+                    mAnswerBellManager.stopPlay();
                 }
                 onCallingState();
                 break;
@@ -226,11 +245,17 @@ public class TellPhoneActivity extends AppCompatActivity {
                         break;
                     }
                 }
+                if(mAnswerBellManager != null){
+                    mAnswerBellManager.stopPlay();
+                }
                 onEndCallState();
                 break;
             case INCOMING:
                 break;
             case UNRECOGNIZED:
+                if(mAnswerBellManager != null){
+                    mAnswerBellManager.stopPlay();
+                }
                 onEndCallState();
                 break;
         }
@@ -258,6 +283,10 @@ public class TellPhoneActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mHandler = null;
+        if(mAnswerBellManager != null){
+            mAnswerBellManager.release();
+            mAnswerBellManager = null;
+        }
         AndroidVoiceManager.setVoiceMusic(this);
     }
 }

@@ -34,7 +34,7 @@ public class RingToneUtils {
             e.printStackTrace();
 
         }finally {
-
+            player.release();
         }
     }
 

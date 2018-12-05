@@ -81,6 +81,7 @@ public class SosSettingsActivity extends BaseActivity {
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
         }
         percentBaterly.setText(baterly+"%");
+        img1.setPower(baterly);
     }
 
     @OnClick({R.id.base_iv_back,R.id.btn_yes})

@@ -33,6 +33,7 @@ import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.activity.TellPhoneIncomingActivity;
 import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.presenter.manager.SyncManager;
+import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.RingToneUtils;
 
 
@@ -188,7 +189,7 @@ public class CmdHandler {
        /* Intent intent = new Intent("com.qzy.tt.incoming");
         intent.putExtra("phone_number",number);
         context.sendBroadcast(intent);*/
-
+        AppUtils.wakeUpAndUnlock(context);
         Intent intent = new Intent(context, TellPhoneIncomingActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("diapadNumber", number);
