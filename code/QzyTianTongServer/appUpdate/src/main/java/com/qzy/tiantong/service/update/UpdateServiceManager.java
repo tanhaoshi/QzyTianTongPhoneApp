@@ -76,6 +76,7 @@ public class UpdateServiceManager implements IUpdateManager {
 
             @Override
             public void onBackupSuccess() {
+                LogUtils.d("onBackupSuccess");
                 if (UpdateFileManager.checkUpdateFileMD5("/mnt/sdcard/update/backup")) {  //升级成功
                     UpdateLocalConfigBean localConfigBean = mIniFile.getUpdateLocalConfigBean(true);
                     localConfigBean.setBackup("1");
@@ -86,11 +87,13 @@ public class UpdateServiceManager implements IUpdateManager {
 
             @Override
             public void onBackupFailed() {
+                LogUtils.d("onBackupFailed");
                  mLocalUpdateSocketManager.startLocalBackup();
             }
 
             @Override
             public void onUpdateSuccess() {
+                LogUtils.d("onUpdateSuccess");
                 if (UpdateFileManager.checkUpdateFileMD5("/mnt/sdcard/update")) {  //升级成功
 
                     //升级成功将新的版本号和md5写到原始配置文件
@@ -125,11 +128,13 @@ public class UpdateServiceManager implements IUpdateManager {
 
             @Override
             public void onUpdateFailed() {
+                LogUtils.d("onUpdateFailed");
                 mLocalUpdateSocketManager.startLocalUpdte();
             }
 
             @Override
             public void onRecoverSuccess() {
+                LogUtils.d("onRecoverSuccess");
                 UpdateLocalConfigBean localConfigBean = mIniFile.getUpdateLocalConfigBean(true);
                 localConfigBean.setRecover("1");
                 mIniFile.setUpdateLocalConfigBean(localConfigBean);
@@ -138,11 +143,13 @@ public class UpdateServiceManager implements IUpdateManager {
 
             @Override
             public void onRecoverFailed() {
+                LogUtils.d("onRecoverFailed");
                 mLocalUpdateSocketManager.startLocalRecover();
             }
 
             @Override
             public void onRebootSuccess() {
+                LogUtils.d("onRebootSuccess");
                 UpdateLocalConfigBean localConfigBean = mIniFile.getUpdateLocalConfigBean(true);
                 localConfigBean.setReboot("1");
                 mIniFile.setUpdateLocalConfigBean(localConfigBean);
@@ -150,6 +157,7 @@ public class UpdateServiceManager implements IUpdateManager {
 
             @Override
             public void onRebootFailed() {
+                LogUtils.d("onRebootFailed");
                 mLocalUpdateSocketManager.startLocalReboot();
             }
 

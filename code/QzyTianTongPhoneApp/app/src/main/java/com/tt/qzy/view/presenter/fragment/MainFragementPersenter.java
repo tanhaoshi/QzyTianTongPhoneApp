@@ -253,7 +253,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
     private void parseServerUpgradleFailed(Object o){
         PhoneCmd cmd = (PhoneCmd)o;
         TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse)cmd.getMessage();
-        if(updateResponse.getIsSendFileFinish()){
+        if(!updateResponse.getIsSendFileFinish()){
             EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_UPLOAD_APP
                     ,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));
         }
