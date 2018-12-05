@@ -13,6 +13,8 @@ import android.view.KeyEvent;
 
 import com.android.internal.telephony.ITelephony;
 import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tiantong.service.atcommand.AtCommandToolManager;
+import com.qzy.tiantong.service.atcommand.AtCommandTools;
 import com.qzy.tiantong.service.service.ITianTongServer;
 import com.qzy.tiantong.service.utils.PhoneUtils;
 import com.qzy.tt.data.TtPhoneWifiProtos;
@@ -29,11 +31,20 @@ public class QzyPhoneManager {
     private ITianTongServer mServer;
 
 
+    private AtCommandToolManager mAtCommandToolManager;
+
     public QzyPhoneManager(Context context, ITianTongServer server) {
         mContext = context;
         mServer = server;
 
         setPhoneListener();
+        //初始化at指令
+        mAtCommandToolManager = new AtCommandToolManager(context, new AtCommandToolManager.IAtResultListener() {
+            @Override
+            public void onResult(String cmd, String result) {
+
+            }
+        });
     }
 
     /**
@@ -114,6 +125,9 @@ public class QzyPhoneManager {
             IBinder binder = (IBinder) method.invoke(null, new Object[]{Context.TELEPHONY_SERVICE});
             ITelephony telephony = ITelephony.Stub.asInterface(binder);
             telephony.endCall();
+            if(mAtCommandToolManager != null){
+                mAtCommandToolManager.sendAtCommand(AtCommandTools.at_command_hungup);
+            }
             LogUtils.d("endcall .....");
             sendPhonehangup();
         } catch (Exception e) {
@@ -258,6 +272,10 @@ public class QzyPhoneManager {
 
 
     public void release() {
+
+        if (mAtCommandToolManager != null) {
+            mAtCommandToolManager.free();
+        }
 
     }
 }
