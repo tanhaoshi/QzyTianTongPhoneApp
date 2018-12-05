@@ -117,6 +117,7 @@ public class AtThread extends Thread {
         msg.what = key;
         Bundle bd = new Bundle();
         bd.putString("result", mAtResult);
+        bd.putString("command_value", mCmd);
         msg.setData(bd);
         mHandler.sendMessage(msg);
         return mAtResult;

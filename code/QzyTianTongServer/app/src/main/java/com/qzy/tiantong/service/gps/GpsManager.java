@@ -18,6 +18,8 @@ import android.os.UserHandle;
 import android.provider.Settings;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tiantong.service.atcommand.AtCommandToolManager;
+import com.qzy.tiantong.service.atcommand.AtCommandTools;
 import com.qzy.tiantong.service.netty.NettyServerManager;
 import com.qzy.tiantong.service.utils.GpsUtils;
 import com.qzy.tt.data.TtPhonePositionProtos;
@@ -28,13 +30,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 public class GpsManager {
-
-    private static final String action_gps_open = "com.qzy.tt.ACTION_GPS_OPEN";
-    private static final String action_gps_close = "com.qzy.tt.ACTION_GPS_CLOSE";
-
-    private static final String action_gps_result = "com.qzy.tt.ACTION_GPS_RESULT";
-    private static final String extra_option = "extra_option";
-    private static final String extra_value = "extra_value";
 
     private Context mContext;
 
@@ -48,19 +43,47 @@ public class GpsManager {
 
     private boolean isGpsOpen = false;
 
+    //at 指令管理
+    private AtCommandToolManager mAtCommandToolManager;
+
     public GpsManager(Context context, NettyServerManager manager) {
         mContext = context;
         mNettyServerManager = manager;
 
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(action_gps_result);
-        mContext.registerReceiver(mReceiver, intentFilter);
+
 
         openGPS(true);
 
         initLocationManager();
 
         //openGps();
+
+        initAtCommandManager();
+    }
+
+
+    private void initAtCommandManager(){
+        mAtCommandToolManager = new AtCommandToolManager(mContext, new AtCommandToolManager.IAtResultListener() {
+            @Override
+            public void onResult(String cmd, String result) {
+                if(AtCommandTools.at_command_open_gps.equals(cmd)){
+                    if (result.equals("ok")) {
+                        mCurrenLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER); // 通过GPS获取位置
+                        isGpsOpen = true;
+                    } else {
+                        //isGpsOpen = false;
+                    }
+                } else  if(AtCommandTools.at_command_close_gps.equals(cmd)){
+
+                    if (result.equals("ok")) {
+                        mCurrenLocation = null;
+                        isGpsOpen = false;
+                    } else {
+                        // isGpsOpen = true;
+                    }
+                }
+            }
+        });
     }
 
     private void initLocationManager() {
@@ -157,8 +180,9 @@ public class GpsManager {
      * 打开GPS
      */
     public void openGps() {
-        Intent intent = new Intent(action_gps_open);
-        mContext.sendBroadcastAsUser(intent, getUserHandleALL());
+        if(mAtCommandToolManager != null){
+            mAtCommandToolManager.sendAtCommand(AtCommandTools.at_command_open_gps);
+        }
         LogUtils.d("open gps .....");
     }
 
@@ -191,46 +215,11 @@ public class GpsManager {
      * 关闭GPS
      */
     public void closeGps() {
-        Intent intent = new Intent(action_gps_close);
-        mContext.sendBroadcastAsUser(intent, getUserHandleALL());
+        if(mAtCommandToolManager != null){
+            mAtCommandToolManager.sendAtCommand(AtCommandTools.at_command_close_gps);
+        }
         LogUtils.d("close gps .....");
     }
-
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            LogUtils.e("action = " + action);
-            if (action_gps_result.equals(action)) {
-                String optionType = intent.getStringExtra("extra_option");
-                LogUtils.e("optionType = " + optionType);
-                if (optionType.equals("open")) {
-                    String value = intent.getStringExtra(extra_value);
-                    LogUtils.e("value = " + value);
-
-                    if (value.equals("ok")) {
-                        mCurrenLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER); // 通过GPS获取位置
-                        isGpsOpen = true;
-                    } else {
-                        //isGpsOpen = false;
-                    }
-
-                } else if (optionType.equals("close")) {
-                    String value = intent.getStringExtra(extra_value);
-                    LogUtils.e("value = " + value);
-
-                    if (value.equals("ok")) {
-                        mCurrenLocation = null;
-                        isGpsOpen = false;
-                    } else {
-                        // isGpsOpen = true;
-                    }
-
-                }
-            }
-
-        }
-    };
 
     /**
      * 定时发送经纬度状态给手机
@@ -297,7 +286,9 @@ public class GpsManager {
     }
 
     public void free() {
-        mContext.unregisterReceiver(mReceiver);
+       if(mAtCommandToolManager != null){
+           mAtCommandToolManager.free();
+       }
     }
 
 
