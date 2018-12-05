@@ -4,10 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.service.ITianTongServer;
+
 
 
 /**
@@ -66,13 +69,22 @@ public class BroadcastManager {
                     if (phoneState.equals("2")) {
                         //mServer.startRecorder();
                         //mServer.startPlayer();
+                       /* if(mHandler.hasMessages(1)){
+                            mHandler.removeMessages(1);
+                        }*/
                         mServer.initTtPcmDevice();
                         mServer.onPhoneStateChange(TtPhoneState.CALL);
                     } else if (phoneState.equals("0")) {
                         //关闭设备
                         // mServer.closeRecorderAndPlayer();
+                        /*if(mHandler.hasMessages(1)){
+                            mHandler.removeMessages(1);
+                        }*/
                         mServer.freeTtPcmDevice();
                         mServer.onPhoneStateChange(TtPhoneState.NOCALL);
+                    }else if (phoneState.equals("5")) {
+                        //mHandler.sendEmptyMessageDelayed(1,40 * 1000);
+                       // mServer.onPhoneStateChange(TtPhoneState.RING);
                     }
 
                 }
@@ -84,6 +96,18 @@ public class BroadcastManager {
 
             }
 
+        }
+    };
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 1:
+                    mServer.initTtPcmDevice();
+                    break;
+            }
         }
     };
 
