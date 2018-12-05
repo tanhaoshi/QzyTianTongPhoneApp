@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AtDemo</string>
+    <string name="hello_world">Hello world!</string>
+    
+    
+    <string name="click">发送AT</string>
+    <string name="send_success">发送指令成功</string>
+
+</resources>
