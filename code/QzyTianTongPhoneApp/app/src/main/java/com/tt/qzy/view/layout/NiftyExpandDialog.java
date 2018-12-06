@@ -187,6 +187,23 @@ public final class NiftyExpandDialog {
                 .setCustomView(R.layout.app_update_layout,mContext);
     }
 
+    public NiftyDialogBuilder serverUpdateDismiss(boolean isCancelable){
+        return mNiftyDialogBuilder.withTitle("天通猫软件更新")
+                .withTitleColor(mContext.getResources().getColor(R.color.update_dialog_title))
+                .withDividerColor(mContext.getResources().getColor(R.color.update_dialog_divider))
+                .withMessage(mContext.getString(R.string.TMT_the_change_content))
+                .withMessageColor(mContext.getResources().getColor(R.color.update_dialog_message))
+                .withDialogColor(mContext.getResources().getColor(R.color.update_dialog_dialogs))
+                .withIcon(mContext.getResources().getDrawable(R.drawable.icon))
+                .withDuration(700)
+                .withEffect(Effectstype.Slidetop)
+                .withButton1Text(mContext.getString(R.string.TMT_yes))
+                .withButton2Text(mContext.getString(R.string.TMT_cannel))
+                .isCancelableOnTouchOutside(false)
+                .isCancelable(isCancelable)
+                .setCustomView(R.layout.app_update_layout,mContext);
+    }
+
     /**
      *
      * the dialog is can be closed

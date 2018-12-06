@@ -282,10 +282,8 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
         TtPhoneMobileDataProtos.TtPhoneMobileData ttPhoneMobileData = (TtPhoneMobileDataProtos.TtPhoneMobileData)cmd.getMessage();
         if(ttPhoneMobileData.getResponseStatus()){
             mView.get().getMobileDataShow(true);
-//            NToast.shortToast(mContext,"打开天通猫数据成功!");
         }else{
             mView.get().getMobileDataShow(false);
-//            NToast.shortToast(mContext,"打开天通猫数据失败!");
         }
     }
 

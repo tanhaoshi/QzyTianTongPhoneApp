@@ -292,7 +292,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
     @Override
     public void upgradleServerApp() {
         final NiftyExpandDialog dialogBuilder = NiftyExpandDialog.getInstance(getActivity()).initDialogBuilder();
-        dialogBuilder.nonCanceDismiss(false)
+        dialogBuilder.serverUpdateDismiss(false)
                 .setButton1Click(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
