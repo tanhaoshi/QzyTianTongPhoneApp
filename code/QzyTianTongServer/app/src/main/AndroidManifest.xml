@@ -32,6 +32,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.BATTERY_STATS"/>
 
     <!-- 打开天通猫移动数据权限 -->
     <uses-permission android:name="android.permission.MODIFY_PHONE_STATE"/>

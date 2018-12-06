@@ -13,7 +13,7 @@ import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.lib.utils.QzySystemUtils;
 import com.qzy.tiantong.service.BuildConfig;
 import com.qzy.tiantong.service.mobiledata.IMobileDataManager;
-import com.qzy.tiantong.service.phone.BatteryManager;
+import com.qzy.tiantong.service.phone.QzyBatteryManager;
 import com.qzy.tiantong.service.gps.GpsManager;
 import com.qzy.tiantong.service.phone.PhoneClientManager;
 import com.qzy.tiantong.service.phone.SmsPhoneManager;
@@ -59,7 +59,7 @@ public class PhoneNettyManager implements IMobileDataManager{
     //客户端手机管理
     private PhoneClientManager mPhoneClientManager;
 
-    private Thread mStateThread;
+    private Runnable mStateThread;
     private CallPhoneStateProtos.CallPhoneState.PhoneState currentPhoneState;
     private String currentPhoneNumber = "";
     private int currentSignalValue = 99;
@@ -77,7 +77,7 @@ public class PhoneNettyManager implements IMobileDataManager{
     /**
      * 电量获取
      */
-    private BatteryManager mBatteryManager;
+    private QzyBatteryManager mBatteryManager;
 
     private MobileDataManager mMobileDataManager;
 
@@ -140,7 +140,7 @@ public class PhoneNettyManager implements IMobileDataManager{
      * 初始化电量管理
      */
     private void initBattery() {
-        mBatteryManager = new BatteryManager(mContext, new BatteryManager.onBatteryListenr() {
+        mBatteryManager = new QzyBatteryManager(mContext, new QzyBatteryManager.onBatteryListenr() {
             @Override
             public void onBattery(int level, int scal) {
                 if (ttPhoneBattery == null) {
@@ -157,33 +157,30 @@ public class PhoneNettyManager implements IMobileDataManager{
      * 初始化发送线程
      */
     private void initSendThread() {
-        mStateThread = new Thread(new Runnable() {
+        mStateThread = new Runnable() {
             @Override
             public void run() {
                 try {
-                    while (true) {
-                        Thread.sleep(3000);
-                        LogUtils.e("send all sate.....");
+                   // LogUtils.e("send all sate.....");
 
-                        if (currentPhoneState != null) {
-                            sendTtCallPhoneStateToClient(currentPhoneState, currentPhoneNumber);
-                        }
-                        sendSignalToPhoneClient(currentSignalValue);
-                        //发送电量
-                        sendTtPhoneBatteryToClient();
-                        //sim 卡是否插入
-                        sendSimStateToPhoneClient();
-
-                        //发送gps状态
-                        mGpsManager.sendGpsState();
+                    if (currentPhoneState != null) {
+                        sendTtCallPhoneStateToClient(currentPhoneState, currentPhoneNumber);
                     }
+                    sendSignalToPhoneClient(currentSignalValue);
+                    //发送电量
+                    sendTtPhoneBatteryToClient();
+                    //sim 卡是否插入
+                    sendSimStateToPhoneClient();
 
+                    //发送gps状态
+                    mGpsManager.sendGpsState();
+                    mHandler.postDelayed(mStateThread,3000);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        });
-        mStateThread.start();
+        };
+        mHandler.post(mStateThread);
     }
 
 
@@ -403,13 +400,12 @@ public class PhoneNettyManager implements IMobileDataManager{
      * 发送电池电量
      */
     public void sendTtPhoneBatteryToClient() {
-        LogUtils.e("sendTtPhoneBatteryToClient come in .....");
+
         if (checkNettManagerIsNull()) return;
-        LogUtils.e("mNettyServerManager not null .....");
         if (ttPhoneBattery != null) {
-            LogUtils.e("ttPhoneBattery not null .....");
+            mBatteryManager.getBattery();
             mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_phone_battery, ttPhoneBattery));
-            LogUtils.e("mNettyServerManager send data .....");
+
         }
     }
 
@@ -719,10 +715,10 @@ public class PhoneNettyManager implements IMobileDataManager{
 
         EventBus.getDefault().unregister(this);
         freeSingnal();
-        if (mStateThread != null && mStateThread.isAlive()) {
-            mStateThread.interrupt();
+
+        if(mHandler != null && mStateThread != null){
+            mHandler.removeCallbacks(mStateThread);
         }
-        mStateThread = null;
 
         if (mSmsPhoneManager != null) {
             mSmsPhoneManager.free();

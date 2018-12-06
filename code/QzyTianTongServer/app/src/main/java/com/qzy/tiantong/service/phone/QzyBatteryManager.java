@@ -4,21 +4,25 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.BatteryManager;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tt.data.TtPhoneBatteryProtos;
 
 
 /**
  * Created by yj.zhang on 2018/9/21.
  */
 
-public class BatteryManager {
+public class QzyBatteryManager {
 
     private Context mContext;
 
     private onBatteryListenr callback;
 
-    public BatteryManager(Context context,onBatteryListenr listenr) {
+
+
+    public QzyBatteryManager(Context context, onBatteryListenr listenr) {
         mContext = context;
         callback  = listenr;
 
@@ -43,6 +47,14 @@ public class BatteryManager {
             }
         }
     };
+
+    public void getBattery(){
+        BatteryManager batteryManager = (BatteryManager)mContext.getSystemService(Context.BATTERY_SERVICE);
+        int battery = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+        if(callback != null){
+            callback.onBattery(battery,100);
+        }
+    }
 
     public void free() {
         mContext.unregisterReceiver(mBatInfoReveiver);
