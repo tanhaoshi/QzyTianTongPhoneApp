@@ -128,7 +128,7 @@ public class CallLogManager {
             }
 
             String phoneNumber = ttDeleCallLog.getPhonenumber();
-            if(TextUtils.isEmpty(phoneNumber)){
+            if(!TextUtils.isEmpty(phoneNumber)){
                 return PhoneUtils.deleteCallLogByPhoneNumber(context,phoneNumber);
             }
 

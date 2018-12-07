@@ -400,29 +400,12 @@ public class PhoneUtils {
      */
     public static boolean deleteCallLogByPhoneNumber(Context context,String phonenumber) {
         try {
-
-            String[] projection = {CallLog.Calls._ID,CallLog.Calls.CACHED_NAME, CallLog.Calls.NUMBER, CallLog.Calls.TYPE, CallLog.Calls.DURATION, CallLog.Calls.DATE};
-
             Uri callLogUri = CallLog.Calls.CONTENT_URI;
             String where = CallLog.Calls.NUMBER + "= " + phonenumber;
-
-            Cursor cursor = context.getContentResolver().query(callLogUri, projection, where, null,null);
-
-            if(cursor != null){
-                int allCount = cursor.getCount();
-                int index = 0;
-                while (cursor.moveToNext()){
-                    int count = context.getContentResolver().delete(callLogUri, where, null);
-                    LogUtils.e("count = " + count);
-                    if(count > 0){
-                        index ++ ;
-                    }
-                }
-                cursor.close();
-                if(index == allCount){
-                    return true;
-                }
-
+            int count = context.getContentResolver().delete(callLogUri, where, null);
+            LogUtils.e("count = " + count);
+            if(count > 0){
+                return true;
             }
 
         } catch (Exception e) {
