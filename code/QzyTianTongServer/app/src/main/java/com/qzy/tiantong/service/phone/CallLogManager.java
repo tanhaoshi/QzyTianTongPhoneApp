@@ -160,12 +160,15 @@ public class CallLogManager {
             String phoneNumber = ttDeleSms.getPhonenumber();
             if(!TextUtils.isEmpty(phoneNumber)){
                  PhoneUtils.delSmsByPhonenumber(context,phoneNumber);
+
+            }else{
+                long id = ttDeleSms.getServerDataId();
+                if(id >= 0){
+                    PhoneUtils.delSmsById(context,id +"");
+                }
             }
 
-            long id = ttDeleSms.getServerDataId();
-            if(id >= 0){
-                 PhoneUtils.delSmsById(context,id +"");
-            }
+
 
         }catch (Exception e){
             e.printStackTrace();
