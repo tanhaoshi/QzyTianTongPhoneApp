@@ -8,12 +8,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Criteria;
+import android.location.GpsSatellite;
+import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.UserHandle;
 import android.provider.Settings;
 
@@ -28,6 +31,7 @@ import com.qzy.tt.probuf.lib.data.PrototocalTools;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Iterator;
 
 public class GpsManager {
 
@@ -51,7 +55,6 @@ public class GpsManager {
         mNettyServerManager = manager;
 
 
-
         openGPS(true);
 
         initLocationManager();
@@ -62,18 +65,18 @@ public class GpsManager {
     }
 
 
-    private void initAtCommandManager(){
+    private void initAtCommandManager() {
         mAtCommandToolManager = new AtCommandToolManager(mContext, new AtCommandToolManager.IAtResultListener() {
             @Override
             public void onResult(String cmd, String result) {
-                if(AtCommandTools.at_command_open_gps.equals(cmd)){
+                if (AtCommandTools.at_command_open_gps.equals(cmd)) {
                     if (result.equals("ok")) {
                         mCurrenLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER); // 通过GPS获取位置
                         isGpsOpen = true;
                     } else {
                         //isGpsOpen = false;
                     }
-                } else  if(AtCommandTools.at_command_close_gps.equals(cmd)){
+                } else if (AtCommandTools.at_command_close_gps.equals(cmd)) {
 
                     if (result.equals("ok")) {
                         mCurrenLocation = null;
@@ -107,6 +110,10 @@ public class GpsManager {
             if (mCurrenLocation != null) {
                 LogUtils.d("initLocationManager lat =" + mCurrenLocation.getLatitude() + " lng =" + mCurrenLocation.getLongitude());
             }
+
+            //状态监听
+            locationManager.addGpsStatusListener(gpsStatus);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -180,45 +187,26 @@ public class GpsManager {
      * 打开GPS
      */
     public void openGps() {
-        if(mAtCommandToolManager != null){
+        if (mAtCommandToolManager != null) {
             mAtCommandToolManager.sendAtCommand(AtCommandTools.at_command_open_gps);
         }
         LogUtils.d("open gps .....");
     }
 
-    private UserHandle getUserHandleALL() {
-        UserHandle userHandle = null;
-        try {
-            Field[] fields = UserHandle.class.getDeclaredFields();
-            for (Field field : fields) {
-                if (!Modifier.isStatic(field.getModifiers())) {
-                    continue;
-                }
-
-                if (field.getName().equals("ALL")) {
-                    //LogUtils.e("get userHandle ..........");
-                    userHandle = (UserHandle) field.get(UserHandle.class);
-                    // LogUtils.e("get userHandle success ..........");
-                    break;
-                }
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return userHandle;
-    }
 
 
     /**
      * 关闭GPS
      */
     public void closeGps() {
-        if(mAtCommandToolManager != null){
+        if (mAtCommandToolManager != null) {
             mAtCommandToolManager.sendAtCommand(AtCommandTools.at_command_close_gps);
+            mCurrenLocation = null;
+            sendGpsState();
         }
         LogUtils.d("close gps .....");
+
+
     }
 
     /**
@@ -279,6 +267,7 @@ public class GpsManager {
 
     /**
      * 获取当前经纬度
+     *
      * @return
      */
     public Location getmCurrenLocation() {
@@ -286,10 +275,69 @@ public class GpsManager {
     }
 
     public void free() {
-       if(mAtCommandToolManager != null){
-           mAtCommandToolManager.free();
-       }
+        if (mAtCommandToolManager != null) {
+            mAtCommandToolManager.free();
+        }
     }
+
+
+
+    private GpsStatus.Listener gpsStatus = new GpsStatus.Listener() {
+
+        private  int gpscount = 0;
+
+        @Override
+        public void onGpsStatusChanged(int event) {
+
+            // TODO Auto-generated method stub
+            if (event == GpsStatus.GPS_EVENT_FIRST_FIX) {
+            //第一次定位  
+            } else if (event == GpsStatus.GPS_EVENT_SATELLITE_STATUS) {
+                //卫星状态改变  
+                GpsStatus gpsStauts = locationManager.getGpsStatus(null); // 取当前状态  
+                int maxSatellites = gpsStauts.getMaxSatellites(); //获取卫星颗数的默认最大值  
+
+                Iterator<GpsSatellite> it = gpsStauts.getSatellites().iterator();//创建一个迭代器保存所有卫星  
+                while (it.hasNext() && gpscount <= maxSatellites) {
+                    GpsSatellite s = it.next();
+                    //可见卫星数量
+                    if (s.usedInFix()) {
+                    //已定位卫星数量
+                        gpscount++;
+                    }
+                }
+               LogUtils.e("gps count " + gpscount);
+
+
+
+                mHandler.removeCallbacks(runnable);
+                mHandler.postDelayed(runnable,10 * 1000);
+
+            } else if (event == GpsStatus.GPS_EVENT_STARTED) {
+            //定位启动  
+                LogUtils.e("gps start " );
+            } else if (event == GpsStatus.GPS_EVENT_STOPPED) {
+            //定位结束  
+                LogUtils.e("gps stop " );
+            }
+        }
+    };
+
+
+    private Handler mHandler = new Handler(){};
+
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                LogUtils.e("lost gps signal ..... ");
+                mCurrenLocation = null;
+                sendGpsState();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    };
 
 
 }

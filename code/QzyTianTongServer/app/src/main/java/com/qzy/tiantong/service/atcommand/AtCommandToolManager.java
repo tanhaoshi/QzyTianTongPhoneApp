@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.text.TextUtils;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tiantong.service.utils.QzyUserHandler;
 
 public class AtCommandToolManager {
 
@@ -35,8 +36,7 @@ public class AtCommandToolManager {
     public void sendAtCommand(String cmd){
         Intent intent = new Intent(action_at_command);
         intent.putExtra(extra_command_vaule,cmd);
-        mContext.sendBroadcast(intent);
-
+        mContext.sendBroadcastAsUser(intent, QzyUserHandler.getUserHandleALL());
     }
 
 
