@@ -36,6 +36,8 @@
 
     <uses-permission android:name= "android.permission.ACCESS_FINE_LOCATION"/>
 
+    <uses-permission android:name="android.permission.WRITE_CALL_LOG"/>
+
     <!-- 打开天通猫移动数据权限 -->
     <uses-permission android:name="android.permission.MODIFY_PHONE_STATE"/>
 
