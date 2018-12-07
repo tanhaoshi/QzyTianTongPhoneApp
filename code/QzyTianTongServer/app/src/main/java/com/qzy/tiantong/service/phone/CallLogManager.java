@@ -164,7 +164,7 @@ public class CallLogManager {
 
             long id = ttDeleSms.getServerDataId();
             if(id >= 0){
-                 PhoneUtils.deleteCallLogByID(context,id);
+                 PhoneUtils.delSmsById(context,id +"");
             }
 
         }catch (Exception e){
