@@ -158,7 +158,7 @@ public class CallLogManager {
             }
 
             String phoneNumber = ttDeleSms.getPhonenumber();
-            if(TextUtils.isEmpty(phoneNumber)){
+            if(!TextUtils.isEmpty(phoneNumber)){
                  PhoneUtils.delSmsByPhonenumber(context,phoneNumber);
             }
 
