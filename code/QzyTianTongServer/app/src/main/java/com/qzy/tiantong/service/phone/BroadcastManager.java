@@ -10,7 +10,7 @@ import android.text.TextUtils;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.service.ITianTongServer;
-
+import com.qzy.tiantong.service.utils.PhoneUtils;
 
 
 /**
@@ -38,6 +38,7 @@ public class BroadcastManager {
         intentFilter.addAction("com.test");
         intentFilter.addAction("com.test.close");
         intentFilter.addAction("com.qzy.phone.state");
+        intentFilter.addAction(PhoneUtils.actionstrDelCallback);
         mContext.registerReceiver(mReceiver, intentFilter);
     }
 
@@ -93,6 +94,8 @@ public class BroadcastManager {
                 //关闭设备
                // mServer.closeRecorderAndPlayer();
                 mServer.freeTtPcmDevice();
+
+            }else if(action.equals(PhoneUtils.actionstrDelCallback)){
 
             }
 

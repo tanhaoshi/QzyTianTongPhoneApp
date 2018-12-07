@@ -29,6 +29,7 @@ import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.CallPhoneStateProtos;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtDeleCallLogProtos;
+import com.qzy.tt.data.TtDeleSmsProtos;
 import com.qzy.tt.data.TtPhoneBatteryProtos;
 import com.qzy.tt.data.TtPhoneGetServerVersionProtos;
 import com.qzy.tt.data.TtPhoneMobileDataProtos;
@@ -734,6 +735,37 @@ public class PhoneNettyManager implements IMobileDataManager{
                }catch (Exception e){
                    e.printStackTrace();
                }
+            }
+        }).start();
+
+    }
+
+    /**
+     * 删除短信
+     */
+    public void deleteSms(final TtDeleSmsProtos.TtDeleSms ttDeleSms){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+
+                    if(ttDeleSms == null){
+                        LogUtils.e(" ttDeleSms is null");
+                        return ;
+                    }
+
+                     CallLogManager.deleteSms(mContext,ttDeleSms);
+                    /*TtDeleCallLogProtos.TtDeleCallLog ttDeleCallLogR = TtDeleCallLogProtos.TtDeleCallLog.newBuilder()
+                            .setIp(ttDeleCallLog.getIp())
+                            .setIsResponse(true)
+                            .setState(state)
+                            .build();
+
+                    mNettyServerManager.sendData(ttDeleCallLog.getIp(),PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.response_server_del_calllog,ttDeleCallLogR));*/
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         }).start();
 

@@ -159,12 +159,76 @@ public class PhoneUtils {
 
 
 
+
+    public static final String actionstr = "com.qzy.sms.write";
+    public static final String actionstrDel = "com.qzy.sms.del";
+    public static final String extra_del_all = "isDeleAll";
+    public static final String extra_del_by_id = "del_id";
+    public static final String extra_del_by_phonenumber = "del_phonenumber";
+    public static final String actionstrDelCallback = "com.qzy.sms.callback";
+    private static final String extra_handler = "handler";
+    public static final String extra_state = "sate";
     public static void writeSmsRead(Context context,long id) {
         try {
 
-            Intent intent = new Intent("com.qzy.sms.write");
+            Intent intent = new Intent(actionstr);
             intent.setComponent(new ComponentName("com.android.messaging","com.android.messaging.QzySmsService"));
             intent.putExtra("_id",id);
+            context.startService(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * 删除所有短信
+     * @param context
+     */
+    public static void delAllSms(Context context) {
+        try {
+
+            Intent intent = new Intent(actionstrDel);
+            intent.setComponent(new ComponentName("com.android.messaging","com.android.messaging.QzySmsService"));
+            intent.putExtra(extra_del_all,true);
+            context.startService(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * 删除短信
+     * @param context
+     */
+    public static void delSmsById(Context context,String id) {
+        try {
+
+            Intent intent = new Intent(actionstrDel);
+            intent.setComponent(new ComponentName("com.android.messaging","com.android.messaging.QzySmsService"));
+            intent.putExtra(extra_del_all,false);
+            intent.putExtra(extra_del_by_id,id);
+            context.startService(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    /**
+     * 删除短信
+     * @param context
+     */
+    public static void delSmsByPhonenumber(Context context,String phone) {
+        try {
+
+            Intent intent = new Intent(actionstrDel);
+            intent.setComponent(new ComponentName("com.android.messaging","com.android.messaging.QzySmsService"));
+            intent.putExtra(extra_del_all,false);
+            intent.putExtra(extra_del_by_id,"");
+            intent.putExtra(extra_del_by_phonenumber,phone);
             context.startService(intent);
         } catch (Exception e) {
             e.printStackTrace();

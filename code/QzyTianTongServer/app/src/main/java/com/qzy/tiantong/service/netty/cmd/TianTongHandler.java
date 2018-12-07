@@ -112,8 +112,7 @@ public class TianTongHandler extends Handler {
                     mServer.getPhoneNettyManager().deleteCallLog((TtDeleCallLogProtos.TtDeleCallLog) msg.obj);
                     break;
                 case PrototocalTools.IProtoServerIndex.request_server_del_sms:
-                   // TtDeleSmsProtos.TtDeleSms ttDeleSms = TtDeleSmsProtos.TtDeleSms.parseDelimitedFrom(inputStream);
-                   // senMsg(protoId,ttDeleSms);
+                    mServer.getPhoneNettyManager().deleteSms((TtDeleSmsProtos.TtDeleSms) msg.obj);
                     break;
                 default:
                     break;

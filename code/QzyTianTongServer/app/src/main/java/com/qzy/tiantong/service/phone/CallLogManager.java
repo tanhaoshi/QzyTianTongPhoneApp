@@ -11,6 +11,7 @@ import com.qzy.tiantong.service.phone.data.SmsInfo;
 import com.qzy.tiantong.service.utils.PhoneUtils;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtDeleCallLogProtos;
+import com.qzy.tt.data.TtDeleSmsProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 
 import java.util.List;
@@ -142,6 +143,33 @@ public class CallLogManager {
 
         return false;
 
+    }
+
+    /**
+     * 删除通话记录
+     * @param context
+     * @param ttDeleSms
+     * @return
+     */
+    public static synchronized void deleteSms(Context context,TtDeleSmsProtos.TtDeleSms ttDeleSms){
+        try{
+            if(ttDeleSms.getIsDeleAll()){
+                 PhoneUtils.delAllSms(context);
+            }
+
+            String phoneNumber = ttDeleSms.getPhonenumber();
+            if(TextUtils.isEmpty(phoneNumber)){
+                 PhoneUtils.delSmsByPhonenumber(context,phoneNumber);
+            }
+
+            long id = ttDeleSms.getServerDataId();
+            if(id >= 0){
+                 PhoneUtils.deleteCallLogByID(context,id);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 
