@@ -12,6 +12,7 @@ import com.qzy.eventbus.MessageEventBus;
 import com.qzy.netty.NettyClientManager;
 import com.qzy.tt.data.CallPhoneProtos;
 import com.qzy.tt.data.TtCallRecordProtos;
+import com.qzy.tt.data.TtDeleCallLogProtos;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhoneGetServerVersionProtos;
 import com.qzy.tt.data.TtPhoneMobileDataProtos;
@@ -33,6 +34,7 @@ import com.socks.library.KLog;
 import com.tt.qzy.view.bean.AppInfoModel;
 import com.tt.qzy.view.bean.DatetimeModel;
 import com.tt.qzy.view.bean.EnableDataModel;
+import com.tt.qzy.view.bean.ProtobufMessageModel;
 import com.tt.qzy.view.bean.SMAgrementModel;
 import com.tt.qzy.view.bean.ServerPortIp;
 import com.tt.qzy.view.bean.SosSendMessageModel;
@@ -184,7 +186,7 @@ public class PhoneNettyManager {
     }
 
     /**
-     * 请求天通猫通话记录
+     * 请求设备通话记录
      */
     private void requestCallRecord(){
         TtCallRecordProtos.TtCallRecordProto ttCallRecordProto = TtCallRecordProtos.TtCallRecordProto.newBuilder()
@@ -194,7 +196,7 @@ public class PhoneNettyManager {
     }
 
     /**
-     * 请求天通猫短信记录
+     * 请求设备短信记录
      */
     private void requestShortMessage(){
         TtShortMessageProtos.TtShortMessage ttShortMessage = TtShortMessageProtos.TtShortMessage.newBuilder()
@@ -204,7 +206,7 @@ public class PhoneNettyManager {
     }
 
     /**
-     * 请求天通猫服务APP是否需要更新
+     * 请求设备服务APP是否需要更新
      */
     private void requestServerVersion(Object o){
         AppInfoModel appInfoModel = (AppInfoModel)o;
@@ -353,7 +355,7 @@ public class PhoneNettyManager {
     }
 
     /**
-     * 请求服务端打开天通猫移动数据
+     * 请求服务端打开设备移动数据
      */
     private void requestEnableData(Object o){
         EnableDataModel dataModel = (EnableDataModel)o;
@@ -376,7 +378,7 @@ public class PhoneNettyManager {
     }
 
     /**
-     * 天通猫服务端sos设置保存
+     * 设备服务端sos设置保存
      */
     private void requestSosSendMessage(Object o){
         SosSendMessageModel sosSendMessageModel = (SosSendMessageModel)o;
@@ -390,7 +392,7 @@ public class PhoneNettyManager {
     }
 
     /**
-     * 恢复天通猫出厂设置
+     * 恢复设备出厂设置
      */
     private void requestServerRecoverSystem(){
         TtPhoneRecoverSystemProtos.TtPhoneRecoverSystem recoverSystem = TtPhoneRecoverSystemProtos.TtPhoneRecoverSystem.newBuilder()
@@ -401,7 +403,7 @@ public class PhoneNettyManager {
     }
 
     /**
-     * 获取天通猫移动数据状态
+     * 获取设备移动数据状态
      */
     private void reuqestServerMobileStatus(){
         TtPhoneMobileDataProtos.TtPhoneMobileData mobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.newBuilder()
@@ -410,7 +412,7 @@ public class PhoneNettyManager {
     }
 
     /**
-     * 获取天通猫SOS初始状态
+     * 获取设备SOS初始状态
      */
     private void requestServerSosStatus(){
         TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState = TtPhoneSosStateProtos.TtPhoneSosState.newBuilder()
@@ -420,7 +422,7 @@ public class PhoneNettyManager {
     }
 
     /**
-     * 关闭服务天通猫SOS
+     * 关闭服务设备SOS
      */
     private void requestServerSosClose(){
         TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState = TtPhoneSosStateProtos.TtPhoneSosState.newBuilder()
@@ -428,6 +430,49 @@ public class PhoneNettyManager {
                 .setIsSwitch(false)
                 .build();
         sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_sos_close,ttPhoneSosState));
+    }
+
+    /**
+     * 请求服务删除该号码下通话记录
+     */
+    private void requestServerDeleteMessage(Object o){
+        ProtobufMessageModel messageModel = (ProtobufMessageModel)o;
+        if(messageModel.isDelete()){
+            TtDeleCallLogProtos.TtDeleCallLog ttDeleCallLog = TtDeleCallLogProtos.TtDeleCallLog.newBuilder()
+                    .setIsDeleAll(messageModel.isDelete())
+                    .setIp(CommonData.getInstance().getLocalWifiIp())
+                    .build();
+            sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_del_calllog,ttDeleCallLog));
+        }else{
+            TtDeleCallLogProtos.TtDeleCallLog ttDeleCallLog = TtDeleCallLogProtos.TtDeleCallLog.newBuilder()
+                    .setIsDeleAll(messageModel.isDelete())
+                    .setIp(CommonData.getInstance().getLocalWifiIp())
+                    .setPhonenumber(messageModel.getPhoneNumber())
+                    .setServerDataId(messageModel.getServerId())
+                    .build();
+            sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_del_calllog,ttDeleCallLog));
+        }
+    }
+
+    /**
+     * 请求服务删除该短信息下的记录
+     */
+    private void requestServerShortMessageDelete(Object o){
+        ProtobufMessageModel messageModel = (ProtobufMessageModel)o;
+        if(messageModel.isDelete()){
+            TtDeleCallLogProtos.TtDeleCallLog ttDeleCallLog = TtDeleCallLogProtos.TtDeleCallLog.newBuilder()
+                    .setIp(CommonData.getInstance().getLocalWifiIp())
+                    .setIsDeleAll(messageModel.isDelete())
+                    .build();
+            sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_del_sms,ttDeleCallLog));
+        }else{
+            TtDeleCallLogProtos.TtDeleCallLog ttDeleCallLog = TtDeleCallLogProtos.TtDeleCallLog.newBuilder()
+                    .setIp(CommonData.getInstance().getLocalWifiIp())
+                    .setIsDeleAll(messageModel.isDelete())
+                    .setPhonenumber(messageModel.getPhoneNumber())
+                    .build();
+            sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_del_sms,ttDeleCallLog));
+        }
     }
 
     private NettyClientManager.INettyListener nettyListener = new NettyClientManager.INettyListener() {
@@ -529,11 +574,17 @@ public class PhoneNettyManager {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_CLOSE:
                 requestServerSosClose();
                 break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_DELETE_SIGNAL_MESSAFGE:
+                requestServerDeleteMessage(event.getObject());
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_DELETE_SIGNAL_SHORT_MESSAGE:
+                requestServerShortMessageDelete(event.getObject());
+                break;
         }
     }
 
     /**
-     * 发送命令到天通猫
+     * 发送命令到设备
      *
      * @param cmd
      */

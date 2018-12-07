@@ -138,7 +138,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     }
 
     /**
-     * 连接天通猫成功
+     * 连接设备成功
      */
     private void connectTianTongSuccess(){
         tt_status = true;
@@ -156,7 +156,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     }
 
     /**
-     * 天通猫有无插入sim卡
+     * 设备有无插入sim卡
      */
     private void getTianTongSimcardStatsu(boolean status){
         if(status){
@@ -169,7 +169,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     }
 
     /**
-     * 天通猫是否连接上北斗卫星
+     * 设备是否连接上北斗卫星
      */
     private void getTianTongConnectBeiDou(boolean isConnect){
         tt_beidou_status = isConnect;
@@ -189,7 +189,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     }
 
     /**
-     * 更新天通猫信号强度
+     * 更新设备信号强度
      * AP 信号格数（共 4 档）和 rssi 对应关系建议方案：
      * RSSI  格数  dBm
      * 33     3    -95
@@ -242,7 +242,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
                 EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE));
             }else{
                 tt_call_status = true;
-               /// NToast.shortToast(this,"当前天通猫被占用");
+               /// NToast.shortToast(this,"当前设备被占用");
             }
         }else{
             tt_call_status = false;

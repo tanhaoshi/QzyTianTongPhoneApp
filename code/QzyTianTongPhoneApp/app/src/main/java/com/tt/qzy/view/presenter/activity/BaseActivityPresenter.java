@@ -56,7 +56,7 @@ public class BaseActivityPresenter extends BasePresenter<BaseMainView>{
     }
 
     /**
-     * 获取天通猫sim卡状态
+     * 获取设备sim卡状态
      */
     public boolean getTianTongSimStatus(Object obj){
         PhoneCmd cmd = (PhoneCmd)obj;
@@ -66,7 +66,7 @@ public class BaseActivityPresenter extends BasePresenter<BaseMainView>{
     }
 
     /**
-     * 天通猫是否连接上北斗卫星
+     * 设备是否连接上北斗卫星
      */
     public boolean getTianTongConnectBeiDou(Object obj){
         PhoneCmd cmd = (PhoneCmd)obj;

@@ -4,8 +4,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- 主页 -->
-    <string name="TMT_energy">天通猫电量</string>
-    <string name="TMT_quantity">天通猫信号</string>
+    <string name="TMT_energy">设备电量</string>
+    <string name="TMT_quantity">设备信号</string>
     <string name="TMT_sos">SOS</string>
     <string name="TMT_mobileData">数据</string>
     <string name="TMT_location">定位</string>
@@ -13,7 +13,7 @@
     <string name="TMT_title">地理坐标</string>
     <string name="TMT_latitude">纬度</string>
     <string name="TMT_longitude">经度</string>
-    <string name="TMT_entrnyMessage">无法连接,天通猫与卫星无连接</string>
+    <string name="TMT_entrnyMessage">无法连接,设备与卫星无连接</string>
     <string name="TMT_userEditors">用户编辑</string>
     <string name="TMT_exit">退出</string>
     <string name="TMT_sos_settings">sos设置</string>
@@ -25,10 +25,10 @@
     <string name="TMT_factroy_reset">恢复出厂设置</string>
     <string name="TMT_link_phone">请输入紧急联系电话</string>
     <string name="TMT_please_input_wifipassword">请输入WIFI热点密码</string>
-    <string name="TMT_please_settings_tt_server_date">设置天通猫时间</string>
+    <string name="TMT_please_settings_tt_server_date">设置设备时间</string>
     <string name="TMT_cannel">取消</string>
     <string name="TMT_yes">确认</string>
-    <string name="TMT_date_sync_succeed">同步天通猫时间成功!</string>
+    <string name="TMT_date_sync_succeed">同步设备时间成功!</string>
     <string name="TMT_share">已保存</string>
     <string name="TMT_city_name">城市列表</string>
     <string name="TMT_load_manager">下载管理</string>
@@ -92,14 +92,14 @@
     <string name="TMT_dial_number_notmull">电话号码不能为空</string>
     <string name="TMT_dial_dialing">正在拨号</string>
     <string name="TMT_dial_endcall">正在挂断</string>
-    <string name="TMT_gps_position_filed">获取天通猫定位失败!</string>
+    <string name="TMT_gps_position_filed">获取设备定位失败!</string>
 
     <string name="TMT_tt_signal_scan">正在搜星中...</string>
     <string name="TMT_tt_signal_connect">已连接</string>
     <string name="TMT_tt_signal_connect_xz">限制服务</string>
     <string name="TMT_tt_signal_connect_gj">告警服务</string>
 
-    <string name="TMT_be_occupied">天通猫已被占用!</string>
+    <string name="TMT_be_occupied">设备已被占用!</string>
     <string name="TMT_loading">加载中...</string>
     <string name="TMT_usb_swtich">USB切换</string>
     <string name="TMT_select_shortMessage">选择短信</string>

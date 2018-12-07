@@ -8,9 +8,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.qzy.eventbus.IMessageEventBustType;
+import com.qzy.eventbus.MessageEventBus;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.DeleteShortMessageAdapter;
 import com.tt.qzy.view.adapter.DeleteSignalAdapter;
+import com.tt.qzy.view.bean.ProtobufMessageModel;
 import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
 import com.tt.qzy.view.db.manager.CallRecordManager;
@@ -21,6 +24,8 @@ import com.tt.qzy.view.presenter.activity.DeleteShortMessagePresenter;
 import com.tt.qzy.view.presenter.activity.DeleteSignalPresenter;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.view.DeleteSignalView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +53,7 @@ public class DeleteSignalRecordActivity extends AppCompatActivity implements Del
     private DeleteSignalAdapter mDeleteSignalAdapter;
 
     private Long id = null;
+    private String phone = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +91,21 @@ public class DeleteSignalRecordActivity extends AppCompatActivity implements Del
                 if(null == id){
                     NToast.shortToast(this,getString(R.string.TMT_select_record));
                 }else{
-                    CallRecordManager.getInstance(DeleteSignalRecordActivity.this).deleteShortMessageOfPrimaryKey(id);
+                    ProtobufMessageModel protobufMessageModel = new ProtobufMessageModel();
+                    protobufMessageModel.setPhoneNumber(phone);
+                    protobufMessageModel.setServerId(id);
+                    protobufMessageModel.setDelete(false);
+                    EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.
+                            EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_DELETE_SIGNAL_MESSAFGE
+                    ,protobufMessageModel));
+
+                    List<CallRecordDao> recordDaoList = CallRecordManager.getInstance(DeleteSignalRecordActivity.this)
+                            .queryKeyOnPhoneNumber(phone);
+
+                    if(recordDaoList.size() > 0){
+                        CallRecordManager.getInstance(DeleteSignalRecordActivity.this).deleteLinkPhone(recordDaoList);
+                    }
+
                     NToast.shortToast(DeleteSignalRecordActivity.this,getString(R.string.TMT_delete_succeed));
                     finish();
                 }
@@ -129,11 +149,13 @@ public class DeleteSignalRecordActivity extends AppCompatActivity implements Del
     }
 
     @Override
-    public void onItemClick(View view, int position, boolean isFlag, Long id) {
+    public void onItemClick(View view, int position, boolean isFlag, Long id,String phone) {
         if(isFlag){
             this.id = id;
+            this.phone = phone;
         }else{
             this.id = null;
+            this.phone = "";
         }
     }
 }

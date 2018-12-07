@@ -1,7 +1,7 @@
 package com.tt.qzy.view.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -9,10 +9,10 @@ import android.widget.TextView;
 
 import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
 import com.kaopiz.kprogresshud.KProgressHUD;
-import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.bean.VersionCodeModel;
 import com.tt.qzy.view.layout.NiftyExpandDialog;
+import com.tt.qzy.view.network.OkHttpUtil;
 import com.tt.qzy.view.presenter.activity.CheckUpdatePresenter;
 import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.NToast;
@@ -59,7 +59,12 @@ public class CheckUpdateActivity extends AppCompatActivity implements CheckUpdat
                 break;
             case R.id.checkUpdate:
                 mHUD.show();
-                mPresenter.getAppversionRequest();
+                if(!OkHttpUtil.isNetWorkAvailable()){
+                    mPresenter.getAppversionRequest();
+                }else{
+                    NToast.shortToast(CheckUpdateActivity.this,"当前无网络!");
+                    mHUD.dismiss();
+                }
                 break;
         }
     }
@@ -147,7 +152,6 @@ public class CheckUpdateActivity extends AppCompatActivity implements CheckUpdat
 
     @Override
     public void loadData(boolean pullToRefresh) {
-
     }
 
     private void initProgress(){

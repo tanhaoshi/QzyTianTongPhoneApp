@@ -250,8 +250,8 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
         dateDialog.show();
         dateDialog.getWindow().setContentView(v);
         dateDialog.getWindow().setGravity(Gravity.BOTTOM);
-        title.setText("天通猫恢复出厂设置");
-        custom_input.setText("温馨提示:是否要将天通猫进行恢复出厂设置?");
+        title.setText("设备恢复出厂设置");
+        custom_input.setText("温馨提示:是否要将设备进行恢复出厂设置?");
         custom_cannel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -263,7 +263,8 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
             @Override
             public void onClick(View view) {
                 EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_RECOVER_SYSTEM));
-                NToast.shortToast(SettingsActivity.this,"恢复成功,请等待天通猫重启!");
+                mPresenter.recoverSystem(SettingsActivity.this);
+                NToast.shortToast(SettingsActivity.this,"恢复成功,请等待设备重启!");
                 dateDialog.dismiss();
             }
         });

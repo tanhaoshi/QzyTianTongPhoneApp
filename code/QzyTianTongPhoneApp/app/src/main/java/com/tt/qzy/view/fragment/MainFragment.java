@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SwitchCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -141,10 +142,14 @@ public class MainFragment extends Fragment implements MainFragmentView{
                     if(isChecked){
                         mPresneter.requestGpsPosition(true);
                     }else{
+                        main_latitude.setText("");
+                        main_longitude.setText("");
                         mPresneter.requestGpsPosition(false);
                     }
                 }else{
                     NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
+                    main_latitude.setText("");
+                    main_longitude.setText("");
                     main_location.setChecked(false);
                 }
             }
@@ -211,7 +216,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
                     settings_intent.putExtra("baterly",mainActivity.tt_baterly);
                     startActivity(settings_intent);
                 }else{
-                    NToast.shortToast(getActivity(),"不可操作,请链接天通猫!");
+                    NToast.shortToast(getActivity(),"不可操作,请链接设备!");
                 }
                 break;
             case R.id.tmt_noEntry:
@@ -254,22 +259,20 @@ public class MainFragment extends Fragment implements MainFragmentView{
     @Override
     public void getTtPhonePosition(TtPhonePositionProtos.TtPhonePosition ttPhonePosition) {
         if(ttPhonePosition.getResponseStatus()){
-            if(ttPhonePosition.getLatItude().length() == 0 || ttPhonePosition.getLatItude() == null){
+            if(TextUtils.isEmpty(ttPhonePosition.getLatItude()) || TextUtils.isEmpty(ttPhonePosition.getLongItude())){
+                main_latitude.setText("");
+                main_longitude.setText("");
                 return;
+            }else{
+                main_latitude.setText(AppUtils.decimalDouble(Double.valueOf(ttPhonePosition.getLatItude())));
+                main_longitude.setText(AppUtils.decimalDouble(Double.valueOf(ttPhonePosition.getLongItude())));
             }
-            if(ttPhonePosition.getLongItude().length() == 0 || ttPhonePosition.getLongItude() == null){
-                return;
-            }
-            main_latitude.setText(AppUtils.decimalDouble(Double.valueOf(ttPhonePosition.getLatItude())));
-            main_longitude.setText(AppUtils.decimalDouble(Double.valueOf(ttPhonePosition.getLongItude())));
 
             SPUtils.removeShare(getActivity(),Constans.CRY_HELP_SHORTMESSAGE);
                 SPUtils.putShare(getActivity(),Constans.CRY_HELP_SHORTMESSAGE,
                         SPUtils.getShare(getActivity(),Constans.HELP_SHORTMESSAGE,"").toString()+
                                 "经度:"+main_longitude.getText().toString()
                                 +"," +"纬度:"+main_latitude.getText().toString());
-//            }
-
         }else{
             NToast.shortToast(getActivity(),getActivity().getString(R.string.TMT_gps_position_filed));
         }

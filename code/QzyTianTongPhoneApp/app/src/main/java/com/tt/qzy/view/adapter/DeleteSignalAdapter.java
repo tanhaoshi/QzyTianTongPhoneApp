@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.db.dao.CallRecordDao;
-import com.tt.qzy.view.db.dao.ShortMessageDao;
+import com.tt.qzy.view.db.dao.MailListDao;
+import com.tt.qzy.view.db.manager.MailListManager;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.DateUtil;
 
@@ -42,7 +42,16 @@ public class DeleteSignalAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final CallRecordViewHolder callRecordViewHolder = (CallRecordViewHolder)holder;
-        callRecordViewHolder.phoneNumber.setText(mDaoList.get(position).getPhoneNumber());
+        if(null != mDaoList.get(position).getName() && mDaoList.get(position).getName().length() >= 1 && !"未知号码".equals(mDaoList.get(position).getName())){
+            callRecordViewHolder.phoneNumber.setText(mDaoList.get(position).getName());
+        }else{
+            String name = getPhoneKeyForName(mDaoList.get(position).getPhoneNumber());
+            if(null != name && name.length() > 0){
+                callRecordViewHolder.phoneNumber.setText(name);
+            }else{
+                callRecordViewHolder.phoneNumber.setText(mDaoList.get(position).getPhoneNumber());
+            }
+        }
         callRecordViewHolder.duration.setText("通话时长:"+ DateUtil.secondToDate(mDaoList.get(position).getDuration(),"mm:ss"));
         callRecordViewHolder.date.setText(mDaoList.get(position).getDate());
         if(Constans.ANSWER == Integer.valueOf(mDaoList.get(position).getState())){
@@ -58,10 +67,11 @@ public class DeleteSignalAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 if(mDaoList.get(position).isCheck()){
                     callRecordViewHolder.mRadioButton.setChecked(false);
                     mDaoList.get(position).setCheck(false);
-                    mOnItemClickListener.onItemClick(v,position,false,null);
+                    mOnItemClickListener.onItemClick(v,position,false,null,"");
                 }else{
                     mDaoList.get(position).setCheck(true);
-                    mOnItemClickListener.onItemClick(v,position,true,mDaoList.get(position).getId());
+                    mOnItemClickListener.onItemClick(v,position,true,mDaoList.get(position).getId(),
+                            mDaoList.get(position).getPhoneNumber());
                     callRecordViewHolder.mRadioButton.setChecked(true);
                 }
             }
@@ -74,13 +84,24 @@ public class DeleteSignalAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    private String getPhoneKeyForName(String phone){
+        List<MailListDao> listModels = MailListManager.getInstance(mContext).getByPhoneList(phone);
+        String name;
+        if(listModels.size() > 0){
+            name = listModels.get(0).getName();
+        }else{
+            name =  "";
+        }
+        return name;
+    }
+
     @Override
     public int getItemCount() {
         return mDaoList.size();
     }
 
     public interface OnItemClickListener {
-        void onItemClick(View view, int position, boolean isFlag, Long id);
+        void onItemClick(View view, int position, boolean isFlag, Long id,String phone);
     }
 
     private OnItemClickListener mOnItemClickListener;

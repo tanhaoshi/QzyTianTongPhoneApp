@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 
 /**
@@ -49,7 +50,9 @@ public class SideBar extends View{
         super(context);
     }
 
+    @Override
     protected void onDraw(Canvas canvas) {
+        KLog.i("slideBar onDraw!");
         super.onDraw(canvas);
         int height = getHeight();
         int width = getWidth();
@@ -71,7 +74,6 @@ public class SideBar extends View{
             canvas.drawText(b[i], xPos, yPos, paint);
             paint.reset();
         }
-
     }
 
     @Override

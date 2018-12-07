@@ -207,6 +207,7 @@ public class CmdHandler {
      *收到短信播放系统铃声
      */
     private void startSystemRingTone(){
+        RingToneUtils ringToneUtils = new RingToneUtils(context);
         RingToneUtils.playRing(TtPhoneApplication.getInstance());
     }
 

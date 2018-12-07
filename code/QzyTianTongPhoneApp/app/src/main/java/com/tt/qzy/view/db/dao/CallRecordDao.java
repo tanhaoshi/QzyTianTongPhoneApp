@@ -1,7 +1,5 @@
 package com.tt.qzy.view.db.dao;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
@@ -21,10 +19,12 @@ public class CallRecordDao {
     private String titleName;
     private int count;
     private boolean isCheck;
-    @Generated(hash = 942043692)
+    private boolean isGone;
+    private long serverId;
+    @Generated(hash = 1861288232)
     public CallRecordDao(Long id, String phoneNumber, String name, String address,
             String state, String date, long duration, int isTitle, String titleName,
-            int count, boolean isCheck) {
+            int count, boolean isCheck, boolean isGone, long serverId) {
         this.id = id;
         this.phoneNumber = phoneNumber;
         this.name = name;
@@ -36,6 +36,8 @@ public class CallRecordDao {
         this.titleName = titleName;
         this.count = count;
         this.isCheck = isCheck;
+        this.isGone = isGone;
+        this.serverId = serverId;
     }
 
     public CallRecordDao(String phoneNumber, String name, String address,
@@ -59,6 +61,19 @@ public class CallRecordDao {
         this.isTitle = 0;
         this.titleName = "";
         this.duration = duration;
+    }
+
+    public CallRecordDao(String phoneNumber, String name, String address,
+                         String state, String date,long duration,long serverId){
+        this.phoneNumber = phoneNumber;
+        this.name = name;
+        this.address = address;
+        this.state = state;
+        this.date = date;
+        this.isTitle = 0;
+        this.titleName = "";
+        this.duration = duration;
+        this.serverId = serverId;
     }
 
     @Generated(hash = 1511194593)
@@ -143,5 +158,29 @@ public class CallRecordDao {
 
     public void setIsCheck(boolean isCheck) {
         this.isCheck = isCheck;
+    }
+
+    public boolean isGone() {
+        return isGone;
+    }
+
+    public void setGone(boolean gone) {
+        isGone = gone;
+    }
+
+    public boolean getIsGone() {
+        return this.isGone;
+    }
+
+    public void setIsGone(boolean isGone) {
+        this.isGone = isGone;
+    }
+
+    public long getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(long serverId) {
+        this.serverId = serverId;
     }
 }

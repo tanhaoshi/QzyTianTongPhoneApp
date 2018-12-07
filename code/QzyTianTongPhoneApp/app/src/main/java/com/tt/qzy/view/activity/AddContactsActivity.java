@@ -1,13 +1,12 @@
 package com.tt.qzy.view.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.db.dao.MailListDao;
 import com.tt.qzy.view.db.manager.MailListManager;

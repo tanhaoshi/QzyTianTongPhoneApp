@@ -9,7 +9,6 @@ import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.phone.data.SmsBean;
 import com.socks.library.KLog;
-import com.tt.qzy.view.fragment.MainFragment;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.SPUtils;
 import com.tt.qzy.view.utils.TimeTask;
@@ -55,8 +54,7 @@ public class TimerService extends Service{
 
     private void timerSendMessage(){
         receive = SPUtils.getShare(getApplicationContext(), Constans.CRY_HELP_PHONE,"").toString();
-        content = SPUtils.getShare(getApplicationContext(),Constans.CRY_HELP_SHORTMESSAGE,"").toString() + "经度:"+longitude
-                +"," +"纬度:"+latitude;
+        content = SPUtils.getShare(getApplicationContext(),Constans.CRY_HELP_SHORTMESSAGE,"").toString();
         EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS,
                 new SmsBean(receive, content)));
     }

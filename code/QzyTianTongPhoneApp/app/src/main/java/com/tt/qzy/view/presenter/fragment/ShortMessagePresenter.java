@@ -11,6 +11,7 @@ import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
+import com.tt.qzy.view.bean.ProtobufMessageModel;
 import com.tt.qzy.view.bean.ShortMessageModel;
 import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
@@ -20,6 +21,7 @@ import com.tt.qzy.view.presenter.baselife.BasePresenter;
 import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.view.ShortMessageView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -55,6 +57,13 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
      * 删除全部短信
      */
     public void clearMessage(){
+        ProtobufMessageModel protobufMessageModel = new ProtobufMessageModel();
+        protobufMessageModel.setDelete(true);
+
+        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.
+                EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_DELETE_SIGNAL_SHORT_MESSAGE
+                ,protobufMessageModel));
+
         ShortMessageManager.getInstance(mContext).deleteShortMessageList();
     }
 
