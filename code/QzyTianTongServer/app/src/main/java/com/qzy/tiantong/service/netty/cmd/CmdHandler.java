@@ -7,6 +7,8 @@ import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.netty.iinterface.ICmdHandler;
 import com.qzy.tt.data.CallPhoneProtos;
 import com.qzy.tt.data.ChangePcmPlayerDbProtos;
+import com.qzy.tt.data.TtDeleCallLogProtos;
+import com.qzy.tt.data.TtDeleSmsProtos;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhoneAudioDataProtos;
 import com.qzy.tt.data.TtPhoneGetServerVersionProtos;
@@ -137,6 +139,14 @@ public class CmdHandler implements ICmdHandler {
                 case PrototocalTools.IProtoServerIndex.request_server_sos_close:
                     TtPhoneSosStateProtos.TtPhoneSosState ttSosClose = TtPhoneSosStateProtos.TtPhoneSosState.parseDelimitedFrom(inputStream);
                     senMsg(protoId,ttSosClose);
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_server_del_calllog:
+                    TtDeleCallLogProtos.TtDeleCallLog ttDeleCallLog = TtDeleCallLogProtos.TtDeleCallLog.parseDelimitedFrom(inputStream);
+                    senMsg(protoId,ttDeleCallLog);
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_server_del_sms:
+                    TtDeleSmsProtos.TtDeleSms ttDeleSms = TtDeleSmsProtos.TtDeleSms.parseDelimitedFrom(inputStream);
+                    senMsg(protoId,ttDeleSms);
                     break;
                 default:
                     break;

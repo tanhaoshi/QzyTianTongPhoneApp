@@ -282,5 +282,76 @@ public class PhoneUtils {
         return retmeMessage;
     }
 
+    /**
+     * 删除所有通话记录
+     * @param context
+     * @return
+     */
+    public static boolean deleteAllCallLog(Context context) {
+        try {
+
+            Uri callLogUri = CallLog.Calls.CONTENT_URI;
+            int count = context.getContentResolver().delete(callLogUri, null, null);
+            LogUtils.e("count = " + count);
+            if(count > 0){
+              return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    /**
+     * 删除单条通话记录
+     * @param context
+     * @param id
+     * @return
+     */
+    public static boolean deleteCallLogByID(Context context,long id) {
+        try {
+
+            Uri callLogUri = CallLog.Calls.CONTENT_URI;
+            String where = CallLog.Calls._ID + "= " + id;
+            int count = context.getContentResolver().delete(callLogUri, where, null);
+            LogUtils.e("count = " + count);
+            if(count > 0){
+                return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
+    /**
+     * 删除所有当前号码的记录
+     * @param context
+     * @param phonenumber
+     * @return
+     */
+    public static boolean deleteCallLogByPhoneNumber(Context context,String phonenumber) {
+        try {
+
+            Uri callLogUri = CallLog.Calls.CONTENT_URI;
+            String where = CallLog.Calls.NUMBER + "= " + phonenumber;
+            int count = context.getContentResolver().delete(callLogUri, where, null);
+            LogUtils.e("count = " + count);
+            if(count > 0){
+                return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
 
 }

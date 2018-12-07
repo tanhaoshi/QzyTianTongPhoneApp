@@ -13,6 +13,7 @@ import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.lib.utils.QzySystemUtils;
 import com.qzy.tiantong.service.BuildConfig;
 import com.qzy.tiantong.service.mobiledata.IMobileDataManager;
+import com.qzy.tiantong.service.phone.CallLogManager;
 import com.qzy.tiantong.service.phone.QzyBatteryManager;
 import com.qzy.tiantong.service.gps.GpsManager;
 import com.qzy.tiantong.service.phone.PhoneClientManager;
@@ -27,6 +28,7 @@ import com.qzy.tiantong.service.utils.PhoneUtils;
 import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.CallPhoneStateProtos;
 import com.qzy.tt.data.TtCallRecordProtos;
+import com.qzy.tt.data.TtDeleCallLogProtos;
 import com.qzy.tt.data.TtPhoneBatteryProtos;
 import com.qzy.tt.data.TtPhoneGetServerVersionProtos;
 import com.qzy.tt.data.TtPhoneMobileDataProtos;
@@ -705,6 +707,39 @@ public class PhoneNettyManager implements IMobileDataManager{
         }
        mSmsPhoneManager.stopSendSosMsg();
     }
+
+    /**
+     * 删除通话记录
+     */
+    public void deleteCallLog(final TtDeleCallLogProtos.TtDeleCallLog ttDeleCallLog){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+               try{
+
+                   if(ttDeleCallLog == null){
+                       LogUtils.e(" ttDeleCallLog is null");
+                       return ;
+                   }
+
+                   boolean state = CallLogManager.deleteCallLog(mContext,ttDeleCallLog);
+                   TtDeleCallLogProtos.TtDeleCallLog ttDeleCallLogR = TtDeleCallLogProtos.TtDeleCallLog.newBuilder()
+                           .setIp(ttDeleCallLog.getIp())
+                           .setIsResponse(true)
+                           .setState(state)
+                           .build();
+
+                   mNettyServerManager.sendData(ttDeleCallLog.getIp(),PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.response_server_del_calllog,ttDeleCallLogR));
+
+               }catch (Exception e){
+                   e.printStackTrace();
+               }
+            }
+        }).start();
+
+    }
+
+
 
     public void free() {
 

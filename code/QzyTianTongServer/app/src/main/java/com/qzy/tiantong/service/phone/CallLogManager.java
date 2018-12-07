@@ -1,6 +1,7 @@
 package com.qzy.tiantong.service.phone;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 
 import com.qzy.tiantong.lib.utils.LogUtils;
@@ -9,6 +10,7 @@ import com.qzy.tiantong.service.phone.data.CallLogInfo;
 import com.qzy.tiantong.service.phone.data.SmsInfo;
 import com.qzy.tiantong.service.utils.PhoneUtils;
 import com.qzy.tt.data.TtCallRecordProtos;
+import com.qzy.tt.data.TtDeleCallLogProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 
 import java.util.List;
@@ -109,9 +111,39 @@ public class CallLogManager {
                 }
             }
         }).start();
+    }
 
+
+    /**
+     * 删除通话记录
+     * @param context
+     * @param ttDeleCallLog
+     * @return
+     */
+    public static synchronized boolean deleteCallLog(Context context,TtDeleCallLogProtos.TtDeleCallLog ttDeleCallLog){
+        try{
+            if(ttDeleCallLog.getIsDeleAll()){
+                return PhoneUtils.deleteAllCallLog(context);
+            }
+
+            String phoneNumber = ttDeleCallLog.getPhonenumber();
+            if(TextUtils.isEmpty(phoneNumber)){
+                return PhoneUtils.deleteCallLogByPhoneNumber(context,phoneNumber);
+            }
+
+            long id = ttDeleCallLog.getServerDataId();
+            if(id >= 0){
+                return PhoneUtils.deleteCallLogByID(context,id);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return false;
 
     }
+
 
 
 }
