@@ -33,6 +33,8 @@ public class PrototocalTools {
         int request_phone_server_mobile_init = 136;
         int request_server_sos_status = 138;
         int request_server_sos_close = 140;
+        int request_server_del_calllog = 142;
+        int request_server_del_sms = 144;
     }
 
     public interface IProtoClientIndex{
@@ -57,6 +59,8 @@ public class PrototocalTools {
         int response_server_version_info = 137;
         int response_server_mobile_data_init = 139;
         int response_server_sos_init_status = 141;
+        int response_server_del_calllog = 143;
+        int response_server_del_sms = 145;
     }
 
 
