@@ -144,52 +144,57 @@ public final class TtCallRecordProtos {
         com.google.protobuf.MessageOrBuilder {
 
       /**
-       * <code>optional string phoneNumber = 1;</code>
+       * <code>optional int64 id = 1;</code>
+       */
+      long getId();
+
+      /**
+       * <code>optional string phoneNumber = 2;</code>
        */
       java.lang.String getPhoneNumber();
       /**
-       * <code>optional string phoneNumber = 1;</code>
+       * <code>optional string phoneNumber = 2;</code>
        */
       com.google.protobuf.ByteString
           getPhoneNumberBytes();
 
       /**
-       * <code>optional string name = 2;</code>
+       * <code>optional string name = 3;</code>
        */
       java.lang.String getName();
       /**
-       * <code>optional string name = 2;</code>
+       * <code>optional string name = 3;</code>
        */
       com.google.protobuf.ByteString
           getNameBytes();
 
       /**
-       * <code>optional string address = 3;</code>
+       * <code>optional string address = 4;</code>
        */
       java.lang.String getAddress();
       /**
-       * <code>optional string address = 3;</code>
+       * <code>optional string address = 4;</code>
        */
       com.google.protobuf.ByteString
           getAddressBytes();
 
       /**
-       * <code>optional int32 type = 4;</code>
+       * <code>optional int32 type = 5;</code>
        */
       int getType();
 
       /**
-       * <code>optional string date = 5;</code>
+       * <code>optional string date = 6;</code>
        */
       java.lang.String getDate();
       /**
-       * <code>optional string date = 5;</code>
+       * <code>optional string date = 6;</code>
        */
       com.google.protobuf.ByteString
           getDateBytes();
 
       /**
-       * <code>optional int64 duration = 6;</code>
+       * <code>optional int64 duration = 7;</code>
        */
       long getDuration();
     }
@@ -205,6 +210,7 @@ public final class TtCallRecordProtos {
         super(builder);
       }
       private CallRecord() {
+        id_ = 0L;
         phoneNumber_ = "";
         name_ = "";
         address_ = "";
@@ -238,36 +244,41 @@ public final class TtCallRecordProtos {
                 }
                 break;
               }
-              case 10: {
-                java.lang.String s = input.readStringRequireUtf8();
+              case 8: {
 
-                phoneNumber_ = s;
+                id_ = input.readInt64();
                 break;
               }
               case 18: {
                 java.lang.String s = input.readStringRequireUtf8();
 
-                name_ = s;
+                phoneNumber_ = s;
                 break;
               }
               case 26: {
                 java.lang.String s = input.readStringRequireUtf8();
 
+                name_ = s;
+                break;
+              }
+              case 34: {
+                java.lang.String s = input.readStringRequireUtf8();
+
                 address_ = s;
                 break;
               }
-              case 32: {
+              case 40: {
 
                 type_ = input.readInt32();
                 break;
               }
-              case 42: {
+              case 50: {
                 java.lang.String s = input.readStringRequireUtf8();
 
                 date_ = s;
                 break;
               }
-              case 48: {
+              case 56: {
 
                 duration_ = input.readInt64();
                 break;
@@ -295,10 +306,19 @@ public final class TtCallRecordProtos {
                 com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord.class, com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord.Builder.class);
       }
 
-      public static final int PHONENUMBER_FIELD_NUMBER = 1;
+      public static final int ID_FIELD_NUMBER = 1;
+      private long id_;
+      /**
+       * <code>optional int64 id = 1;</code>
+       */
+      public long getId() {
+        return id_;
+      }
+
+      public static final int PHONENUMBER_FIELD_NUMBER = 2;
       private volatile java.lang.Object phoneNumber_;
       /**
-       * <code>optional string phoneNumber = 1;</code>
+       * <code>optional string phoneNumber = 2;</code>
        */
       public java.lang.String getPhoneNumber() {
         java.lang.Object ref = phoneNumber_;
@@ -313,7 +333,7 @@ public final class TtCallRecordProtos {
         }
       }
       /**
-       * <code>optional string phoneNumber = 1;</code>
+       * <code>optional string phoneNumber = 2;</code>
        */
       public com.google.protobuf.ByteString
           getPhoneNumberBytes() {
@@ -329,10 +349,10 @@ public final class TtCallRecordProtos {
         }
       }
 
-      public static final int NAME_FIELD_NUMBER = 2;
+      public static final int NAME_FIELD_NUMBER = 3;
       private volatile java.lang.Object name_;
       /**
-       * <code>optional string name = 2;</code>
+       * <code>optional string name = 3;</code>
        */
       public java.lang.String getName() {
         java.lang.Object ref = name_;
@@ -347,7 +367,7 @@ public final class TtCallRecordProtos {
         }
       }
       /**
-       * <code>optional string name = 2;</code>
+       * <code>optional string name = 3;</code>
        */
       public com.google.protobuf.ByteString
           getNameBytes() {
@@ -363,10 +383,10 @@ public final class TtCallRecordProtos {
         }
       }
 
-      public static final int ADDRESS_FIELD_NUMBER = 3;
+      public static final int ADDRESS_FIELD_NUMBER = 4;
       private volatile java.lang.Object address_;
       /**
-       * <code>optional string address = 3;</code>
+       * <code>optional string address = 4;</code>
        */
       public java.lang.String getAddress() {
         java.lang.Object ref = address_;
@@ -381,7 +401,7 @@ public final class TtCallRecordProtos {
         }
       }
       /**
-       * <code>optional string address = 3;</code>
+       * <code>optional string address = 4;</code>
        */
       public com.google.protobuf.ByteString
           getAddressBytes() {
@@ -397,19 +417,19 @@ public final class TtCallRecordProtos {
         }
       }
 
-      public static final int TYPE_FIELD_NUMBER = 4;
+      public static final int TYPE_FIELD_NUMBER = 5;
       private int type_;
       /**
-       * <code>optional int32 type = 4;</code>
+       * <code>optional int32 type = 5;</code>
        */
       public int getType() {
         return type_;
       }
 
-      public static final int DATE_FIELD_NUMBER = 5;
+      public static final int DATE_FIELD_NUMBER = 6;
       private volatile java.lang.Object date_;
       /**
-       * <code>optional string date = 5;</code>
+       * <code>optional string date = 6;</code>
        */
       public java.lang.String getDate() {
         java.lang.Object ref = date_;
@@ -424,7 +444,7 @@ public final class TtCallRecordProtos {
         }
       }
       /**
-       * <code>optional string date = 5;</code>
+       * <code>optional string date = 6;</code>
        */
       public com.google.protobuf.ByteString
           getDateBytes() {
@@ -440,10 +460,10 @@ public final class TtCallRecordProtos {
         }
       }
 
-      public static final int DURATION_FIELD_NUMBER = 6;
+      public static final int DURATION_FIELD_NUMBER = 7;
       private long duration_;
       /**
-       * <code>optional int64 duration = 6;</code>
+       * <code>optional int64 duration = 7;</code>
        */
       public long getDuration() {
         return duration_;
@@ -461,23 +481,26 @@ public final class TtCallRecordProtos {
 
       public void writeTo(com.google.protobuf.CodedOutputStream output)
                           throws java.io.IOException {
+        if (id_ != 0L) {
+          output.writeInt64(1, id_);
+        }
         if (!getPhoneNumberBytes().isEmpty()) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 1, phoneNumber_);
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 2, phoneNumber_);
         }
         if (!getNameBytes().isEmpty()) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 2, name_);
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 3, name_);
         }
         if (!getAddressBytes().isEmpty()) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 3, address_);
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 4, address_);
         }
         if (type_ != 0) {
-          output.writeInt32(4, type_);
+          output.writeInt32(5, type_);
         }
         if (!getDateBytes().isEmpty()) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 5, date_);
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 6, date_);
         }
         if (duration_ != 0L) {
-          output.writeInt64(6, duration_);
+          output.writeInt64(7, duration_);
         }
       }
 
@@ -486,25 +509,29 @@ public final class TtCallRecordProtos {
         if (size != -1) return size;
 
         size = 0;
+        if (id_ != 0L) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeInt64Size(1, id_);
+        }
         if (!getPhoneNumberBytes().isEmpty()) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, phoneNumber_);
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, phoneNumber_);
         }
         if (!getNameBytes().isEmpty()) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, name_);
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, name_);
         }
         if (!getAddressBytes().isEmpty()) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, address_);
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, address_);
         }
         if (type_ != 0) {
           size += com.google.protobuf.CodedOutputStream
-            .computeInt32Size(4, type_);
+            .computeInt32Size(5, type_);
         }
         if (!getDateBytes().isEmpty()) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, date_);
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, date_);
         }
         if (duration_ != 0L) {
           size += com.google.protobuf.CodedOutputStream
-            .computeInt64Size(6, duration_);
+            .computeInt64Size(7, duration_);
         }
         memoizedSize = size;
         return size;
@@ -522,6 +549,8 @@ public final class TtCallRecordProtos {
         com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord other = (com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord) obj;
 
         boolean result = true;
+        result = result && (getId()
+            == other.getId());
         result = result && getPhoneNumber()
             .equals(other.getPhoneNumber());
         result = result && getName()
@@ -544,6 +573,9 @@ public final class TtCallRecordProtos {
         }
         int hash = 41;
         hash = (19 * hash) + getDescriptorForType().hashCode();
+        hash = (37 * hash) + ID_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getId());
         hash = (37 * hash) + PHONENUMBER_FIELD_NUMBER;
         hash = (53 * hash) + getPhoneNumber().hashCode();
         hash = (37 * hash) + NAME_FIELD_NUMBER;
@@ -675,6 +707,8 @@ public final class TtCallRecordProtos {
         }
         public Builder clear() {
           super.clear();
+          id_ = 0L;
+
           phoneNumber_ = "";
 
           name_ = "";
@@ -709,6 +743,7 @@ public final class TtCallRecordProtos {
 
         public com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord buildPartial() {
           com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord result = new com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord(this);
+          result.id_ = id_;
           result.phoneNumber_ = phoneNumber_;
           result.name_ = name_;
           result.address_ = address_;
@@ -756,6 +791,9 @@ public final class TtCallRecordProtos {
 
         public Builder mergeFrom(com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord other) {
           if (other == com.qzy.tt.data.TtCallRecordProtos.TtCallRecordProto.CallRecord.getDefaultInstance()) return this;
+          if (other.getId() != 0L) {
+            setId(other.getId());
+          }
           if (!other.getPhoneNumber().isEmpty()) {
             phoneNumber_ = other.phoneNumber_;
             onChanged();
@@ -804,9 +842,35 @@ public final class TtCallRecordProtos {
           return this;
         }
 
+        private long id_ ;
+        /**
+         * <code>optional int64 id = 1;</code>
+         */
+        public long getId() {
+          return id_;
+        }
+        /**
+         * <code>optional int64 id = 1;</code>
+         */
+        public Builder setId(long value) {
+          
+          id_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional int64 id = 1;</code>
+         */
+        public Builder clearId() {
+          
+          id_ = 0L;
+          onChanged();
+          return this;
+        }
+
         private java.lang.Object phoneNumber_ = "";
         /**
-         * <code>optional string phoneNumber = 1;</code>
+         * <code>optional string phoneNumber = 2;</code>
          */
         public java.lang.String getPhoneNumber() {
           java.lang.Object ref = phoneNumber_;
@@ -821,7 +885,7 @@ public final class TtCallRecordProtos {
           }
         }
         /**
-         * <code>optional string phoneNumber = 1;</code>
+         * <code>optional string phoneNumber = 2;</code>
          */
         public com.google.protobuf.ByteString
             getPhoneNumberBytes() {
@@ -837,7 +901,7 @@ public final class TtCallRecordProtos {
           }
         }
         /**
-         * <code>optional string phoneNumber = 1;</code>
+         * <code>optional string phoneNumber = 2;</code>
          */
         public Builder setPhoneNumber(
             java.lang.String value) {
@@ -850,7 +914,7 @@ public final class TtCallRecordProtos {
           return this;
         }
         /**
-         * <code>optional string phoneNumber = 1;</code>
+         * <code>optional string phoneNumber = 2;</code>
          */
         public Builder clearPhoneNumber() {
           
@@ -859,7 +923,7 @@ public final class TtCallRecordProtos {
           return this;
         }
         /**
-         * <code>optional string phoneNumber = 1;</code>
+         * <code>optional string phoneNumber = 2;</code>
          */
         public Builder setPhoneNumberBytes(
             com.google.protobuf.ByteString value) {
@@ -875,7 +939,7 @@ public final class TtCallRecordProtos {
 
         private java.lang.Object name_ = "";
         /**
-         * <code>optional string name = 2;</code>
+         * <code>optional string name = 3;</code>
          */
         public java.lang.String getName() {
           java.lang.Object ref = name_;
@@ -890,7 +954,7 @@ public final class TtCallRecordProtos {
           }
         }
         /**
-         * <code>optional string name = 2;</code>
+         * <code>optional string name = 3;</code>
          */
         public com.google.protobuf.ByteString
             getNameBytes() {
@@ -906,7 +970,7 @@ public final class TtCallRecordProtos {
           }
         }
         /**
-         * <code>optional string name = 2;</code>
+         * <code>optional string name = 3;</code>
          */
         public Builder setName(
             java.lang.String value) {
@@ -919,7 +983,7 @@ public final class TtCallRecordProtos {
           return this;
         }
         /**
-         * <code>optional string name = 2;</code>
+         * <code>optional string name = 3;</code>
          */
         public Builder clearName() {
           
@@ -928,7 +992,7 @@ public final class TtCallRecordProtos {
           return this;
         }
         /**
-         * <code>optional string name = 2;</code>
+         * <code>optional string name = 3;</code>
          */
         public Builder setNameBytes(
             com.google.protobuf.ByteString value) {
@@ -944,7 +1008,7 @@ public final class TtCallRecordProtos {
 
         private java.lang.Object address_ = "";
         /**
-         * <code>optional string address = 3;</code>
+         * <code>optional string address = 4;</code>
          */
         public java.lang.String getAddress() {
           java.lang.Object ref = address_;
@@ -959,7 +1023,7 @@ public final class TtCallRecordProtos {
           }
         }
         /**
-         * <code>optional string address = 3;</code>
+         * <code>optional string address = 4;</code>
          */
         public com.google.protobuf.ByteString
             getAddressBytes() {
@@ -975,7 +1039,7 @@ public final class TtCallRecordProtos {
           }
         }
         /**
-         * <code>optional string address = 3;</code>
+         * <code>optional string address = 4;</code>
          */
         public Builder setAddress(
             java.lang.String value) {
@@ -988,7 +1052,7 @@ public final class TtCallRecordProtos {
           return this;
         }
         /**
-         * <code>optional string address = 3;</code>
+         * <code>optional string address = 4;</code>
          */
         public Builder clearAddress() {
           
@@ -997,7 +1061,7 @@ public final class TtCallRecordProtos {
           return this;
         }
         /**
-         * <code>optional string address = 3;</code>
+         * <code>optional string address = 4;</code>
          */
         public Builder setAddressBytes(
             com.google.protobuf.ByteString value) {
@@ -1013,13 +1077,13 @@ public final class TtCallRecordProtos {
 
         private int type_ ;
         /**
-         * <code>optional int32 type = 4;</code>
+         * <code>optional int32 type = 5;</code>
          */
         public int getType() {
           return type_;
         }
         /**
-         * <code>optional int32 type = 4;</code>
+         * <code>optional int32 type = 5;</code>
          */
         public Builder setType(int value) {
           
@@ -1028,7 +1092,7 @@ public final class TtCallRecordProtos {
           return this;
         }
         /**
-         * <code>optional int32 type = 4;</code>
+         * <code>optional int32 type = 5;</code>
          */
         public Builder clearType() {
           
@@ -1039,7 +1103,7 @@ public final class TtCallRecordProtos {
 
         private java.lang.Object date_ = "";
         /**
-         * <code>optional string date = 5;</code>
+         * <code>optional string date = 6;</code>
          */
         public java.lang.String getDate() {
           java.lang.Object ref = date_;
@@ -1054,7 +1118,7 @@ public final class TtCallRecordProtos {
           }
         }
         /**
-         * <code>optional string date = 5;</code>
+         * <code>optional string date = 6;</code>
          */
         public com.google.protobuf.ByteString
             getDateBytes() {
@@ -1070,7 +1134,7 @@ public final class TtCallRecordProtos {
           }
         }
         /**
-         * <code>optional string date = 5;</code>
+         * <code>optional string date = 6;</code>
          */
         public Builder setDate(
             java.lang.String value) {
@@ -1083,7 +1147,7 @@ public final class TtCallRecordProtos {
           return this;
         }
         /**
-         * <code>optional string date = 5;</code>
+         * <code>optional string date = 6;</code>
          */
         public Builder clearDate() {
           
@@ -1092,7 +1156,7 @@ public final class TtCallRecordProtos {
           return this;
         }
         /**
-         * <code>optional string date = 5;</code>
+         * <code>optional string date = 6;</code>
          */
         public Builder setDateBytes(
             com.google.protobuf.ByteString value) {
@@ -1108,13 +1172,13 @@ public final class TtCallRecordProtos {
 
         private long duration_ ;
         /**
-         * <code>optional int64 duration = 6;</code>
+         * <code>optional int64 duration = 7;</code>
          */
         public long getDuration() {
           return duration_;
         }
         /**
-         * <code>optional int64 duration = 6;</code>
+         * <code>optional int64 duration = 7;</code>
          */
         public Builder setDuration(long value) {
           
@@ -1123,7 +1187,7 @@ public final class TtCallRecordProtos {
           return this;
         }
         /**
-         * <code>optional int64 duration = 6;</code>
+         * <code>optional int64 duration = 7;</code>
          */
         public Builder clearDuration() {
           
@@ -1940,14 +2004,14 @@ public final class TtCallRecordProtos {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\022TtCallRecord.proto\022\tphonedata\"\343\001\n\021TtCa" +
+      "\n\022TtCallRecord.proto\022\tphonedata\"\357\001\n\021TtCa" +
       "llRecordProto\022\017\n\007request\030\001 \001(\010\022\020\n\010respon" +
       "se\030\002 \001(\010\022;\n\ncallRecord\030\003 \003(\0132\'.phonedata" +
-      ".TtCallRecordProto.CallRecord\032n\n\nCallRec" +
-      "ord\022\023\n\013phoneNumber\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\017" +
-      "\n\007address\030\003 \001(\t\022\014\n\004type\030\004 \001(\005\022\014\n\004date\030\005 " +
-      "\001(\t\022\020\n\010duration\030\006 \001(\003B%\n\017com.qzy.tt.data" +
-      "B\022TtCallRecordProtosb\006proto3"
+      ".TtCallRecordProto.CallRecord\032z\n\nCallRec" +
+      "ord\022\n\n\002id\030\001 \001(\003\022\023\n\013phoneNumber\030\002 \001(\t\022\014\n\004" +
+      "name\030\003 \001(\t\022\017\n\007address\030\004 \001(\t\022\014\n\004type\030\005 \001(" +
+      "\005\022\014\n\004date\030\006 \001(\t\022\020\n\010duration\030\007 \001(\003B%\n\017com" +
+      ".qzy.tt.dataB\022TtCallRecordProtosb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1972,7 +2036,7 @@ public final class TtCallRecordProtos {
     internal_static_phonedata_TtCallRecordProto_CallRecord_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_phonedata_TtCallRecordProto_CallRecord_descriptor,
-        new java.lang.String[] { "PhoneNumber", "Name", "Address", "Type", "Date", "Duration", });
+        new java.lang.String[] { "Id", "PhoneNumber", "Name", "Address", "Type", "Date", "Duration", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

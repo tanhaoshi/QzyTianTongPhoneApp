@@ -3,13 +3,15 @@ package com.qzy.tiantong.service.phone.data;
 public class CallLogInfo {
 
 
+    private long id;
     private String name;
     private String number;
     private String date;
     private int type;   // 来电:1，拨出:2,未接:3
     private long time;   //通话时长
 
-    public CallLogInfo(String name, String number, String date, int type, long time) {
+    public CallLogInfo(long id,String name, String number, String date, int type, long time) {
+        setId(id);
         setName(name);
         setNumber(number);
         setType(type);
@@ -58,6 +60,14 @@ public class CallLogInfo {
         this.time = time;
     }
 
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     @Override
     public String toString() {

@@ -105,9 +105,15 @@ class TtCallRecordProto_CallRecord : public ::google::protobuf::Message /* @@pro
 
   // accessors -------------------------------------------------------
 
-  // optional string phoneNumber = 1;
+  // optional int64 id = 1;
+  void clear_id();
+  static const int kIdFieldNumber = 1;
+  ::google::protobuf::int64 id() const;
+  void set_id(::google::protobuf::int64 value);
+
+  // optional string phoneNumber = 2;
   void clear_phonenumber();
-  static const int kPhoneNumberFieldNumber = 1;
+  static const int kPhoneNumberFieldNumber = 2;
   const ::std::string& phonenumber() const;
   void set_phonenumber(const ::std::string& value);
   void set_phonenumber(const char* value);
@@ -116,9 +122,9 @@ class TtCallRecordProto_CallRecord : public ::google::protobuf::Message /* @@pro
   ::std::string* release_phonenumber();
   void set_allocated_phonenumber(::std::string* phonenumber);
 
-  // optional string name = 2;
+  // optional string name = 3;
   void clear_name();
-  static const int kNameFieldNumber = 2;
+  static const int kNameFieldNumber = 3;
   const ::std::string& name() const;
   void set_name(const ::std::string& value);
   void set_name(const char* value);
@@ -127,9 +133,9 @@ class TtCallRecordProto_CallRecord : public ::google::protobuf::Message /* @@pro
   ::std::string* release_name();
   void set_allocated_name(::std::string* name);
 
-  // optional string address = 3;
+  // optional string address = 4;
   void clear_address();
-  static const int kAddressFieldNumber = 3;
+  static const int kAddressFieldNumber = 4;
   const ::std::string& address() const;
   void set_address(const ::std::string& value);
   void set_address(const char* value);
@@ -138,15 +144,15 @@ class TtCallRecordProto_CallRecord : public ::google::protobuf::Message /* @@pro
   ::std::string* release_address();
   void set_allocated_address(::std::string* address);
 
-  // optional int32 type = 4;
+  // optional int32 type = 5;
   void clear_type();
-  static const int kTypeFieldNumber = 4;
+  static const int kTypeFieldNumber = 5;
   ::google::protobuf::int32 type() const;
   void set_type(::google::protobuf::int32 value);
 
-  // optional string date = 5;
+  // optional string date = 6;
   void clear_date();
-  static const int kDateFieldNumber = 5;
+  static const int kDateFieldNumber = 6;
   const ::std::string& date() const;
   void set_date(const ::std::string& value);
   void set_date(const char* value);
@@ -155,9 +161,9 @@ class TtCallRecordProto_CallRecord : public ::google::protobuf::Message /* @@pro
   ::std::string* release_date();
   void set_allocated_date(::std::string* date);
 
-  // optional int64 duration = 6;
+  // optional int64 duration = 7;
   void clear_duration();
-  static const int kDurationFieldNumber = 6;
+  static const int kDurationFieldNumber = 7;
   ::google::protobuf::int64 duration() const;
   void set_duration(::google::protobuf::int64 value);
 
@@ -169,6 +175,7 @@ class TtCallRecordProto_CallRecord : public ::google::protobuf::Message /* @@pro
   ::google::protobuf::internal::ArenaStringPtr name_;
   ::google::protobuf::internal::ArenaStringPtr address_;
   ::google::protobuf::internal::ArenaStringPtr date_;
+  ::google::protobuf::int64 id_;
   ::google::protobuf::int64 duration_;
   ::google::protobuf::int32 type_;
   mutable int _cached_size_;
@@ -297,7 +304,21 @@ extern ::google::protobuf::internal::ExplicitlyConstructed<TtCallRecordProto> Tt
 #if !PROTOBUF_INLINE_NOT_IN_HEADERS
 // TtCallRecordProto_CallRecord
 
-// optional string phoneNumber = 1;
+// optional int64 id = 1;
+inline void TtCallRecordProto_CallRecord::clear_id() {
+  id_ = GOOGLE_LONGLONG(0);
+}
+inline ::google::protobuf::int64 TtCallRecordProto_CallRecord::id() const {
+  // @@protoc_insertion_point(field_get:phonedata.TtCallRecordProto.CallRecord.id)
+  return id_;
+}
+inline void TtCallRecordProto_CallRecord::set_id(::google::protobuf::int64 value) {
+  
+  id_ = value;
+  // @@protoc_insertion_point(field_set:phonedata.TtCallRecordProto.CallRecord.id)
+}
+
+// optional string phoneNumber = 2;
 inline void TtCallRecordProto_CallRecord::clear_phonenumber() {
   phonenumber_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -341,7 +362,7 @@ inline void TtCallRecordProto_CallRecord::set_allocated_phonenumber(::std::strin
   // @@protoc_insertion_point(field_set_allocated:phonedata.TtCallRecordProto.CallRecord.phoneNumber)
 }
 
-// optional string name = 2;
+// optional string name = 3;
 inline void TtCallRecordProto_CallRecord::clear_name() {
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -385,7 +406,7 @@ inline void TtCallRecordProto_CallRecord::set_allocated_name(::std::string* name
   // @@protoc_insertion_point(field_set_allocated:phonedata.TtCallRecordProto.CallRecord.name)
 }
 
-// optional string address = 3;
+// optional string address = 4;
 inline void TtCallRecordProto_CallRecord::clear_address() {
   address_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -429,7 +450,7 @@ inline void TtCallRecordProto_CallRecord::set_allocated_address(::std::string* a
   // @@protoc_insertion_point(field_set_allocated:phonedata.TtCallRecordProto.CallRecord.address)
 }
 
-// optional int32 type = 4;
+// optional int32 type = 5;
 inline void TtCallRecordProto_CallRecord::clear_type() {
   type_ = 0;
 }
@@ -443,7 +464,7 @@ inline void TtCallRecordProto_CallRecord::set_type(::google::protobuf::int32 val
   // @@protoc_insertion_point(field_set:phonedata.TtCallRecordProto.CallRecord.type)
 }
 
-// optional string date = 5;
+// optional string date = 6;
 inline void TtCallRecordProto_CallRecord::clear_date() {
   date_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -487,7 +508,7 @@ inline void TtCallRecordProto_CallRecord::set_allocated_date(::std::string* date
   // @@protoc_insertion_point(field_set_allocated:phonedata.TtCallRecordProto.CallRecord.date)
 }
 
-// optional int64 duration = 6;
+// optional int64 duration = 7;
 inline void TtCallRecordProto_CallRecord::clear_duration() {
   duration_ = GOOGLE_LONGLONG(0);
 }

@@ -137,7 +137,7 @@ public class PhoneUtils {
                     smsBody = cursor.getString(cursor.getColumnIndex("body"));
                     smsDate = cursor.getString(cursor.getColumnIndex("date"));
                     isRead = cursor.getInt(cursor.getColumnIndex("read"));
-                    id = cursor.getInt(cursor.getColumnIndex("_id"));
+                    id = cursor.getLong(cursor.getColumnIndex("_id"));
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                     Date d = new Date(Long.parseLong(smsDate));
                     smsDate = dateFormat.format(d);
@@ -205,7 +205,7 @@ public class PhoneUtils {
      */
     public static List<CallLogInfo> getCallLog(Context context, int page, int pageCount) {
         List<CallLogInfo> callLogList = null;
-        String[] projection = {CallLog.Calls.CACHED_NAME, CallLog.Calls.NUMBER, CallLog.Calls.TYPE, CallLog.Calls.DURATION, CallLog.Calls.DATE};
+        String[] projection = {CallLog.Calls._ID,CallLog.Calls.CACHED_NAME, CallLog.Calls.NUMBER, CallLog.Calls.TYPE, CallLog.Calls.DURATION, CallLog.Calls.DATE};
         String sortOrder = CallLog.Calls.DEFAULT_SORT_ORDER + " limit  " + page * pageCount + "," + pageCount;  // 从那里取  取多少个
         try {
             Uri callLogUri = CallLog.Calls.CONTENT_URI;
@@ -249,7 +249,9 @@ public class PhoneUtils {
                     callLogList = new ArrayList<>();
                 }
 
-                CallLogInfo callLogInfo = new CallLogInfo(callLogName, callLogNumber, callLogDate, callLogType, callLogTime);
+                long id = cursor.getLong(cursor.getColumnIndex(CallLog.Calls._ID));
+
+                CallLogInfo callLogInfo = new CallLogInfo(id,callLogName, callLogNumber, callLogDate, callLogType, callLogTime);
                 callLogList.add(callLogInfo);
             }
             cursor.close();

@@ -43,6 +43,7 @@ public class CallLogManager {
                     for (CallLogInfo callInfo : callLogInfo) {
                         LogUtils.e("callInfo = " + callInfo.toString());
                         TtCallRecordProtos.TtCallRecordProto.CallRecord callRecord = TtCallRecordProtos.TtCallRecordProto.CallRecord.newBuilder()
+                                .setId(callInfo.getId())
                                 .setPhoneNumber(callInfo.getNumber())
                                 .setDate(callInfo.getDate())
                                 .setName(callInfo.getName())

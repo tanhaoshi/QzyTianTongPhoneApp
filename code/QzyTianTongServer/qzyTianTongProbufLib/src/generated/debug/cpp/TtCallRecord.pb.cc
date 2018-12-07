@@ -55,7 +55,8 @@ void protobuf_AssignDesc_TtCallRecord_2eproto() {
       sizeof(TtCallRecordProto),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtCallRecordProto, _internal_metadata_));
   TtCallRecordProto_CallRecord_descriptor_ = TtCallRecordProto_descriptor_->nested_type(0);
-  static const int TtCallRecordProto_CallRecord_offsets_[6] = {
+  static const int TtCallRecordProto_CallRecord_offsets_[7] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtCallRecordProto_CallRecord, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtCallRecordProto_CallRecord, phonenumber_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtCallRecordProto_CallRecord, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtCallRecordProto_CallRecord, address_),
@@ -121,14 +122,14 @@ void protobuf_AddDesc_TtCallRecord_2eproto_impl() {
 
   protobuf_InitDefaults_TtCallRecord_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\022TtCallRecord.proto\022\tphonedata\"\343\001\n\021TtCa"
+    "\n\022TtCallRecord.proto\022\tphonedata\"\357\001\n\021TtCa"
     "llRecordProto\022\017\n\007request\030\001 \001(\010\022\020\n\010respon"
     "se\030\002 \001(\010\022;\n\ncallRecord\030\003 \003(\0132\'.phonedata"
-    ".TtCallRecordProto.CallRecord\032n\n\nCallRec"
-    "ord\022\023\n\013phoneNumber\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\017"
-    "\n\007address\030\003 \001(\t\022\014\n\004type\030\004 \001(\005\022\014\n\004date\030\005 "
-    "\001(\t\022\020\n\010duration\030\006 \001(\003B%\n\017com.qzy.tt.data"
-    "B\022TtCallRecordProtosb\006proto3", 308);
+    ".TtCallRecordProto.CallRecord\032z\n\nCallRec"
+    "ord\022\n\n\002id\030\001 \001(\003\022\023\n\013phoneNumber\030\002 \001(\t\022\014\n\004"
+    "name\030\003 \001(\t\022\017\n\007address\030\004 \001(\t\022\014\n\004type\030\005 \001("
+    "\005\022\014\n\004date\030\006 \001(\t\022\020\n\010duration\030\007 \001(\003B%\n\017com"
+    ".qzy.tt.dataB\022TtCallRecordProtosb\006proto3", 320);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "TtCallRecord.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_TtCallRecord_2eproto);
@@ -159,6 +160,7 @@ static void MergeFromFail(int line) {
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int TtCallRecordProto_CallRecord::kIdFieldNumber;
 const int TtCallRecordProto_CallRecord::kPhoneNumberFieldNumber;
 const int TtCallRecordProto_CallRecord::kNameFieldNumber;
 const int TtCallRecordProto_CallRecord::kAddressFieldNumber;
@@ -190,8 +192,8 @@ void TtCallRecordProto_CallRecord::SharedCtor() {
   name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   address_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   date_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&duration_, 0, reinterpret_cast<char*>(&type_) -
-    reinterpret_cast<char*>(&duration_) + sizeof(type_));
+  ::memset(&id_, 0, reinterpret_cast<char*>(&type_) -
+    reinterpret_cast<char*>(&id_) + sizeof(type_));
   _cached_size_ = 0;
 }
 
@@ -250,7 +252,7 @@ void TtCallRecordProto_CallRecord::Clear() {
            ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
 } while (0)
 
-  ZR_(duration_, type_);
+  ZR_(id_, type_);
   phonenumber_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   address_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
@@ -271,9 +273,24 @@ bool TtCallRecordProto_CallRecord::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional string phoneNumber = 1;
+      // optional int64 id = 1;
       case 1: {
-        if (tag == 10) {
+        if (tag == 8) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &id_)));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(18)) goto parse_phoneNumber;
+        break;
+      }
+
+      // optional string phoneNumber = 2;
+      case 2: {
+        if (tag == 18) {
+         parse_phoneNumber:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_phonenumber()));
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
@@ -283,13 +300,13 @@ bool TtCallRecordProto_CallRecord::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(18)) goto parse_name;
+        if (input->ExpectTag(26)) goto parse_name;
         break;
       }
 
-      // optional string name = 2;
-      case 2: {
-        if (tag == 18) {
+      // optional string name = 3;
+      case 3: {
+        if (tag == 26) {
          parse_name:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_name()));
@@ -300,13 +317,13 @@ bool TtCallRecordProto_CallRecord::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(26)) goto parse_address;
+        if (input->ExpectTag(34)) goto parse_address;
         break;
       }
 
-      // optional string address = 3;
-      case 3: {
-        if (tag == 26) {
+      // optional string address = 4;
+      case 4: {
+        if (tag == 34) {
          parse_address:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_address()));
@@ -317,13 +334,13 @@ bool TtCallRecordProto_CallRecord::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(32)) goto parse_type;
+        if (input->ExpectTag(40)) goto parse_type;
         break;
       }
 
-      // optional int32 type = 4;
-      case 4: {
-        if (tag == 32) {
+      // optional int32 type = 5;
+      case 5: {
+        if (tag == 40) {
          parse_type:
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
@@ -332,13 +349,13 @@ bool TtCallRecordProto_CallRecord::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(42)) goto parse_date;
+        if (input->ExpectTag(50)) goto parse_date;
         break;
       }
 
-      // optional string date = 5;
-      case 5: {
-        if (tag == 42) {
+      // optional string date = 6;
+      case 6: {
+        if (tag == 50) {
          parse_date:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_date()));
@@ -349,13 +366,13 @@ bool TtCallRecordProto_CallRecord::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(48)) goto parse_duration;
+        if (input->ExpectTag(56)) goto parse_duration;
         break;
       }
 
-      // optional int64 duration = 6;
-      case 6: {
-        if (tag == 48) {
+      // optional int64 duration = 7;
+      case 7: {
+        if (tag == 56) {
          parse_duration:
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
@@ -392,54 +409,59 @@ failure:
 void TtCallRecordProto_CallRecord::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:phonedata.TtCallRecordProto.CallRecord)
-  // optional string phoneNumber = 1;
+  // optional int64 id = 1;
+  if (this->id() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->id(), output);
+  }
+
+  // optional string phoneNumber = 2;
   if (this->phonenumber().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->phonenumber().data(), this->phonenumber().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "phonedata.TtCallRecordProto.CallRecord.phoneNumber");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      1, this->phonenumber(), output);
+      2, this->phonenumber(), output);
   }
 
-  // optional string name = 2;
+  // optional string name = 3;
   if (this->name().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->name().data(), this->name().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "phonedata.TtCallRecordProto.CallRecord.name");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      2, this->name(), output);
+      3, this->name(), output);
   }
 
-  // optional string address = 3;
+  // optional string address = 4;
   if (this->address().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->address().data(), this->address().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "phonedata.TtCallRecordProto.CallRecord.address");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      3, this->address(), output);
+      4, this->address(), output);
   }
 
-  // optional int32 type = 4;
+  // optional int32 type = 5;
   if (this->type() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->type(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->type(), output);
   }
 
-  // optional string date = 5;
+  // optional string date = 6;
   if (this->date().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->date().data(), this->date().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "phonedata.TtCallRecordProto.CallRecord.date");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      5, this->date(), output);
+      6, this->date(), output);
   }
 
-  // optional int64 duration = 6;
+  // optional int64 duration = 7;
   if (this->duration() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt64(6, this->duration(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(7, this->duration(), output);
   }
 
   // @@protoc_insertion_point(serialize_end:phonedata.TtCallRecordProto.CallRecord)
@@ -449,7 +471,12 @@ void TtCallRecordProto_CallRecord::SerializeWithCachedSizes(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
   // @@protoc_insertion_point(serialize_to_array_start:phonedata.TtCallRecordProto.CallRecord)
-  // optional string phoneNumber = 1;
+  // optional int64 id = 1;
+  if (this->id() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(1, this->id(), target);
+  }
+
+  // optional string phoneNumber = 2;
   if (this->phonenumber().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->phonenumber().data(), this->phonenumber().length(),
@@ -457,10 +484,10 @@ void TtCallRecordProto_CallRecord::SerializeWithCachedSizes(
       "phonedata.TtCallRecordProto.CallRecord.phoneNumber");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->phonenumber(), target);
+        2, this->phonenumber(), target);
   }
 
-  // optional string name = 2;
+  // optional string name = 3;
   if (this->name().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->name().data(), this->name().length(),
@@ -468,10 +495,10 @@ void TtCallRecordProto_CallRecord::SerializeWithCachedSizes(
       "phonedata.TtCallRecordProto.CallRecord.name");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->name(), target);
+        3, this->name(), target);
   }
 
-  // optional string address = 3;
+  // optional string address = 4;
   if (this->address().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->address().data(), this->address().length(),
@@ -479,15 +506,15 @@ void TtCallRecordProto_CallRecord::SerializeWithCachedSizes(
       "phonedata.TtCallRecordProto.CallRecord.address");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        3, this->address(), target);
+        4, this->address(), target);
   }
 
-  // optional int32 type = 4;
+  // optional int32 type = 5;
   if (this->type() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->type(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->type(), target);
   }
 
-  // optional string date = 5;
+  // optional string date = 6;
   if (this->date().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->date().data(), this->date().length(),
@@ -495,12 +522,12 @@ void TtCallRecordProto_CallRecord::SerializeWithCachedSizes(
       "phonedata.TtCallRecordProto.CallRecord.date");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        5, this->date(), target);
+        6, this->date(), target);
   }
 
-  // optional int64 duration = 6;
+  // optional int64 duration = 7;
   if (this->duration() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(6, this->duration(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(7, this->duration(), target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:phonedata.TtCallRecordProto.CallRecord)
@@ -511,42 +538,49 @@ size_t TtCallRecordProto_CallRecord::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:phonedata.TtCallRecordProto.CallRecord)
   size_t total_size = 0;
 
-  // optional string phoneNumber = 1;
+  // optional int64 id = 1;
+  if (this->id() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int64Size(
+        this->id());
+  }
+
+  // optional string phoneNumber = 2;
   if (this->phonenumber().size() > 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::StringSize(
         this->phonenumber());
   }
 
-  // optional string name = 2;
+  // optional string name = 3;
   if (this->name().size() > 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::StringSize(
         this->name());
   }
 
-  // optional string address = 3;
+  // optional string address = 4;
   if (this->address().size() > 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::StringSize(
         this->address());
   }
 
-  // optional int32 type = 4;
+  // optional int32 type = 5;
   if (this->type() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->type());
   }
 
-  // optional string date = 5;
+  // optional string date = 6;
   if (this->date().size() > 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::StringSize(
         this->date());
   }
 
-  // optional int64 duration = 6;
+  // optional int64 duration = 7;
   if (this->duration() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int64Size(
@@ -586,6 +620,9 @@ void TtCallRecordProto_CallRecord::MergeFrom(const TtCallRecordProto_CallRecord&
 
 void TtCallRecordProto_CallRecord::UnsafeMergeFrom(const TtCallRecordProto_CallRecord& from) {
   GOOGLE_DCHECK(&from != this);
+  if (from.id() != 0) {
+    set_id(from.id());
+  }
   if (from.phonenumber().size() > 0) {
 
     phonenumber_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.phonenumber_);
@@ -634,6 +671,7 @@ void TtCallRecordProto_CallRecord::Swap(TtCallRecordProto_CallRecord* other) {
   InternalSwap(other);
 }
 void TtCallRecordProto_CallRecord::InternalSwap(TtCallRecordProto_CallRecord* other) {
+  std::swap(id_, other->id_);
   phonenumber_.Swap(&other->phonenumber_);
   name_.Swap(&other->name_);
   address_.Swap(&other->address_);
@@ -977,7 +1015,21 @@ void TtCallRecordProto::InternalSwap(TtCallRecordProto* other) {
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
 // TtCallRecordProto_CallRecord
 
-// optional string phoneNumber = 1;
+// optional int64 id = 1;
+void TtCallRecordProto_CallRecord::clear_id() {
+  id_ = GOOGLE_LONGLONG(0);
+}
+::google::protobuf::int64 TtCallRecordProto_CallRecord::id() const {
+  // @@protoc_insertion_point(field_get:phonedata.TtCallRecordProto.CallRecord.id)
+  return id_;
+}
+void TtCallRecordProto_CallRecord::set_id(::google::protobuf::int64 value) {
+  
+  id_ = value;
+  // @@protoc_insertion_point(field_set:phonedata.TtCallRecordProto.CallRecord.id)
+}
+
+// optional string phoneNumber = 2;
 void TtCallRecordProto_CallRecord::clear_phonenumber() {
   phonenumber_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1021,7 +1073,7 @@ void TtCallRecordProto_CallRecord::set_allocated_phonenumber(::std::string* phon
   // @@protoc_insertion_point(field_set_allocated:phonedata.TtCallRecordProto.CallRecord.phoneNumber)
 }
 
-// optional string name = 2;
+// optional string name = 3;
 void TtCallRecordProto_CallRecord::clear_name() {
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1065,7 +1117,7 @@ void TtCallRecordProto_CallRecord::set_allocated_name(::std::string* name) {
   // @@protoc_insertion_point(field_set_allocated:phonedata.TtCallRecordProto.CallRecord.name)
 }
 
-// optional string address = 3;
+// optional string address = 4;
 void TtCallRecordProto_CallRecord::clear_address() {
   address_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1109,7 +1161,7 @@ void TtCallRecordProto_CallRecord::set_allocated_address(::std::string* address)
   // @@protoc_insertion_point(field_set_allocated:phonedata.TtCallRecordProto.CallRecord.address)
 }
 
-// optional int32 type = 4;
+// optional int32 type = 5;
 void TtCallRecordProto_CallRecord::clear_type() {
   type_ = 0;
 }
@@ -1123,7 +1175,7 @@ void TtCallRecordProto_CallRecord::set_type(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:phonedata.TtCallRecordProto.CallRecord.type)
 }
 
-// optional string date = 5;
+// optional string date = 6;
 void TtCallRecordProto_CallRecord::clear_date() {
   date_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1167,7 +1219,7 @@ void TtCallRecordProto_CallRecord::set_allocated_date(::std::string* date) {
   // @@protoc_insertion_point(field_set_allocated:phonedata.TtCallRecordProto.CallRecord.date)
 }
 
-// optional int64 duration = 6;
+// optional int64 duration = 7;
 void TtCallRecordProto_CallRecord::clear_duration() {
   duration_ = GOOGLE_LONGLONG(0);
 }
