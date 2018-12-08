@@ -9,16 +9,16 @@
     >
     <include layout="@layout/toobar_layout"/>
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/refreshLayout"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:srlEnableLoadmore="true">
+    <!--<com.scwang.smartrefresh.layout.SmartRefreshLayout-->
+        <!--android:id="@+id/refreshLayout"-->
+        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--app:srlEnableLoadmore="true">-->
 
-        <com.scwang.smartrefresh.layout.header.ClassicsHeader
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        <!--<com.scwang.smartrefresh.layout.header.ClassicsHeader-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"/>-->
 
           <LinearLayout
               android:orientation="vertical"
@@ -73,7 +73,7 @@
 
           </LinearLayout>
 
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+        <!--</com.scwang.smartrefresh.layout.SmartRefreshLayout>-->
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"

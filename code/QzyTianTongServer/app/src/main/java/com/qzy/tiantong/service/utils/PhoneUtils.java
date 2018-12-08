@@ -230,6 +230,7 @@ public class PhoneUtils {
             intent.putExtra(extra_del_by_id,"");
             intent.putExtra(extra_del_by_phonenumber,phone);
             context.startService(intent);
+            LogUtils.e("phone = " + phone);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -188,7 +188,7 @@ public final class NiftyExpandDialog {
     }
 
     public NiftyDialogBuilder serverUpdateDismiss(boolean isCancelable){
-        return mNiftyDialogBuilder.withTitle("天通猫软件更新")
+        return mNiftyDialogBuilder.withTitle("设备软件更新")
                 .withTitleColor(mContext.getResources().getColor(R.color.update_dialog_title))
                 .withDividerColor(mContext.getResources().getColor(R.color.update_dialog_divider))
                 .withMessage(mContext.getString(R.string.TMT_the_change_content))

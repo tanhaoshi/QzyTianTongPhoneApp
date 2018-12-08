@@ -190,7 +190,11 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     public void inputString(final String diapadNumber) {
         MainActivity mainActivity = (MainActivity) getActivity();
         if(!mainActivity.isCallStatus()){
-            mPersenter.dialPhone(diapadNumber);
+            if(mainActivity.tt_isSignal){
+                mPersenter.dialPhone(diapadNumber);
+            }else{
+                NToast.shortToast(getActivity(),"设备未入网,请先入网!");
+            }
         }else{
             NToast.shortToast(getActivity(),getString(R.string.TMT_be_occupied));
         }
@@ -200,7 +204,11 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     public void onClick(int position,final String diapadNumber) {
         MainActivity mainActivity = (MainActivity) getActivity();
         if(!mainActivity.isCallStatus()){
-            mPersenter.dialPhone(diapadNumber);
+            if(mainActivity.tt_isSignal){
+                mPersenter.dialPhone(diapadNumber);
+            }else{
+                NToast.shortToast(getActivity(),"设备未入网,请先入网!");
+            }
         }else{
             NToast.shortToast(getActivity(),getString(R.string.TMT_be_occupied));
         }

@@ -123,7 +123,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
     }
 
     /**
-     * 检查天通猫服务端APP版本是否更新
+     * 检查设备服务端APP版本是否更新
      */
     public void requestServerVersion(){
         AssetManager assetManager = mContext.getAssets();
@@ -145,7 +145,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
     }
 
     /**
-     * 打开天通猫移动数据
+     * 打开设备移动数据
      */
     public void requestEnableData(boolean isSwitch){
         EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_ENABLE_DATA,
@@ -160,14 +160,14 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
     }
 
     /**
-     * 查询天通猫sos初始状态
+     * 查询设备sos初始状态
      */
     public void requestServerSosStatus(){
         EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_STATUS));
     }
 
     /**
-     * 关闭天通猫SOS
+     * 关闭设备SOS
      */
     public void closeServerSos(){
         EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_CLOSE));
@@ -221,7 +221,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
     }
 
     /**
-     * 解析天通猫初始化状态
+     * 解析设备初始化状态
      */
     private void getServerSosStatus(Object o){
         PhoneCmd cmd = (PhoneCmd)o;
@@ -275,7 +275,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
     }
 
     /**
-     * 天通猫打开数据流量失败或成功
+     * 设备打开数据流量失败或成功
      */
     private void parseServerDataEnable(Object o){
         PhoneCmd cmd = (PhoneCmd)o;
@@ -288,7 +288,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
     }
 
     /**
-     * 关闭天通猫链接
+     * 关闭设备链接
      */
     private void parseAppUploadFinsh(Object o){
         PhoneCmd cmd = (PhoneCmd)o;
@@ -301,7 +301,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
     }
 
     /**
-     * 返回天通猫服务端APP是否需要更新
+     * 返回设备服务端APP是否需要更新
      */
     private void parseServerAppVersion(Object o){
         PhoneCmd cmd = (PhoneCmd)o;
@@ -324,7 +324,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
     }
 
     /**
-     * 解析天通猫北斗开关是否打开
+     * 解析设备北斗开关是否打开
      * @param object
      */
     private void parseBeiDouSwitch(Object object){

@@ -24,6 +24,7 @@ import com.qzy.tt.data.TtShortMessageProtos;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
 import com.socks.library.KLog;
+import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.SendShortMessageActivity;
 import com.tt.qzy.view.adapter.ShortMessageAdapter;
@@ -167,8 +168,13 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
                 }
                 break;
             case R.id.fab:
-                Intent intent = new Intent(getActivity(), SendShortMessageActivity.class);
-                startActivity(intent);
+                MainActivity mainActivity = (MainActivity) getActivity();
+                if(mainActivity.tt_isSignal){
+                    Intent intent = new Intent(getActivity(), SendShortMessageActivity.class);
+                    startActivity(intent);
+                }else{
+                    NToast.shortToast(getActivity(),"设备未入网,请先入网!");
+                }
                 break;
         }
     }

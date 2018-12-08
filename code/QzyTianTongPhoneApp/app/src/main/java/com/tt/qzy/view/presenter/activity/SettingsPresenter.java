@@ -7,6 +7,8 @@ import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.data.TtBeiDouStatuss;
 import com.tt.qzy.view.bean.TtBeidouOpenBean;
+import com.tt.qzy.view.db.manager.CallRecordManager;
+import com.tt.qzy.view.db.manager.ShortMessageManager;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
 import com.tt.qzy.view.view.SettingsView;
 
@@ -41,13 +43,21 @@ public class SettingsPresenter extends BasePresenter<SettingsView>{
     }
 
     /**
-     * 天通猫是否连接上北斗卫星
+     * 设备是否连接上北斗卫星
      */
     public boolean getTianTongConnectBeiDou(Object obj){
         PhoneCmd cmd = (PhoneCmd)obj;
         TtBeiDouStatuss.TtBeiDouStatus ttBeiDouStatus = (TtBeiDouStatuss.TtBeiDouStatus)cmd.getMessage();
         boolean isConnect = ttBeiDouStatus.getIsBeiDouStatus();
         return isConnect;
+    }
+
+    /**
+     * 恢复出厂设置
+     */
+    public void recoverSystem(Context context){
+        CallRecordManager.getInstance(context).deleteRecordList();
+        ShortMessageManager.getInstance(context).deleteShortMessageList();
     }
 
     public void release(){

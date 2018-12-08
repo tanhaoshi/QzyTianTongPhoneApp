@@ -27,7 +27,9 @@ import com.tt.qzy.view.adapter.MsgAdapter;
 import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.bean.MsgModel;
 import com.tt.qzy.view.bean.SMAgrementModel;
+import com.tt.qzy.view.db.dao.MailListDao;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
+import com.tt.qzy.view.db.manager.MailListManager;
 import com.tt.qzy.view.db.manager.ShortMessageManager;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.DateUtil;
@@ -64,6 +66,9 @@ public class SendShortMessageActivity extends AppCompatActivity {
     private MsgAdapter adapter;
     private static final int REQUEST_CODE = 99;
 
+    private String phone = "";
+    private String name = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,15 +89,28 @@ public class SendShortMessageActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if(intent.getExtras() != null){
             mImageView.setVisibility(View.GONE);
-            sms_et_name.setText(intent.getStringExtra(Constans.SHORT_MESSAGE_PHONE));
-            sms_et_name.setFocusable(false);
+            List<MailListDao> mailListDaos = MailListManager.getInstance(SendShortMessageActivity.this).
+                    getByPhoneList(intent.getStringExtra(Constans.SHORT_MESSAGE_PHONE));
+
+            if(mailListDaos.size() > 0){
+                sms_et_name.setText(mailListDaos.get(0).getName());
+                sms_et_name.setFocusable(false);
+                name = mailListDaos.get(0).getName();
+            }else{
+                sms_et_name.setText(intent.getStringExtra(Constans.SHORT_MESSAGE_PHONE));
+                sms_et_name.setFocusable(false);
+                phone = intent.getStringExtra(Constans.SHORT_MESSAGE_PHONE);
+            }
+
             List<ShortMessageDao> daoList =
                     ShortMessageManager.getInstance(this).queryShortMessageCondition(intent.getStringExtra(Constans.SHORT_MESSAGE_PHONE));
+
             for(ShortMessageDao shortMessageDao : daoList){
                 MsgModel msgModel = new MsgModel(shortMessageDao.getMessage(), Integer.valueOf(shortMessageDao.getState()));
                 msgList.add(msgModel);
                 adapter.setData(msgList);
             }
+
             if(daoList.size() == 0){
                 return;
             }else{
@@ -122,6 +140,7 @@ public class SendShortMessageActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.send:
+
                 sendMessage(MsgModel.TYPE_RECEIVE);
                 break;
             case R.id.sms_base_tv_toolbar_right:
@@ -148,6 +167,7 @@ public class SendShortMessageActivity extends AppCompatActivity {
         }
 
         String content = custom_input.getText().toString();
+
         if (!"".equals(content)) {
             MsgModel msg = new MsgModel(content, model);
             msgList.add(msg);
@@ -157,8 +177,8 @@ public class SendShortMessageActivity extends AppCompatActivity {
             EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS, new SmsBean(receive, content)));
         }
 
-        ShortMessageDao shortMessageDao = new ShortMessageDao(sms_et_name.getText().toString().trim(),content,
-                DateUtil.backTimeFomat(new Date()),0,"",String.valueOf(MsgModel.TYPE_RECEIVE),"未知姓名");
+        ShortMessageDao shortMessageDao = new ShortMessageDao(phone,content,
+                DateUtil.backTimeFomat(new Date()),0,"",String.valueOf(MsgModel.TYPE_RECEIVE),name);
 
         ShortMessageManager.getInstance(SendShortMessageActivity.this).insertShortMessage(shortMessageDao,SendShortMessageActivity.this);
     }

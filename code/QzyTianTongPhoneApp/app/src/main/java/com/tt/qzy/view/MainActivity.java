@@ -178,21 +178,21 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
                 if(tt_status){
                     showAidlPhoneFragment();
                 }else{
-                    NToast.shortToast(this,"不可操作,请连接天通猫!");
+                    NToast.shortToast(this,"不可操作,请连接设备!");
                 }
                 break;
             case R.id.tab_messager:
                 if(tt_status){
                     showShortMeesageFragmnet();
                 }else{
-                    NToast.shortToast(this,"不可操作,请连接天通猫!");
+                    NToast.shortToast(this,"不可操作,请连接设备!");
                 }
                 break;
             case R.id.tab_mail:
                 if(tt_status){
                     showMailListFragmnet();
                 }else{
-                    NToast.shortToast(this,"不可操作,请连接天通猫!");
+                    NToast.shortToast(this,"不可操作,请连接设备!");
                 }
                 break;
         }

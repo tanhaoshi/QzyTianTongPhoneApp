@@ -8,10 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.tt.qzy.view.R;
+import com.tt.qzy.view.db.dao.MailListDao;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
+import com.tt.qzy.view.db.manager.MailListManager;
 
 import java.util.List;
 
@@ -40,7 +40,16 @@ public class DeleteShortMessageAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final ShortMessageViewHolder messageViewHolder = (ShortMessageViewHolder)holder;
-        messageViewHolder.isPhone.setText(mDaoList.get(position).getNumberPhone());
+        if(null != mDaoList.get(position).getName() && mDaoList.get(position).getName().length() >= 1 && !"未知号码".equals(mDaoList.get(position).getName())){
+            messageViewHolder.isPhone.setText(mDaoList.get(position).getName());
+        }else{
+            String name = getPhoneKeyForName(mDaoList.get(position).getNumberPhone());
+            if(null != name && name.length() > 0){
+                messageViewHolder.isPhone.setText(name);
+            }else{
+                messageViewHolder.isPhone.setText(mDaoList.get(position).getNumberPhone());
+            }
+        }
         messageViewHolder.isMessage.setText(mDaoList.get(position).getMessage());
         messageViewHolder.isTime.setText(mDaoList.get(position).getTime());
         messageViewHolder.mRadioButton.setOnClickListener(new View.OnClickListener() {
@@ -63,6 +72,17 @@ public class DeleteShortMessageAdapter extends RecyclerView.Adapter<RecyclerView
         }else{
             messageViewHolder.mRadioButton.setChecked(false);
         }
+    }
+
+    private String getPhoneKeyForName(String phone){
+        List<MailListDao> listModels = MailListManager.getInstance(mContext).getByPhoneList(phone);
+        String name;
+        if(listModels.size() > 0){
+            name = listModels.get(0).getName();
+        }else{
+            name =  "";
+        }
+        return name;
     }
 
     @Override

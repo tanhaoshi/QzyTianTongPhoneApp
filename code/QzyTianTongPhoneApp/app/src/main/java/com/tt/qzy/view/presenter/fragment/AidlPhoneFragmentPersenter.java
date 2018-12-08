@@ -18,6 +18,7 @@ import com.tt.qzy.view.activity.AidlContactsActivity;
 import com.tt.qzy.view.activity.ContactsActivity;
 import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.bean.MallListModel;
+import com.tt.qzy.view.bean.ProtobufMessageModel;
 import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.MailListDao;
 import com.tt.qzy.view.db.manager.CallRecordManager;
@@ -90,12 +91,11 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
         String name = getPhoneKeyForName(phone);
 
         if(null != name && name.length() > 0){
-
             CallRecordDao callRecordDao = new CallRecordDao(phoneNumber,name,"","2",DateUtil.backTimeFomat(new Date()),20);
 
             CallRecordManager.getInstance(mContext).insertCallRecord(callRecordDao,mContext);
-        }else{
 
+        }else{
             CallRecordDao callRecordDao = new CallRecordDao(phoneNumber,"","","2",DateUtil.backTimeFomat(new Date()),20);
 
             CallRecordManager.getInstance(mContext).insertCallRecord(callRecordDao,mContext);
@@ -129,6 +129,7 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
             @Override
             public void subscribe(ObservableEmitter<List<CallRecordDao>> e){
                 List<CallRecordDao> callRecordDaos = CallRecordManager.getInstance(mContext).queryCallRecordList();
+                KLog.i("look over callRecordDaos = " + JSON.toJSONString(callRecordDaos));
                 mView.get().getDaoListSize(callRecordDaos.size());
                 List<CallRecordDao> listDao = CallRecordManager.getInstance(mContext).limitCallRecordList(offset,limit);
                 mView.get().getListSize(listDao.size());
@@ -280,7 +281,18 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
     }
 
     public void deleteAllRecord(){
+
+        ProtobufMessageModel protobufMessageModel = new ProtobufMessageModel();
+
+        protobufMessageModel.setDelete(true);
+
+        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.
+                EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_DELETE_SIGNAL_MESSAFGE
+                ,protobufMessageModel));
+
         CallRecordManager.getInstance(mContext).deleteRecordList();
+
+        NToast.shortToast(mContext,"删除成功!");
     }
 
     public void release(){

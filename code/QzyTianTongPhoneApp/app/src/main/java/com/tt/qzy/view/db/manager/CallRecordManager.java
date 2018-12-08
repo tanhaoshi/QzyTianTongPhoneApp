@@ -67,6 +67,11 @@ public class CallRecordManager {
         dao.deleteAll();
     }
 
+    public void deleteLinkPhone(List<CallRecordDao> callRecordDao){
+        CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
+        dao.deleteInTx(callRecordDao);
+    }
+
     public void insertCallRecordList(List<CallRecordDao> callRecordDaos, Context context) {
         if (callRecordDaos == null || callRecordDaos.isEmpty()) {
             return;

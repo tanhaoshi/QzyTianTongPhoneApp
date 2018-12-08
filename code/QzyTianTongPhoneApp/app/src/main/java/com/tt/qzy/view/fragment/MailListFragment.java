@@ -56,8 +56,8 @@ public class MailListFragment extends Fragment implements PopWindow.OnDismissLis
     SideBar mSideBar;
     @BindView(R.id.custom_input)
     ClearEditText mClearEditText;
-    @BindView(R.id.refreshLayout)
-    RefreshLayout mRefreshLayout;
+//    @BindView(R.id.refreshLayout)
+//    RefreshLayout mRefreshLayout;
 
     private List<MallListModel> listModels = new ArrayList<>();
     private PinyinComparator pinyinComparator;
@@ -122,13 +122,14 @@ public class MailListFragment extends Fragment implements PopWindow.OnDismissLis
             }
         });
 
-        mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh(RefreshLayout refreshlayout) {
-                mPresenter.getMallList(getActivity());
-                mRefreshLayout.finishRefresh(200);
-            }
-        });
+        //下拉刷新控件
+//        mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+//            @Override
+//            public void onRefresh(RefreshLayout refreshlayout) {
+//                mPresenter.getMallList(getActivity());
+//                mRefreshLayout.finishRefresh(200);
+//            }
+//        });
 
         initProgress();
     }
