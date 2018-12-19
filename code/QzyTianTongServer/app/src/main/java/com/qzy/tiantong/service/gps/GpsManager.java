@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.UserHandle;
 import android.provider.Settings;
+import android.util.Log;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.atcommand.AtCommandToolManager;
@@ -223,7 +224,6 @@ public class GpsManager {
      * @param location
      */
     private void sendLoactionToPhoneClient(Location location) {
-        //LogUtils.d("isGpsOpen = " + isGpsOpen);
         TtPhonePositionProtos.TtPhonePosition ttPhonePosition = null;
         if (location == null) {
             ttPhonePosition = TtPhonePositionProtos.TtPhonePosition.newBuilder()

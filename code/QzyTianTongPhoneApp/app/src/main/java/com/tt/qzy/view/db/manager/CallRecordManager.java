@@ -2,14 +2,10 @@ package com.tt.qzy.view.db.manager;
 
 import android.content.Context;
 
-import com.tt.qzy.view.activity.ContactsActivity;
 import com.tt.qzy.view.db.CallRecordDaoDao;
 import com.tt.qzy.view.db.DaoMaster;
 import com.tt.qzy.view.db.DaoSession;
-import com.tt.qzy.view.db.MailListDaoDao;
-import com.tt.qzy.view.db.ShortMessageDaoDao;
 import com.tt.qzy.view.db.dao.CallRecordDao;
-import com.tt.qzy.view.db.dao.MailListDao;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 import org.greenrobot.greendao.query.WhereCondition;
@@ -38,6 +34,13 @@ public class CallRecordManager {
         }
 
         return sCallRecordManager;
+    }
+
+    public List<CallRecordDao> queryAllRecordList(){
+        CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
+        QueryBuilder<CallRecordDao> qb = dao.queryBuilder().orderDesc();
+        List<CallRecordDao> list = qb.list();
+        return list;
     }
 
     public List<CallRecordDao> queryCallRecordList() {
@@ -93,7 +96,7 @@ public class CallRecordManager {
         callRecordDao.insert(dao);
     }
 
-    public List<CallRecordDao> limitCallRecordList(int offset,int limit){
+    public List<CallRecordDao> limitCallRecordList(int offset, int limit){
         CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
         List<CallRecordDao> list = dao.queryBuilder().orderDesc(CallRecordDaoDao.Properties.Date)
                 .where(new WhereCondition.StringCondition(

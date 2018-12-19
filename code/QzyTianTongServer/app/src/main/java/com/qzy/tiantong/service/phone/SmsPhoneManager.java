@@ -12,6 +12,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.text.TextUtils;
@@ -22,6 +23,7 @@ import com.qzy.tiantong.service.gps.GpsManager;
 import com.qzy.tiantong.service.phone.data.SmsInfo;
 import com.qzy.tiantong.service.phone.data.SosMessage;
 import com.qzy.tiantong.service.phone.obersever.SmsDatabaseChaneObserver;
+import com.qzy.tiantong.service.utils.LedManager;
 import com.qzy.tiantong.service.utils.PhoneUtils;
 import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.data.TtPhoneSosMessageProtos;
@@ -105,6 +107,8 @@ public class SmsPhoneManager {
     }
 
 
+    private boolean mSosStarted = false;
+    private int downEventCount = 0;
     /**
      * 接受短信
      */
@@ -162,22 +166,25 @@ public class SmsPhoneManager {
                 }*/
 
 
-            } else if (action.equals("android.intent.action.GLOBAL_BUTTON")) {
+            } else if (action.equals("android.intent.action.GLOBAL_BUTTON") ) {
                 KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
-                LogUtils.d("keyevent = " + event.getKeyCode());
                 if ((event.getKeyCode() == KeyEvent.KEYCODE_TV)) {
                     if (KeyEvent.ACTION_DOWN == event.getAction()) {
                         downEventCount++;
-                    } else if (KeyEvent.ACTION_UP == event.getAction()) {
-                        if (downEventCount > 5) {
-                            downEventCount = 0;
-                            startSendSosMsg();
-                        } else {
-                            stopSendSosMsg();
+                        if ((downEventCount > 40)&&(!mSosStarted)){
+                            mSosStarted = true;
+//                            startSendSosMsg();
+                            startSendSosMsgAndGPS();
+                            LedManager.setSosLedStatus(true);
+                        }else if((downEventCount < 41) && mSosStarted){
+                            stopSendSosMsgAndGPS();
+//                            stopSendSosMsg();
+                            mSosStarted = false;
+                            LedManager.setSosLedStatus(false);
                         }
-
+                    } else if (KeyEvent.ACTION_UP == event.getAction()) {
+                        downEventCount = 0;
                     }
-
                 }
             }
         }
@@ -216,7 +223,6 @@ public class SmsPhoneManager {
             e.printStackTrace();
         }
     }
-
 
     /**
      * 发送状态
@@ -283,7 +289,6 @@ public class SmsPhoneManager {
         }
     };
 
-
     /**
      * 发送短信
      *
@@ -292,7 +297,6 @@ public class SmsPhoneManager {
     public void senSms(TtPhoneSmsProtos.TtPhoneSms ttPhoneSms) {
         sendSms(ttPhoneSms.getIp(), ttPhoneSms.getPhoneNumber(), ttPhoneSms.getMessageText());
     }
-
 
     /**
      * 更新短信已读状态
@@ -349,65 +353,160 @@ public class SmsPhoneManager {
         }
     }
 
-
     /**
      * 发送sos短信
      */
     private Thread mThreadSendSos = null;
-    private int downEventCount = 0;
+    private boolean isThread = true;
+    private Runnable mRunnable = null;
+
+    public void startSendSosMsgAndGPS(){
+        try{
+
+            final SosMessage sosMessage = TtPhoneSystemanager.getSosMessage();
+
+            if (sosMessage == null) {
+                LogUtils.e("sosMessage is null ....");
+            }
+
+            final int delayTime = sosMessage.getDelayTime() * 1000 ;
+
+            if(mGpsManager != null){
+                mGpsManager.openGps();
+            }
+
+            if(mCallback != null){
+                mCallback.onSosState(true);
+            }
+
+            mRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    Location location = null;
+
+                    if (mGpsManager != null) {
+                        location = mGpsManager.getmCurrenLocation();
+                    }
+
+                    if(sosMessage != null){
+
+                        String message = sosMessage.getMessage();
+
+                        if (TextUtils.isEmpty(message)) {
+                            message = "help me!!!";
+                        }
+
+                        if (location != null) {
+                            message = message + "纬度:" + location.getLatitude() + "经度:" + location.getLongitude();
+                        }
+
+                        String phone = sosMessage.getPhoneNumber();
+
+                        if (!TextUtils.isEmpty(phone)) {
+                            sendSms("192.168.43.1", phone, message);
+                        }
+
+                        mHandler.postDelayed(mRunnable,delayTime);
+                    }
+                }
+            };
+
+            if(isThread){
+                mHandler.post(mRunnable);
+                isThread = false;
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private Handler mHandler = new Handler();
 
     public void startSendSosMsg() {
         try {
             final SosMessage sosMessage = TtPhoneSystemanager.getSosMessage();
             if (sosMessage == null) {
                 LogUtils.e("sosMessage is null ....");
-                return;
             }
-            LogUtils.d("sosMessage = " + sosMessage);
+
             final int delayTime = sosMessage.getDelayTime();
             mThreadSendSos = new Thread(new Runnable() {
                 @Override
                 public void run() {
+
                     if (mGpsManager != null) {
                         mGpsManager.openGps();
                     }
+
                     if (mCallback != null) {
                           mCallback.onSosState(true);
                     }
-                    while (true) {
 
+                    while (true) {
                         try {
                             Location location = null;
+
                             if (mGpsManager != null) {
                                 location = mGpsManager.getmCurrenLocation();
                             }
-                            String message = sosMessage.getMessage();
 
-                            if (location != null) {
-                                message = message + " lat:" + location.getLatitude() + " lng:" + location.getLongitude();
+                            if(sosMessage != null){
+
+                                String message = sosMessage.getMessage();
+
+                                if (TextUtils.isEmpty(message)) {
+                                    message = "help me!!!";
+                                }
+
+                                if (location != null) {
+                                    message = message + " lat:" + location.getLatitude() + " lng:" + location.getLongitude();
+                                }
+
+                                String phone = sosMessage.getPhoneNumber();
+
+                                if (!TextUtils.isEmpty(phone)) {
+                                    sendSms("192.168.43.1", phone, message);
+                                }
                             }
 
-                            if (TextUtils.isEmpty(message)) {
-                                message = "help !!!";
-                            }
+                            Thread.sleep(delayTime * 1000);
 
-                            String phone = sosMessage.getPhoneNumber();
-                            if (!TextUtils.isEmpty(phone)) {
-                                sendSms("192.168.43.1", phone, message);
-                            }
-
-                            Thread.sleep(delayTime);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
-
                 }
             });
 
+            if(isThread){
+                mThreadSendSos.start();
+                isThread = false;
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 停止发送SOS短信及GPS
+     */
+    public void stopSendSosMsgAndGPS(){
+        if(mRunnable != null){
+            if(mHandler != null){
+                mHandler.removeCallbacks(mRunnable);
+                mHandler = null;
+            }
+            mRunnable = null;
+        }
+
+        if(mCallback != null){
+            mCallback.onSosState(false);
+        }
+
+        if(mGpsManager != null){
+            mGpsManager.closeGps();
         }
     }
 
@@ -419,6 +518,7 @@ public class SmsPhoneManager {
             downEventCount = 0;
             if (mThreadSendSos != null && mThreadSendSos.isAlive()) {
                 mThreadSendSos.interrupt();
+                isThread = true;
             }
             mThreadSendSos = null;
 
@@ -447,9 +547,8 @@ public class SmsPhoneManager {
      * 释放
      */
     public void free() {
-
         unregisterSms();
-        stopSendSosMsg();
+        stopSendSosMsgAndGPS();
     }
 
     public interface IOnSMSCallback {

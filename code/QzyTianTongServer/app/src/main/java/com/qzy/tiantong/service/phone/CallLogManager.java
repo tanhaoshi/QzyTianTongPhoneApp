@@ -37,6 +37,8 @@ public class CallLogManager {
                     List<CallLogInfo> callLogInfo = PhoneUtils.getCallLog(context, page, pageCount);
                     page++;
                     if (callLogInfo == null || callLogInfo.size() <= 0) {
+                        TtCallRecordProtos.TtCallRecordProto.Builder listRecorder = TtCallRecordProtos.TtCallRecordProto.newBuilder();
+                        phoneNettyManager.sendCallLogToPhoneClient(ip, listRecorder.build());
                         LogUtils.e("getCall log fininsh .....");
                         break;
                     }
@@ -85,6 +87,8 @@ public class CallLogManager {
                     List<SmsInfo> smsList = PhoneUtils.getSms(context, page, pageCount);
                     page++;
                     if (smsList == null || smsList.size() <= 0) {
+                        TtShortMessageProtos.TtShortMessage.Builder ttShortMessage = TtShortMessageProtos.TtShortMessage.newBuilder();
+                        phoneNettyManager.sendCallLogToPhoneClient(ip, ttShortMessage.build());
                         LogUtils.e("getSms sync finish .....");
                         break;
                     }

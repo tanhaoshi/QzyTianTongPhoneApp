@@ -1,15 +1,21 @@
 package com.tt.qzy.view.presenter.activity;
 
 import android.content.Context;
+import android.text.TextUtils;
 
+import com.tt.qzy.view.adapter.SelectContactsAdapter;
+import com.tt.qzy.view.adapter.SortAdapter;
 import com.tt.qzy.view.bean.MallListModel;
 import com.tt.qzy.view.db.dao.MailListDao;
 import com.tt.qzy.view.db.manager.MailListManager;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
 import com.tt.qzy.view.utils.MallListUtils;
+import com.tt.qzy.view.utils.PinyinComparator;
+import com.tt.qzy.view.utils.PinyinUtils;
 import com.tt.qzy.view.view.SelectContactView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -106,4 +112,27 @@ public class SelectContactsPresenter extends BasePresenter<SelectContactView>{
         }
         return list;
     }
+
+    public void filterData(List<MallListModel> sourceDateList , String filterStr , PinyinComparator pinyinComparator,SelectContactsAdapter sortAdapter) {
+        List<MallListModel> filterDateList = new ArrayList<>();
+        if (TextUtils.isEmpty(filterStr)) {
+            filterDateList = sourceDateList;
+        } else {
+            filterDateList.clear();
+            for (MallListModel sortModel : sourceDateList) {
+                String name = sortModel.getName();
+                if (name.indexOf(filterStr.toString()) != -1 ||
+                        PinyinUtils.getFirstSpell(name).startsWith(filterStr.toString())
+                        || PinyinUtils.getFirstSpell(name).toLowerCase().startsWith(filterStr.toString())
+                        || PinyinUtils.getFirstSpell(name).toUpperCase().startsWith(filterStr.toString())
+                        ) {
+                    filterDateList.add(sortModel);
+                }
+            }
+        }
+
+        Collections.sort(filterDateList, pinyinComparator);
+        sortAdapter.updateList(filterDateList);
+    }
+
 }

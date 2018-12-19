@@ -17,6 +17,7 @@ import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.AidlContactsActivity;
 import com.tt.qzy.view.activity.ContactsActivity;
 import com.tt.qzy.view.activity.TellPhoneActivity;
+import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.bean.MallListModel;
 import com.tt.qzy.view.bean.ProtobufMessageModel;
 import com.tt.qzy.view.db.dao.CallRecordDao;
@@ -129,16 +130,16 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
             @Override
             public void subscribe(ObservableEmitter<List<CallRecordDao>> e){
                 List<CallRecordDao> callRecordDaos = CallRecordManager.getInstance(mContext).queryCallRecordList();
-                KLog.i("look over callRecordDaos = " + JSON.toJSONString(callRecordDaos));
+                KLog.i("look over callrecod data getCall = " + JSON.toJSONString(callRecordDaos));
                 mView.get().getDaoListSize(callRecordDaos.size());
                 List<CallRecordDao> listDao = CallRecordManager.getInstance(mContext).limitCallRecordList(offset,limit);
                 mView.get().getListSize(listDao.size());
                 e.onNext(arrangementData(listDao));
             }
         })
-            .subscribeOn(Schedulers.io())
-            .unsubscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new Observer<List<CallRecordDao>>() {
                 @Override
                 public void onSubscribe(Disposable d) {

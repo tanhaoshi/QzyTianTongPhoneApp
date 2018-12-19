@@ -16,7 +16,7 @@
     <string name="TMT_entrnyMessage">无法连接,设备与卫星无连接</string>
     <string name="TMT_userEditors">用户编辑</string>
     <string name="TMT_exit">退出</string>
-    <string name="TMT_sos_settings">sos设置</string>
+    <string name="TMT_sos_settings">SOS设置</string>
     <string name="TMT_wifi_settings">WIFI密码设置</string>
     <string name="TMT_date_settings">时间设置</string>
     <string name="TMT_offline_map">离线地图</string>
@@ -108,7 +108,7 @@
     <string name="TMT_setting_content_server_date"> 点击确定,将手机时间同步到设备中当前时间:</string>
     <string name="TMT_ANSWER">来电</string>
     <string name="TMT_PUTOUT">拨出</string>
-    <string name="TMT_UNKNOW_STATUS">未接通</string>
+    <string name="TMT_UNKNOW_STATUS">未接</string>
     <string name="TMT_wifi_password_notnull">WIFI密码不能为空</string>
     <string name="TMT_wifi_length_greatethan_eight">WIFI密码不能少于8位</string>
     <string name="TMT_the_change_content">更新内容如下:</string>

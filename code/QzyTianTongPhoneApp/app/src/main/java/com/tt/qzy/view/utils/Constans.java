@@ -18,6 +18,9 @@ public interface Constans {
     String SHORT_MESSAGE_TYPE = "type";
     String SHORT_MESSAGE_ID = "id";
 
+    String RECORD_ISREAD = "record_isreader";
+    String SHORTMESSAGE_ISREAD = "shortmessage_isread";
+
     String TTM_STATUS = "ttm_status";
 
     String BASE_URL = "http://47.106.33.137:9097/TinTong/web/";
@@ -25,8 +28,8 @@ public interface Constans {
     String IP = "192.168.43.1";
     int UPLOAD_PORT = 9998;
     int PORT = 9999;
-
-    String SERVER_APP_VERSION = "4";
+    // 7
+    String SERVER_APP_VERSION = "8";
 
     int ANSWER = 1;
     int PUTOUT = 2;

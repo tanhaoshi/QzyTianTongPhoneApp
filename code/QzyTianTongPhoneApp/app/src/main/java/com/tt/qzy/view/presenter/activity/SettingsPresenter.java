@@ -8,8 +8,10 @@ import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.data.TtBeiDouStatuss;
 import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.db.manager.CallRecordManager;
+import com.tt.qzy.view.db.manager.MailListManager;
 import com.tt.qzy.view.db.manager.ShortMessageManager;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
+import com.tt.qzy.view.utils.SPUtils;
 import com.tt.qzy.view.view.SettingsView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -58,6 +60,9 @@ public class SettingsPresenter extends BasePresenter<SettingsView>{
     public void recoverSystem(Context context){
         CallRecordManager.getInstance(context).deleteRecordList();
         ShortMessageManager.getInstance(context).deleteShortMessageList();
+        MailListManager.getInstance(context).deleteAllMail(context);
+        SPUtils.clearShare(context);
+
     }
 
     public void release(){

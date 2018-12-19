@@ -115,27 +115,47 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
     public void onClick(View view){
         switch (view.getId()){
             case R.id.settings_sos:
-                jumpSosSetting();
+                if(tt_isSignal){
+                    jumpSosSetting();
+                }else{
+                    NToast.shortToast(this,"设备未入网,请先入网!");
+                }
                 break;
             case R.id.setting_map:
                 Intent intent = new Intent(SettingsActivity.this,OffLineMapActivity.class);
                 startActivity(intent);
                 break;
             case R.id.setting_about:
-                Intent about_intent = new Intent(SettingsActivity.this,MainAboutActivity.class);
-                startActivity(about_intent);
+                if(tt_isSignal){
+                    Intent about_intent = new Intent(SettingsActivity.this,MainAboutActivity.class);
+                    startActivity(about_intent);
+                }else{
+                    NToast.shortToast(this,"设备未入网,请先入网!");
+                }
                 break;
             case R.id.main_quantity:
                 finish();
                 break;
             case R.id.settings_wifi:
-                initWIFIDialog();
+                if(tt_isSignal){
+                    initWIFIDialog();
+                }else{
+                    NToast.shortToast(this,"设备未入网,请先入网!");
+                }
                 break;
             case R.id.settings_date_time:
-                initDateDialog();
+                if(tt_isSignal){
+                    initDateDialog();
+                }else{
+                    NToast.shortToast(this,"设备未入网,请先入网!");
+                }
                 break;
             case R.id.setting_factroy_reset:
-                initSystemResetDialog();
+                if(tt_isSignal){
+                    initSystemResetDialog();
+                }else{
+                    NToast.shortToast(this,"设备未入网,请先入网!");
+                }
                 break;
             case R.id.setting_check:
                 Intent checkUpdateIntent = new Intent(SettingsActivity.this,CheckUpdateActivity.class);

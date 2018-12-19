@@ -2,13 +2,9 @@ package com.tt.qzy.view.db.manager;
 
 import android.content.Context;
 
-import com.alibaba.fastjson.JSON;
-import com.socks.library.KLog;
-import com.tt.qzy.view.db.CallRecordDaoDao;
 import com.tt.qzy.view.db.DaoMaster;
 import com.tt.qzy.view.db.DaoSession;
 import com.tt.qzy.view.db.MailListDaoDao;
-import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.MailListDao;
 
 import org.greenrobot.greendao.query.QueryBuilder;
@@ -50,7 +46,7 @@ public class MailListManager {
         return mailListDao;
     }
 
-    public void insertMailListList(List<MailListDao> mailListDaos,Context context) {
+    public void insertMailListList(List<MailListDao> mailListDaos, Context context) {
         if (mailListDaos == null || mailListDaos.isEmpty()) {
             return;
         }
@@ -60,7 +56,7 @@ public class MailListManager {
         userDao.insertInTx(mailListDaos);
     }
 
-    public void insertMailListSignal(MailListDao mailListDao,Context context){
+    public void insertMailListSignal(MailListDao mailListDao, Context context){
         DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
         DaoSession daoSession = daoMaster.newSession();
         MailListDaoDao mailListDaoDao = daoSession.getMailListDaoDao();

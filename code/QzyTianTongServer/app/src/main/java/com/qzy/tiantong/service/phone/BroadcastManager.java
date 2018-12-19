@@ -10,7 +10,10 @@ import android.text.TextUtils;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.service.ITianTongServer;
+import com.qzy.tiantong.service.utils.Constant;
+import com.qzy.tiantong.service.utils.LedManager;
 import com.qzy.tiantong.service.utils.PhoneUtils;
+import com.qzy.tiantong.service.utils.WifiUtils;
 
 
 /**
@@ -38,6 +41,7 @@ public class BroadcastManager {
         intentFilter.addAction("com.test");
         intentFilter.addAction("com.test.close");
         intentFilter.addAction("com.qzy.phone.state");
+        intentFilter.addAction("com.qzy.tt.ACTION_RECOVERY_WIFI"); //恢复出厂设置
         intentFilter.addAction(PhoneUtils.actionstrDelCallback);
         mContext.registerReceiver(mReceiver, intentFilter);
     }
@@ -97,10 +101,37 @@ public class BroadcastManager {
 
             }else if(action.equals(PhoneUtils.actionstrDelCallback)){
 
+            }else if(action.equals("com.qzy.tt.ACTION_RECOVERY_WIFI")){
+                LedManager.setRecoveryLedStatus(true);
+                setWifiPasswd(Constant.WIFI_PASSWD);
+                doMasterClear(context);
             }
-
         }
     };
+
+    /**
+     * 设置wifi密码
+     */
+    public void setWifiPasswd(String passwd) {
+        WifiUtils.setWifiPasswdToSharedpref(mContext, passwd);
+        WifiUtils.setWifiApEnabled(mContext, WifiUtils.getSsidName(), passwd, false);
+        WifiUtils.setWifiApEnabled(mContext, WifiUtils.getSsidName(), passwd, true);
+    }
+
+    /**
+     * 恢复出厂设置
+     *
+     * @param context
+     */
+    public void doMasterClear(Context context) {
+        LogUtils.i("the system recover");
+        Intent intent = new Intent("android.intent.action.MASTER_CLEAR");
+        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+        intent.putExtra("android.intent.extra.REASON", "MasterClearConfirm");
+        intent.putExtra("android.intent.extra.WIPE_EXTERNAL_STORAGE", false);
+        context.sendBroadcast(intent);
+        // Intent handling is asynchronous -- assume it will happen soon.
+    }
 
     private Handler mHandler = new Handler() {
         @Override

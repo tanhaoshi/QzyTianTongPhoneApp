@@ -5,7 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,6 +37,7 @@ import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.RingToneUtils;
+import com.tt.qzy.view.utils.SPUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -83,6 +86,22 @@ public class SendShortMessageActivity extends AppCompatActivity {
     private void initView() {
         //sms_main_quantity.setText(getResources().getString(R.string.TMT_short_message));
         mImageView.setVisibility(View.VISIBLE);
+        sms_et_name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                phone = s.toString();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     private void initMsgs() {
@@ -96,6 +115,7 @@ public class SendShortMessageActivity extends AppCompatActivity {
                 sms_et_name.setText(mailListDaos.get(0).getName());
                 sms_et_name.setFocusable(false);
                 name = mailListDaos.get(0).getName();
+                phone = intent.getStringExtra(Constans.SHORT_MESSAGE_PHONE);
             }else{
                 sms_et_name.setText(intent.getStringExtra(Constans.SHORT_MESSAGE_PHONE));
                 sms_et_name.setFocusable(false);
@@ -123,8 +143,20 @@ public class SendShortMessageActivity extends AppCompatActivity {
                 shortMessageDao.setIsStatus(true);
 
                 ShortMessageManager.getInstance(SendShortMessageActivity.this).updateShortMessageName(shortMessageDao);
+
+                updateMainAlert();
             }
         }
+    }
+
+    private void updateMainAlert(){
+        Integer integer = (Integer) SPUtils.getShare(this,Constans.SHORTMESSAGE_ISREAD,0);
+        if(integer > 0){
+            integer --;
+        }else{
+            return;
+        }
+        SPUtils.putShare(this,Constans.SHORTMESSAGE_ISREAD,integer);
     }
 
     private void initAdapter() {
@@ -160,7 +192,8 @@ public class SendShortMessageActivity extends AppCompatActivity {
             return;
         }
 
-        String receive = sms_et_name.getText().toString().trim();
+        String receive = phone;
+
         if (TextUtils.isEmpty(receive)) {
             NToast.shortToast(this, R.string.TMT_short_message_receiver_notnull);
             return;
@@ -178,7 +211,7 @@ public class SendShortMessageActivity extends AppCompatActivity {
         }
 
         ShortMessageDao shortMessageDao = new ShortMessageDao(phone,content,
-                DateUtil.backTimeFomat(new Date()),0,"",String.valueOf(MsgModel.TYPE_RECEIVE),name);
+                DateUtil.backTimeFomat(new Date()),0,"",String.valueOf(MsgModel.TYPE_RECEIVE),name,true);
 
         ShortMessageManager.getInstance(SendShortMessageActivity.this).insertShortMessage(shortMessageDao,SendShortMessageActivity.this);
     }
@@ -234,6 +267,7 @@ public class SendShortMessageActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && resultCode == 1) {
             String s = data.getStringExtra("back");
+            this.phone = data.getStringExtra("phone");
             sms_et_name.setText(s);
         }
     }

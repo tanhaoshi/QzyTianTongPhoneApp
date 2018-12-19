@@ -262,6 +262,8 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
     public void onStart() {
         super.onStart();
         loadData(true);
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if(mainActivity != null) mainActivity.showRecordRead();
     }
 
     @Override

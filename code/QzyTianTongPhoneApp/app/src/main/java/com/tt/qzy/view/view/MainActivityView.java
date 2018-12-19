@@ -14,4 +14,8 @@ public interface MainActivityView extends BaseView{
     void onCompelete(String installPath);
 
     void onError(String errorMessage);
+
+    void showRecordCallRead(boolean isShow,int count);
+
+    void showShortMessageRead(boolean isShow,int count);
 }

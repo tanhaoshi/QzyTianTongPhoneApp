@@ -53,14 +53,10 @@ public class TraceServiceImpl extends AbsWorkService {
     }
 
     private void timerSendMessage(){
-        Log.i("timerSendMessage","three seconds log !");
-        KLog.i("boolean is = " + SPUtils.getShare(this,Constans.SERVER_FLAG,false));
         if(AppUtils.isServiceRunning("com.qzy.tt.phone.service.TtPhoneService",this)){
             // alive
-            KLog.i("timerSendMessage","alive");
         }else{
             // dead
-            KLog.i("timerSendMessage","death");
             Intent intent = new Intent(this, TtPhoneService.class);
             startService(intent);
             SPUtils.putShare(this, Constans.SERVER_FLAG,true);

@@ -1,10 +1,13 @@
 package com.qzy.tiantong.service.phone;
 
+import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.IBinder;
+import android.support.annotation.RequiresApi;
 import android.telephony.PhoneStateListener;
 import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
@@ -16,7 +19,10 @@ import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.atcommand.AtCommandToolManager;
 import com.qzy.tiantong.service.atcommand.AtCommandTools;
 import com.qzy.tiantong.service.service.ITianTongServer;
+import com.qzy.tiantong.service.utils.Constant;
+import com.qzy.tiantong.service.utils.ModuleDormancyUtil;
 import com.qzy.tiantong.service.utils.PhoneUtils;
+import com.qzy.tiantong.service.utils.PowerControl;
 import com.qzy.tt.data.TtPhoneWifiProtos;
 
 import java.lang.reflect.Method;
@@ -29,7 +35,9 @@ public class QzyPhoneManager {
 
     private Context mContext;
     private ITianTongServer mServer;
-
+    private int mstate;
+    // 休眠标记位
+    private boolean dormancyFlag = true;
 
     private AtCommandToolManager mAtCommandToolManager;
 
@@ -75,6 +83,24 @@ public class QzyPhoneManager {
      */
     public void callPhone(String ip, String phoneNum) {
 
+        LogUtils.i("callPhone look over dormancy value = " + ModuleDormancyUtil.getNodeString(Constant.WAKE_PATH));
+        int count = 0;
+        PowerControl.doWakeup();
+        while(!PowerControl.getTTStatus()){
+            count ++;
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(count>10){
+                LogUtils.e("Tiantong Model not be wakeup");
+                break;
+            }
+        }
+
+        LogUtils.i("start call phone ...");
+
         //设置电话ip
         if (!mServer.setCurrenCallingIp(ip)) {
             LogUtils.e("has user calling pleas waiting...");
@@ -89,6 +115,7 @@ public class QzyPhoneManager {
         LogUtils.e("tel phone ..  " + phoneNum);
     }
 
+
     /**
      * 挂断电话
      *
@@ -97,6 +124,7 @@ public class QzyPhoneManager {
     public void hangupPhone(String ip) {
         mServer.setEndCallingIp(ip);
         endCall();
+        PowerControl.doSleep();
     }
 
     /**
@@ -204,6 +232,7 @@ public class QzyPhoneManager {
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
             super.onCallStateChanged(state, incomingNumber);
+            mstate = state;
             switch (state) {
                 case TelephonyManager.CALL_STATE_RINGING:
                     //等待接听状态
@@ -226,6 +255,7 @@ public class QzyPhoneManager {
             }
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
             super.onSignalStrengthsChanged(signalStrength);
@@ -235,6 +265,7 @@ public class QzyPhoneManager {
             int gsmSignalStrength = signalStrength.getGsmSignalStrength();
             //获取网络类型
             int netWorkType = PhoneUtils.getNetWorkType(mContext);
+
             switch (netWorkType) {
                 case PhoneUtils.NETWORKTYPE_WIFI:
                     LogUtils.e("network type wifi,signaleS = " + gsmSignalStrength);
@@ -247,6 +278,7 @@ public class QzyPhoneManager {
                     break;
                 case PhoneUtils.NETWORKTYPE_NONE:
                     LogUtils.e("network type none,signaleS = " + gsmSignalStrength);
+                    controlSignalStrength(gsmSignalStrength);
                     mServer.onPhoneSignalStrengthChange(gsmSignalStrength);
                     break;
                 case -1:
@@ -270,6 +302,36 @@ public class QzyPhoneManager {
         }
     }
 
+    private boolean inPreSignal = false;
+    private boolean inPreNoSignal = true;
+    @android.support.annotation.RequiresApi(api = Build.VERSION_CODES.O)
+    private synchronized void controlSignalStrength(int gsmSignalStrength){
+        // 入网
+            if(gsmSignalStrength >= 0 && gsmSignalStrength < 97){
+                //从无到有
+                if(inPreNoSignal) {
+                    inPreNoSignal = false;
+                    inPreSignal = true;
+                    //要对它进行休眠
+                    //1代表已经休眠 0代表正常可工作状态
+                    LogUtils.i("look over node value = " + ModuleDormancyUtil.getNodeString(Constant.WAKE_PATH));
+                    if (PowerControl.getTTStatus()) {
+                        //== 于0 要让它去休眠
+                        PowerControl.doSleep();
+                    }
+                }//从有到有
+            }else{
+                //从有到无
+                if(inPreSignal) {
+                    inPreNoSignal = true;
+                    inPreSignal = false;
+                    LogUtils.i("signal loss do wakeup\n");
+//                    if(!PowerControl.getTTStatus()) {
+//                        PowerControl.doWakeup();
+//                    }
+                }//从无到无
+            }
+    }
 
     public void release() {
 

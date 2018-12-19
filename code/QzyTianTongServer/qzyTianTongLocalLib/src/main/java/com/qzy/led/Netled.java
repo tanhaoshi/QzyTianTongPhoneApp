@@ -5,7 +5,7 @@ package com.qzy.led;
  */
 
 public class Netled {
-
+/*
     static {
         System.loadLibrary("netled");
     }
@@ -18,4 +18,5 @@ public class Netled {
     public static native void setNetledState(boolean state);
     //must destroy if not use the net led
     public static native void destroy();
+    */
 }

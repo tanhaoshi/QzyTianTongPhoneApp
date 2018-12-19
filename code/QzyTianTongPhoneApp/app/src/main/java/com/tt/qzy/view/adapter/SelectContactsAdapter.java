@@ -66,11 +66,11 @@ public class SelectContactsAdapter extends RecyclerView.Adapter<SelectContactsAd
                 if(mData.get(position).isChoosed()){
                     holder.ck_chose.setChecked(false);
                     mData.get(position).setChoosed(((RadioButton)view).isChecked());
-                    mOnItemClickListener.onItemClick(view,position,false);
+                    mOnItemClickListener.onItemClick(view,position,false,mData.get(position).getPhone());
                 }else{
                     holder.ck_chose.setChecked(true);
                     mData.get(position).setChoosed(((RadioButton)view).isChecked());
-                    mOnItemClickListener.onItemClick(view,position,true);
+                    mOnItemClickListener.onItemClick(view,position,true,mData.get(position).getPhone());
                 }
             }
         });
@@ -90,7 +90,7 @@ public class SelectContactsAdapter extends RecyclerView.Adapter<SelectContactsAd
 
     //**********************itemClick************************
     public interface OnItemClickListener {
-        void onItemClick(View view, int position,boolean isFlag);
+        void onItemClick(View view, int position,boolean isFlag,String phone);
     }
 
     private SelectContactsAdapter.OnItemClickListener mOnItemClickListener;

@@ -2,6 +2,7 @@ package com.tt.qzy.view.presenter.activity;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -14,9 +15,13 @@ import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.Status;
+import com.qzy.eventbus.IMessageEventBustType;
+import com.qzy.eventbus.MessageEventBus;
+import com.qzy.tt.data.TtCallRecordProtos;
 import com.socks.library.KLog;
 import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.bean.VersionCodeModel;
+import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.network.NetService;
 import com.tt.qzy.view.network.NetWorkUtils;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
@@ -24,7 +29,12 @@ import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.view.MainActivityView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.IOException;
+import java.util.List;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -38,6 +48,7 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView>{
 
     public MainActivityPresenter(Context context){
         this.mContext = context;
+        EventBus.getDefault().register(this);
     }
 
     public void getAppversionRequest(){
@@ -140,5 +151,44 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView>{
                         mView.get().onError(error.toString());
                     }
                 });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEventBus event) {
+        switch (event.getType()) {
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_RECORD_CALL_HISTROY:
+                Integer integer = (Integer) event.getObject();
+                mView.get().showRecordCallRead(true,integer);
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_SHORT_MESSAGE_HISTROY:
+                Integer integers = (Integer)event.getObject();
+                mView.get().showShortMessageRead(true,integers);
+                break;
+        }
+    }
+
+    /**
+     * 将服务端的系统数据库修改未接状态
+     */
+    public void requestServerPhoneStatus(List<CallRecordDao> callRecordDaos){
+        TtCallRecordProtos.TtCallRecordProto.Builder listRecorder = TtCallRecordProtos.TtCallRecordProto.newBuilder();
+        for (CallRecordDao callInfo : callRecordDaos) {
+            KLog.e("callInfo = " + callInfo.toString());
+            TtCallRecordProtos.TtCallRecordProto.CallRecord callRecord = TtCallRecordProtos.TtCallRecordProto.CallRecord.newBuilder()
+                    .setId(callInfo.getServerId())
+                    .setPhoneNumber(callInfo.getPhoneNumber())
+                    .setDate(callInfo.getDate())
+                    .setName(callInfo.getName())
+                    .setType(Integer.valueOf(callInfo.getState()))
+                    .setDuration(callInfo.getDuration())
+                    .build();
+            listRecorder.addCallRecord(callRecord);
+        }
+        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_RECORD_CALL_STATUS,
+                listRecorder.build()));
+    }
+
+    public void release(){
+        EventBus.getDefault().unregister(this);
     }
 }

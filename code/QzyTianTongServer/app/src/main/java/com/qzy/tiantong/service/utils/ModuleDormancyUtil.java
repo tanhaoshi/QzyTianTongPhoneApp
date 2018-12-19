@@ -1,0 +1,68 @@
+package com.qzy.tiantong.service.utils;
+
+import android.util.Log;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.RandomAccessFile;
+
+public class ModuleDormancyUtil {
+
+    public static String getNodeString(String path) {
+        String prop = "1";// 默认值
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(path));
+            prop = reader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("exception","error : " + e.getMessage());
+        }
+        return prop;
+    }
+
+    public static synchronized void writeNode(final String path,final String state){
+        //  1代表已经休眠 0代表正常可工作状态
+//        try{
+//            BufferedWriter bufWriter = null;
+//            bufWriter = new BufferedWriter(new FileWriter(path));
+//            bufWriter.write(state);  // 写操作
+//            bufWriter.close();
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            Log.e("exception","error : " + e.getMessage());
+//        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OutputStream output = null;
+                OutputStreamWriter outputWrite = null;
+                PrintWriter print = null;
+                File file = new File(path);
+                Log.i("ModuleDormancyUtil", "write file[" + path + "] with value (" + state + ")" );
+                try {
+                    output = new FileOutputStream(file);
+                    outputWrite = new OutputStreamWriter(output);
+                    print = new PrintWriter(outputWrite);
+                    print.print(state);
+                    print.flush();
+                    print.close();
+                    outputWrite.close();
+                    output.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+}

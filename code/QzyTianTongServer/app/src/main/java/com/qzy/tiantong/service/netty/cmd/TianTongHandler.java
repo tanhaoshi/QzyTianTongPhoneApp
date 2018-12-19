@@ -10,6 +10,7 @@ import com.qzy.tiantong.service.service.ITianTongServer;
 import com.qzy.tt.data.CallPhoneProtos;
 import com.qzy.tt.data.ChangePcmPlayerDbProtos;
 import com.qzy.tt.data.TtBeiDouStatuss;
+import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtDeleCallLogProtos;
 import com.qzy.tt.data.TtDeleSmsProtos;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
@@ -113,6 +114,9 @@ public class TianTongHandler extends Handler {
                     break;
                 case PrototocalTools.IProtoServerIndex.request_server_del_sms:
                     mServer.getPhoneNettyManager().deleteSms((TtDeleSmsProtos.TtDeleSms) msg.obj);
+                    break;
+                case PrototocalTools.IProtoServerIndex.request_server_call_status:
+                    mServer.getPhoneNettyManager().updateCallRecordStatus((TtCallRecordProtos.TtCallRecordProto) msg.obj);
                     break;
                 default:
                     break;

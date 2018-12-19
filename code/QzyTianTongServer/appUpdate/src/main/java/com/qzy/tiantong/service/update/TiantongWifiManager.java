@@ -11,6 +11,8 @@ import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.contants.QzyTtContants;
 import com.qzy.tiantong.service.utils.WifiUtils;
 
+import java.security.Key;
+
 public class TiantongWifiManager {
 
     private Context mContext;
@@ -34,10 +36,9 @@ public class TiantongWifiManager {
         WifiUtils.setWifiApEnabled(mContext, WifiUtils.getSsidName(), passwd, true);
     }
 
-
     private void registerReceiver() {
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("com.qzy.tt.ACTION_RECOVERY_WIFI"); //清除WiFi密码
+//        intentFilter.addAction("com.qzy.tt.ACTION_RECOVERY_WIFI"); //清除WiFi密码
         intentFilter.addAction("com.qzy.tt.ACTION_CHANGE_WIFI"); //清除WiFi密码
         mContext.registerReceiver(mReceiver, intentFilter);
     }
@@ -48,21 +49,22 @@ public class TiantongWifiManager {
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(final Context context, Intent intent) {
+            LogUtils.i("action NEW LOG" );
             String action = intent.getAction();
             LogUtils.d("action = " + action);
             if (action.equals("com.qzy.tt.ACTION_RECOVERY_WIFI")) {
                 setWifiPasswd(QzyTtContants.WIFI_PASSWD);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                     doMasterClear(context);
-                    }
-                },3000);
+                doMasterClear(context);
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                     doMasterClear(context);
+//                    }
+//                },3000);
             } else if (action.equals("com.qzy.tt.ACTION_CHANGE_WIFI")) {
                 String passwd = intent.getStringExtra("passwd");
                 setWifiPasswd(passwd);
             }
-
         }
     };
 
@@ -82,6 +84,7 @@ public class TiantongWifiManager {
      * @param context
      */
     public void doMasterClear(Context context) {
+        LogUtils.i("the system recover");
         Intent intent = new Intent("android.intent.action.MASTER_CLEAR");
         intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
         intent.putExtra("android.intent.extra.REASON", "MasterClearConfirm");

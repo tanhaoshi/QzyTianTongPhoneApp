@@ -11,12 +11,16 @@ import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.socks.library.KLog;
+import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.bean.MsgModel;
 import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
 import com.tt.qzy.view.db.manager.CallRecordManager;
+import com.tt.qzy.view.db.manager.DBManager;
 import com.tt.qzy.view.db.manager.ShortMessageManager;
+import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.DateUtil;
+import com.tt.qzy.view.utils.SPUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -86,22 +90,35 @@ public class SyncManager {
     }
 
     private void dataMerging(List<TtCallRecordProtos.TtCallRecordProto.CallRecord> list){
-        List<CallRecordDao> callRecordDaos = handlerCallRecordAgrementData(list);
         if(isRecord){
             CallRecordManager.getInstance(mContext).deleteRecordList();
             isRecord = false;
         }
+        List<CallRecordDao> callRecordDaos = handlerCallRecordAgrementData(list);
+
         CallRecordManager.getInstance(mContext).insertCallRecordList(callRecordDaos,mContext);
     }
 
     public List<CallRecordDao> handlerCallRecordAgrementData(List<TtCallRecordProtos.TtCallRecordProto.CallRecord> list){
+        int count = 0;
         List<CallRecordDao> callRecordDaos = new ArrayList<>();
         if(list.size() > 0){
             for(TtCallRecordProtos.TtCallRecordProto.CallRecord callRecord : list){
                 callRecordDaos.add(new CallRecordDao(callRecord.getPhoneNumber(),callRecord.getName(),
-                        callRecord.getAddress(),String.valueOf(callRecord.getType()),callRecord.getDate(),callRecord.getDuration()));
+                        callRecord.getAddress(),String.valueOf(callRecord.getType()),callRecord.getDate(),callRecord.getDuration(),
+                        callRecord.getId()));
+                if(3 == callRecord.getType()){
+                    count = count + 1;
+                }
             }
         }
+        if(isRecord){
+            EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_RECORD_CALL_HISTROY
+                    ,Integer.valueOf(count)));
+
+            SPUtils.putShare(mContext, Constans.RECORD_ISREAD,count);
+        }
+
         return callRecordDaos;
     }
 
@@ -132,22 +149,32 @@ public class SyncManager {
     }
 
     private void dateMerging(List<TtShortMessageProtos.TtShortMessage.ShortMessage> list){
-        List<ShortMessageDao> shortMessagList = handlerShortMessageAgrementData(list);
         if(isShortMessage){
             ShortMessageManager.getInstance(mContext).deleteShortMessageList();
             isShortMessage = false;
         }
+        List<ShortMessageDao> shortMessagList = handlerShortMessageAgrementData(list);
         ShortMessageManager.getInstance(mContext).insertShortMessageList(shortMessagList,mContext);
     }
 
     public List<ShortMessageDao> handlerShortMessageAgrementData(List<TtShortMessageProtos.TtShortMessage.ShortMessage> list){
+        int count = 0;
         List<ShortMessageDao> shortMessageDaos = new ArrayList<>();
         if(list.size() > 0){
             for(TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage : list){
                 shortMessageDaos.add(new ShortMessageDao(shortMessage.getNumberPhone(),shortMessage.getMessage(),
                         shortMessage.getTime(),String.valueOf(shortMessage.getType()),shortMessage.getName(),
                         shortMessage.getId(),shortMessage.getIsRead()));
+                if(!shortMessage.getIsRead()){
+                    count = count + 1;
+                }
             }
+        }
+        if(isShortMessage){
+            EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_SHORT_MESSAGE_HISTROY
+                    ,Integer.valueOf(count)));
+
+            SPUtils.putShare(mContext, Constans.SHORTMESSAGE_ISREAD,count);
         }
         return shortMessageDaos;
     }
@@ -158,6 +185,7 @@ public class SyncManager {
            @Override
            public void subscribe(ObservableEmitter<ShortMessageDao> e){
                ShortMessageManager.getInstance(mContext).insertShortMessage(meragingShortMessage(ttShortMessage),mContext);
+               disposeAlert();
                e.onNext(meragingShortMessage(ttShortMessage));
            }
        }).subscribeOn(Schedulers.io())
@@ -176,7 +204,6 @@ public class SyncManager {
             public void onError(Throwable e) {
                 KLog.i("onError handleShortMessageSignal  = "+ e.getMessage().toString());
             }
-
             @Override
             public void onComplete() {
             }
@@ -187,6 +214,15 @@ public class SyncManager {
           ShortMessageDao shortMessageDao = new ShortMessageDao(shortMessage.getNumberPhone(),shortMessage.getMessage(),
                   DateUtil.backTimeFomat(new Date()),0,"",String.valueOf(shortMessage.getType()),"");
         return shortMessageDao;
+    }
+
+    private void disposeAlert(){
+        Integer recordCount = (Integer)SPUtils.getShare(mContext, Constans.SHORTMESSAGE_ISREAD,0);
+        recordCount = recordCount + 1;
+        SPUtils.putShare(mContext,Constans.SHORTMESSAGE_ISREAD,recordCount);
+
+        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_SHORT_MESSAGE_HISTROY
+                ,Integer.valueOf(recordCount)));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

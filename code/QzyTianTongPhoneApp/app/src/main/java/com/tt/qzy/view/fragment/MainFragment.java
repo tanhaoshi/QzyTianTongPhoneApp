@@ -163,15 +163,20 @@ public class MainFragment extends Fragment implements MainFragmentView{
                     return;
                 }
                 if(mainActivity.isConnectStatus()){
-                    if(isChecked){
-                        mPresneter.dialPhone(SPUtils.getShare(getActivity(),Constans.CRY_HELP_PHONE,"").toString());
-                        mIntent = new Intent(getActivity(),TimerService.class);
-                        getActivity().startService(mIntent);
-                        mPresneter.requestGpsPosition(true);
-                        main_location.setChecked(true);
+                    if(mainActivity.tt_isSignal){
+                        if(isChecked){
+                            mPresneter.dialPhone(SPUtils.getShare(getActivity(),Constans.CRY_HELP_PHONE,"").toString());
+                            mIntent = new Intent(getActivity(),TimerService.class);
+                            getActivity().startService(mIntent);
+                            mPresneter.requestGpsPosition(true);
+                            main_location.setChecked(true);
+                        }else{
+                            getActivity().stopService(mIntent);
+                            mPresneter.closeServerSos();
+                        }
                     }else{
-                        getActivity().stopService(mIntent);
-                        mPresneter.closeServerSos();
+                        NToast.shortToast(getActivity(), "设备未入网,请先入网!");
+                        sc_settin_testxinlv.setChecked(false);
                     }
                 }else{
                     NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
@@ -208,16 +213,12 @@ public class MainFragment extends Fragment implements MainFragmentView{
                 }
                 break;
             case R.id.main_settings:
-                if(mainActivity.isConnectStatus()){
-                    Intent settings_intent = new Intent(getActivity(), SettingsActivity.class);
-                    settings_intent.putExtra("connect",mainActivity.isConnectStatus());
-                    settings_intent.putExtra("isSim",mainActivity.tt_isSim);
-                    settings_intent.putExtra("isSignal",mainActivity.tt_isSignal);
-                    settings_intent.putExtra("baterly",mainActivity.tt_baterly);
-                    startActivity(settings_intent);
-                }else{
-                    NToast.shortToast(getActivity(),"不可操作,请链接设备!");
-                }
+                Intent settings_intent = new Intent(getActivity(), SettingsActivity.class);
+                settings_intent.putExtra("connect",mainActivity.isConnectStatus());
+                settings_intent.putExtra("isSim",mainActivity.tt_isSim);
+                settings_intent.putExtra("isSignal",mainActivity.tt_isSignal);
+                settings_intent.putExtra("baterly",mainActivity.tt_baterly);
+                startActivity(settings_intent);
                 break;
             case R.id.tmt_noEntry:
                 break;
@@ -385,7 +386,10 @@ public class MainFragment extends Fragment implements MainFragmentView{
 
     @Override
     public void getServerSosStatus(boolean isSwitch) {
-        sc_settin_testxinlv.setChecked(isSwitch);
+        if(isSwitch){
+            mPresneter.dialPhone(SPUtils.getShare(getActivity(),Constans.CRY_HELP_PHONE,"").toString());
+            mPresneter.requestGpsPosition(true);
+        }
     }
 
     private void changePercent(final int i){

@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.BatteryManager;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tiantong.service.utils.LedManager;
 import com.qzy.tt.data.TtPhoneBatteryProtos;
 
 
@@ -36,15 +37,50 @@ public class QzyBatteryManager {
     private BroadcastReceiver mBatInfoReveiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            int level = 0;
+            int scale = 100;
             String action = intent.getAction();
             if (intent.ACTION_BATTERY_CHANGED.equals(action)) {
-                int level = intent.getIntExtra("level", 0);
-                int scale = intent.getIntExtra("scale", 100);
+                    level = intent.getIntExtra("level", 0);
+                    scale = intent.getIntExtra("scale", 100);
                 LogUtils.d("level = " + level + " scale =" + scale);
                 if(callback != null){
                     callback.onBattery(level,scale);
                 }
             }
+            // 1.总共几种状态.
+            //   1.当前处于充电  2.当前处于充电且充电充满 3.当前没有充电且电量没有满.4.电量低于20
+            //   5.发sos情况下
+//            int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+//            LogUtils.i("status = " + LedManager.get32BitBinString(status));
+//            //如果sos打开了 全部关闭 蓝灯闪 红灯关闭
+//
+//            //当前处于充电状态，且充电没有充满
+//            if(status == BatteryManager.BATTERY_STATUS_CHARGING ){
+//                //亮红灯
+//                //关蓝灯
+//                LedManager.setandCleanLedFlag(LedManager.FLAG_BATTERY_LOW_RED_LED_SWITCH,
+//                        LedManager.FLAG_BATTERY_FULL_BLUE_LED_SWITCH
+//                        | LedManager.FLAG_BATTERY_LOW_LED_TIMER);
+//            //当前处于充电状态，且电量充满
+//            }else if(status == BatteryManager.BATTERY_STATUS_FULL){
+//                //亮蓝灯
+//                //关红灯
+//                LedManager.setandCleanLedFlag(LedManager.FLAG_BATTERY_FULL_BLUE_LED_SWITCH,
+//                        LedManager.FLAG_BATTERY_LOW_RED_LED_SWITCH
+//                        | LedManager.FLAG_BATTERY_FULL_BLUE_LED_TIMER);
+//            //当前处于不是充电
+//            } else if( level*100 / scale < 21){
+//                //闪红灯
+//                //关蓝灯
+//                LedManager.setandCleanLedFlag(LedManager.FLAG_BATTERY_LOW_LED_TIMER
+//                        | LedManager.FLAG_BATTERY_LOW_RED_LED_SWITCH,
+//                        LedManager.FLAG_BATTERY_FULL_BLUE_LED_SWITCH);
+//            }else{
+//                //红灯蓝灯一起关闭
+//                LedManager.setandCleanLedFlag(0,LedManager.FLAG_BATTERY_FULL_BLUE_LED_SWITCH
+//                    | LedManager.FLAG_BATTERY_LOW_RED_LED_SWITCH);
+//            }
         }
     };
 

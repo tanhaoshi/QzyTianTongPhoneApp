@@ -19,6 +19,7 @@ import com.tt.qzy.view.layout.ClearEditText;
 import com.tt.qzy.view.presenter.activity.SelectContactsPresenter;
 import com.tt.qzy.view.layout.SideBar;
 import com.tt.qzy.view.utils.NToast;
+import com.tt.qzy.view.utils.PinyinComparator;
 import com.tt.qzy.view.view.SelectContactView;
 
 import java.util.ArrayList;
@@ -51,7 +52,10 @@ public class SelectContactsActivity extends AppCompatActivity implements SelectC
     private SelectContactsAdapter adapter;
     private KProgressHUD mHUD;
 
+    private PinyinComparator pinyinComparator;
+
     private String selectContacts="";
+    private String phone = "";
     private static final String RESPONSE_FLAG = "back";
     private static final int RESPONSE_CODE = 1;
 
@@ -79,6 +83,7 @@ public class SelectContactsActivity extends AppCompatActivity implements SelectC
                 if(!TextUtils.isEmpty(selectContacts.trim())){
                     Intent intent = new Intent();
                     intent.putExtra(RESPONSE_FLAG,selectContacts);
+                    intent.putExtra("phone",phone);
                     setResult(RESPONSE_CODE,intent);
                     finish();
                 }else{
@@ -104,6 +109,8 @@ public class SelectContactsActivity extends AppCompatActivity implements SelectC
         adapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(adapter);
 
+        pinyinComparator = new PinyinComparator();
+
         mSideBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
 
             @Override
@@ -121,7 +128,7 @@ public class SelectContactsActivity extends AppCompatActivity implements SelectC
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 //当输入框里面的值为空，更新为原来的列表，否则为过滤数据列表
-//                filterData(s.toString());
+                mContactsPresenter.filterData(SourceDateList,s.toString(),pinyinComparator,adapter);
             }
 
             @Override
@@ -136,9 +143,10 @@ public class SelectContactsActivity extends AppCompatActivity implements SelectC
     }
 
     @Override
-    public void onItemClick(View view, int position,boolean isFlag) {
+    public void onItemClick(View view, int position,boolean isFlag,String phone) {
         if(isFlag){
             selectContacts = SourceDateList.get(position).getName();
+            this.phone = phone;
         }
     }
 

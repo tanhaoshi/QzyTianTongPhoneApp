@@ -475,6 +475,15 @@ public class PhoneNettyManager {
         }
     }
 
+    /**
+     * 将服务端的系统数据库修改未接状态
+     * @param o
+     */
+    private void requestServerPhoneStatus(Object o){
+        TtCallRecordProtos.TtCallRecordProto ttCallRecordProto = (TtCallRecordProtos.TtCallRecordProto)o;
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_call_status,ttCallRecordProto));
+    }
+
     private NettyClientManager.INettyListener nettyListener = new NettyClientManager.INettyListener() {
         @Override
         public void onReceiveData(ByteBufInputStream inputStream) {
@@ -579,6 +588,9 @@ public class PhoneNettyManager {
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_DELETE_SIGNAL_SHORT_MESSAGE:
                 requestServerShortMessageDelete(event.getObject());
+                break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_RECORD_CALL_STATUS:
+                requestServerPhoneStatus(event.getObject());
                 break;
         }
     }

@@ -1,8 +1,8 @@
 package com.tt.qzy.view.db.dao;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 @Entity
 public class ShortMessageDao {
@@ -42,6 +42,18 @@ public class ShortMessageDao {
         this.titleName = titleName;
         this.state = state;
         this.name = name;
+    }
+
+    public ShortMessageDao(String numberPhone, String message, String time,int isTitle,String titleName,String state,String name
+            ,boolean isStatus) {
+        this.numberPhone = numberPhone;
+        this.message = message;
+        this.time = time;
+        this.isTitle = isTitle;
+        this.titleName = titleName;
+        this.state = state;
+        this.name = name;
+        this.isStatus = isStatus;
     }
 
     public ShortMessageDao(String numberPhone,String message,String time,String state,String name,long serverId,

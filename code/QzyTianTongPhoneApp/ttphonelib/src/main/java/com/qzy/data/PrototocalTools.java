@@ -34,6 +34,7 @@ public class PrototocalTools {
         int request_server_sos_close = 140;
         int request_server_del_calllog = 142;
         int request_server_del_sms = 144;
+        int request_server_call_status = 146;
     }
 
     public interface IProtoClientIndex{

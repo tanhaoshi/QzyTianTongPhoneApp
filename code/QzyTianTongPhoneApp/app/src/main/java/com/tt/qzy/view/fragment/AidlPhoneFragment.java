@@ -251,7 +251,7 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     public void loadRefresh(List<CallRecordDao> list) {
         mModelList.clear();
         mModelList = list;
-        mCallRecordAdapter.setData(mModelList);
+        mCallRecordAdapter.notifyData(mModelList);
     }
 
     @Override

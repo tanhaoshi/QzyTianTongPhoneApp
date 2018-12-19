@@ -1,6 +1,7 @@
 package com.qzy.tiantong.service.utils;
 
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -390,6 +391,27 @@ public class PhoneUtils {
         }
 
         return false;
+    }
+
+    /**
+     * 更新集合中携带的数据修改通话状态
+     */
+    public static void updateCallLogByID(Context context,List<CallLogInfo> infoList){
+        try{
+            if(infoList != null){
+                if(infoList.size() > 0){
+                    Uri callLogUri = CallLog.Calls.CONTENT_URI;
+                    for(CallLogInfo callLogInfo : infoList){
+                        String where = CallLog.Calls._ID + "= " +callLogInfo.getId();
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put(CallLog.Calls.TYPE,"1");
+                        int count = context.getContentResolver().update(callLogUri,contentValues,where,null);
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 

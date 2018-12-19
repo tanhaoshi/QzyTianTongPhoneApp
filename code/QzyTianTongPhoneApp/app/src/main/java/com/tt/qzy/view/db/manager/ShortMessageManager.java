@@ -2,14 +2,9 @@ package com.tt.qzy.view.db.manager;
 
 import android.content.Context;
 
-import com.alibaba.fastjson.JSON;
-import com.socks.library.KLog;
-import com.tt.qzy.view.activity.SendShortMessageActivity;
-import com.tt.qzy.view.db.CallRecordDaoDao;
 import com.tt.qzy.view.db.DaoMaster;
 import com.tt.qzy.view.db.DaoSession;
 import com.tt.qzy.view.db.ShortMessageDaoDao;
-import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
 
 import org.greenrobot.greendao.query.QueryBuilder;

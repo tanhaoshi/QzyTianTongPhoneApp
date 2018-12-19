@@ -20,18 +20,27 @@ import com.qzy.tt.phone.common.CommonData;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.application.TtPhoneApplication;
+import com.tt.qzy.view.db.dao.CallRecordDao;
+import com.tt.qzy.view.db.dao.MailListDao;
+import com.tt.qzy.view.db.manager.CallRecordManager;
+import com.tt.qzy.view.db.manager.MailListManager;
 import com.tt.qzy.view.presenter.activity.TellPhoneActivityPresenter;
+import com.tt.qzy.view.utils.Constans;
+import com.tt.qzy.view.utils.DateUtil;
+import com.tt.qzy.view.utils.SPUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class TellPhoneIncomingActivity extends AppCompatActivity {
-
 
     @BindView(R.id.txtv_phoneNumber)
     TextView txtv_phoneNumber;
@@ -70,13 +79,50 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.btn_accept:
                 onCallingState();
+                String name = getPhoneKeyForName(phoneNumber);
+
+                if(null != name && name.length() > 0){
+                    CallRecordDao callRecordDao = new CallRecordDao(phoneNumber,name,"","1", DateUtil.backTimeFomat(new Date()),20);
+
+                    CallRecordManager.getInstance(this).insertCallRecord(callRecordDao,this);
+
+                }else{
+                    CallRecordDao callRecordDao = new CallRecordDao(phoneNumber,"","","1",DateUtil.backTimeFomat(new Date()),20);
+
+                    CallRecordManager.getInstance(this).insertCallRecord(callRecordDao,this);
+                }
                 break;
             case R.id.btn_endcall:
+
                 onEndCallState();
+
+                String phoneName = getPhoneKeyForName(phoneNumber);
+
+                if(null != phoneName && phoneName.length() > 0){
+                    CallRecordDao callRecordDao = new CallRecordDao(phoneNumber,phoneName,"","3",DateUtil.backTimeFomat(new Date()),20);
+
+                    CallRecordManager.getInstance(this).insertCallRecord(callRecordDao,this);
+
+                }else{
+
+                    CallRecordDao callRecordDao = new CallRecordDao(phoneNumber,"","","3",DateUtil.backTimeFomat(new Date()),20);
+
+                    CallRecordManager.getInstance(this).insertCallRecord(callRecordDao,this);
+                }
                 break;
         }
     }
 
+    public String getPhoneKeyForName(String phone){
+        List<MailListDao> listModels = MailListManager.getInstance(this).getByPhoneList(phone);
+        String name;
+        if(listModels.size() > 0){
+            name = listModels.get(0).getName();
+        }else{
+            name = "";
+        }
+        return name;
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEventBus event) {
@@ -145,7 +191,24 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
                 onCallingState();
                 break;
             case HUANGUP:
+
                 onEndCallState();
+
+                disposeAlert();
+
+                String phoneName = getPhoneKeyForName(phoneNumber);
+
+                if(null != phoneName && phoneName.length() > 0){
+                    CallRecordDao callRecordDao = new CallRecordDao(phoneNumber,phoneName,"","3",DateUtil.backTimeFomat(new Date()),20);
+
+                    CallRecordManager.getInstance(this).insertCallRecord(callRecordDao,this);
+
+                }else{
+
+                    CallRecordDao callRecordDao = new CallRecordDao(phoneNumber,"","","3",DateUtil.backTimeFomat(new Date()),20);
+
+                    CallRecordManager.getInstance(this).insertCallRecord(callRecordDao,this);
+                }
                 break;
             case INCOMING:
                 break;
@@ -155,10 +218,25 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         }
     }
 
+    private boolean isAlert = true;
+
+    private synchronized void disposeAlert(){
+        if(isAlert){
+            Integer recordCount = (Integer) SPUtils.getShare(this, Constans.RECORD_ISREAD,0);
+            recordCount = recordCount + 1;
+            SPUtils.putShare(this,Constans.RECORD_ISREAD,recordCount);
+
+            EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_RECORD_CALL_HISTROY
+                    ,Integer.valueOf(recordCount)));
+            isAlert = false;
+        }
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
         RingManager.stopDefaultCallMediaPlayer(TtPhoneApplication.getInstance());
         EventBusUtils.unregister(this);
+        isAlert = true;
     }
 }

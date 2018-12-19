@@ -22,8 +22,9 @@ import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
 import com.qzy.tt.phone.service.TtPhoneService;
 import com.socks.library.KLog;
 import com.tt.qzy.view.activity.base.BaseActivity;
-import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.bean.VersionCodeModel;
+import com.tt.qzy.view.db.dao.CallRecordDao;
+import com.tt.qzy.view.db.manager.CallRecordManager;
 import com.tt.qzy.view.fragment.AidlPhoneFragment;
 import com.tt.qzy.view.fragment.MailListFragment;
 import com.tt.qzy.view.fragment.MainFragment;
@@ -32,10 +33,15 @@ import com.tt.qzy.view.layout.BadgeView;
 import com.tt.qzy.view.layout.NiftyExpandDialog;
 import com.tt.qzy.view.presenter.activity.MainActivityPresenter;
 import com.tt.qzy.view.utils.AppUtils;
+import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NToast;
+import com.tt.qzy.view.utils.SPUtils;
 import com.tt.qzy.view.view.MainActivityView;
 import com.xdandroid.hellodaemon.IntentWrapper;
 
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -43,7 +49,9 @@ import butterknife.OnClick;
 public class MainActivity extends BaseActivity<MainActivityView> implements MainActivityView{
 
     @BindView(R.id.shortMessage)
-    Button button;
+    Button shortMessage;
+    @BindView(R.id.putOut)
+    Button putOut;
     @BindView(R.id.frameLayout)
     FrameLayout mFrameLayout;
     @BindView(R.id.circle_loading_view)
@@ -64,6 +72,9 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     private MainActivityPresenter mPresenter;
     private AlertDialog dateDialog;
 
+    private BadgeView callBadgeView;
+    private BadgeView shortMessageBadgeView;
+
     public FrameLayout getBottomBar() {
         return bottomBar;
     }
@@ -82,9 +93,9 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     @Override
     public void initView() {
         showMainFragment();
-//        remind(button,"12");
         mPresenter = new MainActivityPresenter(this);
         mPresenter.onBindView(this);
+        initBadeView();
     }
 
     @Override
@@ -157,15 +168,23 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
         }
     }
 
-    public void remind(View view,String size){
-        BadgeView badge = new BadgeView(this, view);
-        badge.setText(size);
-        badge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
-        badge.setTextColor(Color.WHITE);
-        badge.setBadgeBackgroundColor(Color.RED);
-        badge.setTextSize(12);
-        badge.setBadgeMargin(3);
-        badge.show();
+    private void initBadeView(){
+        callBadgeView = new BadgeView(this,putOut);
+        shortMessageBadgeView = new BadgeView(this,shortMessage);
+    }
+
+    public void remind(String size,BadgeView badge){
+        if("0".equals(size)){
+            badge.hide();
+        }else{
+            badge.setText(size);
+            badge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
+            badge.setTextColor(Color.WHITE);
+            badge.setBadgeBackgroundColor(Color.RED);
+            badge.setTextSize(10);
+            badge.setBadgeMargin(0);
+            badge.show();
+        }
     }
 
     @OnClick({R.id.tab_main,R.id.tab_aidl, R.id.tab_messager, R.id.tab_mail})
@@ -177,6 +196,8 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
             case R.id.tab_aidl:
                 if(tt_status){
                     showAidlPhoneFragment();
+                    callBadgeView.hide();
+                    updateMainAlert();
                 }else{
                     NToast.shortToast(this,"不可操作,请连接设备!");
                 }
@@ -196,6 +217,34 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
                 }
                 break;
         }
+    }
+
+    private void updateMainAlert(){
+        SPUtils.putShare(this,Constans.RECORD_ISREAD,0);
+        List<CallRecordDao> callRecordDaos = new ArrayList<>();
+        List<CallRecordDao> list = CallRecordManager.getInstance(MainActivity.this).queryAllRecordList();
+        for(CallRecordDao callRecordDao : list){
+            if("3".equals(callRecordDao.getState())){
+                callRecordDaos.add(callRecordDao);
+                callRecordDao.setState("1");
+                CallRecordManager.getInstance(MainActivity.this).updateRecordName(callRecordDao);
+            }
+        }
+        mPresenter.requestServerPhoneStatus(callRecordDaos);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Integer recordCount = (Integer)SPUtils.getShare(MainActivity.this, Constans.RECORD_ISREAD,0);
+        remind(String.valueOf(recordCount),callBadgeView);
+        Integer shortMessageCount = (Integer)SPUtils.getShare(MainActivity.this,Constans.SHORTMESSAGE_ISREAD,0);
+        remind(String.valueOf(shortMessageCount),shortMessageBadgeView);
+    }
+
+    public void showRecordRead(){
+        Integer shortMessageCount = (Integer)SPUtils.getShare(MainActivity.this,Constans.SHORTMESSAGE_ISREAD,0);
+        remind(String.valueOf(shortMessageCount),shortMessageBadgeView);
     }
 
     @Override
@@ -230,6 +279,7 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
        // CommonData.relase();
         NiftyExpandDialog.getInstance(MainActivity.this).release();
 //        stopService();
+        mPresenter.release();
     }
 
     @Override
@@ -290,7 +340,6 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
 
     @Override
     public void getAppVersionCode(VersionCodeModel versionCodeModel) {
-        KLog.i("getAppVersion value = " +JSON.toJSONString(versionCodeModel));
         if(mPresenter.checkUpdate(versionCodeModel)){
             niftyDialog(versionCodeModel);
         }
@@ -350,6 +399,22 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     @Override
     public void onError(String errorMessage) {
         NToast.shortToast(MainActivity.this,errorMessage);
+    }
+
+    @Override
+    public void showRecordCallRead(boolean isShow, int count) {
+        if(isShow){
+            Integer integer = (Integer)SPUtils.getShare(MainActivity.this,Constans.RECORD_ISREAD,0);
+            remind(String.valueOf(integer),callBadgeView);
+        }
+    }
+
+    @Override
+    public void showShortMessageRead(boolean isShow, int count) {
+        if(isShow){
+            Integer integer = (Integer)SPUtils.getShare(MainActivity.this,Constans.SHORTMESSAGE_ISREAD,0);
+            remind(String.valueOf(integer),shortMessageBadgeView);
+        }
     }
 
     @Override

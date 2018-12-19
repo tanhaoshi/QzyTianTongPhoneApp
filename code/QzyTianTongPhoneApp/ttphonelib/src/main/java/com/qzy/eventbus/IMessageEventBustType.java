@@ -95,4 +95,10 @@ public interface IMessageEventBustType {
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_DELETE_SIGNAL_MESSAGE = "event_bus_type_connect_tiantong_response_server_delete_message";
     // 删除天通猫短信记录
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_DELETE_SIGNAL_SHORT_MESSAGE = "event_bus_type_connect_tiantong_request_server_delete_signal_short_message";
+    // 保存未读通话记录
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_RECORD_CALL_HISTROY = "event_bus_type_connect_tiantong_local_record_call_histroy";
+    // 保存未读的短信记录
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_SHORT_MESSAGE_HISTROY = "event_bus_type_connect_tiantong_local_short_message_histroy";
+    // 修改服务端数据库电话记录表中已读的状态
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_RECORD_CALL_STATUS = "event_bus_type_connect_tiantong_request_server_record_call_status";
 }

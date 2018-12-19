@@ -1,5 +1,6 @@
 package com.tt.qzy.view.activity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -32,6 +33,8 @@ public class CheckUpdateActivity extends AppCompatActivity implements CheckUpdat
     AnimatedCircleLoadingView mCircleLoadingView;
     @BindView(R.id.linearLayout)
     LinearLayout mLinearLayout;
+    @BindView(R.id.about_version)
+    TextView about_version;
 
     private CheckUpdatePresenter mPresenter;
     private KProgressHUD mHUD;
@@ -48,6 +51,7 @@ public class CheckUpdateActivity extends AppCompatActivity implements CheckUpdat
 
     private void initView(){
         main_quantity.setText("检查更新");
+        about_version.setText("当前版本号:"+AppUtils.getVersionName(CheckUpdateActivity.this));
         initProgress();
     }
 
