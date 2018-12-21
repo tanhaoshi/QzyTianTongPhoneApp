@@ -398,6 +398,7 @@ public class SmsPhoneManager {
 
                         if (location != null) {
                             message = message + "纬度:" + location.getLatitude() + "经度:" + location.getLongitude();
+                            LogUtils.d("message = " + message);
                         }
 
                         String phone = sosMessage.getPhoneNumber();
