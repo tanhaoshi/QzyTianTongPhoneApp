@@ -8,7 +8,6 @@ import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.phone.data.SmsBean;
-import com.socks.library.KLog;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.SPUtils;
 import com.tt.qzy.view.utils.TimeTask;
@@ -21,9 +20,6 @@ public class TimerService extends Service{
 
     private String receive = "";
     private String content = "";
-
-    private String latitude = "";  // 纬度
-    private String longitude = ""; // 经度
 
     public TimerService() {
     }
@@ -38,7 +34,6 @@ public class TimerService extends Service{
         super.onCreate();
         String timerStr =  (String) SPUtils.getShare(this,Constans.CRY_HELP_TIMETIMER,"60");
         Long timerDuration = Long.valueOf(timerStr) * 1000 ;
-        KLog.i(" look over duration value = " + timerDuration);
         if(mTimeTask == null){
             mTimeTask = new TimeTask(timerDuration, new TimerTask() {
                 @Override
@@ -53,8 +48,11 @@ public class TimerService extends Service{
     }
 
     private void timerSendMessage(){
+        String longitude = (String) SPUtils.getShare(getApplicationContext(),Constans.LONGITUDE_VALUE,"");
+        String latitude =  (String)SPUtils.getShare(getApplicationContext(),Constans.LATITUDE_VALUE,"");
         receive = SPUtils.getShare(getApplicationContext(), Constans.CRY_HELP_PHONE,"").toString();
-        content = SPUtils.getShare(getApplicationContext(),Constans.CRY_HELP_SHORTMESSAGE,"").toString();
+        content = SPUtils.getShare(getApplicationContext(),Constans.CRY_HELP_SHORTMESSAGE,"").toString()
+        +"经度:"+longitude + " 纬度:"+latitude;
         EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS,
                 new SmsBean(receive, content)));
     }
@@ -63,5 +61,6 @@ public class TimerService extends Service{
     public void onDestroy() {
         super.onDestroy();
         mTimeTask.stop();
+        mTimeTask = null;
     }
 }

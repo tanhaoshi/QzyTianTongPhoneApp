@@ -310,6 +310,7 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
             @Override
             public void onClick(View view) {
                 dateDialog.dismiss();
+                System.exit(0);
             }
         });
 
@@ -317,7 +318,7 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
             @Override
             public void onClick(View view) {
                 dateDialog.dismiss();
-                finish();
+                System.exit(0);
             }
         });
     }

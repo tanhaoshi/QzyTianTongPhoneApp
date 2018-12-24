@@ -10,9 +10,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.RequiresApi;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.text.TextUtils;
@@ -23,6 +25,7 @@ import com.qzy.tiantong.service.gps.GpsManager;
 import com.qzy.tiantong.service.phone.data.SmsInfo;
 import com.qzy.tiantong.service.phone.data.SosMessage;
 import com.qzy.tiantong.service.phone.obersever.SmsDatabaseChaneObserver;
+import com.qzy.tiantong.service.utils.AppUtils;
 import com.qzy.tiantong.service.utils.LedManager;
 import com.qzy.tiantong.service.utils.PhoneUtils;
 import com.qzy.tt.data.TtPhoneSmsProtos;
@@ -178,6 +181,7 @@ public class SmsPhoneManager {
                             LedManager.setSosLedStatus(true);
                         }else if((downEventCount < 41) && mSosStarted){
                             stopSendSosMsgAndGPS();
+                            mCallback.onSosState(false);
 //                            stopSendSosMsg();
                             mSosStarted = false;
                             LedManager.setSosLedStatus(false);
@@ -380,6 +384,7 @@ public class SmsPhoneManager {
             }
 
             mRunnable = new Runnable() {
+                @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void run() {
                     Location location = null;
@@ -397,8 +402,11 @@ public class SmsPhoneManager {
                         }
 
                         if (location != null) {
-                            message = message + "纬度:" + location.getLatitude() + "经度:" + location.getLongitude();
+                            message = message + "纬度:" + AppUtils.decimalDouble(Double.valueOf(location.getLatitude()))
+                                    + "经度:" + AppUtils.decimalDouble(Double.valueOf(location.getLongitude()));
                             LogUtils.d("message = " + message);
+                        }else{
+                            message = message + "纬度:" + "  " + "经度:" + "  ";
                         }
 
                         String phone = sosMessage.getPhoneNumber();
@@ -494,20 +502,26 @@ public class SmsPhoneManager {
      * 停止发送SOS短信及GPS
      */
     public void stopSendSosMsgAndGPS(){
-        if(mRunnable != null){
-            if(mHandler != null){
-                mHandler.removeCallbacks(mRunnable);
-                mHandler = null;
+        try{
+            downEventCount = 0;
+            if(mRunnable != null){
+                if(mHandler != null){
+                    mHandler.removeCallbacks(mRunnable);
+                }
+                mRunnable = null;
             }
-            mRunnable = null;
-        }
 
-        if(mCallback != null){
-            mCallback.onSosState(false);
-        }
+            if(mCallback != null){
+                mCallback.onSosState(false);
+            }
 
-        if(mGpsManager != null){
-            mGpsManager.closeGps();
+            if(mGpsManager != null){
+                mGpsManager.closeGps();
+            }
+
+            isThread = true;
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

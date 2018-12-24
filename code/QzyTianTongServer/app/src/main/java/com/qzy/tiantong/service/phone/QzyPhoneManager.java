@@ -1,6 +1,5 @@
 package com.qzy.tiantong.service.phone;
 
-import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -83,21 +82,21 @@ public class QzyPhoneManager {
      */
     public void callPhone(String ip, String phoneNum) {
 
-        LogUtils.i("callPhone look over dormancy value = " + ModuleDormancyUtil.getNodeString(Constant.WAKE_PATH));
-        int count = 0;
-        PowerControl.doWakeup();
-        while(!PowerControl.getTTStatus()){
-            count ++;
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if(count>10){
-                LogUtils.e("Tiantong Model not be wakeup");
-                break;
-            }
-        }
+//        LogUtils.i("callPhone look over dormancy value = " + ModuleDormancyUtil.getNodeString(Constant.WAKE_PATH));
+//        int count = 0;
+//        PowerControl.doWakeup();
+//        while(!PowerControl.getTTStatus()){
+//            count ++;
+//            try {
+//                Thread.sleep(500);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            if(count>10){
+//                LogUtils.e("Tiantong Model not be wakeup");
+//                break;
+//            }
+//        }
 
         LogUtils.i("start call phone ...");
 
@@ -124,7 +123,7 @@ public class QzyPhoneManager {
     public void hangupPhone(String ip) {
         mServer.setEndCallingIp(ip);
         endCall();
-        PowerControl.doSleep();
+//        PowerControl.doSleep();
     }
 
     /**
@@ -315,10 +314,10 @@ public class QzyPhoneManager {
                     //要对它进行休眠
                     //1代表已经休眠 0代表正常可工作状态
                     LogUtils.i("look over node value = " + ModuleDormancyUtil.getNodeString(Constant.WAKE_PATH));
-                    if (PowerControl.getTTStatus()) {
-                        //== 于0 要让它去休眠
-                        PowerControl.doSleep();
-                    }
+//                    if (PowerControl.getTTStatus()) {
+//                        //== 于0 要让它去休眠
+//                        PowerControl.doSleep();
+//                    }
                 }//从有到有
             }else{
                 //从有到无

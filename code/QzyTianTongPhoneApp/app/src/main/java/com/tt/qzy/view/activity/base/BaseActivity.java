@@ -1,5 +1,6 @@
 package com.tt.qzy.view.activity.base;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,8 @@ import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.layout.BatteryView;
 import com.tt.qzy.view.presenter.activity.BaseActivityPresenter;
+import com.tt.qzy.view.service.TimerService;
+import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.SPUtils;
 import com.tt.qzy.view.view.BaseMainView;
@@ -135,6 +138,15 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
         img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonetwork));
         percentBaterly.setText(0+"%");
+        stopTimerService();
+    }
+
+    private void stopTimerService(){
+        if(AppUtils.isServiceRunning("com.tt.qzy.view.service.TimerService",BaseActivity.this)){
+            //服务存活
+            Intent intent = new Intent(BaseActivity.this, TimerService.class);
+            stopService(intent);
+        }
     }
 
     /**
@@ -165,6 +177,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         }else{
             tt_isSim = false;
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_noconnect));
+            stopTimerService();
         }
     }
 
@@ -206,12 +219,15 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     private void onTiantongInfoReceiver(int intLevel) {
         if (intLevel == 97) {
             tt_isSignal = false;
+            stopTimerService();
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
         } else if (intLevel == 98) {
             tt_isSignal = false;
+            stopTimerService();
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
         } else if (intLevel == 99) {
             tt_isSignal = false;
+            stopTimerService();
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
         } else if (intLevel >= 0 && intLevel <= 1) {
             tt_isSignal = true;
@@ -235,18 +251,15 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     public void onTianTongCallStatus(Object o){
         PhoneCmd cmd = (PhoneCmd) o;
         CallPhoneBackProtos.CallPhoneBack callPhoneBack = (CallPhoneBackProtos.CallPhoneBack)cmd.getMessage();
-        KLog.i("tt_call_status is = " + callPhoneBack.getIsCalling());
         if(callPhoneBack.getIsCalling()){
             if(callPhoneBack.getIp().equals(CommonData.getInstance().getLocalWifiIp())){
                 tt_call_status = true;
                 EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE));
             }else{
                 tt_call_status = true;
-               /// NToast.shortToast(this,"当前设备被占用");
             }
         }else{
             tt_call_status = false;
-            //EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE));
         }
     }
 

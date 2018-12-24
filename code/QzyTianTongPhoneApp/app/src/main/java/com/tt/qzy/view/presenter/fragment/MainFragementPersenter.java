@@ -254,8 +254,9 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
         PhoneCmd cmd = (PhoneCmd)o;
         TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse)cmd.getMessage();
         if(!updateResponse.getIsSendFileFinish()){
-            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_UPLOAD_APP
-                    ,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));
+              NToast.shortToast(mContext,"升级出现中断,请退出APP重新链接wifi升级!");
+//            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_UPLOAD_APP
+//                    ,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));
         }
     }
 

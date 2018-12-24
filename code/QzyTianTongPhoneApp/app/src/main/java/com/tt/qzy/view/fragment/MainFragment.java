@@ -14,6 +14,7 @@ import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
 import com.qzy.eventbus.EventBusUtils;
@@ -26,6 +27,7 @@ import com.socks.library.KLog;
 import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.SettingsActivity;
+import com.tt.qzy.view.activity.base.BaseActivity;
 import com.tt.qzy.view.bean.ServerPortIp;
 import com.tt.qzy.view.layout.CircleImageView;
 import com.tt.qzy.view.layout.NiftyExpandDialog;
@@ -36,6 +38,7 @@ import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.NetworkUtil;
 import com.tt.qzy.view.utils.SPUtils;
+import com.tt.qzy.view.utils.ToastUtil;
 import com.tt.qzy.view.view.MainFragmentView;
 
 
@@ -154,17 +157,23 @@ public class MainFragment extends Fragment implements MainFragmentView{
                 }
             }
         });
-        sc_settin_testxinlv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        sc_settin_testxinlv.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onClick(View v) {
                 if(!SPUtils.containsShare(getActivity(), Constans.CRY_HELP_PHONE)){
                     sc_settin_testxinlv.setChecked(false);
                     NToast.shortToast(getActivity(),getString(R.string.TMT_remind));
+                    if(sc_settin_testxinlv.isChecked()){
+                        if(AppUtils.isServiceRunning("com.tt.qzy.view.service.TimerService",getActivity())){
+                            Intent intent = new Intent(getActivity(), TimerService.class);
+                            getActivity().stopService(intent);
+                        }
+                    }
                     return;
                 }
                 if(mainActivity.isConnectStatus()){
                     if(mainActivity.tt_isSignal){
-                        if(isChecked){
+                        if(sc_settin_testxinlv.isChecked()){
                             mPresneter.dialPhone(SPUtils.getShare(getActivity(),Constans.CRY_HELP_PHONE,"").toString());
                             mIntent = new Intent(getActivity(),TimerService.class);
                             getActivity().startService(mIntent);
@@ -184,6 +193,36 @@ public class MainFragment extends Fragment implements MainFragmentView{
                 }
             }
         });
+//        sc_settin_testxinlv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if(!SPUtils.containsShare(getActivity(), Constans.CRY_HELP_PHONE)){
+//                    sc_settin_testxinlv.setChecked(false);
+//                    NToast.shortToast(getActivity(),getString(R.string.TMT_remind));
+//                    return;
+//                }
+//                if(mainActivity.isConnectStatus()){
+//                    if(mainActivity.tt_isSignal){
+//                        if(isChecked){
+//                            mPresneter.dialPhone(SPUtils.getShare(getActivity(),Constans.CRY_HELP_PHONE,"").toString());
+//                            mIntent = new Intent(getActivity(),TimerService.class);
+//                            getActivity().startService(mIntent);
+//                            mPresneter.requestGpsPosition(true);
+//                            main_location.setChecked(true);
+//                        }else{
+//                            getActivity().stopService(mIntent);
+//                            mPresneter.closeServerSos();
+//                        }
+//                    }else{
+//                        NToast.shortToast(getActivity(), "设备未入网,请先入网!");
+//                        sc_settin_testxinlv.setChecked(false);
+//                    }
+//                }else{
+//                    NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
+//                    sc_settin_testxinlv.setChecked(false);
+//                }
+//            }
+//        });
         sc_settin_data.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -269,11 +308,12 @@ public class MainFragment extends Fragment implements MainFragmentView{
                 main_longitude.setText(AppUtils.decimalDouble(Double.valueOf(ttPhonePosition.getLongItude())));
             }
 
-            SPUtils.removeShare(getActivity(),Constans.CRY_HELP_SHORTMESSAGE);
-                SPUtils.putShare(getActivity(),Constans.CRY_HELP_SHORTMESSAGE,
-                        SPUtils.getShare(getActivity(),Constans.HELP_SHORTMESSAGE,"").toString()+
-                                "经度:"+main_longitude.getText().toString()
-                                +"," +"纬度:"+main_latitude.getText().toString());
+            SPUtils.removeShare(getActivity(),Constans.LONGITUDE_VALUE);
+            SPUtils.removeShare(getActivity(),Constans.LATITUDE_VALUE);
+
+            SPUtils.putShare(getActivity(),Constans.LONGITUDE_VALUE,main_longitude.getText().toString());
+            SPUtils.putShare(getActivity(),Constans.LATITUDE_VALUE,main_latitude.getText().toString());
+
         }else{
             NToast.shortToast(getActivity(),getActivity().getString(R.string.TMT_gps_position_filed));
         }
@@ -337,7 +377,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
             @Override
             public void run() {
                 try {
-                    Thread.sleep(1500);
+                    Thread.sleep(2000);
                     for (int i = 0; i <= 100; i++) {
                         Thread.sleep(140);
                         changePercent(i);
@@ -386,9 +426,17 @@ public class MainFragment extends Fragment implements MainFragmentView{
 
     @Override
     public void getServerSosStatus(boolean isSwitch) {
-        if(isSwitch){
-            mPresneter.dialPhone(SPUtils.getShare(getActivity(),Constans.CRY_HELP_PHONE,"").toString());
-            mPresneter.requestGpsPosition(true);
+        sc_settin_testxinlv.setChecked(isSwitch);
+        main_location.setChecked(isSwitch);
+        if (isSwitch == false) {
+            if (AppUtils.isServiceRunning("com.tt.qzy.view.service.TimerService", getActivity())) {
+                if (mIntent != null) {
+                    getActivity().stopService(mIntent);
+                } else {
+                    mIntent = new Intent(getActivity(), TimerService.class);
+                    getActivity().stopService(mIntent);
+                }
+            }
         }
     }
 
@@ -397,6 +445,9 @@ public class MainFragment extends Fragment implements MainFragmentView{
             @Override
             public void run() {
                 mAnimatedCircleLoadingView.setPercent(i);
+                if(i == 100){
+                    NToast.longToast(getActivity(),"请等待5~10秒猫端更新!");
+                }
             }
         });
     }

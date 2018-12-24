@@ -13,20 +13,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.qzy.data.PhoneCmd;
 import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
-import com.qzy.ring.RingManager;
 import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.SmsBean;
-import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.MsgAdapter;
-import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.bean.MsgModel;
 import com.tt.qzy.view.bean.SMAgrementModel;
 import com.tt.qzy.view.db.dao.MailListDao;
@@ -36,7 +32,6 @@ import com.tt.qzy.view.db.manager.ShortMessageManager;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.utils.NToast;
-import com.tt.qzy.view.utils.RingToneUtils;
 import com.tt.qzy.view.utils.SPUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -126,37 +121,62 @@ public class SendShortMessageActivity extends AppCompatActivity {
                     ShortMessageManager.getInstance(this).queryShortMessageCondition(intent.getStringExtra(Constans.SHORT_MESSAGE_PHONE));
 
             for(ShortMessageDao shortMessageDao : daoList){
+
                 MsgModel msgModel = new MsgModel(shortMessageDao.getMessage(), Integer.valueOf(shortMessageDao.getState()));
+
                 msgList.add(msgModel);
+
                 adapter.setData(msgList);
+
+                if(!shortMessageDao.getIsStatus()){
+                    disposeChangeRead(shortMessageDao);
+                }
             }
 
-            if(daoList.size() == 0){
-                return;
-            }else{
-                EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.
-                        EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SHORT_MESSAGE,new
-                        SMAgrementModel(daoList.get(daoList.size() - 1).getServerId())));
-
-                ShortMessageDao shortMessageDao = daoList.get(daoList.size() -1);
-
-                shortMessageDao.setIsStatus(true);
-
-                ShortMessageManager.getInstance(SendShortMessageActivity.this).updateShortMessageName(shortMessageDao);
-
-                updateMainAlert();
-            }
+//            if(daoList.size() == 0){
+//                return;
+//            }else{
+//                EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.
+//                        EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SHORT_MESSAGE,new
+//                        SMAgrementModel(daoList.get(daoList.size() - 1).getServerId())));
+//
+//                ShortMessageDao shortMessageDao = daoList.get(daoList.size() -1);
+//
+//                shortMessageDao.setIsStatus(true);
+//
+//                ShortMessageManager.getInstance(SendShortMessageActivity.this).updateShortMessageName(shortMessageDao);
+//
+//                updateMainAlert();
+//            }
         }
+    }
+
+    private void disposeChangeRead(ShortMessageDao shortMessageDao){
+        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.
+                EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SHORT_MESSAGE,new
+                SMAgrementModel(shortMessageDao.getServerId())));
+
+        shortMessageDao.setIsStatus(true);
+
+        ShortMessageManager.getInstance(SendShortMessageActivity.this).updateShortMessageName(shortMessageDao);
+
+        updateMainAlert();
+
     }
 
     private void updateMainAlert(){
         Integer integer = (Integer) SPUtils.getShare(this,Constans.SHORTMESSAGE_ISREAD,0);
+
         if(integer > 0){
             integer --;
         }else{
             return;
         }
+
         SPUtils.putShare(this,Constans.SHORTMESSAGE_ISREAD,integer);
+
+        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_SHORT_MESSAGE_HISTROY
+                ,Integer.valueOf(Integer.valueOf(integer))));
     }
 
     private void initAdapter() {
@@ -172,7 +192,6 @@ public class SendShortMessageActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.send:
-
                 sendMessage(MsgModel.TYPE_RECEIVE);
                 break;
             case R.id.sms_base_tv_toolbar_right:

@@ -115,7 +115,7 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
     public void onClick(View view){
         switch (view.getId()){
             case R.id.settings_sos:
-                if(tt_isSignal){
+                if(isSignal){
                     jumpSosSetting();
                 }else{
                     NToast.shortToast(this,"设备未入网,请先入网!");
@@ -126,7 +126,7 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
                 startActivity(intent);
                 break;
             case R.id.setting_about:
-                if(tt_isSignal){
+                if(isSignal){
                     Intent about_intent = new Intent(SettingsActivity.this,MainAboutActivity.class);
                     startActivity(about_intent);
                 }else{
@@ -137,21 +137,21 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
                 finish();
                 break;
             case R.id.settings_wifi:
-                if(tt_isSignal){
+                if(isSignal){
                     initWIFIDialog();
                 }else{
                     NToast.shortToast(this,"设备未入网,请先入网!");
                 }
                 break;
             case R.id.settings_date_time:
-                if(tt_isSignal){
+                if(isSignal){
                     initDateDialog();
                 }else{
                     NToast.shortToast(this,"设备未入网,请先入网!");
                 }
                 break;
             case R.id.setting_factroy_reset:
-                if(tt_isSignal){
+                if(isSignal){
                     initSystemResetDialog();
                 }else{
                     NToast.shortToast(this,"设备未入网,请先入网!");
