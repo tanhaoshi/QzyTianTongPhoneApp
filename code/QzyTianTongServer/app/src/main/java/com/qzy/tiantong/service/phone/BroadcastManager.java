@@ -122,7 +122,7 @@ public class BroadcastManager {
        int state = intent.getIntExtra(EXTRA_CALL_STATE,-99);
         LogUtils.i("Phone ringing state = " + state);
        if(3 == state){
-           LogUtils.i("send Phone STATE ... ");
+           LogUtils.i("send Phone STATE ... 1111111");
            mServer.initTtPcmDevice();
            mServer.onPhoneStateChange(TtPhoneState.RING);
        }

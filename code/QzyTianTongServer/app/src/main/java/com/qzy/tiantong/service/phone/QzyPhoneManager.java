@@ -111,6 +111,17 @@ public class QzyPhoneManager {
         mServer.setEndCallingIp(ip);
         endCall();
 //        PowerControl.doSleep();
+        endCallingAndClearIp();
+    }
+
+
+    /**
+     * 挂断并清除通话ip
+     */
+    private void endCallingAndClearIp(){
+        LogUtils.e("endCallingAndClearIp ..  " );
+        mServer.freeTtPcmDevice();
+        mServer.onPhoneStateChange(TtPhoneState.HUANGUP);
     }
 
     /**
@@ -148,6 +159,8 @@ public class QzyPhoneManager {
             e.printStackTrace();
         }
     }
+
+
 
     private boolean answerRingCall() {
         // IBinder iBinder = ServiceManager.getService(TELEPHONY_SERVICE);
