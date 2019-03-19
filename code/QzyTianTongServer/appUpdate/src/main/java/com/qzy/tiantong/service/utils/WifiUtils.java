@@ -49,8 +49,8 @@ public class WifiUtils {
         if (TextUtils.isEmpty(ssid)) {
             ssid = QzyTtContants.WIFI_SSID + QzySystemUtils.getEmmcId();
             setSsidToSharedpref(ssid);
-        }*/
-        String ssid = QzyTtContants.WIFI_SSID + QzySystemUtils.getEmmcId();
+        }*/                                         //QzySystemUtils.getEmmcId()
+        String ssid = QzyTtContants.WIFI_SSID + QzySystemUtils.getSerialNumberCustom();
         return ssid;
     }
 

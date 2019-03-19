@@ -1,10 +1,13 @@
 package com.tt.qzy.view;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -16,9 +19,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
-import com.alibaba.fastjson.JSON;
 import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
+import com.qzy.phone.pcm.AllLocalPcmManager;
 import com.qzy.tt.phone.service.TtPhoneService;
 import com.socks.library.KLog;
 import com.tt.qzy.view.activity.base.BaseActivity;
@@ -32,13 +34,13 @@ import com.tt.qzy.view.fragment.ShortMessageFragment;
 import com.tt.qzy.view.layout.BadgeView;
 import com.tt.qzy.view.layout.NiftyExpandDialog;
 import com.tt.qzy.view.presenter.activity.MainActivityPresenter;
+import com.tt.qzy.view.trace.TraceServiceImpl;
 import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.SPUtils;
 import com.tt.qzy.view.view.MainActivityView;
 import com.xdandroid.hellodaemon.IntentWrapper;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,9 +82,15 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        if(savedInstanceState != null){
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            mMainFragment         = (MainFragment)fragmentManager.findFragmentByTag("mMainFragment");
+            mAidlPhoneFragment    = (AidlPhoneFragment)fragmentManager.findFragmentByTag("mAidlPhoneFragment");
+            mShortMessageFragment = (ShortMessageFragment)fragmentManager.findFragmentByTag("mShortMessageFragment");
+            mMailListFragment     = (MailListFragment)fragmentManager.findFragmentByTag("mMailListFragment");
+        }
     }
 
     @Override
@@ -107,7 +115,7 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
         hideAllFragment(fragmentTransaction);
         if(mMainFragment == null){
             mMainFragment = mMainFragment.newInstance();
-            fragmentTransaction.add(R.id.fragmentContent, mMainFragment);
+            fragmentTransaction.add(R.id.fragmentContent, mMainFragment,"mMainFragment");
         }
         commitShowFragment(fragmentTransaction,mMainFragment);
 
@@ -119,31 +127,31 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
         hideAllFragment(fragmentTransaction);
         if(mAidlPhoneFragment == null){
             mAidlPhoneFragment = mAidlPhoneFragment.newInstance();
-            fragmentTransaction.add(R.id.fragmentContent, mAidlPhoneFragment);
+            fragmentTransaction.add(R.id.fragmentContent, mAidlPhoneFragment,"mAidlPhoneFragment");
         }
         commitShowFragment(fragmentTransaction,mAidlPhoneFragment);
 
         statusLayout.setBackgroundColor(getResources().getColor(R.color.tab_stander));
     }
 
-    public void showShortMeesageFragmnet(){
+    public void showShortMeesageFragment(){
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         hideAllFragment(fragmentTransaction);
         if(mShortMessageFragment == null){
             mShortMessageFragment = mShortMessageFragment.newInstance();
-            fragmentTransaction.add(R.id.fragmentContent, mShortMessageFragment);
+            fragmentTransaction.add(R.id.fragmentContent, mShortMessageFragment,"mShortMessageFragment");
         }
         commitShowFragment(fragmentTransaction,mShortMessageFragment);
 
         statusLayout.setBackgroundColor(getResources().getColor(R.color.tab_stander));
     }
 
-    public void showMailListFragmnet(){
+    public void showMailListFragment(){
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         hideAllFragment(fragmentTransaction);
         if(mMailListFragment == null){
             mMailListFragment = mMailListFragment.newInstance();
-            fragmentTransaction.add(R.id.fragmentContent, mMailListFragment);
+            fragmentTransaction.add(R.id.fragmentContent, mMailListFragment,"mMailListFragment");
         }
         commitShowFragment(fragmentTransaction,mMailListFragment);
 
@@ -199,21 +207,21 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
                     callBadgeView.hide();
                     updateMainAlert();
                 }else{
-                    NToast.shortToast(this,"不可操作,请连接设备!");
+                    NToast.shortToast(this,getString(R.string.TMT_THE_DEVICE_NOT_OPERATION));
                 }
                 break;
             case R.id.tab_messager:
                 if(tt_status){
-                    showShortMeesageFragmnet();
+                    showShortMeesageFragment();
                 }else{
-                    NToast.shortToast(this,"不可操作,请连接设备!");
+                    NToast.shortToast(this,getString(R.string.TMT_THE_DEVICE_NOT_OPERATION));
                 }
                 break;
             case R.id.tab_mail:
                 if(tt_status){
-                    showMailListFragmnet();
+                    showMailListFragment();
                 }else{
-                    NToast.shortToast(this,"不可操作,请连接设备!");
+                    NToast.shortToast(this,getString(R.string.TMT_THE_DEVICE_NOT_OPERATION));
                 }
                 break;
         }
@@ -236,6 +244,7 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     @Override
     protected void onResume() {
         super.onResume();
+//        SPUtils.putShare(MainActivity.this,Constans.AUTO_EXITS,true);
         Integer recordCount = (Integer)SPUtils.getShare(MainActivity.this, Constans.RECORD_ISREAD,0);
         remind(String.valueOf(recordCount),callBadgeView);
         Integer shortMessageCount = (Integer)SPUtils.getShare(MainActivity.this,Constans.SHORTMESSAGE_ISREAD,0);
@@ -250,35 +259,37 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     @Override
     protected void onStart() {
         super.onStart();
-        mPresenter.getAppversionRequest();
         startService();
+        mPresenter.getAppversionRequest();
     }
 
     /**
      * start service
+     *
+     * dispose permission of xiao mi
      */
     private void startService() {
-        startService(new Intent(this, TtPhoneService.class));
+        if(mPresenter.checkPermissionExist()){
+            if(!AppUtils.isServiceRunning("com.qzy.tt.phone.service.TtPhoneService",MainActivity.this)){
+                startService(new Intent(this, TtPhoneService.class));
+            }
+        }else{
+            mPresenter.requestPermission(Build.BRAND,this, Manifest.permission.RECORD_AUDIO);
+            startService(new Intent(this, TtPhoneService.class));
+        }
     }
 
-    /**
+    /*
      * stop service
      */
     public void stopService() {
         stopService(new Intent(this, TtPhoneService.class));
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-       // CommonData.relase();
+    public void release(){
+//        SPUtils.putShare(MainActivity.this,Constans.AUTO_EXITS,false);
+//        AllLocalPcmManager.getInstance().free();
         NiftyExpandDialog.getInstance(MainActivity.this).release();
-//        stopService();
         mPresenter.release();
     }
 
@@ -304,21 +315,23 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
         dateDialog.show();
         dateDialog.getWindow().setContentView(v);
         dateDialog.getWindow().setGravity(Gravity.CENTER);
-        title.setText("提示");
-        custom_input.setText("温馨提示:您确定是否退出吗?");
+        title.setText(getString(R.string.TMT_hint));
+        custom_input.setText(getString(R.string.TMT_confirm_exit));
         custom_cannel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dateDialog.dismiss();
-                System.exit(0);
             }
         });
 
         custom_yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                release();
                 dateDialog.dismiss();
-                System.exit(0);
+//                TraceServiceImpl.stopService();
+                finishAffinity();
+//                System.exit(0);
             }
         });
     }

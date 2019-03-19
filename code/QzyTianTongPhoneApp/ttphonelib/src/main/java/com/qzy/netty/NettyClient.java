@@ -1,12 +1,12 @@
 package com.qzy.netty;
 
-import com.qzy.eventbus.IMessageEventBustType;
+
 import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
 
-import org.greenrobot.eventbus.EventBus;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.TimeUnit;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
@@ -19,10 +19,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import io.netty.handler.codec.protobuf.ProtobufDecoder;
-import io.netty.handler.codec.protobuf.ProtobufEncoder;
-import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
-import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
+import io.netty.handler.timeout.IdleStateHandler;
 
 /**
  * Created by yj.zhang on 2018/7/31/031.
@@ -75,9 +74,7 @@ public class NettyClient {
             }
         });
         mThread.start();
-
     }
-
 
     /**
      * 连接工具
@@ -90,6 +87,7 @@ public class NettyClient {
            /* ch.pipeline().addLast(new ProtobufVarint32FrameDecoder());
             ch.pipeline().addLast(new ProtobufVarint32LengthFieldPrepender());
             ch.pipeline().addLast(new ProtobufEncoder());*/
+            ch.pipeline().addLast(new IdleStateHandler(5, 0, 0, TimeUnit.SECONDS));
             ch.pipeline().addLast(connectedChannelHandler);
             ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE,4,4,-8,0));
         }
@@ -152,7 +150,6 @@ public class NettyClient {
 
         @Override
         public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-            LogUtils.e("channelReadComplete ");
             connectHanlerCtx = ctx;
 
             if (connectedReadDataListener != null && dataBuf != null) {
@@ -163,9 +160,16 @@ public class NettyClient {
         }
 
         @Override
-        public void userEventTriggered(ChannelHandlerContext ctx, Object o) throws Exception {
-            LogUtils.d("userEventTriggered ");
+        public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
             connectHanlerCtx = ctx;
+            if (evt instanceof IdleStateEvent) {
+                IdleStateEvent e = (IdleStateEvent) evt;
+                if (e.state() == IdleState.WRITER_IDLE) {
+                    // TODO: 2018/6/13
+                    //ctx.writeAndFlush(HEARTBEAT_SEQUENCE.duplicate()).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
+                }else{
+                }
+            }
         }
 
         @Override
@@ -208,12 +212,10 @@ public class NettyClient {
             if(mThread != null && mThread.isAlive()){
                 mThread.interrupt();
             }
-
         }catch (Exception e){
             e.printStackTrace();
         }
     }
-
 
     public interface IConnectedReadDataListener{
         void onReceiveData(ByteBufInputStream data);

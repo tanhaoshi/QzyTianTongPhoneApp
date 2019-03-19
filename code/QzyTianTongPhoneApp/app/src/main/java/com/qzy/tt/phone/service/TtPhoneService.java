@@ -21,8 +21,12 @@ public class TtPhoneService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        KLog.i("onCreate");
         mPhoneServiceManager = new PhoneServiceManager(getApplicationContext());
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
     }
 
     @Override

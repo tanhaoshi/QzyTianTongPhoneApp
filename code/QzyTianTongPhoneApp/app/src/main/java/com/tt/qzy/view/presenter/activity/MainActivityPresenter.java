@@ -1,9 +1,12 @@
 package com.tt.qzy.view.presenter.activity;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
-import android.widget.Toast;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 import com.alibaba.fastjson.JSON;
 import com.downloader.Error;
@@ -44,6 +47,9 @@ import okhttp3.ResponseBody;
 
 public class MainActivityPresenter extends BasePresenter<MainActivityView>{
 
+    public static final String DEVICE_BRAND = "Xiaomi";
+    public static final int    PERMISSION_REQUEST_CODE = 1;
+
     private Context mContext;
 
     public MainActivityPresenter(Context context){
@@ -61,7 +67,6 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView>{
                  .subscribe(new Observer<ResponseBody>() {
                      @Override
                      public void onSubscribe(Disposable d) {
-                         
                      }
 
                      @Override
@@ -190,5 +195,24 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView>{
 
     public void release(){
         EventBus.getDefault().unregister(this);
+        mContext = null;
+    }
+
+    /** 应该先检测录音权限是否存在  exits */
+    public boolean checkPermissionExist(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            return (ContextCompat.checkSelfPermission(mContext, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED);
+        }
+        return true;
+    }
+
+    public void requestPermission(String brand, Activity activity, String... permissions){
+        KLog.i("look up is not Xiaomi");
+        if(DEVICE_BRAND.equals(brand)){
+            KLog.i("is xiaomi so start request permission");
+            ActivityCompat.requestPermissions(activity,permissions,PERMISSION_REQUEST_CODE);
+        }else{
+            return;
+        }
     }
 }

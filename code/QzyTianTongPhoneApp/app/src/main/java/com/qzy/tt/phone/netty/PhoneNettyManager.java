@@ -487,7 +487,6 @@ public class PhoneNettyManager {
     private NettyClientManager.INettyListener nettyListener = new NettyClientManager.INettyListener() {
         @Override
         public void onReceiveData(ByteBufInputStream inputStream) {
-            KLog.i("netty onReceiveData ...");
             if (mCmdHandler != null) {
                 mCmdHandler.handlerCmd(inputStream);
             }
@@ -514,6 +513,7 @@ public class PhoneNettyManager {
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG:
+                KLog.i("sadasdasdasdadasdasd");
                 ServerPortIp serverPortIp = (ServerPortIp) event.getObject();
                 connect(serverPortIp.getPort(),serverPortIp.getIp());
                 break;

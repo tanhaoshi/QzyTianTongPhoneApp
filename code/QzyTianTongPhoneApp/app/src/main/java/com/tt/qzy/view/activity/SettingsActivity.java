@@ -118,7 +118,7 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
                 if(isSignal){
                     jumpSosSetting();
                 }else{
-                    NToast.shortToast(this,"设备未入网,请先入网!");
+                    NToast.shortToast(this,getString(R.string.TMT_THE_DEVICE_NOT_OPERATION));
                 }
                 break;
             case R.id.setting_map:
@@ -126,12 +126,8 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
                 startActivity(intent);
                 break;
             case R.id.setting_about:
-                if(isSignal){
-                    Intent about_intent = new Intent(SettingsActivity.this,MainAboutActivity.class);
-                    startActivity(about_intent);
-                }else{
-                    NToast.shortToast(this,"设备未入网,请先入网!");
-                }
+                Intent about_intent = new Intent(SettingsActivity.this,MainAboutActivity.class);
+                startActivity(about_intent);
                 break;
             case R.id.main_quantity:
                 finish();
@@ -140,21 +136,21 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
                 if(isSignal){
                     initWIFIDialog();
                 }else{
-                    NToast.shortToast(this,"设备未入网,请先入网!");
+                    NToast.shortToast(this,getString(R.string.TMT_THE_DEVICE_NOT_OPERATION));
                 }
                 break;
             case R.id.settings_date_time:
                 if(isSignal){
                     initDateDialog();
                 }else{
-                    NToast.shortToast(this,"设备未入网,请先入网!");
+                    NToast.shortToast(this,getString(R.string.TMT_THE_DEVICE_NOT_OPERATION));
                 }
                 break;
             case R.id.setting_factroy_reset:
                 if(isSignal){
                     initSystemResetDialog();
                 }else{
-                    NToast.shortToast(this,"设备未入网,请先入网!");
+                    NToast.shortToast(this,getString(R.string.TMT_THE_DEVICE_NOT_OPERATION));
                 }
                 break;
             case R.id.setting_check:
@@ -270,8 +266,8 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
         dateDialog.show();
         dateDialog.getWindow().setContentView(v);
         dateDialog.getWindow().setGravity(Gravity.BOTTOM);
-        title.setText("设备恢复出厂设置");
-        custom_input.setText("温馨提示:是否要将设备进行恢复出厂设置?");
+        title.setText(getString(R.string.TMT_DEVICE_SYSTEM_RECOVER_SETTING));
+        custom_input.setText(getString(R.string.TMT_ALERT_OF_DIALOG_CONTENT));
         custom_cannel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -284,7 +280,7 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
             public void onClick(View view) {
                 EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_RECOVER_SYSTEM));
                 mPresenter.recoverSystem(SettingsActivity.this);
-                NToast.shortToast(SettingsActivity.this,"恢复成功,请等待设备重启!");
+                NToast.shortToast(SettingsActivity.this,getString(R.string.TMT_DEVICE_IS_RECOVER_SUCCEED));
                 dateDialog.dismiss();
             }
         });

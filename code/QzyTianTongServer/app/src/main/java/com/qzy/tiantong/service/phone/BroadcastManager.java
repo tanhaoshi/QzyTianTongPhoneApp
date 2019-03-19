@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Keep;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.service.ITianTongServer;
@@ -27,6 +29,8 @@ public class BroadcastManager {
 
     private String lastPhoneState = "0";
 
+    public static final String ACTION_PRECISE_CALL_STATE_CHANGED="com.qzy.CallState.Intent";
+
     public BroadcastManager(Context context, ITianTongServer server) {
         mContext = context;
         mServer = server;
@@ -43,6 +47,7 @@ public class BroadcastManager {
         intentFilter.addAction("com.qzy.phone.state");
         intentFilter.addAction("com.qzy.tt.ACTION_RECOVERY_WIFI"); //恢复出厂设置
         intentFilter.addAction(PhoneUtils.actionstrDelCallback);
+        intentFilter.addAction(ACTION_PRECISE_CALL_STATE_CHANGED); //监听系统层电话状态
         mContext.registerReceiver(mReceiver, intentFilter);
     }
 
@@ -105,12 +110,27 @@ public class BroadcastManager {
                 LedManager.setRecoveryLedStatus(true);
                 setWifiPasswd(Constant.WIFI_PASSWD);
                 doMasterClear(context);
+            }else if(action.equals(ACTION_PRECISE_CALL_STATE_CHANGED)){
+                disposePhoneState(intent);
             }
         }
     };
 
+    public static final String EXTRA_CALL_STATE       = "CallState";
+
+    private void disposePhoneState(Intent intent){
+       int state = intent.getIntExtra(EXTRA_CALL_STATE,-99);
+        LogUtils.i("Phone ringing state = " + state);
+       if(3 == state){
+           LogUtils.i("send Phone STATE ... ");
+           mServer.initTtPcmDevice();
+           mServer.onPhoneStateChange(TtPhoneState.RING);
+       }
+
+    }
+
     /**
-     * 设置wifi密码
+     * 设置wifi密
      */
     public void setWifiPasswd(String passwd) {
         WifiUtils.setWifiPasswdToSharedpref(mContext, passwd);
@@ -145,10 +165,8 @@ public class BroadcastManager {
         }
     };
 
-
     public void release(){
         mContext.unregisterReceiver(mReceiver);
     }
-
 
 }

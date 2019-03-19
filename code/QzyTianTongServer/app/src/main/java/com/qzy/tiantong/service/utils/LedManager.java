@@ -108,6 +108,7 @@ public class LedManager {
             //write "0" to battery full led brightness file
             ModuleDormancyUtil.writeNode(battery_low_led_switch, "0");
         }
+        //brightness 写0 或 1 代表关和开 trigger 写 timer 和 none 代表 闪和不闪
         if((FLAG_NET_GREEN_LED_SWITCH & preGlobalLedStatus) > 0){
             //write "none" to battery full led trigger file
             if((FLAG_NET_GREEN_LED_TIMER & preGlobalLedStatus) > 0){

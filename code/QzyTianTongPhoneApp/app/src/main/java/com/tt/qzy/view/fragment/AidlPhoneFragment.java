@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
-import com.socks.library.KLog;
 import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.CallRecordAdapter;
@@ -81,6 +80,7 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+        setRetainInstance(true);
         mPersenter = new AidlPhoneFragmentPersenter(getActivity());
     }
 

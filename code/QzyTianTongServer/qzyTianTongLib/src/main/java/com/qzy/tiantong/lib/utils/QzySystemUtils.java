@@ -34,13 +34,11 @@ public class QzySystemUtils {
         try{
             Class<?>c= Class.forName("android.os.SystemProperties");
             Method get =c.getMethod("get",String.class);
-            return (String)get.invoke(c,"ro.serialno");
+            return (String)get.invoke(c,"sys.serialno");
         }catch(Exception e){
             e.printStackTrace();
         }
         return serial;
     }
-
-
 
 }

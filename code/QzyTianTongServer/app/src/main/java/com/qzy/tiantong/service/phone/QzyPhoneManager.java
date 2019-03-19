@@ -83,20 +83,7 @@ public class QzyPhoneManager {
     public void callPhone(String ip, String phoneNum) {
 
 //        LogUtils.i("callPhone look over dormancy value = " + ModuleDormancyUtil.getNodeString(Constant.WAKE_PATH));
-//        int count = 0;
 //        PowerControl.doWakeup();
-//        while(!PowerControl.getTTStatus()){
-//            count ++;
-//            try {
-//                Thread.sleep(500);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            if(count>10){
-//                LogUtils.e("Tiantong Model not be wakeup");
-//                break;
-//            }
-//        }
 
         LogUtils.i("start call phone ...");
 
@@ -232,17 +219,18 @@ public class QzyPhoneManager {
         public void onCallStateChanged(int state, String incomingNumber) {
             super.onCallStateChanged(state, incomingNumber);
             mstate = state;
+            LogUtils.i("Call State Changed value = " + mstate);
             switch (state) {
                 case TelephonyManager.CALL_STATE_RINGING:
                     //等待接听状态
                     String mIncomingNumber = incomingNumber;
                     LogUtils.e("=====RINGING :" + mIncomingNumber + "=========");
+                    mServer.initTtPcmDevice();
                     mServer.onPhoneIncoming(TtPhoneState.INCOMING, mIncomingNumber);
                     break;
                 case TelephonyManager.CALL_STATE_OFFHOOK:
-                    LogUtils.e("======get call 1111======== ");
-                    //mServer.initTtPcmDevice();
-                    mServer.onPhoneStateChange(TtPhoneState.RING);
+                    LogUtils.e("======get call 1111  RING ======== ");
+//                    mServer.onPhoneStateChange(TtPhoneState.RING);
                     break;
                 case TelephonyManager.CALL_STATE_IDLE:
                     LogUtils.e("========hung up=======");
@@ -313,7 +301,7 @@ public class QzyPhoneManager {
                     inPreSignal = true;
                     //要对它进行休眠
                     //1代表已经休眠 0代表正常可工作状态
-                    LogUtils.i("look over node value = " + ModuleDormancyUtil.getNodeString(Constant.WAKE_PATH));
+//                    LogUtils.i("look over node value = " + ModuleDormancyUtil.getNodeString(Constant.WAKE_PATH));
 //                    if (PowerControl.getTTStatus()) {
 //                        //== 于0 要让它去休眠
 //                        PowerControl.doSleep();

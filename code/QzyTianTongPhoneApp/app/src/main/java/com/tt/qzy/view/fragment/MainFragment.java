@@ -20,6 +20,7 @@ import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
 import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
+import com.qzy.phone.pcm.AllLocalPcmManager;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.phone.data.SmsBean;
@@ -67,6 +68,8 @@ public class MainFragment extends Fragment implements MainFragmentView{
     SwitchCompat sc_settin_testxinlv;
     @BindView(R.id.sc_settin_data)
     SwitchCompat sc_settin_data;
+    @BindView(R.id.record_voice_switch)
+    SwitchCompat record_voice_switch;
     @BindView(R.id.frameLayout)
     FrameLayout mFrameLayout;
     @BindView(R.id.circle_loading_view)
@@ -97,6 +100,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+        setRetainInstance(true);
         mPresneter = new MainFragementPersenter(getActivity());
     }
 
@@ -184,7 +188,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
                             mPresneter.closeServerSos();
                         }
                     }else{
-                        NToast.shortToast(getActivity(), "设备未入网,请先入网!");
+                        NToast.shortToast(getActivity(), getString(R.string.TMT_THE_DEVICE_NOT_INTERNET_NOW));
                         sc_settin_testxinlv.setChecked(false);
                     }
                 }else{
@@ -239,6 +243,25 @@ public class MainFragment extends Fragment implements MainFragmentView{
                 }
             }
         });
+
+        boolean voiceState = AllLocalPcmManager.getInstance() == null ? false : true;
+
+        record_voice_switch.setChecked(voiceState);
+
+        record_voice_switch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // onClickListener 执行速度在 onChceckListener 后面
+                if(!record_voice_switch.isChecked()){
+                    if(AllLocalPcmManager.getInstance() != null){
+                        AllLocalPcmManager.getInstance().free();
+                    }
+                }else{
+                    AllLocalPcmManager.getInstance();
+
+                }
+            }
+        });
     }
 
     @OnClick({R.id.main_editors, R.id.main_settings, R.id.tmt_noEntry})
@@ -272,11 +295,11 @@ public class MainFragment extends Fragment implements MainFragmentView{
         if (isConnected) {
             mCircleImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.yilianjie));
             connect.setText(getResources().getString(R.string.TMT_connect_succeed));
-            NToast.shortToast(getActivity(), getString(R.string.TMT_connect_succeed_notice));
+//            NToast.shortToast(getActivity(), getString(R.string.TMT_connect_succeed_notice));
         } else {
             mCircleImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.weilianjie));
             connect.setText(getResources().getString(R.string.TMT_click_connect));
-            NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
+//            NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
         }
     }
 
@@ -396,16 +419,16 @@ public class MainFragment extends Fragment implements MainFragmentView{
         this.isServerChange = isStatus;
         if(isStatus){
             viewTransition(false);
-            NToast.shortToast(getActivity(),"请重新链接wifi！");
+            NToast.shortToast(getActivity(),getActivity().getString(R.string.TMT_start_again_connect));
         }else{
-            NToast.shortToast(getActivity(),"更新失败,请重新更新!");
+            NToast.shortToast(getActivity(),getActivity().getString(R.string.TMT_update_failure_alert));
         }
     }
 
     @Override
     public void upgradleNonconnect() {
         viewTransition(false);
-        NToast.shortToast(getActivity(),"WIFI链接中断,请重新更新!");
+        NToast.shortToast(getActivity(),getActivity().getString(R.string.TMT_WIFI_DISCONNECT_OF_UPDATE));
     }
 
     @Override
@@ -446,7 +469,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
             public void run() {
                 mAnimatedCircleLoadingView.setPercent(i);
                 if(i == 100){
-                    NToast.longToast(getActivity(),"请等待5~10秒猫端更新!");
+                    NToast.longToast(getActivity(),getActivity().getString(R.string.TMT_UPDATE_SUCCEED_FOR_WAIT));
                 }
             }
         });

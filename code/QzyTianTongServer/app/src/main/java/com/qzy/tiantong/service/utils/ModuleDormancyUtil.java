@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
+import java.util.concurrent.ExecutorService;
 
 public class ModuleDormancyUtil {
 
@@ -41,7 +42,8 @@ public class ModuleDormancyUtil {
     }
 
     public static synchronized void writeNodeFileTriger(final String path, final String state) {
-        new Thread(new Runnable() {
+        ExecutorService executorService = ThreadUtils.getCachedPool();
+        executorService.submit(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -63,7 +65,6 @@ public class ModuleDormancyUtil {
 
                         //强制刷新内存到文件
                         Runtime.getRuntime().exec("sync");
-
 
                         FileReader fileReader = new FileReader(file);
                         BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -77,7 +78,6 @@ public class ModuleDormancyUtil {
 
                         isSuccess = value.contains(compare);
 
-
                         Log.i("ModuleDormancyUtil", "write file[" + path + "] with value (" + state + ")" + " get writ value = " + value + " is success = " + isSuccess);
                         if (isSuccess) {
                             break;
@@ -88,7 +88,58 @@ public class ModuleDormancyUtil {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        });
+        if(executorService.isShutdown()){
+            executorService.shutdownNow();
+        }
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    while (true) {
+//                        OutputStream output = null;
+//                        OutputStreamWriter outputWrite = null;
+//                        PrintWriter print = null;
+//                        File file = new File(path);
+//                        Log.i("ModuleDormancyUtil", "write file[" + path + "] with value (" + state + ")");
+//
+//                        output = new FileOutputStream(file);
+//                        outputWrite = new OutputStreamWriter(output);
+//                        print = new PrintWriter(outputWrite);
+//                        print.print(state);
+//                        print.flush();
+//                        print.close();
+//                        outputWrite.close();
+//                        output.close();
+//
+//                        //强制刷新内存到文件
+//                        Runtime.getRuntime().exec("sync");
+//
+//
+//                        FileReader fileReader = new FileReader(file);
+//                        BufferedReader bufferedReader = new BufferedReader(fileReader);
+//                        String value = bufferedReader.readLine();
+//                        fileReader.close();
+//                        bufferedReader.close();
+//
+//                        boolean isSuccess = false;
+//
+//                        String compare = "[" + state + "]";
+//
+//                        isSuccess = value.contains(compare);
+//
+//
+//                        Log.i("ModuleDormancyUtil", "write file[" + path + "] with value (" + state + ")" + " get writ value = " + value + " is success = " + isSuccess);
+//                        if (isSuccess) {
+//                            break;
+//                        }
+//
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
     }
 
     public static synchronized void writeNodeFile(final String path, final String state) {
@@ -102,7 +153,8 @@ public class ModuleDormancyUtil {
 //            e.printStackTrace();
 //            Log.e("exception","error : " + e.getMessage());
 //        }
-        new Thread(new Runnable() {
+        ExecutorService executorService = ThreadUtils.getCachedPool();
+        executorService.submit(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -125,16 +177,13 @@ public class ModuleDormancyUtil {
                         //强制刷新内存到文件
                         Runtime.getRuntime().exec("sync");
 
-
                         FileReader fileReader = new FileReader(file);
                         BufferedReader bufferedReader = new BufferedReader(fileReader);
                         String value = bufferedReader.readLine();
                         fileReader.close();
                         bufferedReader.close();
 
-
                         boolean isSuccess = value.equals(state);
-
 
                         Log.i("ModuleDormancyUtil", "write file[" + path + "] with value (" + state + ")" + " get writ value = " + value + " is success = " + isSuccess);
                         if (isSuccess) {
@@ -146,6 +195,54 @@ public class ModuleDormancyUtil {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        });
+        if(executorService.isShutdown()){
+            executorService.shutdownNow();
+        }
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    while (true) {
+//                        OutputStream output = null;
+//                        OutputStreamWriter outputWrite = null;
+//                        PrintWriter print = null;
+//                        File file = new File(path);
+//                        Log.i("ModuleDormancyUtil", "write file[" + path + "] with value (" + state + ")");
+//
+//                        output = new FileOutputStream(file);
+//                        outputWrite = new OutputStreamWriter(output);
+//                        print = new PrintWriter(outputWrite);
+//                        print.print(state);
+//                        print.flush();
+//                        print.close();
+//                        outputWrite.close();
+//                        output.close();
+//
+//                        //强制刷新内存到文件
+//                        Runtime.getRuntime().exec("sync");
+//
+//
+//                        FileReader fileReader = new FileReader(file);
+//                        BufferedReader bufferedReader = new BufferedReader(fileReader);
+//                        String value = bufferedReader.readLine();
+//                        fileReader.close();
+//                        bufferedReader.close();
+//
+//
+//                        boolean isSuccess = value.equals(state);
+//
+//
+//                        Log.i("ModuleDormancyUtil", "write file[" + path + "] with value (" + state + ")" + " get writ value = " + value + " is success = " + isSuccess);
+//                        if (isSuccess) {
+//                            break;
+//                        }
+//
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
     }
 }

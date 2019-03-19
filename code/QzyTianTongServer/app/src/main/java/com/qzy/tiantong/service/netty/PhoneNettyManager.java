@@ -13,11 +13,12 @@ import com.qzy.tiantong.lib.eventbus.MessageEvent;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.lib.utils.QzySystemUtils;
 import com.qzy.tiantong.service.BuildConfig;
-import com.qzy.tiantong.service.mobiledata.IMobileDataManager;
-import com.qzy.tiantong.service.phone.CallLogManager;
-import com.qzy.tiantong.service.phone.QzyBatteryManager;
 import com.qzy.tiantong.service.gps.GpsManager;
+import com.qzy.tiantong.service.mobiledata.IMobileDataManager;
+import com.qzy.tiantong.service.mobiledata.MobileDataManager;
+import com.qzy.tiantong.service.phone.CallLogManager;
 import com.qzy.tiantong.service.phone.PhoneClientManager;
+import com.qzy.tiantong.service.phone.QzyBatteryManager;
 import com.qzy.tiantong.service.phone.SmsPhoneManager;
 import com.qzy.tiantong.service.phone.TtPhoneState;
 import com.qzy.tiantong.service.phone.TtPhoneSystemanager;
@@ -26,7 +27,6 @@ import com.qzy.tiantong.service.phone.data.ClientInfoBean;
 import com.qzy.tiantong.service.phone.data.SmsInfo;
 import com.qzy.tiantong.service.time.DateTimeManager;
 import com.qzy.tiantong.service.usb.TtUsbManager;
-import com.qzy.tiantong.service.mobiledata.MobileDataManager;
 import com.qzy.tiantong.service.utils.Constant;
 import com.qzy.tiantong.service.utils.LedManager;
 import com.qzy.tiantong.service.utils.ModuleDormancyUtil;
@@ -54,10 +54,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by yj.zhang on 2018/8/9.
@@ -344,7 +344,6 @@ public class PhoneNettyManager implements IMobileDataManager{
             phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.CALL;
             //处理同时接听电话,其他链接手机没有挂断Bug
 //            disposeCallPhone();
-
         } else if (state == TtPhoneState.HUANGUP) {
             phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.HUANGUP;
             if (currentPhoneState != phoneState) {
@@ -363,7 +362,7 @@ public class PhoneNettyManager implements IMobileDataManager{
      * 当有人进行通话时,将其他链接的ip进行挂断
      */
     private void disposeCallPhone(){
-        HashMap<String, ClientInfoBean> hashMap = PhoneClientManager.getInstance().getmHaspMapPhoneClient();
+        ConcurrentHashMap<String, ClientInfoBean> hashMap = PhoneClientManager.getInstance().getmHaspMapPhoneClient();
 
         if (hashMap == null) {
             return;
@@ -417,6 +416,7 @@ public class PhoneNettyManager implements IMobileDataManager{
      */
     private void sendTtCallPhoneBackToClientTimer() {
         String callingIp = PhoneClientManager.getInstance().isCallingIp();
+        LogUtils.i("look up callingIp = " + callingIp);
         if (!TextUtils.isEmpty(callingIp)) {
             sendTtCallPhoneBackToClient(null, callingIp, true);
         } else {
@@ -483,12 +483,12 @@ public class PhoneNettyManager implements IMobileDataManager{
     private void sendSimStateToPhoneClient() {
         if (checkNettManagerIsNull()) return;
         boolean hasSim = PhoneUtils.ishasSimCard(mContext);
-        LogUtils.d("hasSim = " + hasSim + " currentSignalValue = " + currentSignalValue);
         if(!isG4Test) {
             if(hasSim) {
                 //Netled.setNetledState(true);
                 controlSignal(currentSignalValue); // 检测卡的状态来控制灯的闪烁
             }else{
+                //未检测到卡,下面应该常亮亮蓝灯
                 LedManager.setandCleanLedFlag(LedManager.FLAG_POWER_BLUE_LED_SWITCH,
                         LedManager.FLAG_NET_GREEN_LED_SWITCH
                     | LedManager.FLAG_POWER_BLUE_LED_TIMER);
@@ -499,7 +499,6 @@ public class PhoneNettyManager implements IMobileDataManager{
                 .build();
         mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_phone_simcard, simCard));
     }
-
 
     /**
      * 发送所有通话记录

@@ -7,14 +7,23 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.icu.text.DecimalFormat;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Environment;
 import android.os.PowerManager;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import java.io.File;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 
@@ -116,5 +125,70 @@ public final class AppUtils {
         // 屏幕锁定
 //        keyguardLock.reenableKeyguard();
         keyguardLock.disableKeyguard(); // 解锁
+    }
+
+    public static String getIpAddress(Context context) {
+
+        ConnectivityManager connect = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        //检查网络连接
+        NetworkInfo info = connect.getActiveNetworkInfo();
+
+        if(null == info){
+            NToast.shortToast(context,"请连接WIFI!");
+            return "";
+        }
+
+        int netType = info.getType();
+        int netSubtype = info.getSubtype();
+
+        if (netType == ConnectivityManager.TYPE_WIFI) {  //WIFI
+            return getWifiIpAddress(context);
+        } else if (netType == ConnectivityManager.TYPE_MOBILE ) {   //MOBILE
+            return getLocalIpAddress();
+        } else {
+            return "127.0.0.1";
+        }
+    }
+
+    //使用wifi
+    public static String getWifiIpAddress(Context context) {
+
+        //获取wifi服务
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        //判断wifi是否开启
+        //             if (!wifiManager.isWifiEnabled()) {
+        //      <span style="white-space:pre">    </span>   wifiManager.setWifiEnabled(true);
+        //             }
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        int ipAddress = wifiInfo.getIpAddress();
+        String ip = intToIp(ipAddress);
+        return ip;
+    }
+
+    private static String intToIp(int i) {
+        return (i & 0xFF ) + "." +
+                ((i >> 8 ) & 0xFF) + "." +
+                ((i >> 16 ) & 0xFF) + "." +
+                ( i >> 24 & 0xFF) ;
+    }
+
+    //使用GPRS
+    public static String getLocalIpAddress() {
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface
+                    .getNetworkInterfaces(); en.hasMoreElements();) {
+                NetworkInterface intf = en.nextElement();
+                for (Enumeration<InetAddress> enumIpAddr = intf
+                        .getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()) {
+                        return inetAddress.getHostAddress().toString();
+                    }
+                }
+            }
+        } catch (SocketException ex) {
+            Log.e("Exception", ex.toString());
+        }
+        return "127.0.0.1";
     }
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.net.wifi.WifiManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.qzy.data.PhoneCmd;
 import com.qzy.eventbus.EventBusUtils;
@@ -18,6 +19,7 @@ import com.qzy.tt.data.TtPhoneSosStateProtos;
 import com.qzy.tt.data.TtPhoneUpdateResponseProtos;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.utils.IPUtil;
+import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.TellPhoneActivity;
@@ -96,6 +98,33 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
 
         //判断是否连接着天通指定的wifi
         String ssid = NetworkUtil.getConnectWifiSsid(mContext);
+
+        LogUtils.i("ssid value = " + ssid);
+
+        if(TextUtils.isEmpty(ssid)){
+            LogUtils.i("ssid is empty ");
+        }else{
+            LogUtils.i("ssid not empty");
+        }
+
+        if(ssid.length() < 6){
+            LogUtils.i("ssid length is less 6");
+        }else{
+            LogUtils.i("ssid length is than 6");
+        }
+
+        if(ssid.contains(Constans.STANDARD_WIFI_NAME)){
+            LogUtils.i("ssid is contains wifi name");
+        }else{
+            LogUtils.i("ssid is not contains wifi name");
+        }
+
+        KLog.i("look up ip address chars = " + AppUtils.getIpAddress(mContext));
+
+        if(!AppUtils.getIpAddress(mContext).contains(Constans.LOCAL_HEAD_IP)){
+            NToast.shortToast(mContext,mContext.getString(R.string.TMT_PLEASE_CLOSE_DATA_MOBILE_AND_ENABLE_WIFI));
+        }
+
         if(TextUtils.isEmpty(ssid) || ssid.length() < 6 || !ssid.contains(Constans.STANDARD_WIFI_NAME)){
             NToast.shortToast(mContext, mContext.getString(R.string.TMT_connect_tiantong_please));
             Intent intent = new Intent("android.settings.WIFI_SETTINGS");
@@ -187,7 +216,8 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
                 requestServerVersion();
                 mView.get().updateConnectedState(true);
                 requestServerDatetime();
-                requestServerMobileStatus();
+                /** 屏蔽了数据初始化状态 */
+                //requestServerMobileStatus();
                 requestServerSosStatus();
                 break;
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_FAILED:
@@ -232,7 +262,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
     }
 
     /**
-     * 保存链接wifi后的ip地址
+     * 保存连接wifi后的ip地址
      */
     private void saveLocalWIFIIP(){
         CommonData.getInstance().setLocalWifiIp(IPUtil.getLocalIPAddress(mContext));
@@ -254,7 +284,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
         PhoneCmd cmd = (PhoneCmd)o;
         TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse)cmd.getMessage();
         if(!updateResponse.getIsSendFileFinish()){
-              NToast.shortToast(mContext,"升级出现中断,请退出APP重新链接wifi升级!");
+              NToast.shortToast(mContext,mContext.getResources().getString(R.string.TMT_WIFI_DISCONNECT_OF_UPDATE_PLEASE_OUT));
 //            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_UPLOAD_APP
 //                    ,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));
         }

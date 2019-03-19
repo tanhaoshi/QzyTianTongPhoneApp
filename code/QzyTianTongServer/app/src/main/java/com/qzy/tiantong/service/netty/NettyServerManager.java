@@ -3,7 +3,6 @@ package com.qzy.tiantong.service.netty;
 import android.text.TextUtils;
 
 import com.google.protobuf.Message;
-
 import com.qzy.tiantong.lib.service.netty.NettyServer;
 import com.qzy.tiantong.lib.utils.ByteUtils;
 import com.qzy.tiantong.lib.utils.LogUtils;
@@ -13,8 +12,8 @@ import com.qzy.tt.probuf.lib.data.PhoneAudioCmd;
 import com.qzy.tt.probuf.lib.data.PhoneCmd;
 import com.qzy.tt.probuf.lib.data.PrototocalTools;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
@@ -90,7 +89,7 @@ public class NettyServerManager implements NettyServer.IServerListener {
     public void sendData(String ip, PhoneCmd cmd) {
         try {
             if (TextUtils.isEmpty(ip)) { //发送所有终端
-                HashMap<String, ClientInfoBean> hashMap = PhoneClientManager.getInstance().getmHaspMapPhoneClient();
+                ConcurrentHashMap<String, ClientInfoBean> hashMap = PhoneClientManager.getInstance().getmHaspMapPhoneClient();
                 for (Map.Entry<String, ClientInfoBean> entry : hashMap.entrySet()) {
                     if (entry.getValue() != null && entry.getValue().getCtx() != null) {
                         sendData(entry.getValue().getCtx(), cmd);
@@ -107,7 +106,6 @@ public class NettyServerManager implements NettyServer.IServerListener {
             e.printStackTrace();
         }
     }
-
 
     /**
      * 发送数据
@@ -189,7 +187,6 @@ public class NettyServerManager implements NettyServer.IServerListener {
         }
     }
 
-
     /**
      * 释放资源
      */
@@ -199,7 +196,6 @@ public class NettyServerManager implements NettyServer.IServerListener {
             PhoneClientManager.getInstance().free();
         }
     }
-
 
     /**
      * 接口回调

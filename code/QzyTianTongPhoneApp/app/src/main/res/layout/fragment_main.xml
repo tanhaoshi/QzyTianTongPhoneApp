@@ -280,6 +280,34 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:background="@color/white"
+                    android:layout_height="53dp"
+                    android:layout_marginTop="7dp">
+
+                    <TextView
+                        android:id="@+id/record_voice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="53dp"
+                        android:drawablePadding="20dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="16dp"
+                        android:layout_weight="1"
+                        android:text="@string/TMT_record_voice"
+                        android:drawableLeft="@drawable/sos"/>
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/record_voice_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="12dp"
+                        android:theme="@style/SwitchComputer"
+                        />
+
+                </LinearLayout>
+
                 <!--<TextView-->
                     <!--android:id="@+id/main_location"-->
                     <!--android:layout_marginTop="7dp"-->

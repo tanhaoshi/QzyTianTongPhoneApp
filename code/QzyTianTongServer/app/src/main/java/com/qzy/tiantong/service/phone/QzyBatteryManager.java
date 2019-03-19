@@ -7,8 +7,6 @@ import android.content.IntentFilter;
 import android.os.BatteryManager;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
-import com.qzy.tiantong.service.utils.LedManager;
-import com.qzy.tt.data.TtPhoneBatteryProtos;
 
 
 /**

@@ -1,6 +1,5 @@
 package com.qzy.tiantong.service.utils;
 
-import android.util.Log;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
 

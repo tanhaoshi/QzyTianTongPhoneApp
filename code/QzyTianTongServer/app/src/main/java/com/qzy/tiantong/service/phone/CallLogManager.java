@@ -9,12 +9,14 @@ import com.qzy.tiantong.service.netty.PhoneNettyManager;
 import com.qzy.tiantong.service.phone.data.CallLogInfo;
 import com.qzy.tiantong.service.phone.data.SmsInfo;
 import com.qzy.tiantong.service.utils.PhoneUtils;
+import com.qzy.tiantong.service.utils.ThreadUtils;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtDeleCallLogProtos;
 import com.qzy.tt.data.TtDeleSmsProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 /**
  * 通话记录管理
@@ -27,7 +29,8 @@ public class CallLogManager {
      * @param context
      */
     public static void syncCallLogInfo(final String ip, final Context context, final PhoneNettyManager phoneNettyManager) {
-        new Thread(new Runnable() {
+        ExecutorService executorService = ThreadUtils.getCachedPool();
+        executorService.submit(new Runnable() {
             @Override
             public void run() {
                 int page = 0;
@@ -61,11 +64,9 @@ public class CallLogManager {
                     if (phoneNettyManager != null) {
                         phoneNettyManager.sendCallLogToPhoneClient(ip, listRecorder.build());
                     }
-
                 }
             }
-        }).start();
-
+        });
 
     }
 
@@ -76,8 +77,8 @@ public class CallLogManager {
      * @param phoneNettyManager
      */
     public static void syncSmsInfo(final String ip, final Context context, final PhoneNettyManager phoneNettyManager) {
-
-        new Thread(new Runnable() {
+        ExecutorService executorService = ThreadUtils.getCachedPool();
+        executorService.submit(new Runnable() {
             @Override
             public void run() {
                 int page = 0;
@@ -95,7 +96,7 @@ public class CallLogManager {
                     LogUtils.e("getSms sync size = " + smsList.size());
                     TtShortMessageProtos.TtShortMessage.Builder ttShortMessage = TtShortMessageProtos.TtShortMessage.newBuilder();
                     for (SmsInfo smsInfo : smsList) {
-                       // LogUtils.d("smsInfo  = " + smsInfo.toString());
+                        // LogUtils.d("smsInfo  = " + smsInfo.toString());
                         TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage = TtShortMessageProtos.TtShortMessage.ShortMessage.newBuilder()
                                 .setId(smsInfo.getId())
                                 .setNumberPhone(smsInfo.getNumber())
@@ -115,7 +116,7 @@ public class CallLogManager {
 
                 }
             }
-        }).start();
+        });
     }
 
 
@@ -171,9 +172,6 @@ public class CallLogManager {
                     PhoneUtils.delSmsById(context,id +"");
                 }
             }
-
-
-
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -46,9 +46,6 @@ public class TianTongService extends Service {
         } else {
             startForeground(CancelNoticeService.NOTICE_ID, new Notification());
         }
-
-
-
     }
 
     @Override
@@ -90,9 +87,7 @@ public class TianTongService extends Service {
             mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP,
                     this.getClass().getCanonicalName());
             mWakeLock.acquire();
-
         }
-
     }
 
     private void releaseWakeLock() {
@@ -100,9 +95,6 @@ public class TianTongService extends Service {
             mWakeLock.release();
             mWakeLock = null;
         }
-
-
-
     }
 
 }

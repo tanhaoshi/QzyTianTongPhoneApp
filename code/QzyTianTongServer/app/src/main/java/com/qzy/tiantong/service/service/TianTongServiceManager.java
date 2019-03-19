@@ -105,9 +105,7 @@ public class TianTongServiceManager implements ITianTongServer {
         if (isUdpPcmLocal) {
             mLocalPcmSocketManager = new LocalPcmSocketManager(context);
         }
-
     }
-
 
     /**
      * 初始化netty服务

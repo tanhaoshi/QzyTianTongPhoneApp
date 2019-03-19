@@ -19,9 +19,6 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.protobuf.ProtobufEncoder;
-import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
-import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 
 /**
  * Created by yj.zhang on 2018/8/3/003.
@@ -41,14 +38,11 @@ public class NettyServer {
     //发送数据句柄
     // public ChannelHandlerContext connectHanlerCtx;
 
-
     private IServerListener iServerListener;
-
 
     public NettyServer(IServerListener listener) {
         iServerListener = listener;
     }
-
 
     /**
      * 启动服务，主要做数据通信
@@ -78,7 +72,6 @@ public class NettyServer {
             }
         });
         mThread.start();
-
     }
 
     private ChannelInitializer connectChannelInitializer = new ChannelInitializer<SocketChannel>() {
@@ -91,7 +84,6 @@ public class NettyServer {
         }
     };
 
-
     @ChannelHandler.Sharable
     public class ChannelHander extends ChannelInboundHandlerAdapter {
 
@@ -100,7 +92,6 @@ public class NettyServer {
         @Override
         public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
             LogUtils.d("channelRegistered...");
-
         }
 
         @Override
@@ -127,9 +118,7 @@ public class NettyServer {
             if (iServerListener != null) {
                 iServerListener.onConnected(ctx, ip, true);
             }
-
         }
-
 
         @Override
         public void channelInactive(ChannelHandlerContext ctx) throws Exception {
@@ -169,14 +158,16 @@ public class NettyServer {
                 dataBuf = null;
             }
         }
+
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+            super.exceptionCaught(ctx, cause);
+            Channel channel = ctx.channel();
+            if(channel.isActive()) ctx.close();
+        }
     }
 
-    /*public ChannelHandlerContext getConnectHanlerCtx() {
-        return connectHanlerCtx;
-    }*/
-
     public void stopServer() {
-
         try {
             if (bossGroup != null) {
                 bossGroup.shutdownGracefully();
@@ -203,6 +194,5 @@ public class NettyServer {
     public void release() {
         stopServer();
     }
-
 
 }

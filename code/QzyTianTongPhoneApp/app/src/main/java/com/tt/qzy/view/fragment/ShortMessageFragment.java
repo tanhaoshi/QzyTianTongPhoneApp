@@ -93,6 +93,7 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+        setRetainInstance(true);
         mPresenter = new ShortMessagePresenter(getActivity());
     }
 

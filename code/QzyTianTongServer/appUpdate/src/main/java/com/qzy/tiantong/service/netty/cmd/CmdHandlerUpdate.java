@@ -43,9 +43,7 @@ public class CmdHandlerUpdate implements ICmdHandler {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
 
     /**
      * 分协议id处理消息
@@ -71,7 +69,6 @@ public class CmdHandlerUpdate implements ICmdHandler {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override

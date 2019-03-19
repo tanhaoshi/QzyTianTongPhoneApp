@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="56dp">
+              android:layout_height="64dp">
 
     <TextView
         android:layout_marginLeft="55dp"
@@ -13,7 +13,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/mobile"
@@ -31,9 +31,8 @@
             android:id="@+id/linearLayout"
             android:orientation="horizontal"
             android:layout_weight="1"
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="48dp">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -54,17 +53,17 @@
                     android:orientation="horizontal"
                     android:layout_marginTop="6dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="14dp">
+                    android:layout_height="match_parent">
 
                     <TextView
                         android:id="@+id/status"
                         android:text=""
-                        android:textSize="10sp"
+                        android:textSize="11sp"
                         android:textColor="@color/red"
                         android:layout_gravity="center_vertical"
                         android:layout_marginTop="2dp"
                         android:layout_width="wrap_content"
-                        android:layout_height="14dp"/>
+                        android:layout_height="match_parent"/>
 
                     <TextView
                         android:visibility="gone"
@@ -77,13 +76,12 @@
 
                     <TextView
                         android:id="@+id/duration"
-                        android:textSize="10sp"
+                        android:textSize="11sp"
                         android:layout_marginLeft="12dp"
                         android:text="通话时长:"
                         android:layout_marginTop="2dp"
-                        android:layout_gravity="center_vertical"
                         android:layout_width="wrap_content"
-                        android:layout_height="14dp"/>
+                        android:layout_height="match_parent"/>
 
                 </LinearLayout>
 

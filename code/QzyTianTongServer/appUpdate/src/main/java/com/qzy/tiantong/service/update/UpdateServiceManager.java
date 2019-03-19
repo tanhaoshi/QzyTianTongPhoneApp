@@ -114,7 +114,6 @@ public class UpdateServiceManager implements IUpdateManager {
                         public void run() {
                             try{
                                 Thread.sleep(3000);
-
                                 //重启
                                 mLocalUpdateSocketManager.startLocalReboot();
                             }catch (Exception e){

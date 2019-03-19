@@ -29,10 +29,13 @@ public interface Constans {
     String BASE_URL = "http://47.106.33.137:9097/TinTong/web/";
 
     String IP = "192.168.43.1";
+
+    String LOCAL_HEAD_IP = "192.168.43";
+
     int UPLOAD_PORT = 9998;
     int PORT = 9999;
-    // 10
-    String SERVER_APP_VERSION = "13";
+    // 13
+    String SERVER_APP_VERSION = "1";
 
     int ANSWER = 1;
     int PUTOUT = 2;
@@ -40,4 +43,6 @@ public interface Constans {
     String fileName = "QzyTianTongPhone.apk";
 
     String SERVER_FLAG = "server_flag";
+    //存在 exist 退出 exits
+    String AUTO_EXITS = "auto_exits";
 }

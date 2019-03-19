@@ -4,14 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Handler;
 import android.text.TextUtils;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.contants.QzyTtContants;
 import com.qzy.tiantong.service.utils.WifiUtils;
 
-import java.security.Key;
 
 public class TiantongWifiManager {
 

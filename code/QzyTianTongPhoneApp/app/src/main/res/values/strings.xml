@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">天地互联</string>
+    <string name="app_name">征服卫星</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
@@ -7,6 +7,7 @@
     <string name="TMT_energy">设备电量</string>
     <string name="TMT_quantity">设备信号</string>
     <string name="TMT_sos">SOS</string>
+    <string name="TMT_record_voice">录音开关</string>
     <string name="TMT_mobileData">数据</string>
     <string name="TMT_location">定位</string>
     <string name="TMT_settings">设置</string>
@@ -38,9 +39,9 @@
     <string name="TMT_finshLoad">已下载城市</string>
     <string name="TMT_notify">当前为WI-FI网络,切换至运营商流量会自动暂停下载</string>
     <string name="TMT_net_notify">当前为运营商网络,建议切换至WI-FI网络下载</string>
-    <string name="TMT_version">天地互联APP版本</string>
-    <string name="TMT_soft_version">天地互联服务版本</string>
-    <string name="TMT_fixed_version">天地互联固件版本</string>
+    <string name="TMT_version">征服卫星APP版本</string>
+    <string name="TMT_soft_version">征服卫星服务版本</string>
+    <string name="TMT_fixed_version">固件版本</string>
     <string name="TMT_number">序列号</string>
     <string name="TMT_hantInput">拨号或使用拼音搜索</string>
     <string name="TMT_jilu">拼音搜索或字母搜索</string>
@@ -87,8 +88,8 @@
     <string name="TMT_dataisnull">没有更多的数据了!</string>
     <!-- 连接成功状态下 -->
     <string name="TMT_connect_succeed">已连接</string>
-    <string name="TMT_connect_tiantong_please">请连接天通</string>
-    <string name="TMT_connect_succeed_notice">已连接天通</string>
+    <string name="TMT_connect_tiantong_please">请连接猫</string>
+    <string name="TMT_connect_succeed_notice">已连接猫</string>
     <string name="TMT_dial_number_notmull">电话号码不能为空</string>
     <string name="TMT_dial_dialing">正在拨号</string>
     <string name="TMT_dial_endcall">正在挂断</string>
@@ -113,4 +114,17 @@
     <string name="TMT_wifi_length_greatethan_eight">WIFI密码不能少于8位</string>
     <string name="TMT_the_change_content">更新内容如下:</string>
     <string name="TMT_the_update_dialog_title">APP新版本</string>
+    <string name="TMT_confirm_exit">温馨提示:您确定是否退出吗?</string>
+    <string name="TMT_hint">提示</string>
+    <string name="TMT_start_again_connect">请重连WIFI!</string>
+    <string name="TMT_update_failure_alert">更新失败,请重新更新!</string>
+    <string name="TMT_WIFI_DISCONNECT_OF_UPDATE">WIFI连接中断,请重新连接!</string>
+    <string name="TMT_UPDATE_SUCCEED_FOR_WAIT">请等待5~10秒猫端更新!</string>
+    <string name="TMT_WIFI_DISCONNECT_OF_UPDATE_PLEASE_OUT">升级出现中断,请退出APP重新连接WIFI升级!</string>
+    <string name="TMT_THE_DEVICE_NOT_INTERNET_NOW">设备未入网,请先入网!</string>
+    <string name="TMT_THE_DEVICE_NOT_OPERATION">设备未入网,请先入网!</string>
+    <string name="TMT_DEVICE_SYSTEM_RECOVER_SETTING">设备恢复出厂设置</string>
+    <string name="TMT_ALERT_OF_DIALOG_CONTENT">温馨提示:是否要将设备进行恢复出厂设置?</string>
+    <string name="TMT_DEVICE_IS_RECOVER_SUCCEED"></string>
+    <string name="TMT_PLEASE_CLOSE_DATA_MOBILE_AND_ENABLE_WIFI">请关闭数据流量开关,并连接指定WIFI!</string>
 </resources>

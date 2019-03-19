@@ -20,7 +20,6 @@ public class BaseActivityPresenter extends BasePresenter<BaseMainView>{
 
     /**
      * 获取天通信号强度
-     *
      * @param obj
      * @return
      */

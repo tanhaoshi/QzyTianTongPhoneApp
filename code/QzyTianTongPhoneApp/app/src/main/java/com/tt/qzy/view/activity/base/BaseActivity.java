@@ -1,6 +1,8 @@
 package com.tt.qzy.view.activity.base;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -8,9 +10,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.nativeaudio.NativeAudio;
 import com.qzy.data.PhoneCmd;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
+import com.qzy.phone.pcm.AllLocalPcmManager;
 import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.phone.common.CommonData;
 import com.socks.library.KLog;
@@ -53,6 +57,15 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     public boolean tt_isSim = false;
     public boolean tt_isSignal = false;
     public int tt_baterly = 0;
+
+    @Override
+    public Resources getResources() {
+        Resources res = super.getResources();
+        Configuration config=new Configuration();
+        config.setToDefaults();
+        res.updateConfiguration(config,res.getDisplayMetrics() );
+        return res;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -275,4 +288,14 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         return tt_call_status;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+    }
 }

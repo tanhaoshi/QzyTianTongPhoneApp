@@ -1,7 +1,6 @@
 package com.qzy.tiantong.service.utils;
 
 import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -14,10 +13,8 @@ import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
-import com.qzy.tiantong.service.phone.IPhoneDataSyncListener;
 import com.qzy.tiantong.service.phone.data.CallLogInfo;
 import com.qzy.tiantong.service.phone.data.SmsInfo;
 
@@ -104,10 +101,9 @@ public class PhoneUtils {
         List<SmsInfo> smsInfoList = null;
         String[] projection = new String[]{"_id", "address", "person", "body", "date", "type", "read"};
         String sortOrder = "date desc limit  " + page * pageCount + "," + pageCount;
+        Uri smsUri = Uri.parse("content://sms/");
+        Cursor cursor = context.getContentResolver().query(smsUri, projection, null, null, sortOrder);
         try {
-            Uri smsUri = Uri.parse("content://sms/");
-            Cursor cursor = context.getContentResolver().query(smsUri, projection, null, null, sortOrder);
-
             String smsType;
             String smsName;
             String smsNumber;
@@ -153,6 +149,9 @@ public class PhoneUtils {
 
         } catch (Exception e) {
             e.printStackTrace();
+            cursor.close();
+        }finally {
+            cursor.close();
         }
 
         return smsInfoList;
@@ -273,9 +272,9 @@ public class PhoneUtils {
         List<CallLogInfo> callLogList = null;
         String[] projection = {CallLog.Calls._ID,CallLog.Calls.CACHED_NAME, CallLog.Calls.NUMBER, CallLog.Calls.TYPE, CallLog.Calls.DURATION, CallLog.Calls.DATE};
         String sortOrder = CallLog.Calls.DEFAULT_SORT_ORDER + " limit  " + page * pageCount + "," + pageCount;  // 从那里取  取多少个
+        Uri callLogUri = CallLog.Calls.CONTENT_URI;
+        Cursor cursor = context.getContentResolver().query(callLogUri, projection, null, null, sortOrder);
         try {
-            Uri callLogUri = CallLog.Calls.CONTENT_URI;
-            Cursor cursor = context.getContentResolver().query(callLogUri, projection, null, null, sortOrder);
             String callLogName;
             String callLogNumber;
             String callLogDate;
@@ -324,6 +323,9 @@ public class PhoneUtils {
 
         } catch (Exception e) {
             e.printStackTrace();
+            cursor.close();
+        }finally {
+            cursor.close();
         }
 
         return callLogList;

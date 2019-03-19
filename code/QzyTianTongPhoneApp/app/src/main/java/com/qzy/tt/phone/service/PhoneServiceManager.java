@@ -13,6 +13,8 @@ import com.qzy.netty.NettyClientManager;
 import com.qzy.phone.pcm.AllLocalPcmManager;
 import com.qzy.tt.phone.netty.PhoneNettyManager;
 import com.socks.library.KLog;
+import com.tt.qzy.view.utils.Constans;
+import com.tt.qzy.view.utils.SPUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -49,9 +51,11 @@ public class PhoneServiceManager {
         mContext = context;
         mPhoneNettyManager = new PhoneNettyManager(context);
 //        mQzySensorManager = new QzySensorManager(context);
-        initProtocal();
+//        if((Boolean)SPUtils.getShare(mContext, Constans.AUTO_EXITS,false)){
+            KLog.i("phone service manager start record ");
+            initProtocal();
+//        }
     }
-
 
     /**
      * 初始化通讯协议
@@ -96,7 +100,6 @@ public class PhoneServiceManager {
         }
     }
 
-
     /**
      * 开始录音
      */
@@ -104,7 +107,6 @@ public class PhoneServiceManager {
         if (mAllLocalPcmManager != null) {
             mAllLocalPcmManager.start();
         }
-
     }
 
     /**
@@ -117,12 +119,10 @@ public class PhoneServiceManager {
 
     }
 
-
     /**
      * 结束录音
      */
     public void stopProtocal() {
-
         if (mAllLocalPcmManager != null) {
             mAllLocalPcmManager.stop();
         }
@@ -138,7 +138,6 @@ public class PhoneServiceManager {
         }
     }
 
-
     /**
      * 释放
      */
@@ -148,7 +147,6 @@ public class PhoneServiceManager {
             mPhoneNettyManager.free();
         }
         releaseProtocal();
-
 //        if (mQzySensorManager != null) {
 //            mQzySensorManager.freeSenerState();
 //        }

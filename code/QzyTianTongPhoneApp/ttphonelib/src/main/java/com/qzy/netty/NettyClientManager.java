@@ -41,7 +41,6 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
         mNettyClent.starConnect(port,ip);
     }
 
-
     @Override
     public void onReceiveData(ByteBufInputStream inputStream) {
        if(iNettyListener != null){
@@ -99,7 +98,6 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
         }finally {
             mReconnectedThread = null;
         }
-
     }
 
     public void sendData(PhoneCmd cmd){

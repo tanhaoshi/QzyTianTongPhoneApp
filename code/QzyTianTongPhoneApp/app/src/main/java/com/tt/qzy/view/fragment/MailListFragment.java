@@ -84,6 +84,7 @@ public class MailListFragment extends Fragment implements PopWindow.OnDismissLis
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+        setRetainInstance(true);
         mPresenter = new MailListFragmentPresenter(getActivity());
     }
 
