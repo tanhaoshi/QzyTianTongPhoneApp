@@ -1,6 +1,9 @@
 package com.qzy.phone.pcm;
 
+import android.content.Context;
+import android.support.annotation.Keep;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.nativeaudio.NativeAudio;
 
@@ -12,16 +15,19 @@ public class AllLocalPcmManager {
 
     private Thread thread;
 
-    private static AllLocalPcmManager instance;
+    public static AllLocalPcmManager instance;
 
-    public static AllLocalPcmManager getInstance(){
+    private Context mContext;
+
+    public static AllLocalPcmManager getInstance(Context context){
         if(instance == null){
-            instance = new AllLocalPcmManager();
+            instance = new AllLocalPcmManager(context);
         }
         return  instance;
     }
 
-    private AllLocalPcmManager(){
+    private AllLocalPcmManager(Context context){
+        this.mContext = context;
         init();
     }
 
@@ -48,6 +54,7 @@ public class AllLocalPcmManager {
         try{
             Log.e("zyj","...AllLocalPcmManager........start.......");
             if(thread != null) {
+                Log.i("zyj","start play !!!!");
                 NativeAudio.startPlayer();
                 NativeAudio.startRecord();
             }
@@ -95,6 +102,7 @@ public class AllLocalPcmManager {
             e.printStackTrace();
         }
         instance = null;
+        thread = null;
     }
 
 }

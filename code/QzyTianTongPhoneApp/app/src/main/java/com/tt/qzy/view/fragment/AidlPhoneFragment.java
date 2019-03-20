@@ -15,10 +15,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.qzy.phone.pcm.AllLocalPcmManager;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
 import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
+import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.adapter.CallRecordAdapter;
 import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.manager.CallRecordManager;
@@ -189,6 +191,10 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     @Override
     public void inputString(final String diapadNumber) {
         MainActivity mainActivity = (MainActivity) getActivity();
+        if(AllLocalPcmManager.instance == null){
+            NToast.shortToast(getActivity(),"请先把语音打开,再进行通话!");
+            return;
+        }
         if(!mainActivity.isCallStatus()){
             if(mainActivity.tt_isSignal){
                 mPersenter.dialPhone(diapadNumber);
@@ -203,6 +209,10 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     @Override
     public void onClick(int position,final String diapadNumber) {
         MainActivity mainActivity = (MainActivity) getActivity();
+        if(AllLocalPcmManager.instance == null){
+            NToast.shortToast(getActivity(),"请先把语音打开,再进行通话!");
+            return;
+        }
         if(!mainActivity.isCallStatus()){
             if(mainActivity.tt_isSignal){
                 mPersenter.dialPhone(diapadNumber);

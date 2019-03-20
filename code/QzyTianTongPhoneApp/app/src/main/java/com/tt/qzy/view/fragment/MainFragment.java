@@ -244,7 +244,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
             }
         });
 
-        boolean voiceState = AllLocalPcmManager.getInstance() == null ? false : true;
+        boolean voiceState = AllLocalPcmManager.getInstance(getActivity()) == null ? false : true;
 
         record_voice_switch.setChecked(voiceState);
 
@@ -253,11 +253,11 @@ public class MainFragment extends Fragment implements MainFragmentView{
             public void onClick(View v) {
                 // onClickListener 执行速度在 onChceckListener 后面
                 if(!record_voice_switch.isChecked()){
-                    if(AllLocalPcmManager.getInstance() != null){
-                        AllLocalPcmManager.getInstance().free();
+                    if(AllLocalPcmManager.getInstance(getActivity()) != null){
+                        AllLocalPcmManager.getInstance(getActivity()).free();
                     }
                 }else{
-                    AllLocalPcmManager.getInstance();
+                    AllLocalPcmManager.getInstance(getActivity());
 
                 }
             }

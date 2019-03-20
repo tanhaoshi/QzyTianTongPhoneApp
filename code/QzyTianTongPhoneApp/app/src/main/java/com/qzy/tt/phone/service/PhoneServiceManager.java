@@ -61,7 +61,7 @@ public class PhoneServiceManager {
      * 初始化通讯协议
      */
     private void initProtocal() {
-        mAllLocalPcmManager = AllLocalPcmManager.getInstance();
+        mAllLocalPcmManager = AllLocalPcmManager.getInstance(mContext);
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -134,7 +134,7 @@ public class PhoneServiceManager {
      */
     private void releaseProtocal() {
         if (mAllLocalPcmManager != null) {
-            mAllLocalPcmManager.stop();
+            mAllLocalPcmManager.free();  // modifed by yj.zhang 2019 03 19  把onstop改成了free
         }
     }
 
