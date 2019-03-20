@@ -388,7 +388,7 @@ public class PhoneNettyManager implements IMobileDataManager{
      *
      * @param phoneState
      */
-    private void sendTtCallPhoneStateToClient(CallPhoneStateProtos.CallPhoneState.PhoneState phoneState, String phoneNumber) {
+    private synchronized void sendTtCallPhoneStateToClient(CallPhoneStateProtos.CallPhoneState.PhoneState phoneState, String phoneNumber) {
         if (checkNettManagerIsNull()) return;
         if(phoneNumber == null){
             phoneNumber = "13352528585";
@@ -401,12 +401,14 @@ public class PhoneNettyManager implements IMobileDataManager{
 
         if ((phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.CALL) || (phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.RING)) {
             if(!TextUtils.isEmpty(callInigIp)){
+                //LogUtils.i("sendTtCallPhoneStateToClient callingIp = " + callInigIp + " phonestate = " + callPhoneState.getPhoneState().ordinal());
                 mNettyServerManager.sendData(callInigIp, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
             }
         } else {
             if (TextUtils.isEmpty(callInigIp) && (phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.CALL)){
                 return;
             }
+            //LogUtils.i("sendTtCallPhoneStateToClient callingIp = null  " + " phonestate = " + callPhoneState.getPhoneState().ordinal());
             mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
         }
     }
