@@ -83,8 +83,10 @@ public class TianTongServiceManager implements ITianTongServer {
 
     public TianTongServiceManager(Context context) {
         mContext = context;
-
-        mQzyPhoneManager = new QzyPhoneManager(context, this);
+        if (isUdpPcmLocal) {
+            mLocalPcmSocketManager = new LocalPcmSocketManager(context);
+        }
+        mQzyPhoneManager = new QzyPhoneManager(context, this,mLocalPcmSocketManager);
         mTianTongHandler = new TianTongHandler(this);
         mCmdHandler = new CmdHandler(mTianTongHandler);
 
@@ -100,10 +102,6 @@ public class TianTongServiceManager implements ITianTongServer {
 
         if (isUsePmcServer) {
             mContext.startService(new Intent(mContext, PcmServices.class));
-        }
-
-        if (isUdpPcmLocal) {
-            mLocalPcmSocketManager = new LocalPcmSocketManager(context);
         }
     }
 
@@ -262,7 +260,6 @@ public class TianTongServiceManager implements ITianTongServer {
     public PhoneNettyManager getPhoneNettyManager() {
         return mPhoneNettyManager;
     }
-
 
     @Override
     public void onPhoneStateChange(TtPhoneState state) {

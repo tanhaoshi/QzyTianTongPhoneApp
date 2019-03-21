@@ -14,6 +14,7 @@ import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 
 import com.android.internal.telephony.ITelephony;
+import com.qzy.tiantong.lib.localsocket.LocalPcmSocketManager;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.atcommand.AtCommandToolManager;
 import com.qzy.tiantong.service.atcommand.AtCommandTools;
@@ -40,7 +41,9 @@ public class QzyPhoneManager {
 
     private AtCommandToolManager mAtCommandToolManager;
 
-    public QzyPhoneManager(Context context, ITianTongServer server) {
+    private LocalPcmSocketManager mLocalPcmSocketManager;
+
+    public QzyPhoneManager(Context context, ITianTongServer server,LocalPcmSocketManager localPcmSocketManager) {
         mContext = context;
         mServer = server;
 
@@ -52,6 +55,7 @@ public class QzyPhoneManager {
 
             }
         });
+        this.mLocalPcmSocketManager = localPcmSocketManager;
     }
 
     /**
