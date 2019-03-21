@@ -3,6 +3,7 @@ package com.qzy.tiantong.service.netty;
 import android.text.TextUtils;
 
 import com.google.protobuf.Message;
+import com.qzy.tiantong.lib.localsocket.LocalPcmSocketManager;
 import com.qzy.tiantong.lib.service.netty.NettyServer;
 import com.qzy.tiantong.lib.utils.ByteUtils;
 import com.qzy.tiantong.lib.utils.LogUtils;
@@ -31,9 +32,9 @@ public class NettyServerManager implements NettyServer.IServerListener {
     private INettyServerListener iNettyServerListener;
 
 
-    public NettyServerManager(INettyServerListener listener) {
+    public NettyServerManager(INettyServerListener listener, LocalPcmSocketManager localPcmSocketManager) {
         iNettyServerListener = listener;
-        mNettyServer = new NettyServer(this);
+        mNettyServer = new NettyServer(this,localPcmSocketManager);
     }
 
 

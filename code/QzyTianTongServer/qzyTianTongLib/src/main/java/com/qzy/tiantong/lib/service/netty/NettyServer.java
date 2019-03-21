@@ -1,10 +1,12 @@
 package com.qzy.tiantong.lib.service.netty;
 
 
+import com.qzy.tiantong.lib.localsocket.LocalPcmSocketManager;
 import com.qzy.tiantong.lib.power.PowerUtils;
 import com.qzy.tiantong.lib.utils.LogUtils;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.TimeUnit;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
@@ -20,8 +22,10 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
+import io.netty.handler.timeout.IdleStateHandler;
 
 /**
  * Created by yj.zhang on 2018/8/3/003.
@@ -43,8 +47,11 @@ public class NettyServer {
 
     private IServerListener iServerListener;
 
-    public NettyServer(IServerListener listener) {
+    private LocalPcmSocketManager mLocalPcmSocketManager;
+
+    public NettyServer(IServerListener listener, LocalPcmSocketManager localPcmSocketManager) {
         iServerListener = listener;
+        this.mLocalPcmSocketManager = localPcmSocketManager;
     }
 
     /**
@@ -83,7 +90,9 @@ public class NettyServer {
            /* ch.pipeline().addLast(new ProtobufVarint32FrameDecoder());
             ch.pipeline().addLast(new ProtobufVarint32LengthFieldPrepender());
             ch.pipeline().addLast(new ProtobufEncoder());*/
+            ch.pipeline().addLast(new IdleStateHandler(5, 5, 5, TimeUnit.SECONDS));
             ch.pipeline().addLast(new ChannelHander());
+            ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE,4,4,-8,0));
         }
     };
 
@@ -175,6 +184,9 @@ public class NettyServer {
                 IdleStateEvent event = (IdleStateEvent) evt;
                 if (event.state() == IdleState.READER_IDLE) {
                     LogUtils.i("ths read is idle");
+//                    if(mLocalPcmSocketManager != null){
+//                        mLocalPcmSocketManager.sendCommand(PowerUtils.sleepSystemCommand());
+//                    }
                 } else if (event.state() == IdleState.WRITER_IDLE) {
                     LogUtils.i("ths writer is idle ");
                 }else{

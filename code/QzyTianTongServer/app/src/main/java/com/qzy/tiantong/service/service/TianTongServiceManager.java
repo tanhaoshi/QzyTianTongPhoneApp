@@ -141,7 +141,7 @@ public class TianTongServiceManager implements ITianTongServer {
             public void onDisconnected(String ip) {
 
             }
-        });
+        },mLocalPcmSocketManager);
         mNettyServerManager.startNettyServer(9999);
     }
 
