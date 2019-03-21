@@ -1,6 +1,7 @@
 package com.qzy.tiantong.lib.service.netty;
 
 
+import com.qzy.tiantong.lib.power.PowerUtils;
 import com.qzy.tiantong.lib.utils.LogUtils;
 
 import java.net.InetSocketAddress;
@@ -19,6 +20,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 
 /**
  * Created by yj.zhang on 2018/8/3/003.
@@ -164,6 +167,20 @@ public class NettyServer {
             super.exceptionCaught(ctx, cause);
             Channel channel = ctx.channel();
             if(channel.isActive()) ctx.close();
+        }
+
+        @Override
+        public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+            if (IdleStateEvent.class.isAssignableFrom(evt.getClass())) {
+                IdleStateEvent event = (IdleStateEvent) evt;
+                if (event.state() == IdleState.READER_IDLE) {
+                    LogUtils.i("ths read is idle");
+                } else if (event.state() == IdleState.WRITER_IDLE) {
+                    LogUtils.i("ths writer is idle ");
+                }else{
+                    LogUtils.i("ths writer and read is idle ");
+                }
+            }
         }
     }
 
