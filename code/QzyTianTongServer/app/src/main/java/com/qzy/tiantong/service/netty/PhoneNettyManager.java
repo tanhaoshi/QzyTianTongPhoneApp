@@ -10,6 +10,7 @@ import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 
 import com.qzy.tiantong.lib.eventbus.MessageEvent;
+import com.qzy.tiantong.lib.localsocket.LocalPcmSocketManager;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.lib.utils.QzySystemUtils;
 import com.qzy.tiantong.service.BuildConfig;
@@ -100,9 +101,12 @@ public class PhoneNettyManager implements IMobileDataManager{
 
     private boolean isG4Test = false;
 
-    public PhoneNettyManager(Context context, NettyServerManager manager) {
+    private LocalPcmSocketManager mLocalPcmSocketManager;
+
+    public PhoneNettyManager(Context context, NettyServerManager manager,LocalPcmSocketManager localPcmSocketManager) {
         mContext = context;
         mNettyServerManager = manager;
+        this.mLocalPcmSocketManager = localPcmSocketManager;
 
         mDateTimeManager = new DateTimeManager(context, mNettyServerManager);
         mGpsManager = new GpsManager(mContext, mNettyServerManager);

@@ -91,7 +91,7 @@ public class TianTongServiceManager implements ITianTongServer {
         mCmdHandler = new CmdHandler(mTianTongHandler);
 
         initNettyServer();
-        initPhoneNettyManager();
+        initPhoneNettyManager(mLocalPcmSocketManager);
 
         initBroadcast();
 
@@ -158,8 +158,8 @@ public class TianTongServiceManager implements ITianTongServer {
     /**
      * 初始化 Phone客户端管理工具
      */
-    private void initPhoneNettyManager() {
-        mPhoneNettyManager = new PhoneNettyManager(mContext, mNettyServerManager);
+    private void initPhoneNettyManager(LocalPcmSocketManager localPcmSocketManager) {
+        mPhoneNettyManager = new PhoneNettyManager(mContext, mNettyServerManager,localPcmSocketManager);
     }
 
 

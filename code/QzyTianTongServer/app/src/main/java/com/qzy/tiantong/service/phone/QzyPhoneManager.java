@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.annotation.RequiresApi;
 import android.telephony.PhoneStateListener;
 import android.telephony.ServiceState;
@@ -15,6 +16,7 @@ import android.view.KeyEvent;
 
 import com.android.internal.telephony.ITelephony;
 import com.qzy.tiantong.lib.localsocket.LocalPcmSocketManager;
+import com.qzy.tiantong.lib.power.PowerUtils;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.atcommand.AtCommandToolManager;
 import com.qzy.tiantong.service.atcommand.AtCommandTools;
@@ -86,8 +88,7 @@ public class QzyPhoneManager {
      */
     public void callPhone(String ip, String phoneNum) {
 
-//        LogUtils.i("callPhone look over dormancy value = " + ModuleDormancyUtil.getNodeString(Constant.WAKE_PATH));
-//        PowerControl.doWakeup();
+        wakeupCallChannel();
 
         LogUtils.i("start call phone ...");
 
@@ -105,6 +106,28 @@ public class QzyPhoneManager {
         LogUtils.e("tel phone ..  " + phoneNum);
     }
 
+    /** 打电话之前将模块进行唤醒 */
+    private void wakeupCallChannel(){
+        int count = 0;
+        try {
+            mLocalPcmSocketManager.sendCommand(PowerUtils.wakeupCommand());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        while (!PowerControl.getTTStatus()){
+            count ++;
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(count>10){
+                LogUtils.e("Tiantong Model not be wakeup");
+                break;
+            }
+        }
+    }
+
 
     /**
      * 挂断电话
@@ -114,7 +137,11 @@ public class QzyPhoneManager {
     public void hangupPhone(String ip) {
         mServer.setEndCallingIp(ip);
         endCall();
-//        PowerControl.doSleep();
+        try {
+            mLocalPcmSocketManager.sendCommand(PowerUtils.sleepCommand());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         endCallingAndClearIp();
     }
 
@@ -313,19 +340,17 @@ public class QzyPhoneManager {
         // 入网
             if(gsmSignalStrength >= 0 && gsmSignalStrength < 97){
                 //从无到有
+                LogUtils.i("control model go to sleep");
                 if(inPreNoSignal) {
                     inPreNoSignal = false;
                     inPreSignal = true;
                     //要对它进行休眠
                     //1代表已经休眠 0代表正常可工作状态
-//                    LogUtils.i("look over node value = " + ModuleDormancyUtil.getNodeString(Constant.WAKE_PATH));
-//                    if (PowerControl.getTTStatus()) {
-//                        //== 于0 要让它去休眠
-//                        PowerControl.doSleep();
-//                    }
+                    PowerUtils.sleepCommand();
                 }//从有到有
             }else{
                 //从有到无
+                LogUtils.i("control model go to wakeup ");
                 if(inPreSignal) {
                     inPreNoSignal = true;
                     inPreSignal = false;
