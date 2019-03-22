@@ -244,7 +244,9 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     @Override
     protected void onResume() {
         super.onResume();
-//        SPUtils.putShare(MainActivity.this,Constans.AUTO_EXITS,true);
+        KLog.i("MainActivity onResume ... ");
+        SPUtils.putShare(MainActivity.this,Constans.AUTO_EXITS,true);
+        startService();
         Integer recordCount = (Integer)SPUtils.getShare(MainActivity.this, Constans.RECORD_ISREAD,0);
         remind(String.valueOf(recordCount),callBadgeView);
         Integer shortMessageCount = (Integer)SPUtils.getShare(MainActivity.this,Constans.SHORTMESSAGE_ISREAD,0);
@@ -259,7 +261,6 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     @Override
     protected void onStart() {
         super.onStart();
-        startService();
         mPresenter.getAppversionRequest();
     }
 
@@ -270,9 +271,9 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
      */
     private void startService() {
         if(mPresenter.checkPermissionExist()){
-            if(!AppUtils.isServiceRunning("com.qzy.tt.phone.service.TtPhoneService",MainActivity.this)){
+//            if(!AppUtils.isServiceRunning("com.qzy.tt.phone.service.TtPhoneService",MainActivity.this)){
                 startService(new Intent(this, TtPhoneService.class));
-            }
+//            }
         }else{
             mPresenter.requestPermission(Build.BRAND,this, Manifest.permission.RECORD_AUDIO);
             startService(new Intent(this, TtPhoneService.class));
@@ -287,8 +288,8 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     }
 
     public void release(){
-//        SPUtils.putShare(MainActivity.this,Constans.AUTO_EXITS,false);
-//        AllLocalPcmManager.getInstance().free();
+        SPUtils.removeShare(MainActivity.this,Constans.AUTO_EXITS);
+        AllLocalPcmManager.getInstance(MainActivity.this).free();
         NiftyExpandDialog.getInstance(MainActivity.this).release();
         mPresenter.release();
     }
@@ -331,7 +332,7 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
                 dateDialog.dismiss();
 //                TraceServiceImpl.stopService();
                 finishAffinity();
-//                System.exit(0);
+                System.exit(0);
             }
         });
     }

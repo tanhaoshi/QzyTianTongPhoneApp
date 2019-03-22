@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
+import android.support.annotation.Keep;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
 
@@ -84,6 +85,7 @@ public class PhoneUtils {
             case TelephonyManager.SIM_STATE_PUK_REQUIRED:
             case TelephonyManager.SIM_STATE_NETWORK_LOCKED:
             default:
+                LogUtils.i("sim state ready = " + simState);
                 result = false;
                 break;
         }

@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tt.qzy.view.R;
-import com.tt.qzy.view.bean.MallListModel;
 import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.utils.Constans;
 

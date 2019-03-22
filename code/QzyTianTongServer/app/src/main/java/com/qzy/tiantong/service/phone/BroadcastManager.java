@@ -48,6 +48,8 @@ public class BroadcastManager {
         intentFilter.addAction("com.qzy.tt.ACTION_RECOVERY_WIFI"); //恢复出厂设置
         intentFilter.addAction(PhoneUtils.actionstrDelCallback);
         intentFilter.addAction(ACTION_PRECISE_CALL_STATE_CHANGED); //监听系统层电话状态
+        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
         mContext.registerReceiver(mReceiver, intentFilter);
     }
 
@@ -112,6 +114,10 @@ public class BroadcastManager {
                 doMasterClear(context);
             }else if(action.equals(ACTION_PRECISE_CALL_STATE_CHANGED)){
                 disposePhoneState(intent);
+            }else if(action.equals(Intent.ACTION_SCREEN_ON)){
+                LogUtils.i("The system process broad cast on");
+            }else if(action.equals(Intent.ACTION_SCREEN_OFF)){
+                LogUtils.i("The system process broad cast off");
             }
         }
     };
@@ -126,7 +132,6 @@ public class BroadcastManager {
            mServer.initTtPcmDevice();
            mServer.onPhoneStateChange(TtPhoneState.RING);
        }
-
     }
 
     /**

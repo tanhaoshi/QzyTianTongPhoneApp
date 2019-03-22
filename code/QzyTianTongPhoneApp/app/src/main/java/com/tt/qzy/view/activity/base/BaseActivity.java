@@ -184,6 +184,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
      * 设备有无插入sim卡
      */
     private void getTianTongSimcardStatsu(boolean status){
+        KLog.i("sim status = " + status);
         if(status){
             tt_isSim = true;
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));

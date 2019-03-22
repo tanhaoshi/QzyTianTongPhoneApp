@@ -108,23 +108,20 @@ public class QzyPhoneManager {
 
     /** 打电话之前将模块进行唤醒 */
     private void wakeupCallChannel(){
-        int count = 0;
+//        while (true){
+//            try {
+//                LogUtils.i("delayed 3000 start");
+//                Thread.sleep(3000);
+//                LogUtils.i("delayed 3000 end");
+//                break;
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
         try {
             mLocalPcmSocketManager.sendCommand(PowerUtils.wakeupCommand());
         } catch (RemoteException e) {
             e.printStackTrace();
-        }
-        while (!PowerControl.getTTStatus()){
-            count ++;
-            try {
-                Thread.sleep(300);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if(count>10){
-                LogUtils.e("Tiantong Model not be wakeup");
-                break;
-            }
         }
     }
 
@@ -347,6 +344,7 @@ public class QzyPhoneManager {
                     //要对它进行休眠
                     //1代表已经休眠 0代表正常可工作状态
                     try {
+                        LogUtils.i("control model go to sleep");
                         mLocalPcmSocketManager.sendCommand(PowerUtils.sleepCommand());
                     } catch (RemoteException e) {
                         e.printStackTrace();
@@ -367,10 +365,8 @@ public class QzyPhoneManager {
     }
 
     public void release() {
-
         if (mAtCommandToolManager != null) {
             mAtCommandToolManager.free();
         }
-
     }
 }

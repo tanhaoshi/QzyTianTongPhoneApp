@@ -281,6 +281,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:background="@color/white"

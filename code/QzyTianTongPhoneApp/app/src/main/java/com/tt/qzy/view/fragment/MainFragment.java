@@ -68,8 +68,8 @@ public class MainFragment extends Fragment implements MainFragmentView{
     SwitchCompat sc_settin_testxinlv;
     @BindView(R.id.sc_settin_data)
     SwitchCompat sc_settin_data;
-    @BindView(R.id.record_voice_switch)
-    SwitchCompat record_voice_switch;
+//    @BindView(R.id.record_voice_switch)
+//    SwitchCompat record_voice_switch;
     @BindView(R.id.frameLayout)
     FrameLayout mFrameLayout;
     @BindView(R.id.circle_loading_view)
@@ -244,24 +244,24 @@ public class MainFragment extends Fragment implements MainFragmentView{
             }
         });
 
-        boolean voiceState = AllLocalPcmManager.getInstance(getActivity()) == null ? false : true;
-
-        record_voice_switch.setChecked(voiceState);
-
-        record_voice_switch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // onClickListener 执行速度在 onChceckListener 后面
-                if(!record_voice_switch.isChecked()){
-                    if(AllLocalPcmManager.getInstance(getActivity()) != null){
-                        AllLocalPcmManager.getInstance(getActivity()).free();
-                    }
-                }else{
-                    AllLocalPcmManager.getInstance(getActivity());
-
-                }
-            }
-        });
+//        boolean voiceState = AllLocalPcmManager.getInstance(getActivity()) == null ? false : true;
+//
+//        record_voice_switch.setChecked(voiceState);
+//
+//        record_voice_switch.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // onClickListener 执行速度在 onChceckListener 后面
+//                if(!record_voice_switch.isChecked()){
+//                    if(AllLocalPcmManager.getInstance(getActivity()) != null){
+//                        AllLocalPcmManager.getInstance(getActivity()).free();
+//                    }
+//                }else{
+//                    AllLocalPcmManager.getInstance(getActivity());
+//
+//                }
+//            }
+//        });
     }
 
     @OnClick({R.id.main_editors, R.id.main_settings, R.id.tmt_noEntry})

@@ -51,10 +51,10 @@ public class PhoneServiceManager {
         mContext = context;
         mPhoneNettyManager = new PhoneNettyManager(context);
 //        mQzySensorManager = new QzySensorManager(context);
-//        if((Boolean)SPUtils.getShare(mContext, Constans.AUTO_EXITS,false)){
+        if(SPUtils.containsShare(context,Constans.AUTO_EXITS)){
             KLog.i("phone service manager start record ");
             initProtocal();
-//        }
+        }
     }
 
     /**
