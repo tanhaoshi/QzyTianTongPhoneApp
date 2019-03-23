@@ -77,6 +77,7 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
 
     private BadgeView callBadgeView;
     private BadgeView shortMessageBadgeView;
+    private HomeKeyListenerHelper mHelper;
 
     public FrameLayout getBottomBar() {
         return bottomBar;
@@ -101,6 +102,8 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
 
     @Override
     public void initView() {
+        mHelper = new HomeKeyListenerHelper(MainActivity.this);
+        mHelper.registerHomeKeyListener(this);
         showMainFragment();
         mPresenter = new MainActivityPresenter(this);
         mPresenter.onBindView(this);
@@ -441,7 +444,11 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
 
     @Override
     public void onHomeKeyShortPressed() {
-
+        if(AllLocalPcmManager.getInstance(MainActivity.this) != null){
+            AllLocalPcmManager.getInstance(MainActivity.this).free();
+            mHelper.unregisterHomeKeyListener();
+            finishAffinity();
+        }
     }
 
     @Override

@@ -191,10 +191,6 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     @Override
     public void inputString(final String diapadNumber) {
         MainActivity mainActivity = (MainActivity) getActivity();
-        if(AllLocalPcmManager.instance == null){
-            NToast.shortToast(getActivity(),"请先把语音打开,再进行通话!");
-            return;
-        }
         if(!mainActivity.isCallStatus()){
             if(mainActivity.tt_isSignal){
                 mPersenter.dialPhone(diapadNumber);
@@ -209,10 +205,6 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     @Override
     public void onClick(int position,final String diapadNumber) {
         MainActivity mainActivity = (MainActivity) getActivity();
-        if(AllLocalPcmManager.instance == null){
-            NToast.shortToast(getActivity(),"请先把语音打开,再进行通话!");
-            return;
-        }
         if(!mainActivity.isCallStatus()){
             if(mainActivity.tt_isSignal){
                 mPersenter.dialPhone(diapadNumber);
