@@ -76,8 +76,6 @@ public class TianTongServiceManager implements ITianTongServer {
     //管理server与phone端通讯命令
     private PhoneNettyManager mPhoneNettyManager;
 
-    //系统休眠控制类
-    private SystemSleepManager mSystemSleepManager;
 
     private boolean isUdpPcmLocal = true;
     private LocalPcmSocketManager mLocalPcmSocketManager;
@@ -93,9 +91,7 @@ public class TianTongServiceManager implements ITianTongServer {
         mCmdHandler = new CmdHandler(mTianTongHandler);
 
         initNettyServer();
-        initPhoneNettyManager(mLocalPcmSocketManager);
-
-        mSystemSleepManager = new SystemSleepManager(mContext,mPhoneNettyManager,mLocalPcmSocketManager);
+        initPhoneNettyManager();
 
         initBroadcast();
 
@@ -145,7 +141,7 @@ public class TianTongServiceManager implements ITianTongServer {
             public void onDisconnected(String ip) {
 
             }
-        },mLocalPcmSocketManager);
+        });
         mNettyServerManager.startNettyServer(9999);
     }
 
@@ -162,8 +158,8 @@ public class TianTongServiceManager implements ITianTongServer {
     /**
      * 初始化 Phone客户端管理工具
      */
-    private void initPhoneNettyManager(LocalPcmSocketManager localPcmSocketManager) {
-        mPhoneNettyManager = new PhoneNettyManager(mContext, mNettyServerManager,localPcmSocketManager);
+    private void initPhoneNettyManager() {
+        mPhoneNettyManager = new PhoneNettyManager(mContext, mNettyServerManager);
     }
 
 
@@ -253,12 +249,6 @@ public class TianTongServiceManager implements ITianTongServer {
             mLocalPcmSocketManager.release();
         }
 
-        if(mSystemSleepManager != null){
-
-            mSystemSleepManager.free();
-        }
-
-
     }
 
     @Override
@@ -269,11 +259,6 @@ public class TianTongServiceManager implements ITianTongServer {
     @Override
     public PhoneNettyManager getPhoneNettyManager() {
         return mPhoneNettyManager;
-    }
-
-    @Override
-    public SystemSleepManager getSystemSleepManager() {
-        return mSystemSleepManager;
     }
 
     @Override
