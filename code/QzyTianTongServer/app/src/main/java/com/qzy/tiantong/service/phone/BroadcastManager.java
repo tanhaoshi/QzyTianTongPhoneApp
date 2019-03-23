@@ -44,6 +44,7 @@ public class BroadcastManager {
         intentFilter.addAction("com.test.incoming");
         intentFilter.addAction("com.test");
         intentFilter.addAction("com.test.close");
+        intentFilter.addAction("com.test.sleep");
         intentFilter.addAction("com.qzy.phone.state");
         intentFilter.addAction("com.qzy.tt.ACTION_RECOVERY_WIFI"); //恢复出厂设置
         intentFilter.addAction(PhoneUtils.actionstrDelCallback);
@@ -106,6 +107,11 @@ public class BroadcastManager {
                // mServer.closeRecorderAndPlayer();
                 mServer.freeTtPcmDevice();
 
+            }else if (action.equals("com.test.sleep")) {
+                //关闭设备
+                // mServer.closeRecorderAndPlayer();
+                mServer.getSystemSleepManager().doSleeep();
+
             }else if(action.equals(PhoneUtils.actionstrDelCallback)){
 
             }else if(action.equals("com.qzy.tt.ACTION_RECOVERY_WIFI")){
@@ -116,6 +122,7 @@ public class BroadcastManager {
                 disposePhoneState(intent);
             }else if(action.equals(Intent.ACTION_SCREEN_ON)){
                 LogUtils.i("The system process broad cast on");
+                mServer.getSystemSleepManager().controlSystemSleep();
             }else if(action.equals(Intent.ACTION_SCREEN_OFF)){
                 LogUtils.i("The system process broad cast off");
             }

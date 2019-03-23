@@ -18,6 +18,8 @@ public interface ITianTongServer {
 
     PhoneNettyManager getPhoneNettyManager();
 
+    SystemSleepManager getSystemSleepManager();
+
     boolean setCurrenCallingIp(String ip);
     void setEndCallingIp(String ip);
 

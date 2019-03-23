@@ -108,16 +108,6 @@ public class QzyPhoneManager {
 
     /** 打电话之前将模块进行唤醒 */
     private void wakeupCallChannel(){
-//        while (true){
-//            try {
-//                LogUtils.i("delayed 3000 start");
-//                Thread.sleep(3000);
-//                LogUtils.i("delayed 3000 end");
-//                break;
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
         try {
             mLocalPcmSocketManager.sendCommand(PowerUtils.wakeupCommand());
         } catch (RemoteException e) {
@@ -306,7 +296,7 @@ public class QzyPhoneManager {
                     break;
                 case PhoneUtils.NETWORKTYPE_NONE:
                     LogUtils.e("network type none,signaleS = " + gsmSignalStrength);
-                    controlSignalStrength(gsmSignalStrength);
+//                    controlSignalStrength(gsmSignalStrength);
                     mServer.onPhoneSignalStrengthChange(gsmSignalStrength);
                     break;
                 case -1:
@@ -330,39 +320,39 @@ public class QzyPhoneManager {
         }
     }
 
-    private boolean inPreSignal = false;
-    private boolean inPreNoSignal = true;
-    @android.support.annotation.RequiresApi(api = Build.VERSION_CODES.O)
-    private synchronized void controlSignalStrength(int gsmSignalStrength){
-        // 入网
-            if(gsmSignalStrength >= 0 && gsmSignalStrength < 97){
-                //从无到有
-                LogUtils.i("control model go to sleep");
-                if(inPreNoSignal) {
-                    inPreNoSignal = false;
-                    inPreSignal = true;
-                    //要对它进行休眠
-                    //1代表已经休眠 0代表正常可工作状态
-                    try {
-                        LogUtils.i("control model go to sleep");
-                        mLocalPcmSocketManager.sendCommand(PowerUtils.sleepCommand());
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    }
-                }//从有到有
-            }else{
-                //从有到无
-                LogUtils.i("control model go to wakeup ");
-                if(inPreSignal) {
-                    inPreNoSignal = true;
-                    inPreSignal = false;
-                    LogUtils.i("signal loss do wakeup\n");
-//                    if(!PowerControl.getTTStatus()) {
-//                        PowerControl.doWakeup();
+//    private boolean inPreSignal = false;
+//    private boolean inPreNoSignal = true;
+//    @android.support.annotation.RequiresApi(api = Build.VERSION_CODES.O)
+//    private synchronized void controlSignalStrength(int gsmSignalStrength){
+//        // 入网
+//            if(gsmSignalStrength >= 0 && gsmSignalStrength < 97){
+//                //从无到有
+//                LogUtils.i("control model go to sleep");
+//                if(inPreNoSignal) {
+//                    inPreNoSignal = false;
+//                    inPreSignal = true;
+//                    //要对它进行休眠
+//                    //1代表已经休眠 0代表正常可工作状态
+//                    try {
+//                        LogUtils.i("control model go to sleep");
+//                        mLocalPcmSocketManager.sendCommand(PowerUtils.sleepCommand());
+//                    } catch (RemoteException e) {
+//                        e.printStackTrace();
 //                    }
-                }//从无到无
-            }
-    }
+//                }//从有到有
+//            }else{
+//                //从有到无
+//                LogUtils.i("control model go to wakeup ");
+//                if(inPreSignal) {
+//                    inPreNoSignal = true;
+//                    inPreSignal = false;
+//                    LogUtils.i("signal loss do wakeup\n");
+////                    if(!PowerControl.getTTStatus()) {
+////                        PowerControl.doWakeup();
+////                    }
+//                }//从无到无
+//            }
+//    }
 
     public void release() {
         if (mAtCommandToolManager != null) {

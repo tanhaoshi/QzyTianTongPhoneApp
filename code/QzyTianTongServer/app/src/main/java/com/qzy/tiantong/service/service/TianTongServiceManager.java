@@ -76,6 +76,8 @@ public class TianTongServiceManager implements ITianTongServer {
     //管理server与phone端通讯命令
     private PhoneNettyManager mPhoneNettyManager;
 
+    //系统休眠控制类
+    private SystemSleepManager mSystemSleepManager;
 
     private boolean isUdpPcmLocal = true;
     private LocalPcmSocketManager mLocalPcmSocketManager;
@@ -92,6 +94,8 @@ public class TianTongServiceManager implements ITianTongServer {
 
         initNettyServer();
         initPhoneNettyManager(mLocalPcmSocketManager);
+
+        mSystemSleepManager = new SystemSleepManager(mContext,mPhoneNettyManager,mLocalPcmSocketManager);
 
         initBroadcast();
 
@@ -249,6 +253,12 @@ public class TianTongServiceManager implements ITianTongServer {
             mLocalPcmSocketManager.release();
         }
 
+        if(mSystemSleepManager != null){
+
+            mSystemSleepManager.free();
+        }
+
+
     }
 
     @Override
@@ -259,6 +269,11 @@ public class TianTongServiceManager implements ITianTongServer {
     @Override
     public PhoneNettyManager getPhoneNettyManager() {
         return mPhoneNettyManager;
+    }
+
+    @Override
+    public SystemSleepManager getSystemSleepManager() {
+        return mSystemSleepManager;
     }
 
     @Override

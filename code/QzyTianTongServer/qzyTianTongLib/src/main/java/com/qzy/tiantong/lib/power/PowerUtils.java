@@ -13,6 +13,9 @@ public final class PowerUtils {
     public static byte[] sleep_system = new byte[]{(byte)0xAA, (byte)0x55 ,(byte)0x01 ,(byte)0x08};
 
 
+    public static byte[] check_tt_mode_sleep = new byte[]{(byte)0xAA, (byte)0x55 ,(byte)0x01 ,(byte)0x06};
+
+
     public static byte[] wakeupCommand() {
         return wakeup_command;
     }
@@ -22,6 +25,10 @@ public final class PowerUtils {
     }
 
     public static byte[] sleepSystemCommand(){
+        return sleep_system;
+    }
+
+    public static byte[] checkTtModeCommand(){
         return sleep_system;
     }
 }

@@ -5,12 +5,14 @@ import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.os.RemoteException;
 import android.support.annotation.Keep;
 import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 
 import com.qzy.tiantong.lib.eventbus.MessageEvent;
 import com.qzy.tiantong.lib.localsocket.LocalPcmSocketManager;
+import com.qzy.tiantong.lib.power.PowerUtils;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.lib.utils.QzySystemUtils;
 import com.qzy.tiantong.service.BuildConfig;
@@ -58,6 +60,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -74,9 +77,9 @@ public class PhoneNettyManager implements IMobileDataManager{
     private PhoneClientManager mPhoneClientManager;
 
     private Runnable mStateThread;
-    private CallPhoneStateProtos.CallPhoneState.PhoneState currentPhoneState;
+    public CallPhoneStateProtos.CallPhoneState.PhoneState currentPhoneState;
     private String currentPhoneNumber = "";
-    private int currentSignalValue = 99;
+    public int currentSignalValue = 99;
 
     private Context mContext;
 
@@ -96,8 +99,6 @@ public class PhoneNettyManager implements IMobileDataManager{
     private MobileDataManager mMobileDataManager;
 
     private TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery;
-
-    private Timer timerCalling;
 
     private boolean isG4Test = false;
 
@@ -152,28 +153,11 @@ public class PhoneNettyManager implements IMobileDataManager{
 
     };
 
-
-    /**
-     * 初始化电量管理
-     */
-    private void initBattery() {
-        mBatteryManager = new QzyBatteryManager(mContext, new QzyBatteryManager.onBatteryListenr() {
-            @Override
-            public void onBattery(int level, int scal) {
-                if (ttPhoneBattery == null) {
-                    ttPhoneBattery = TtPhoneBatteryProtos.TtPhoneBattery.newBuilder()
-                            .setLevel(level)
-                            .setScale(scal)
-                            .build();
-                }
-            }
-        });
-    }
-
     /**
      * 初始化发送线程
      */
     private void initSendThread() {
+        //如果有人电话,该方法可以退出执行
         mStateThread = new Runnable() {
             @Override
             public void run() {
@@ -351,8 +335,14 @@ public class PhoneNettyManager implements IMobileDataManager{
         } else if (state == TtPhoneState.HUANGUP) {
             phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.HUANGUP;
             if (currentPhoneState != phoneState) {
+
+                //恢复地网来电底层在休眠状态下主动给的标志位
+                mSmsPhoneManager.isKeyF2Incoming = false;
+
                 PhoneClientManager.getInstance().setEndCallUser();
                 sendTtCallPhoneBackToClientTimer();
+
+
             }
         } else if (state == TtPhoneState.INCOMING) {
             phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.INCOMING;

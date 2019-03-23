@@ -168,18 +168,18 @@ public class SmsPhoneManager {
                     }
                 }*/
 
-
-            } else if (action.equals("android.intent.action.GLOBAL_BUTTON") ) {
+                // flag
+            } else if (action.equals("android.intent.action.GLOBAL_BUTTON")) {
                 KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
                 if ((event.getKeyCode() == KeyEvent.KEYCODE_TV)) {
                     if (KeyEvent.ACTION_DOWN == event.getAction()) {
                         downEventCount++;
-                        if ((downEventCount > 40)&&(!mSosStarted)){
+                        if ((downEventCount > 40) && (!mSosStarted)) {
                             mSosStarted = true;
 //                            startSendSosMsg();
                             startSendSosMsgAndGPS();
                             LedManager.setSosLedStatus(true);
-                        }else if((downEventCount < 41) && mSosStarted){
+                        } else if ((downEventCount < 41) && mSosStarted) {
                             stopSendSosMsgAndGPS();
                             mCallback.onSosState(false);
 //                            stopSendSosMsg();
@@ -189,10 +189,14 @@ public class SmsPhoneManager {
                     } else if (KeyEvent.ACTION_UP == event.getAction()) {
                         downEventCount = 0;
                     }
+                } else if ((event.getKeyCode() == KeyEvent.KEYCODE_F2)) {
+                    isKeyF2Incoming = true;
                 }
             }
         }
     };
+
+    public boolean isKeyF2Incoming = false;
 
 
     /**
@@ -309,7 +313,7 @@ public class SmsPhoneManager {
      */
     public void updateSmsRead(TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessage) {
         boolean isFlag = true;
-        if(isFlag){
+        if (isFlag) {
             long id = ttShortMessage.getId();
             LogUtils.d("id = " + id);
             PhoneUtils.writeSmsRead(mContext, id);
@@ -361,11 +365,11 @@ public class SmsPhoneManager {
      * 发送sos短信
      */
     private Thread mThreadSendSos = null;
-    private boolean isThread = true;
+    public boolean isThread = true;
     private Runnable mRunnable = null;
 
-    public void startSendSosMsgAndGPS(){
-        try{
+    public void startSendSosMsgAndGPS() {
+        try {
 
             final SosMessage sosMessage = TtPhoneSystemanager.getSosMessage();
 
@@ -373,13 +377,13 @@ public class SmsPhoneManager {
                 LogUtils.e("sosMessage is null ....");
             }
 
-            final int delayTime = sosMessage.getDelayTime() * 1000 ;
+            final int delayTime = sosMessage.getDelayTime() * 1000;
 
-            if(mGpsManager != null){
+            if (mGpsManager != null) {
                 mGpsManager.openGps();
             }
 
-            if(mCallback != null){
+            if (mCallback != null) {
                 mCallback.onSosState(true);
             }
 
@@ -393,7 +397,7 @@ public class SmsPhoneManager {
                         location = mGpsManager.getmCurrenLocation();
                     }
 
-                    if(sosMessage != null){
+                    if (sosMessage != null) {
 
                         String message = sosMessage.getMessage();
 
@@ -405,7 +409,7 @@ public class SmsPhoneManager {
                             message = message + "纬度:" + AppUtils.decimalDouble(Double.valueOf(location.getLatitude()))
                                     + "经度:" + AppUtils.decimalDouble(Double.valueOf(location.getLongitude()));
                             LogUtils.d("message = " + message);
-                        }else{
+                        } else {
                             message = message + "纬度:" + "  " + "经度:" + "  ";
                         }
 
@@ -415,17 +419,17 @@ public class SmsPhoneManager {
                             sendSms("192.168.43.1", phone, message);
                         }
 
-                        mHandler.postDelayed(mRunnable,delayTime);
+                        mHandler.postDelayed(mRunnable, delayTime);
                     }
                 }
             };
 
-            if(isThread){
+            if (isThread) {
                 mHandler.post(mRunnable);
                 isThread = false;
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -449,7 +453,7 @@ public class SmsPhoneManager {
                     }
 
                     if (mCallback != null) {
-                          mCallback.onSosState(true);
+                        mCallback.onSosState(true);
                     }
 
                     while (true) {
@@ -460,7 +464,7 @@ public class SmsPhoneManager {
                                 location = mGpsManager.getmCurrenLocation();
                             }
 
-                            if(sosMessage != null){
+                            if (sosMessage != null) {
 
                                 String message = sosMessage.getMessage();
 
@@ -488,7 +492,7 @@ public class SmsPhoneManager {
                 }
             });
 
-            if(isThread){
+            if (isThread) {
                 mThreadSendSos.start();
                 isThread = false;
             }
@@ -501,26 +505,26 @@ public class SmsPhoneManager {
     /**
      * 停止发送SOS短信及GPS
      */
-    public void stopSendSosMsgAndGPS(){
-        try{
+    public void stopSendSosMsgAndGPS() {
+        try {
             downEventCount = 0;
-            if(mRunnable != null){
-                if(mHandler != null){
+            if (mRunnable != null) {
+                if (mHandler != null) {
                     mHandler.removeCallbacks(mRunnable);
                 }
                 mRunnable = null;
             }
 
-            if(mCallback != null){
+            if (mCallback != null) {
                 mCallback.onSosState(false);
             }
 
-            if(mGpsManager != null){
+            if (mGpsManager != null) {
                 mGpsManager.closeGps();
             }
 
             isThread = true;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -548,10 +552,11 @@ public class SmsPhoneManager {
 
     /**
      * 获取天通猫初始化状态
+     *
      * @return
      */
-    public boolean isSosState(){
-        if(mThreadSendSos == null){
+    public boolean isSosState() {
+        if (mThreadSendSos == null) {
             return false;
         }
         return true;
