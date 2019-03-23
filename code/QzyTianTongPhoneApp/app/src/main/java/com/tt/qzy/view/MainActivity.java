@@ -34,6 +34,7 @@ import com.tt.qzy.view.fragment.ShortMessageFragment;
 import com.tt.qzy.view.layout.BadgeView;
 import com.tt.qzy.view.layout.NiftyExpandDialog;
 import com.tt.qzy.view.presenter.activity.MainActivityPresenter;
+import com.tt.qzy.view.receiver.HomeKeyListenerHelper;
 import com.tt.qzy.view.trace.TraceServiceImpl;
 import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.Constans;
@@ -48,7 +49,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class MainActivity extends BaseActivity<MainActivityView> implements MainActivityView{
+public class MainActivity extends BaseActivity<MainActivityView> implements MainActivityView,HomeKeyListenerHelper.HomeKeyListener{
 
     @BindView(R.id.shortMessage)
     Button shortMessage;
@@ -438,4 +439,13 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
         IntentWrapper.onBackPressed(this);
     }
 
+    @Override
+    public void onHomeKeyShortPressed() {
+
+    }
+
+    @Override
+    public void onHomeKeyLongPressed() {
+
+    }
 }
