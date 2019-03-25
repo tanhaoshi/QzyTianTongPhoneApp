@@ -159,7 +159,7 @@ public final class SystemSleepManager {
             mLocalPcmSocketManager.sendCommand(PowerUtils.sleepCommand());
 
 
-            mLocalPcmSocketManager.sendCommand(PowerUtils.checkTtModeCommand());
+//            mLocalPcmSocketManager.sendCommand(PowerUtils.checkTtModeCommand());
 
 
             LogUtils.i("control system go to sleep end  = " + isTtSleep);

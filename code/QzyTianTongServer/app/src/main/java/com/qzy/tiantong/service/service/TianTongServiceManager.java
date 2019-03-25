@@ -86,7 +86,7 @@ public class TianTongServiceManager implements ITianTongServer {
         if (isUdpPcmLocal) {
             mLocalPcmSocketManager = new LocalPcmSocketManager(context);
         }
-        mQzyPhoneManager = new QzyPhoneManager(context, this,mLocalPcmSocketManager);
+        mQzyPhoneManager = new QzyPhoneManager(context, this);
         mTianTongHandler = new TianTongHandler(this);
         mCmdHandler = new CmdHandler(mTianTongHandler);
 

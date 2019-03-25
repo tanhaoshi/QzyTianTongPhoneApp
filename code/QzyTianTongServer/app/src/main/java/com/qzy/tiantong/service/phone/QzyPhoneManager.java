@@ -41,9 +41,7 @@ public class QzyPhoneManager {
 
     private AtCommandToolManager mAtCommandToolManager;
 
-    private LocalPcmSocketManager mLocalPcmSocketManager;
-
-    public QzyPhoneManager(Context context, ITianTongServer server,LocalPcmSocketManager localPcmSocketManager) {
+    public QzyPhoneManager(Context context, ITianTongServer server) {
         mContext = context;
         mServer = server;
 
@@ -55,7 +53,6 @@ public class QzyPhoneManager {
 
             }
         });
-        this.mLocalPcmSocketManager = localPcmSocketManager;
     }
 
     /**
@@ -163,8 +160,6 @@ public class QzyPhoneManager {
             e.printStackTrace();
         }
     }
-
-
 
     private boolean answerRingCall() {
         // IBinder iBinder = ServiceManager.getService(TELEPHONY_SERVICE);

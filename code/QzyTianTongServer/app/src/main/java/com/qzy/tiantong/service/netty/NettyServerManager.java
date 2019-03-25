@@ -32,9 +32,9 @@ public class NettyServerManager implements NettyServer.IServerListener {
     private INettyServerListener iNettyServerListener;
 
 
-    public NettyServerManager(INettyServerListener listener, LocalPcmSocketManager localPcmSocketManager) {
+    public NettyServerManager(INettyServerListener listener) {
         iNettyServerListener = listener;
-        mNettyServer = new NettyServer(this,localPcmSocketManager);
+        mNettyServer = new NettyServer(this);
     }
 
 

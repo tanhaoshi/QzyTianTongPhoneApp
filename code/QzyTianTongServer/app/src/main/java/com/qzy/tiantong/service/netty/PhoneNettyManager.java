@@ -73,9 +73,9 @@ public class PhoneNettyManager implements IMobileDataManager{
     private PhoneClientManager mPhoneClientManager;
 
     private Runnable mStateThread;
-    private CallPhoneStateProtos.CallPhoneState.PhoneState currentPhoneState;
+    public CallPhoneStateProtos.CallPhoneState.PhoneState currentPhoneState;
     private String currentPhoneNumber = "";
-    private int currentSignalValue = 99;
+    public int currentSignalValue = 99;
 
     private Context mContext;
 

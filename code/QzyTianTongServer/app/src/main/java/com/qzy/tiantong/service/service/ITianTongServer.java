@@ -1,7 +1,6 @@
 package com.qzy.tiantong.service.service;
 
 
-import com.qzy.tiantong.lib.localsocket.LocalPcmSocketManager;
 import com.qzy.tiantong.service.netty.PhoneNettyManager;
 import com.qzy.tiantong.service.phone.QzyPhoneManager;
 import com.qzy.tiantong.service.phone.TtPhoneState;
@@ -18,7 +17,7 @@ public interface ITianTongServer {
 
     PhoneNettyManager getPhoneNettyManager();
 
-    SystemSleepManager getSystemSleepManager();
+//    SystemSleepManager getSystemSleepManager();
 
     boolean setCurrenCallingIp(String ip);
     void setEndCallingIp(String ip);

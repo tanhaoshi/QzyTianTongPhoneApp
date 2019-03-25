@@ -47,11 +47,8 @@ public class NettyServer {
 
     private IServerListener iServerListener;
 
-    private LocalPcmSocketManager mLocalPcmSocketManager;
-
-    public NettyServer(IServerListener listener, LocalPcmSocketManager localPcmSocketManager) {
+    public NettyServer(IServerListener listener) {
         iServerListener = listener;
-        this.mLocalPcmSocketManager = localPcmSocketManager;
     }
 
     /**
@@ -180,21 +177,18 @@ public class NettyServer {
 
         @Override
         public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-            if (IdleStateEvent.class.isAssignableFrom(evt.getClass())) {
-                IdleStateEvent event = (IdleStateEvent) evt;
+//            if (IdleStateEvent.class.isAssignableFrom(evt.getClass())) {
+//                IdleStateEvent event = (IdleStateEvent) evt;
 //                if (event.state() == IdleState.READER_IDLE) {
 //                    LogUtils.i("ths read is idle");
 //                    if(mLocalPcmSocketManager != null){
 //                        LogUtils.i("ths system go to sleep");
-//                        mLocalPcmSocketManager.sendCommand(PowerUtils.sleepSystemCommand());
-//                        LogUtils.i("ths ststem go to sleep 1");
 //                    }
 //                } else if (event.state() == IdleState.WRITER_IDLE) {
 //                    LogUtils.i("ths writer is idle ");
 //                }else{
 //                    LogUtils.i("ths writer and read is idle ");
 //                }
-            }
         }
     }
 
