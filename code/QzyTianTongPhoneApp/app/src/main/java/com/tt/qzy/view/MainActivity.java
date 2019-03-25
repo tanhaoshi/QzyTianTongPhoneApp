@@ -35,7 +35,6 @@ import com.tt.qzy.view.layout.BadgeView;
 import com.tt.qzy.view.layout.NiftyExpandDialog;
 import com.tt.qzy.view.presenter.activity.MainActivityPresenter;
 import com.tt.qzy.view.receiver.HomeKeyListenerHelper;
-import com.tt.qzy.view.trace.TraceServiceImpl;
 import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NToast;
@@ -248,7 +247,6 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     @Override
     protected void onResume() {
         super.onResume();
-        KLog.i("MainActivity onResume ... ");
         SPUtils.putShare(MainActivity.this,Constans.AUTO_EXITS,true);
         startService();
         Integer recordCount = (Integer)SPUtils.getShare(MainActivity.this, Constans.RECORD_ISREAD,0);
@@ -293,7 +291,12 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
 
     public void release(){
         SPUtils.removeShare(MainActivity.this,Constans.AUTO_EXITS);
-        AllLocalPcmManager.getInstance(MainActivity.this).free();
+        mHelper.unregisterHomeKeyListener();
+        if(AllLocalPcmManager.instance != null){
+            AllLocalPcmManager.instance.free();
+        }else{
+            AllLocalPcmManager.getInstance(MainActivity.this).free();
+        }
         NiftyExpandDialog.getInstance(MainActivity.this).release();
         mPresenter.release();
     }
@@ -444,10 +447,11 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
 
     @Override
     public void onHomeKeyShortPressed() {
-        if(AllLocalPcmManager.getInstance(MainActivity.this) != null){
+        if(AllLocalPcmManager.instance != null){
+            AllLocalPcmManager.instance.free();
+            SPUtils.removeShare(MainActivity.this,Constans.AUTO_EXITS);
+        }else{
             AllLocalPcmManager.getInstance(MainActivity.this).free();
-            mHelper.unregisterHomeKeyListener();
-            finishAffinity();
         }
     }
 

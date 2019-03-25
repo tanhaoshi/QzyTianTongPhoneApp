@@ -58,7 +58,7 @@ public class CmdHandler {
      *
      * @param inputStream
      */
-    public void handlerCmd(ByteBufInputStream inputStream) {
+    public synchronized void handlerCmd(ByteBufInputStream inputStream) {
         try {
 
             if (inputStream.available() > 0 && PrototocalTools.readToFour0x5aHeaderByte(inputStream)) {

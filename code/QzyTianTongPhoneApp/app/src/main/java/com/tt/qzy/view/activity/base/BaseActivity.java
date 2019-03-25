@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.nativeaudio.NativeAudio;
 import com.qzy.data.PhoneCmd;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
@@ -18,9 +17,11 @@ import com.qzy.phone.pcm.AllLocalPcmManager;
 import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.phone.common.CommonData;
 import com.socks.library.KLog;
+import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.layout.BatteryView;
 import com.tt.qzy.view.presenter.activity.BaseActivityPresenter;
+import com.tt.qzy.view.receiver.HomeKeyListenerHelper;
 import com.tt.qzy.view.service.TimerService;
 import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.Constans;
@@ -184,7 +185,6 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
      * 设备有无插入sim卡
      */
     private void getTianTongSimcardStatsu(boolean status){
-        KLog.i("sim status = " + status);
         if(status){
             tt_isSim = true;
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
@@ -208,7 +208,6 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     }
 
     private void onBatteryInfoReceiver(int intLevel, int intScale) {
-        KLog.i("receive information from the server battery intLevel * 100 = " + intLevel * 100 +" : intScale = " + intScale);
         int percent = intLevel * 100 / intScale;
         img1.setPower(percent);
         percentBaterly.setText(percent+"%");
@@ -297,6 +296,5 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-
     }
 }

@@ -92,7 +92,7 @@ public class PrototocalTools {
         return false;
     }*/
 
-    public static boolean readToFour0x5aHeaderByte(ByteBufInputStream stream) throws IOException {
+    public synchronized static boolean readToFour0x5aHeaderByte(ByteBufInputStream stream) throws IOException {
         int countIndex = 0;
         boolean isProtocal = false;
         while (true) {
