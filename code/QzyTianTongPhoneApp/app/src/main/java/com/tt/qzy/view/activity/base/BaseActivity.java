@@ -209,9 +209,11 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
 
     private void onBatteryInfoReceiver(int intLevel, int intScale) {
         int percent = intLevel * 100 / intScale;
-        img1.setPower(percent);
-        percentBaterly.setText(percent+"%");
-        tt_baterly = percent;
+        if(tt_baterly != percent){
+            img1.setPower(percent);
+            percentBaterly.setText(percent+"%");
+            tt_baterly = percent;
+        }
     }
 
     /**

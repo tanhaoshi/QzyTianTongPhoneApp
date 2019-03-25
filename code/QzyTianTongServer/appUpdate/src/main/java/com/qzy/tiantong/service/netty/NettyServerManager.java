@@ -33,7 +33,7 @@ public class NettyServerManager implements NettyServer.IServerListener {
 
     public NettyServerManager(INettyServerListener listener) {
         iNettyServerListener = listener;
-        mNettyServer = new NettyServer(this,null);
+        mNettyServer = new NettyServer(this);
     }
 
 

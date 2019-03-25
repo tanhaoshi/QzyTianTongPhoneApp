@@ -56,6 +56,7 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
         }else {
             EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_NONCONNECT));
 //            startReconnected(port,ip);
+            mNettyClent.stopConnected();
         }
         if(iNettyListener != null){
             if(state) {

@@ -8,10 +8,13 @@ import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.phone.data.SmsBean;
+import com.socks.library.KLog;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.SPUtils;
 import com.tt.qzy.view.utils.TimeTask;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.TimerTask;
 
 public class TimerService extends Service{
@@ -33,12 +36,15 @@ public class TimerService extends Service{
     public void onCreate() {
         super.onCreate();
         String timerStr =  (String) SPUtils.getShare(this,Constans.CRY_HELP_TIMETIMER,"60");
+        KLog.i(" seconds data time = "+timerStr);
         Long timerDuration = Long.valueOf(timerStr) * 1000 ;
         if(mTimeTask == null){
             mTimeTask = new TimeTask(timerDuration, new TimerTask() {
                 @Override
                 public void run() {
+                    KLog.i("data time start = "+System.currentTimeMillis());
                     timerSendMessage();
+                    KLog.i("data time end   =" + System.currentTimeMillis());
                 }
             });
             mTimeTask.start();

@@ -182,6 +182,8 @@ public class NettyClient {
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable throwable) throws Exception {
             LogUtils.e("exceptionCaught ",throwable);
             connectHanlerCtx = ctx;
+            ctx.close();
+            groupConnected = null;
         }
 
         @Override
@@ -212,6 +214,7 @@ public class NettyClient {
             if(mThread != null && mThread.isAlive()){
                 mThread.interrupt();
             }
+            groupConnected = null;
         }catch (Exception e){
             e.printStackTrace();
         }
