@@ -10,7 +10,7 @@ public final class PowerUtils {
     public static byte[] sleep_command = new byte[]{(byte) 0xAA, (byte) 0x55,(byte) 0x01,(byte)0x05};
 
 
-    private static byte[] wakeupCommand() {
+    public static byte[] wakeupCommand() {
         return wakeup_command;
     }
 

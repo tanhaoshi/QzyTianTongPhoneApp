@@ -92,45 +92,46 @@ public class PrototocalTools {
         return false;
     }*/
 
-    public synchronized static boolean readToFour0x5aHeaderByte(ByteBufInputStream stream) throws IOException {
+    public static boolean readToFour0x5aHeaderByte(ByteBufInputStream stream) throws IOException {
         int countIndex = 0;
         boolean isProtocal = false;
         while (true) {
-            byte val = stream.readByte();
-            if(!isStartHeaderByte(val)){
-                continue;
+            synchronized (PrototocalTools.class){
+                byte val = stream.readByte();
+
+                if(!isStartHeaderByte(val)){
+                    continue;
+                }
+                countIndex += 1;
+
+                val = stream.readByte();
+                if(!isStartHeaderByte(val)){
+                    countIndex = 0;
+                    continue;
+                }
+
+                countIndex += 1;
+
+                val = stream.readByte();
+                if(!isStartHeaderByte(val)){
+                    countIndex = 0;
+                    continue;
+                }
+
+                countIndex += 1;
+
+                val = stream.readByte();
+                if(!isStartHeaderByte(val)){
+                    countIndex = 0;
+                    continue;
+                }
+
+                countIndex += 1;
+                if(countIndex > 3){
+                    isProtocal = true;
+                    break;
+                }
             }
-            countIndex += 1;
-
-            val = stream.readByte();
-            if(!isStartHeaderByte(val)){
-                countIndex = 0;
-                continue;
-            }
-
-            countIndex += 1;
-
-            val = stream.readByte();
-            if(!isStartHeaderByte(val)){
-                countIndex = 0;
-                continue;
-            }
-
-            countIndex += 1;
-
-            val = stream.readByte();
-            if(!isStartHeaderByte(val)){
-                countIndex = 0;
-                continue;
-            }
-
-            countIndex += 1;
-            if(countIndex > 3){
-                isProtocal = true;
-                break;
-            }
-
-
         }
 
         return isProtocal;

@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.qzy.data.PhoneCmd;
 import com.qzy.eventbus.EventBusUtils;
 import com.qzy.eventbus.IMessageEventBustType;
@@ -21,6 +22,7 @@ import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.SmsBean;
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.MsgAdapter;
 import com.tt.qzy.view.bean.MsgModel;
@@ -120,18 +122,20 @@ public class SendShortMessageActivity extends AppCompatActivity {
             List<ShortMessageDao> daoList =
                     ShortMessageManager.getInstance(this).queryShortMessageCondition(intent.getStringExtra(Constans.SHORT_MESSAGE_PHONE));
 
+            KLog.i("look short message = " + JSON.toJSONString(daoList));
+
             for(ShortMessageDao shortMessageDao : daoList){
 
                 MsgModel msgModel = new MsgModel(shortMessageDao.getMessage(), Integer.valueOf(shortMessageDao.getState()));
 
                 msgList.add(msgModel);
 
-                adapter.setData(msgList);
-
                 if(!shortMessageDao.getIsStatus()){
                     disposeChangeRead(shortMessageDao);
                 }
             }
+
+            adapter.setData(msgList);
 
 //            if(daoList.size() == 0){
 //                return;

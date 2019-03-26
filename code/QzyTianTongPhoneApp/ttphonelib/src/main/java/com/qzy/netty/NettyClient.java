@@ -6,6 +6,7 @@ import com.socks.library.KLog;
 
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import io.netty.bootstrap.Bootstrap;
@@ -34,9 +35,6 @@ public class NettyClient {
 
     private NioEventLoopGroup groupConnected;
 
-    //连接线程
-    private Thread mThread;
-
     //发送数据句柄
     public ChannelHandlerContext connectHanlerCtx;
 
@@ -50,17 +48,20 @@ public class NettyClient {
     /**
      * 连接服务
      */
+    Bootstrap bootstrap = null;
+    ExecutorService executorService = null;
     public void starConnect(final int port, final String ip){
-        mThread =  new Thread(new Runnable() {
+        executorService = ThreadUtils.getCachedPool();
+        executorService.execute(new Runnable() {
             @Override
             public void run() {
-                groupConnected = new NioEventLoopGroup();
-                try {
-                    // Client服务启动器 3.x的ClientBootstrap
-                    // 改为Bootstrap，且构造函数变化很大，这里用无参构造。
+                try
+                {
+                    if(groupConnected == null){
+                        groupConnected = new NioEventLoopGroup();
+                    }
+                    bootstrap = new Bootstrap();
 
-                    Bootstrap bootstrap = new Bootstrap();
-                    // 指定channel类型
                     bootstrap.channel(NioSocketChannel.class);
                     // 指定Handler
                     bootstrap.handler(connectedChannelInitializer);
@@ -68,12 +69,11 @@ public class NettyClient {
                     bootstrap.group(groupConnected);
                     // 连接到目标IP的8000端口的服务端
                     Channel channel = bootstrap.connect(new InetSocketAddress(ip, port)).sync().channel();
-                } catch (Exception e) {
+                }catch (Exception e){
                     e.printStackTrace();
                 }
             }
         });
-        mThread.start();
     }
 
     /**
@@ -211,10 +211,11 @@ public class NettyClient {
             if(groupConnected != null){
                 groupConnected.shutdownGracefully();
             }
-            if(mThread != null && mThread.isAlive()){
-                mThread.interrupt();
-            }
-            groupConnected = null;
+//            if(executorService != null){
+//                executorService.shutdown();
+//            }
+//            groupConnected = null;
+//            executorService = null;
         }catch (Exception e){
             e.printStackTrace();
         }
