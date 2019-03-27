@@ -202,10 +202,7 @@ public class CmdHandler {
       //gps 位置
       parseGpsPosition(PrototocalTools.IProtoClientIndex.tt_gps_position,send.getTtPhoneGpsPosition());
 
-
-
     }
-
 
     /**
      * 解析电话状态并发送到ui
@@ -232,7 +229,6 @@ public class CmdHandler {
      * @param ttPhoneBattery
      */
     private void pasreCallPhoneBattery(int protoId,TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery){
-       // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_BATTERY,protoId, ttPhoneBattery);
         if(mAllDataListener != null){
             mAllDataListener.isTtPhoneBattery(ttPhoneBattery.getLevel(),ttPhoneBattery.getScale());
         }
@@ -244,7 +240,6 @@ public class CmdHandler {
      * @param ttPhoneSimCard
      */
     private void parseSimCard(int protoId, TtPhoneSimCards.TtPhoneSimCard ttPhoneSimCard){
-       // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SIM_CARD,protoId,ttPhoneSimCard);
         if(mAllDataListener != null){
             mAllDataListener.isTtSimCard(ttPhoneSimCard.getIsSimCard());
         }
@@ -256,7 +251,6 @@ public class CmdHandler {
      * @param phoneSignalStrength
      */
     private void parseSiganStregth(int protoId,TtPhoneSignalProtos.PhoneSignalStrength phoneSignalStrength){
-        //sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SIGNAL,protoId,phoneSignalStrength);
         if(mAllDataListener != null){
             mAllDataListener.isTtSignalStrength(phoneSignalStrength.getSignalStrength());
         }

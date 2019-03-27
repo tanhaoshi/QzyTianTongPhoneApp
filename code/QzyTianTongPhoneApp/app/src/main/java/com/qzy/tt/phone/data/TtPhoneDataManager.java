@@ -43,7 +43,6 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
     //baseActivityPersenter 回调
     private ITtPhoneDataListener iTtPhoneDataListener;
 
-
     //数据同步操作类
     private SyncManager mSyncManager;
 
@@ -58,7 +57,6 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
      * 初始化
      */
     public void init(Context context, PhoneNettyManager manager) {
-        KLog.i("是否初始化!");
         if(instance == null) {
             instance = new TtPhoneDataManager();
         }
@@ -73,8 +71,6 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     }
 
-
-
     /**
      * 初始化同步数据
      *
@@ -83,7 +79,6 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
     private void initSyncDataModel(Context context) {
         mSyncManager = new SyncManager(context);
     }
-
 
     /**
      * 所有数据监听

@@ -20,9 +20,7 @@ public class BaseActivityPresenter extends BasePresenter<BaseMainView> implement
         this.mContext = context;
     }
 
-    /**
-     * 设置底层数据监听
-     */
+    /** 设置底层数据监听 */
     public void setTtPhoneDataListener() {
         if (TtPhoneDataManager.getInstance() != null) {
             TtPhoneDataManager.getInstance().setTtPhoneDataListener(this);
@@ -90,17 +88,17 @@ public class BaseActivityPresenter extends BasePresenter<BaseMainView> implement
 
     @Override
     public void isTtSignalStrength(int signalLevel) {
-
+        mView.get().isTtSignalStrength(signalLevel);
     }
 
     @Override
     public void isTtSimCard(boolean isIn) {
-
+        mView.get().isTtSimCard(isIn);
     }
 
     @Override
     public void isTtPhoneBattery(int level, int scal) {
-
+        mView.get().isTtPhoneBattery(level,scal);
     }
 
 }

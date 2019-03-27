@@ -19,7 +19,6 @@ import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.impl.IMainFragment;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.utils.IPUtil;
-import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.activity.UserEditorsActivity;
@@ -30,7 +29,6 @@ import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.NetworkUtil;
 import com.tt.qzy.view.view.MainFragmentView;
 
-import io.reactivex.Observable;
 
 
 /**

@@ -253,6 +253,8 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
         remind(String.valueOf(recordCount),callBadgeView);
         Integer shortMessageCount = (Integer)SPUtils.getShare(MainActivity.this,Constans.SHORTMESSAGE_ISREAD,0);
         remind(String.valueOf(shortMessageCount),shortMessageBadgeView);
+        //设置数据
+        setDataListener();
     }
 
     public void showRecordRead(){
@@ -280,10 +282,6 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
             mPresenter.requestPermission(Build.BRAND,this, Manifest.permission.RECORD_AUDIO);
             startService(new Intent(this, TtPhoneService.class));
         }
-
-
-        //设置数据
-        setDataListener();
     }
 
     /*

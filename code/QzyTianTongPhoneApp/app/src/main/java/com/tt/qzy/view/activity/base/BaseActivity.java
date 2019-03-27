@@ -18,6 +18,7 @@ import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSignalProtos;
 import com.qzy.tt.data.TtPhoneSimCards;
 import com.qzy.tt.phone.common.CommonData;
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.layout.BatteryView;
 import com.tt.qzy.view.presenter.activity.BaseActivityPresenter;
@@ -31,6 +32,12 @@ import com.tt.qzy.view.view.base.BaseView;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity implements BaseMainView{
 
@@ -69,7 +76,6 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(getContentView());
         ButterKnife.bind(this);
-      //  EventBus.getDefault().register(this);
         mPresenter = new BaseActivityPresenter(this);
         mPresenter.onBindView(this);
         if(!isInitView){
@@ -99,7 +105,6 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-       // EventBus.getDefault().unregister(this);
         m.unbind();
     }
 
@@ -183,22 +188,16 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         }
     }
 
-    /**
-     * 连接设备成功
-     */
-    private void connectTianTongSuccess(){
-        tt_status = true;
-        SPUtils.putShare(BaseActivity.this, Constans.TTM_STATUS,tt_status);
-        img5.setImageDrawable(getResources().getDrawable(R.drawable.search_network));
-    }
-
-    /**
-     * 连接天通失败
-     */
-    private void connectTianTongFailed(){
-        tt_status = false;
-        SPUtils.putShare(BaseActivity.this, Constans.TTM_STATUS,tt_status);
-        img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonetwork));
+    /** 连接设备成功 */
+    public void connectTianTongControl(boolean connectState){
+        tt_status = connectState;
+        if(tt_status){
+            SPUtils.putShare(BaseActivity.this, Constans.TTM_STATUS,tt_status);
+            img5.setImageDrawable(getResources().getDrawable(R.drawable.search_network));
+        }else{
+            SPUtils.putShare(BaseActivity.this, Constans.TTM_STATUS,tt_status);
+            img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonetwork));
+        }
     }
 
     /**
@@ -309,12 +308,17 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    public void isTtPhoneBattery(int level,int scal) {
+        onBatteryInfoReceiver(level,scal);
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    public void isTtSimCard(boolean isIn) {
+        getTianTongSimcardStatsu(isIn);
+    }
+
+    @Override
+    public void isTtSignalStrength(int signalLevel) {
+        onTiantongInfoReceiver(signalLevel);
     }
 }

@@ -22,6 +22,7 @@ import com.qzy.tt.data.TtPhonePositionProtos;
 import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.SettingsActivity;
+import com.tt.qzy.view.activity.base.BaseActivity;
 import com.tt.qzy.view.layout.CircleImageView;
 import com.tt.qzy.view.layout.NiftyExpandDialog;
 import com.tt.qzy.view.presenter.fragment.MainFragmentPresenter;
@@ -225,10 +226,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
         }
     }
 
-    /**
-     * 设置连接天通状态显示
-     * @param isConnected
-     */
+    /** 设置连接天通状态显示 */
     private void setConnectStateView(boolean isConnected) {
         if (isConnected) {
             mCircleImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.yilianjie));
@@ -237,6 +235,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
             mCircleImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.weilianjie));
             connect.setText(getResources().getString(R.string.TMT_click_connect));
         }
+        mainActivity.connectTianTongControl(isConnected);
     }
 
     @Override
