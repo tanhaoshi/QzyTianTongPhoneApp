@@ -4,9 +4,7 @@ import android.content.Context;
 
 import com.alibaba.fastjson.JSON;
 import com.qzy.data.PhoneCmd;
-import com.qzy.eventbus.EventBusUtils;
-import com.qzy.eventbus.IMessageEventBustType;
-import com.qzy.eventbus.MessageEventBus;
+
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.socks.library.KLog;
@@ -21,9 +19,7 @@ import com.tt.qzy.view.presenter.baselife.BasePresenter;
 import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.view.ShortMessageView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,9 +56,9 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
         ProtobufMessageModel protobufMessageModel = new ProtobufMessageModel();
         protobufMessageModel.setDelete(true);
 
-        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.
+       /* EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.
                 EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_DELETE_SIGNAL_SHORT_MESSAGE
-                ,protobufMessageModel));
+                ,protobufMessageModel));*/
 
         ShortMessageManager.getInstance(mContext).deleteShortMessageList();
     }

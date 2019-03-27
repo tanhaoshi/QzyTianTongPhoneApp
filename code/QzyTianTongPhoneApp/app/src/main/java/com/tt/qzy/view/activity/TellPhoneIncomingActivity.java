@@ -11,9 +11,7 @@ import android.widget.TextView;
 
 import com.qzy.data.PhoneCmd;
 import com.qzy.data.PhoneStateUtils;
-import com.qzy.eventbus.EventBusUtils;
-import com.qzy.eventbus.IMessageEventBustType;
-import com.qzy.eventbus.MessageEventBus;
+
 import com.qzy.ring.RingManager;
 import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.phone.common.CommonData;
@@ -29,9 +27,6 @@ import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.utils.SPUtils;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Date;
 import java.util.List;
@@ -71,7 +66,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         if (!TextUtils.isEmpty(phoneNumber) && phoneNumber.length() >= 3) {
         }
         mTellPhoneActivityPresenter = new TellPhoneActivityPresenter(this);
-        EventBusUtils.register(this);
+      //  EventBusUtils.register(this);
     }
 
     @OnClick({R.id.btn_accept, R.id.btn_endcall})
@@ -124,7 +119,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         return name;
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+   /* @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_STATE:
@@ -134,7 +129,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
                 onTianTongCallStatus(event.getObject());
                 break;
         }
-    }
+    }*/
 
     public void onTianTongCallStatus(Object o){
         PhoneCmd cmd = (PhoneCmd) o;
@@ -226,8 +221,8 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
             recordCount = recordCount + 1;
             SPUtils.putShare(this,Constans.RECORD_ISREAD,recordCount);
 
-            EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_RECORD_CALL_HISTROY
-                    ,Integer.valueOf(recordCount)));
+          /*  EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_RECORD_CALL_HISTROY
+                    ,Integer.valueOf(recordCount)));*/
             isAlert = false;
         }
     }
@@ -236,7 +231,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         RingManager.stopDefaultCallMediaPlayer(TtPhoneApplication.getInstance());
-        EventBusUtils.unregister(this);
+       // EventBusUtils.unregister(this);
         isAlert = true;
     }
 }

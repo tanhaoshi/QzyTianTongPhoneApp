@@ -17,9 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
-import com.qzy.eventbus.EventBusUtils;
-import com.qzy.eventbus.IMessageEventBustType;
-import com.qzy.eventbus.MessageEventBus;
+
 import com.qzy.phone.pcm.AllLocalPcmManager;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
@@ -361,8 +359,8 @@ public class MainFragment extends Fragment implements MainFragmentView{
                     @Override
                     public void onClick(View v) {
                         viewTransition(true);
-                        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_UPLOAD_APP
-                                ,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));
+             /*           EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_UPLOAD_APP
+                                ,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));*/
                         dialogBuilder.niftyDismiss();
 
                     }

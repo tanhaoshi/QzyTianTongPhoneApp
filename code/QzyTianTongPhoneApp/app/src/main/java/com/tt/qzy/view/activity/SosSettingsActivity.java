@@ -8,8 +8,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.qzy.eventbus.IMessageEventBustType;
-import com.qzy.eventbus.MessageEventBus;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.base.BaseActivity;
@@ -18,7 +16,6 @@ import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.SPUtils;
 
-import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -119,13 +116,13 @@ public class SosSettingsActivity extends BaseActivity {
             SPUtils.putShare(SosSettingsActivity.this,Constans.CRY_HELP_TIMETIMER,defaultValue);
         }
 
-        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_SENDMESSAGE,new
+       /* EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_SENDMESSAGE,new
                 SosSendMessageModel(SPUtils.getShare(SosSettingsActivity.this,
                 Constans.CRY_HELP_SHORTMESSAGE,getString(R.string.TMT_please_input_shortMessage)).toString(),
                 SPUtils.getShare(SosSettingsActivity.this,
                 Constans.CRY_HELP_PHONE,getString(R.string.TMT_please_input_phone)).toString(),
                 Integer.valueOf(SPUtils.getShare(SosSettingsActivity.this,
-                        Constans.CRY_HELP_TIMETIMER,getString(R.string.TMT_please_input_timetimer)).toString()))));
+                        Constans.CRY_HELP_TIMETIMER,getString(R.string.TMT_please_input_timetimer)).toString()))));*/
 
         NToast.shortToast(SosSettingsActivity.this,getString(R.string.TMT_save_succeed));
 

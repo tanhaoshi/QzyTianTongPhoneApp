@@ -8,8 +8,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
-import com.qzy.eventbus.IMessageEventBustType;
-import com.qzy.eventbus.MessageEventBus;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.DeleteShortMessageAdapter;
@@ -20,7 +18,6 @@ import com.tt.qzy.view.presenter.activity.DeleteShortMessagePresenter;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.view.DeleteShortMessageView;
 
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,9 +88,7 @@ public class DeleteShortMessageActivity extends AppCompatActivity implements Del
                     protobufMessageModel.setPhoneNumber(phone);
                     protobufMessageModel.setServerId(id);
                     protobufMessageModel.setDelete(false);
-                    EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.
-                            EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_DELETE_SIGNAL_SHORT_MESSAGE
-                            ,protobufMessageModel));
+                  //  EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_DELETE_SIGNAL_SHORT_MESSAGE,protobufMessageModel));
 
                     List<ShortMessageDao> daoList = ShortMessageManager.getInstance(DeleteShortMessageActivity.this)
                             .queryShortMessageCondition(phone);

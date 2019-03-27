@@ -6,9 +6,6 @@ import com.google.protobuf.ByteString;
 import com.qzy.androidftp.FtpClienManager;
 import com.qzy.data.PhoneCmd;
 import com.qzy.data.PrototocalTools;
-import com.qzy.eventbus.EventBusUtils;
-import com.qzy.eventbus.IMessageEventBustType;
-import com.qzy.eventbus.MessageEventBus;
 import com.qzy.netty.NettyClientManager;
 import com.qzy.tt.data.CallPhoneProtos;
 import com.qzy.tt.data.TtCallRecordProtos;
@@ -43,9 +40,6 @@ import com.tt.qzy.view.bean.WifiSettingModel;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.SPUtils;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -70,7 +64,6 @@ public class PhoneNettyManager {
 
     public PhoneNettyManager(Context context) {
         mContext = context;
-        EventBusUtils.register(this);
         mNettyClientManager = new NettyClientManager(nettyListener);
         mCmdHandler = new CmdHandler(context);
         KLog.i("TtPhoneService boolean flag value = " + (Boolean) SPUtils.getShare(mContext, Constans.SERVER_FLAG,false));
@@ -139,10 +132,17 @@ public class PhoneNettyManager {
         boolean isconnected = mNettyClientManager.isConnected();
         //设置全局状态
         CommonData.getInstance().setConnected(isconnected);
-        if (isconnected) {
-            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SUCCESS));
-        } else {
-            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_FAILED));
+        sendConnectedState(isconnected);
+    }
+
+
+    /**
+     * 返回连接状态到应用层
+     * @param isconnected
+     */
+    private void sendConnectedState(boolean isconnected){
+        if( mCmdHandler.getmDataListener() != null){
+            mCmdHandler.getmDataListener().isTtServerConnected(isconnected);
         }
     }
 
@@ -311,8 +311,7 @@ public class PhoneNettyManager {
             @Override
             public void started() {
                 LogUtils.e("-----------------started");
-                EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_PERCENT
-                        ,Integer.valueOf(0)));
+                //EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_PERCENT,Integer.valueOf(0)));
             }
 
             @Override
@@ -501,7 +500,8 @@ public class PhoneNettyManager {
         @Override
         public void onDisconnected() {
             KLog.i("netty disconnected ...");
-            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_NONCONNECT));
+            //EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_NONCONNECT));
+            sendConnectedState(false);
             if(mCmdHandler != null){
                 mCmdHandler.resetPhoneState();
             }
@@ -509,7 +509,7 @@ public class PhoneNettyManager {
         }
     };
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+   /* @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG:
@@ -593,7 +593,7 @@ public class PhoneNettyManager {
                 break;
         }
     }
-
+*/
     /**
      * 发送命令到设备
      *
@@ -609,12 +609,16 @@ public class PhoneNettyManager {
      * 释放
      */
     public void free() {
-        EventBusUtils.unregister(this);
         if (mNettyClientManager != null) {
             mNettyClientManager.release();
         }
         CommonData.getInstance().free();
         mCmdHandler.release();
+    }
+
+
+    public CmdHandler getmCmdHandler() {
+        return mCmdHandler;
     }
 
 

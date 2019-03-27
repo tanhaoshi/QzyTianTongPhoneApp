@@ -15,7 +15,6 @@ import com.tt.qzy.view.evenbus.MainFragmentEvenbus;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NetworkUtil;
 
-import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by qzy009 on 2018/8/28.

@@ -11,9 +11,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.qzy.eventbus.EventBusUtils;
-import com.qzy.eventbus.IMessageEventBustType;
-import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.phone.common.CommonData;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.TellPhoneActivity;
@@ -95,8 +92,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
                         return;
                     }
 
-                    EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,
-                            mContactsModelns.get(position).getPhone()));
+                  //  EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL, mContactsModelns.get(position).getPhone()));
 
                     Intent intent = new Intent(mContext, TellPhoneActivity.class);
                     intent.putExtra("diapadNumber", mContactsModelns.get(position).getPhone());

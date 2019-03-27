@@ -18,8 +18,6 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.qzy.data.PhoneCmd;
-import com.qzy.eventbus.IMessageEventBustType;
-import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
@@ -40,9 +38,6 @@ import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.PinyinUtils;
 import com.tt.qzy.view.view.ShortMessageView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -104,7 +99,7 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
         ButterKnife.bind(this, view);
         mPresenter.onBindView(this);
         initView();
-        EventBus.getDefault().register(this);
+      //  EventBus.getDefault().register(this);
         return view;
     }
 
@@ -290,14 +285,14 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
         shortMessageAdapter.setData(null);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    /*@Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SHORT_MESSAGE:
                 parseSmsreciver(event.getObject());
                 break;
         }
-    }
+    }*/
 
     /**
      * 解析收到短息
@@ -315,6 +310,6 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
     @Override
     public void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+       // EventBus.getDefault().unregister(this);
     }
 }

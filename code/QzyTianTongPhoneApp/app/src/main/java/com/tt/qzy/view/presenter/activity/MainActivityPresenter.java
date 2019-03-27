@@ -18,8 +18,6 @@ import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.Status;
-import com.qzy.eventbus.IMessageEventBustType;
-import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.socks.library.KLog;
 import com.tt.qzy.view.application.TtPhoneApplication;
@@ -32,9 +30,6 @@ import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.view.MainActivityView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 import java.util.List;
@@ -54,7 +49,7 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView>{
 
     public MainActivityPresenter(Context context){
         this.mContext = context;
-        EventBus.getDefault().register(this);
+       // EventBus.getDefault().register(this);
     }
 
     public void getAppversionRequest(){
@@ -158,7 +153,7 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView>{
                 });
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+   /* @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_RECORD_CALL_HISTROY:
@@ -170,7 +165,7 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView>{
                 mView.get().showShortMessageRead(true,integers);
                 break;
         }
-    }
+    }*/
 
     /**
      * 将服务端的系统数据库修改未接状态
@@ -189,12 +184,11 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView>{
                     .build();
             listRecorder.addCallRecord(callRecord);
         }
-        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_RECORD_CALL_STATUS,
-                listRecorder.build()));
+       // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_RECORD_CALL_STATUS, listRecorder.build()));
     }
 
     public void release(){
-        EventBus.getDefault().unregister(this);
+       // EventBus.getDefault().unregister(this);
         mContext = null;
     }
 

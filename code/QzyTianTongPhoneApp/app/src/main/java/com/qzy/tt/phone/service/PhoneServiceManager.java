@@ -3,24 +3,15 @@ package com.qzy.tt.phone.service;
 import android.content.Context;
 
 
-import com.qzy.QzySensorManager;
 import com.qzy.data.PhoneCmd;
 import com.qzy.data.PhoneStateUtils;
-import com.qzy.eventbus.EventBusUtils;
-import com.qzy.eventbus.IMessageEventBustType;
-import com.qzy.eventbus.MessageEventBus;
-import com.qzy.netty.NettyClientManager;
 import com.qzy.phone.pcm.AllLocalPcmManager;
+import com.qzy.tt.phone.data.TtPhoneDataManger;
 import com.qzy.tt.phone.netty.PhoneNettyManager;
 import com.socks.library.KLog;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.SPUtils;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import io.netty.buffer.ByteBufInputStream;
 
 /**
  * Created by yj.zhang on 2018/7/31/031.
@@ -37,6 +28,7 @@ public class PhoneServiceManager {
 
     private AllLocalPcmManager mAllLocalPcmManager;
 
+
     /**
      * sensor
      *
@@ -44,14 +36,12 @@ public class PhoneServiceManager {
      */
 
 //    private QzySensorManager mQzySensorManager;
-
-
     public PhoneServiceManager(Context context) {
-        EventBusUtils.register(this);
         mContext = context;
         mPhoneNettyManager = new PhoneNettyManager(context);
+        TtPhoneDataManger.init(mPhoneNettyManager);
 //        mQzySensorManager = new QzySensorManager(context);
-        if(SPUtils.containsShare(context,Constans.AUTO_EXITS)){
+        if (SPUtils.containsShare(context, Constans.AUTO_EXITS)) {
             KLog.i("phone service manager start record ");
             initProtocal();
         }
@@ -64,17 +54,18 @@ public class PhoneServiceManager {
         mAllLocalPcmManager = AllLocalPcmManager.getInstance(mContext);
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    /*@Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_STATE:
                 updatePhoneState((PhoneCmd) event.getObject());
                 break;
         }
-    }
+    }*/
 
     /**
      * 更新天通电话状态
+     *
      * @param cmd
      */
     private void updatePhoneState(PhoneCmd cmd) {
@@ -142,11 +133,17 @@ public class PhoneServiceManager {
      * 释放
      */
     public void relese() {
-        EventBusUtils.unregister(this);
         if (mPhoneNettyManager != null) {
             mPhoneNettyManager.free();
         }
+
+        if (TtPhoneDataManger.getInstance() != null) {
+            TtPhoneDataManger.getInstance().free();
+        }
+
         releaseProtocal();
+
+
 //        if (mQzySensorManager != null) {
 //            mQzySensorManager.freeSenerState();
 //        }

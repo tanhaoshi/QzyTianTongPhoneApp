@@ -6,12 +6,10 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.net.wifi.WifiManager;
 import android.text.TextUtils;
-import android.util.Log;
+
 
 import com.qzy.data.PhoneCmd;
-import com.qzy.eventbus.EventBusUtils;
-import com.qzy.eventbus.IMessageEventBustType;
-import com.qzy.eventbus.MessageEventBus;
+
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhoneMobileDataProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
@@ -38,9 +36,7 @@ import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.NetworkUtil;
 import com.tt.qzy.view.view.MainFragmentView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+
 
 import java.io.IOException;
 import java.util.Date;
@@ -56,7 +52,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
 
     public MainFragementPersenter(Context context) {
         mContext = context;
-        EventBus.getDefault().register(this);
+        //EventBus.getDefault().register(this);
     }
 
     /**
@@ -69,7 +65,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
             public void run() {
                 try {
                     Thread.sleep(200);
-                    EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SELECTED));
+                    //EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SELECTED));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -130,7 +126,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
             return;
         }
 
-        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));
+       // EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));
 
     }
 
@@ -138,15 +134,15 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
      * 关闭连接
      */
     public void stopConnect(){
-        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_DISCONNECT_TIANTONG));
+       // EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_DISCONNECT_TIANTONG));
     }
 
     /**
      * 请求gps准确位置
      */
     public void requestGpsPosition(boolean isSwitch){
-        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_ACCURACY_POSITION,
-                new TtBeidouOpenBean(isSwitch)));
+        /*EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_ACCURACY_POSITION,
+                new TtBeidouOpenBean(isSwitch)));*/
     }
 
     /**
@@ -155,10 +151,10 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
     public void requestServerVersion(){
         AssetManager assetManager = mContext.getAssets();
         try {
-            EventBus.getDefault().post(new MessageEventBus((IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_APP_VERSION),
+           /* EventBus.getDefault().post(new MessageEventBus((IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_APP_VERSION),
                     new AppInfoModel(IPUtil.getLocalIPAddress(mContext), String.valueOf(AppUtils.getVersionCode(mContext)),Constans.SERVER_APP_VERSION,
-                            MD5Utils.getFileMD5(assetManager.open("tiantong_update.zip")))));
-        } catch (IOException e) {
+                            MD5Utils.getFileMD5(assetManager.open("tiantong_update.zip")))));*/
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -167,40 +163,39 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
      * 发送当前时间至服务器
      */
     public void requestServerDatetime(){
-        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_TIME_DATE,
-                new DatetimeModel(DateUtil.backTimeFomat(new Date()))));
+      /*  EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_TIME_DATE,
+                new DatetimeModel(DateUtil.backTimeFomat(new Date()))));*/
     }
 
     /**
      * 打开设备移动数据
      */
     public void requestEnableData(boolean isSwitch){
-        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_ENABLE_DATA,
-                new EnableDataModel(isSwitch)));
+       // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_ENABLE_DATA, new EnableDataModel(isSwitch)));
     }
 
     /**
      * 获取服务初始化数据状态
      */
     public void requestServerMobileStatus(){
-        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_MOBILE_STATUS));
+       // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_MOBILE_STATUS));
     }
 
     /**
      * 查询设备sos初始状态
      */
     public void requestServerSosStatus(){
-        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_STATUS));
+        //EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_STATUS));
     }
 
     /**
      * 关闭设备SOS
      */
     public void closeServerSos(){
-        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_CLOSE));
+        //EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_CLOSE));
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    /*@Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_ACCURACY_POSITION:
@@ -214,7 +209,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
                 requestServerVersion();
                 mView.get().updateConnectedState(true);
                 requestServerDatetime();
-                /** 屏蔽了数据初始化状态 */
+                *//** 屏蔽了数据初始化状态 *//*
                 //requestServerMobileStatus();
                 requestServerSosStatus();
                 break;
@@ -247,7 +242,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
                 break;
         }
     }
-
+*/
     /**
      * 解析设备初始化状态
      */
@@ -324,8 +319,8 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
         TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse)cmd.getMessage();
         if(updateResponse.getIsUpdateFinish()){
             mView.get().isServerUpdate(true);
-            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_DISCONNECT_TIANTONG));
-            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.PORT)));
+           // EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_DISCONNECT_TIANTONG));
+           // EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.PORT)));
         }
     }
 
@@ -338,7 +333,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
         if(updateResponse.getIsUpdate()){
             mView.get().upgradleServerApp();
         }else{
-            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.PORT)));
+          //  EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.PORT)));
         }
     }
 
@@ -376,7 +371,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
             return;
         }
 
-        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber));
+       // EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber));
 
         Intent intent = new Intent(mContext, TellPhoneActivity.class);
         intent.putExtra("diapadNumber", phoneNumber);
@@ -384,6 +379,6 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
     }
 
     public void release(){
-        EventBus.getDefault().unregister(this);
+       // EventBus.getDefault().unregister(this);
     }
 }

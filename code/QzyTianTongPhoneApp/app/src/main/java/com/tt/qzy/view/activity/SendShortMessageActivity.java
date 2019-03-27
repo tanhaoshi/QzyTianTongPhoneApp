@@ -15,9 +15,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.qzy.data.PhoneCmd;
-import com.qzy.eventbus.EventBusUtils;
-import com.qzy.eventbus.IMessageEventBustType;
-import com.qzy.eventbus.MessageEventBus;
+
 import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.phone.common.CommonData;
@@ -36,9 +34,7 @@ import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.SPUtils;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -74,7 +70,7 @@ public class SendShortMessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_short_message);
         ButterKnife.bind(this);
-        EventBusUtils.register(this);
+       // EventBusUtils.register(this);
         initView();
         initAdapter();
         initMsgs();
@@ -156,9 +152,7 @@ public class SendShortMessageActivity extends AppCompatActivity {
     }
 
     private void disposeChangeRead(ShortMessageDao shortMessageDao){
-        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.
-                EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SHORT_MESSAGE,new
-                SMAgrementModel(shortMessageDao.getServerId())));
+       // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SHORT_MESSAGE,new SMAgrementModel(shortMessageDao.getServerId())));
 
         shortMessageDao.setIsStatus(true);
 
@@ -179,8 +173,7 @@ public class SendShortMessageActivity extends AppCompatActivity {
 
         SPUtils.putShare(this,Constans.SHORTMESSAGE_ISREAD,integer);
 
-        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_SHORT_MESSAGE_HISTROY
-                ,Integer.valueOf(Integer.valueOf(integer))));
+       // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_SHORT_MESSAGE_HISTROY,Integer.valueOf(Integer.valueOf(integer))));
     }
 
     private void initAdapter() {
@@ -230,7 +223,7 @@ public class SendShortMessageActivity extends AppCompatActivity {
             adapter.notifyItemInserted(msgList.size() - 1);
             mRecyclerView.scrollToPosition(msgList.size() - 1);
             custom_input.setText("");
-            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS, new SmsBean(receive, content)));
+            //EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS, new SmsBean(receive, content)));
         }
 
         ShortMessageDao shortMessageDao = new ShortMessageDao(phone,content,
@@ -238,7 +231,7 @@ public class SendShortMessageActivity extends AppCompatActivity {
 
         ShortMessageManager.getInstance(SendShortMessageActivity.this).insertShortMessage(shortMessageDao,SendShortMessageActivity.this);
     }
-
+/*
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
@@ -249,7 +242,7 @@ public class SendShortMessageActivity extends AppCompatActivity {
                 parseSmsreciver(event.getObject());
                 break;
         }
-    }
+    }*/
 
     /**
      * 解析短信状态
@@ -298,6 +291,6 @@ public class SendShortMessageActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        EventBusUtils.unregister(this);
+       // EventBusUtils.unregister(this);
     }
 }

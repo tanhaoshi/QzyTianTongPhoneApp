@@ -14,9 +14,6 @@ import android.widget.TextView;
 import com.qzy.QzySensorManager;
 import com.qzy.data.PhoneCmd;
 import com.qzy.data.PhoneStateUtils;
-import com.qzy.eventbus.EventBusUtils;
-import com.qzy.eventbus.IMessageEventBustType;
-import com.qzy.eventbus.MessageEventBus;
 
 import com.qzy.phone.pcm.AllLocalPcmManager;
 import com.qzy.utils.AndroidVoiceManager;
@@ -30,8 +27,6 @@ import com.tt.qzy.view.presenter.activity.TellPhoneActivityPresenter;
 import com.tt.qzy.view.utils.AnswerBellManager;
 import com.tt.qzy.view.utils.NToast;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
 
@@ -81,7 +76,7 @@ public class TellPhoneActivity extends AppCompatActivity {
         if(mTellPhoneActivityPresenter.getPhoneKeyForName(number) != null && mTellPhoneActivityPresenter.getPhoneKeyForName(number).length() > 0){
             aidlName.setText(mTellPhoneActivityPresenter.getPhoneKeyForName(number));
         }
-        EventBusUtils.register(TellPhoneActivity.this);
+        //EventBusUtils.register(TellPhoneActivity.this);
 
         input_call.setListener(new InputPwdViewCall.InputPwdListener() {
             @Override
@@ -109,14 +104,14 @@ public class TellPhoneActivity extends AppCompatActivity {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+   /* @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_STATE:
                 updatePhoneState((PhoneCmd) event.getObject());
                 break;
         }
-    }
+    }*/
 
     /**
      * 刷新通话时长
@@ -210,7 +205,7 @@ public class TellPhoneActivity extends AppCompatActivity {
                     long timeDuration1 = System.currentTimeMillis() - startTime;
                     LogUtils.e("timeDuration1 = " + timeDuration1 + " count = " + count);
                     if(timeDuration1 < 5 * 1000 && count > 0){
-                        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber.getText().toString()));
+                        //EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber.getText().toString()));
                         count --;
                         countTime();
                         break;
@@ -240,7 +235,7 @@ public class TellPhoneActivity extends AppCompatActivity {
                     long timeDuration2 = System.currentTimeMillis() - startTime;
                     LogUtils.e("timeDuration2 = " + timeDuration2 + " count = " + count);
                     if(timeDuration2 < 5 * 1000 && count > 0){
-                        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber.getText().toString()));
+                      //  EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber.getText().toString()));
                         count --;
                         countTime();
                         break;
@@ -276,7 +271,7 @@ public class TellPhoneActivity extends AppCompatActivity {
         super.onStop();
         isFinsh = false;
         mQzySensorManager.freeSenerState();
-        EventBusUtils.unregister(TellPhoneActivity.this);
+       // EventBusUtils.unregister(TellPhoneActivity.this);
        //finish();
     }
 

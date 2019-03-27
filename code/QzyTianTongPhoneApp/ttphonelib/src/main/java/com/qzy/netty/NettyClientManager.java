@@ -4,9 +4,6 @@ package com.qzy.netty;
 import com.google.protobuf.Message;
 import com.qzy.data.PhoneCmd;
 import com.qzy.data.PrototocalTools;
-import com.qzy.eventbus.EventBusUtils;
-import com.qzy.eventbus.IMessageEventBustType;
-import com.qzy.eventbus.MessageEventBus;
 import com.qzy.utils.ByteUtils;
 import com.socks.library.KLog;
 
@@ -51,13 +48,6 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
     @Override
     public void onConnectedState(boolean state) {
         isConnected = state;
-        if(isConnected){
-//            stopReconnected();
-        }else {
-            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_NONCONNECT));
-//            startReconnected(port,ip);
-            mNettyClent.stopConnected();
-        }
         if(iNettyListener != null){
             if(state) {
                 iNettyListener.onConnected();
@@ -65,6 +55,14 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
                 iNettyListener.onDisconnected();
             }
         }
+
+        if(isConnected){
+//            stopReconnected();
+        }else {
+//            startReconnected(port,ip);
+            mNettyClent.stopConnected();
+        }
+
     }
 
 

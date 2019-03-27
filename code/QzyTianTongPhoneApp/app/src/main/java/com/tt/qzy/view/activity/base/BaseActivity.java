@@ -12,8 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.qzy.data.PhoneCmd;
-import com.qzy.eventbus.IMessageEventBustType;
-import com.qzy.eventbus.MessageEventBus;
 import com.qzy.phone.pcm.AllLocalPcmManager;
 import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.CallPhoneStateProtos;
@@ -36,9 +34,6 @@ import com.tt.qzy.view.utils.SPUtils;
 import com.tt.qzy.view.view.BaseMainView;
 import com.tt.qzy.view.view.base.BaseView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -80,7 +75,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(getContentView());
         ButterKnife.bind(this);
-        EventBus.getDefault().register(this);
+      //  EventBus.getDefault().register(this);
         mPresenter = new BaseActivityPresenter(this);
         mPresenter.onBindView(this);
         if(!isInitView){
@@ -110,7 +105,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+       // EventBus.getDefault().unregister(this);
         m.unbind();
     }
 
@@ -120,7 +115,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
 
     public abstract void initData();
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    /*@Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SUCCESS:
@@ -150,7 +145,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_TIMER_MESSAGE:
                 break;
         }
-    }
+    }*/
 
     /**
      * 解析定时发送
@@ -291,7 +286,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         if(callPhoneBack.getIsCalling()){
             if(callPhoneBack.getIp().equals(CommonData.getInstance().getLocalWifiIp())){
                 tt_call_status = true;
-                EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE));
+               // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE));
             }else{
                 tt_call_status = true;
             }

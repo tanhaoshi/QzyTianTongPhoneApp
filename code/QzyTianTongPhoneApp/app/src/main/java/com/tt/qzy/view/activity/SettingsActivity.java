@@ -12,8 +12,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.qzy.eventbus.IMessageEventBustType;
-import com.qzy.eventbus.MessageEventBus;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.base.BaseActivity;
 import com.tt.qzy.view.bean.DatetimeModel;
@@ -26,7 +24,6 @@ import com.tt.qzy.view.utils.SPUtils;
 import com.tt.qzy.view.view.SettingsView;
 
 
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.Date;
 
@@ -211,8 +208,7 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
                     return;
                 }
 
-                EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_WIFI_PASSWORD,
-                        new WifiSettingModel(custom_input.getText().toString())));
+                //EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_WIFI_PASSWORD, new WifiSettingModel(custom_input.getText().toString())));
 
                 NToast.shortToast(SettingsActivity.this,getResources().getString(R.string.TMT_share));
                 wifiDialog.dismiss();
@@ -244,8 +240,7 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
         custom_yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_TIME_DATE,
-                        new DatetimeModel(DateUtil.backTimeFomat(new Date()))));
+              //  EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_TIME_DATE, new DatetimeModel(DateUtil.backTimeFomat(new Date()))));
                 NToast.shortToast(SettingsActivity.this,getResources().getString(R.string.TMT_date_sync_succeed));
                 dateDialog.dismiss();
             }
@@ -278,7 +273,7 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
         custom_yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_RECOVER_SYSTEM));
+               // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_RECOVER_SYSTEM));
                 mPresenter.recoverSystem(SettingsActivity.this);
                 NToast.shortToast(SettingsActivity.this,getString(R.string.TMT_DEVICE_IS_RECOVER_SUCCEED));
                 dateDialog.dismiss();

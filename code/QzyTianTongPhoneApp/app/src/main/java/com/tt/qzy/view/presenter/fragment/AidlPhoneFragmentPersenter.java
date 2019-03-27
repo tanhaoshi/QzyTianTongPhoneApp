@@ -6,9 +6,7 @@ import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.qzy.data.PhoneCmd;
-import com.qzy.eventbus.EventBusUtils;
-import com.qzy.eventbus.IMessageEventBustType;
-import com.qzy.eventbus.MessageEventBus;
+
 import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.phone.common.CommonData;
@@ -29,9 +27,6 @@ import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.view.CallRecordView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,7 +62,7 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
 
     public AidlPhoneFragmentPersenter(Context context) {
         mContext = context;
-        EventBus.getDefault().register(this);
+        //EventBus.getDefault().register(this);
     }
 
     /**
@@ -87,7 +82,7 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
 
         phone = phoneNumber;
 
-        EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber));
+       // EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber));
 
         String name = getPhoneKeyForName(phone);
 
@@ -114,7 +109,7 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
         return name;
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+  /*  @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE:
@@ -123,7 +118,7 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
                 mContext.startActivity(intent);
                 break;
         }
-    }
+    }*/
 
     public void getCallHistroy(final int offset,final int limit){
         Observable.create(new ObservableOnSubscribe<List<CallRecordDao>>() {
@@ -287,9 +282,9 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
 
         protobufMessageModel.setDelete(true);
 
-        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.
+       /* EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.
                 EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_DELETE_SIGNAL_MESSAFGE
-                ,protobufMessageModel));
+                ,protobufMessageModel));*/
 
         CallRecordManager.getInstance(mContext).deleteRecordList();
 
@@ -297,7 +292,8 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
     }
 
     public void release(){
-        EventBus.getDefault().unregister(this);
+
+        //EventBus.getDefault().unregister(this);
     }
 
 }

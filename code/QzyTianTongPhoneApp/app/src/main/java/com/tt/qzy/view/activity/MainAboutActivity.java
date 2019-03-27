@@ -7,8 +7,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.qzy.data.PhoneCmd;
-import com.qzy.eventbus.IMessageEventBustType;
-import com.qzy.eventbus.MessageEventBus;
 import com.qzy.tt.data.TtPhoneGetServerVersionProtos;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.bean.DatetimeModel;
@@ -16,9 +14,6 @@ import com.tt.qzy.view.utils.APKVersionCodeUtils;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.DateUtil;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Date;
 
@@ -42,7 +37,7 @@ public class MainAboutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_about);
         ButterKnife.bind(this);
-        EventBus.getDefault().register(this);
+        //EventBus.getDefault().register(this);
         initView();
     }
 
@@ -57,7 +52,7 @@ public class MainAboutActivity extends AppCompatActivity {
     }
 
     private void initData(){
-        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_VERSION));
+       // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_VERSION));
     }
 
     @OnClick({R.id.main_quantity})
@@ -69,14 +64,14 @@ public class MainAboutActivity extends AppCompatActivity {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+   /* @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_VERSION:
                 parseServerVersion(event.getObject());
                 break;
         }
-    }
+    }*/
 
     private void parseServerVersion(Object o){
         PhoneCmd cmd = (PhoneCmd)o;
@@ -89,6 +84,6 @@ public class MainAboutActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        EventBus.getDefault().unregister(this);
+       // EventBus.getDefault().unregister(this);
     }
 }

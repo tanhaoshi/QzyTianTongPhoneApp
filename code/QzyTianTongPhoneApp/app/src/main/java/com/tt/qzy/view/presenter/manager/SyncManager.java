@@ -5,9 +5,7 @@ import android.content.Context;
 import com.alibaba.fastjson.JSON;
 import com.google.protobuf.GeneratedMessageV3;
 import com.qzy.data.PhoneCmd;
-import com.qzy.eventbus.EventBusUtils;
-import com.qzy.eventbus.IMessageEventBustType;
-import com.qzy.eventbus.MessageEventBus;
+
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.socks.library.KLog;
@@ -22,9 +20,7 @@ import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.utils.SPUtils;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,7 +42,7 @@ public class SyncManager {
 
     public SyncManager(Context context){
         this.mContext = context;
-        EventBus.getDefault().register(this);
+        //EventBus.getDefault().register(this);
     }
 
     public void syncCallRecord(TtCallRecordProtos.TtCallRecordProto ttCallRecordProto ){
@@ -113,8 +109,7 @@ public class SyncManager {
             }
         }
         if(isRecord){
-            EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_RECORD_CALL_HISTROY
-                    ,Integer.valueOf(count)));
+           // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_RECORD_CALL_HISTROY,Integer.valueOf(count)));
 
             SPUtils.putShare(mContext, Constans.RECORD_ISREAD,count);
         }
@@ -171,8 +166,7 @@ public class SyncManager {
             }
         }
         if(isShortMessage){
-            EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_SHORT_MESSAGE_HISTROY
-                    ,Integer.valueOf(count)));
+          //  EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_SHORT_MESSAGE_HISTROY,Integer.valueOf(count)));
 
             SPUtils.putShare(mContext, Constans.SHORTMESSAGE_ISREAD,count);
         }
@@ -197,8 +191,7 @@ public class SyncManager {
             }
             @Override
             public void onNext(ShortMessageDao value) {
-                EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.
-                        EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SHORT_MESSAGE, PhoneCmd.getPhoneCmd(protoId,messageV3)));
+               // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SHORT_MESSAGE, PhoneCmd.getPhoneCmd(protoId,messageV3)));
             }
             @Override
             public void onError(Throwable e) {
@@ -221,11 +214,10 @@ public class SyncManager {
         recordCount = recordCount + 1;
         SPUtils.putShare(mContext,Constans.SHORTMESSAGE_ISREAD,recordCount);
 
-        EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_SHORT_MESSAGE_HISTROY
-                ,Integer.valueOf(recordCount)));
+       // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_SHORT_MESSAGE_HISTROY,Integer.valueOf(recordCount)));
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+  /*  @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEventBus event) {
         switch (event.getType()) {
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_NONCONNECT:
@@ -233,9 +225,9 @@ public class SyncManager {
                 isRecord = true;
                 break;
         }
-    }
+    }*/
 
     public void release(){
-        EventBus.getDefault().unregister(this);
+      //  EventBus.getDefault().unregister(this);
     }
 }

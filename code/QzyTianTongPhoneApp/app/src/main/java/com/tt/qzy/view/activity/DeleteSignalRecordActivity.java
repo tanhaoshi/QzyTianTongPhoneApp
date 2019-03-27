@@ -8,8 +8,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
-import com.qzy.eventbus.IMessageEventBustType;
-import com.qzy.eventbus.MessageEventBus;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.DeleteShortMessageAdapter;
 import com.tt.qzy.view.adapter.DeleteSignalAdapter;
@@ -25,7 +23,6 @@ import com.tt.qzy.view.presenter.activity.DeleteSignalPresenter;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.view.DeleteSignalView;
 
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,9 +92,7 @@ public class DeleteSignalRecordActivity extends AppCompatActivity implements Del
                     protobufMessageModel.setPhoneNumber(phone);
                     protobufMessageModel.setServerId(id);
                     protobufMessageModel.setDelete(false);
-                    EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.
-                            EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_DELETE_SIGNAL_MESSAFGE
-                    ,protobufMessageModel));
+                   // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_DELETE_SIGNAL_MESSAFGE,protobufMessageModel));
 
                     List<CallRecordDao> recordDaoList = CallRecordManager.getInstance(DeleteSignalRecordActivity.this)
                             .queryKeyOnPhoneNumber(phone);
