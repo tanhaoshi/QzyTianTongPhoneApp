@@ -165,7 +165,7 @@ public class PhoneNettyManager {
     /**
      * 请求gps准确位置
      */
-    private void requestGpsPosition(Object o){
+    public void requestGpsPosition(Object o){
         TtBeidouOpenBean ttBeidouOpenBean = (TtBeidouOpenBean)o;
         TtPhonePositionProtos.TtPhonePosition ttPhonePosition = TtPhonePositionProtos.TtPhonePosition.newBuilder()
                 .setIsOpen(ttBeidouOpenBean.isSwitch())
@@ -176,7 +176,7 @@ public class PhoneNettyManager {
     /**
      * 打开usb升级
      */
-    private void openBeidou(Object o){
+    public void openBeidou(Object o){
         TtBeidouOpenBean ttBeidouOpenBean = (TtBeidouOpenBean)o;
         TtOpenBeiDouProtos.TtOpenBeiDou ttOpenBeiDou = TtOpenBeiDouProtos.TtOpenBeiDou.newBuilder()
                 .setIsOpen(ttBeidouOpenBean.isSwitch())
@@ -187,7 +187,7 @@ public class PhoneNettyManager {
     /**
      * 请求设备通话记录
      */
-    private void requestCallRecord(){
+    public void requestCallRecord(){
         TtCallRecordProtos.TtCallRecordProto ttCallRecordProto = TtCallRecordProtos.TtCallRecordProto.newBuilder()
                 .setRequest(true)
                 .build();
@@ -197,7 +197,7 @@ public class PhoneNettyManager {
     /**
      * 请求设备短信记录
      */
-    private void requestShortMessage(){
+    public void requestShortMessage(){
         TtShortMessageProtos.TtShortMessage ttShortMessage = TtShortMessageProtos.TtShortMessage.newBuilder()
                 .setRequest(true)
                 .build();
@@ -207,7 +207,7 @@ public class PhoneNettyManager {
     /**
      * 请求设备服务APP是否需要更新
      */
-    private void requestServerVersion(Object o){
+    public void requestServerVersion(Object o){
         AppInfoModel appInfoModel = (AppInfoModel)o;
         TtPhoneUpdateAppInfoProtos.UpdateAppInfo updateAppInfo = TtPhoneUpdateAppInfoProtos.UpdateAppInfo.newBuilder()
                 .setPhoneAppVersion(appInfoModel.getPhoneAppVersion())
@@ -221,7 +221,7 @@ public class PhoneNettyManager {
     /**
      * 发送当前时间至服务器
      */
-    private void requestServerDatetime(Object o){
+    public void requestServerDatetime(Object o){
         DatetimeModel datetimeModel = (DatetimeModel)o;
         TtTimeProtos.TtTime ttTime = TtTimeProtos.TtTime.newBuilder()
                 .setDateTime(datetimeModel.getDateTime())
@@ -233,7 +233,7 @@ public class PhoneNettyManager {
     /**
      * 发送至服务器修改短信读的状态
      */
-    private void requestServerShortMessageStatus(Object o){
+    public void requestServerShortMessageStatus(Object o){
         SMAgrementModel smAgrementModel = (SMAgrementModel)o;
         TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage = TtShortMessageProtos.TtShortMessage.ShortMessage.newBuilder()
                 .setIsRead(true)
@@ -245,7 +245,7 @@ public class PhoneNettyManager {
     /**
      * 发送至服务器修改wifi密码
      */
-    private void requestServerWifipassword(Object o){
+    public void requestServerWifipassword(Object o){
         WifiSettingModel wifiSettingModel = (WifiSettingModel)o;
         TtPhoneWifiProtos.TtWifi ttWifi = TtPhoneWifiProtos.TtWifi.newBuilder()
                 .setPasswd(wifiSettingModel.getWifiPassword())
@@ -256,7 +256,7 @@ public class PhoneNettyManager {
     /**
      * 开始链接下载
      */
-    private void startUpload(){
+    public void startUpload(){
         //开始下载
         try{
             InputStream inputStream = mContext.getAssets().open("tiantong_update.zip");
@@ -305,7 +305,7 @@ public class PhoneNettyManager {
         });
     }
 
-    private void upload(FtpClienManager mFtpClienManager) {
+    public void upload(FtpClienManager mFtpClienManager) {
         mFtpClienManager.upload("/mnt/sdcard/tiantong_update.zip", new FTPDataTransferListener() {
             @Override
             public void started() {
@@ -339,7 +339,7 @@ public class PhoneNettyManager {
     }
 
 
-    private void sendZipFile(boolean isFinish,byte[] data){
+    public void sendZipFile(boolean isFinish,byte[] data){
         TtPhoneUpdateSendFileProtos.UpdateSendFile.PFile pFile = TtPhoneUpdateSendFileProtos.UpdateSendFile.PFile.newBuilder()
                 .setFilename("tiantong_update.zip")
                 .setData(ByteString.copyFrom(data))
@@ -355,7 +355,7 @@ public class PhoneNettyManager {
     /**
      * 请求服务端打开设备移动数据
      */
-    private void requestEnableData(Object o){
+    public void requestEnableData(Object o){
         EnableDataModel dataModel = (EnableDataModel)o;
         TtPhoneMobileDataProtos.TtPhoneMobileData mobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.newBuilder()
                 .setIsEnableData(dataModel.isEnableData())
@@ -366,7 +366,7 @@ public class PhoneNettyManager {
     /**
      * 请求服务端版本号
      */
-    private void requestServerVersion(){
+    public void requestServerVersion(){
         TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion ttPhoneGetServerVersion = TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion.newBuilder()
                 .setIsRequest(true)
                 .setIp(CommonData.getInstance().getLocalWifiIp())
@@ -378,7 +378,7 @@ public class PhoneNettyManager {
     /**
      * 设备服务端sos设置保存
      */
-    private void requestSosSendMessage(Object o){
+    public void requestSosSendMessage(Object o){
         SosSendMessageModel sosSendMessageModel = (SosSendMessageModel)o;
         TtPhoneSosMessageProtos.TtPhoneSosMessage ttPhoneSosMessage = TtPhoneSosMessageProtos.TtPhoneSosMessage.newBuilder()
                 .setMessageContent(sosSendMessageModel.getMessageContent())
@@ -392,7 +392,7 @@ public class PhoneNettyManager {
     /**
      * 恢复设备出厂设置
      */
-    private void requestServerRecoverSystem(){
+    public void requestServerRecoverSystem(){
         TtPhoneRecoverSystemProtos.TtPhoneRecoverSystem recoverSystem = TtPhoneRecoverSystemProtos.TtPhoneRecoverSystem.newBuilder()
                 .setIsRecover(true)
                 .setIp(CommonData.getInstance().getLocalWifiIp())
@@ -403,7 +403,7 @@ public class PhoneNettyManager {
     /**
      * 获取设备移动数据状态
      */
-    private void reuqestServerMobileStatus(){
+    public void reuqestServerMobileStatus(){
         TtPhoneMobileDataProtos.TtPhoneMobileData mobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.newBuilder()
                 .build();
         sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_phone_server_mobile_init,mobileData));
@@ -412,7 +412,7 @@ public class PhoneNettyManager {
     /**
      * 获取设备SOS初始状态
      */
-    private void requestServerSosStatus(){
+    public void requestServerSosStatus(){
         TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState = TtPhoneSosStateProtos.TtPhoneSosState.newBuilder()
                 .setIsRequest(true)
                 .build();
@@ -422,7 +422,7 @@ public class PhoneNettyManager {
     /**
      * 关闭服务设备SOS
      */
-    private void requestServerSosClose(){
+    public void requestServerSosClose(){
         TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState = TtPhoneSosStateProtos.TtPhoneSosState.newBuilder()
                 .setIsRequest(true)
                 .setIsSwitch(false)
@@ -433,7 +433,7 @@ public class PhoneNettyManager {
     /**
      * 请求服务删除该号码下通话记录
      */
-    private void requestServerDeleteMessage(Object o){
+    public void requestServerDeleteMessage(Object o){
         ProtobufMessageModel messageModel = (ProtobufMessageModel)o;
         if(messageModel.isDelete()){
             TtDeleCallLogProtos.TtDeleCallLog ttDeleCallLog = TtDeleCallLogProtos.TtDeleCallLog.newBuilder()
@@ -455,7 +455,7 @@ public class PhoneNettyManager {
     /**
      * 请求服务删除该短信息下的记录
      */
-    private void requestServerShortMessageDelete(Object o){
+    public void requestServerShortMessageDelete(Object o){
         ProtobufMessageModel messageModel = (ProtobufMessageModel)o;
         if(messageModel.isDelete()){
             TtDeleCallLogProtos.TtDeleCallLog ttDeleCallLog = TtDeleCallLogProtos.TtDeleCallLog.newBuilder()
@@ -477,7 +477,7 @@ public class PhoneNettyManager {
      * 将服务端的系统数据库修改未接状态
      * @param o
      */
-    private void requestServerPhoneStatus(Object o){
+    public void requestServerPhoneStatus(Object o){
         TtCallRecordProtos.TtCallRecordProto ttCallRecordProto = (TtCallRecordProtos.TtCallRecordProto)o;
         sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_call_status,ttCallRecordProto));
     }
@@ -598,7 +598,7 @@ public class PhoneNettyManager {
      *
      * @param cmd
      */
-    private void sendPhoneCmd(PhoneCmd cmd) {
+    public void sendPhoneCmd(PhoneCmd cmd) {
         if (mNettyClientManager != null) {
             mNettyClientManager.sendData(cmd);
         }

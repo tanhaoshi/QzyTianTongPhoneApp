@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.qzy.data.PhoneCmd;
 import com.qzy.tt.data.TtBeiDouStatuss;
+import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.db.manager.CallRecordManager;
 import com.tt.qzy.view.db.manager.MailListManager;
@@ -27,7 +28,15 @@ public class SettingsPresenter extends BasePresenter<SettingsView>{
      * 打开usb开关
      */
     public void openTianTongBeidou(boolean isSwitch){
-      //  EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_BEIDOU_SWITCH,new TtBeidouOpenBean(isSwitch)));
+      //  EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_BEIDOU_SWITCH,));
+        if(TtPhoneDataManager.getInstance() != null){
+            TtBeidouOpenBean ttBeidouOpenBean = new TtBeidouOpenBean(isSwitch);
+            if(isSwitch) {
+                TtPhoneDataManager.getInstance().openUsbMode(ttBeidouOpenBean);
+            }else{
+                TtPhoneDataManager.getInstance().openUsbMode(ttBeidouOpenBean);
+            }
+        }
     }
 
   /*  @Subscribe(threadMode = ThreadMode.MAIN)

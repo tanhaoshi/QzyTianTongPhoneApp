@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.base.BaseActivity;
@@ -45,13 +46,13 @@ public class SosSettingsActivity extends BaseActivity {
         return R.layout.activity_sos_settings;
     }
 
-    private void getIntentData(){
+    private void getIntentData() {
         Intent intent = getIntent();
-        if(null != intent.getExtras()){
-            isConnect = intent.getBooleanExtra("connect",false);
-            isSim = intent.getBooleanExtra("isSim",false);
-            isSignal = intent.getBooleanExtra("isSignal",false);
-            baterly = intent.getIntExtra("baterly",0);
+        if (null != intent.getExtras()) {
+            isConnect = intent.getBooleanExtra("connect", false);
+            isSim = intent.getBooleanExtra("isSim", false);
+            isSignal = intent.getBooleanExtra("isSignal", false);
+            baterly = intent.getIntExtra("baterly", 0);
         }
     }
 
@@ -62,28 +63,28 @@ public class SosSettingsActivity extends BaseActivity {
         base_tv_toolbar_title.setText(getString(R.string.TMT_sos_setting));
         base_iv_back.setImageDrawable(getResources().getDrawable(R.drawable.iv_back));
         base_tv_toolbar_right.setVisibility(View.GONE);
-        if(isConnect){
+        if (isConnect) {
             img5.setImageDrawable(getResources().getDrawable(R.drawable.search_network));
-        }else{
+        } else {
             img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonetwork));
         }
-        if(isSim){
+        if (isSim) {
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
-        }else{
+        } else {
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_noconnect));
         }
-        if(isSignal){
+        if (isSignal) {
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_one));
-        }else{
+        } else {
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
         }
-        percentBaterly.setText(baterly+"%");
+        percentBaterly.setText(baterly + "%");
         img1.setPower(baterly);
     }
 
-    @OnClick({R.id.base_iv_back,R.id.btn_yes})
-    public void onClick(View view){
-        switch (view.getId()){
+    @OnClick({R.id.base_iv_back, R.id.btn_yes})
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.base_iv_back:
                 finish();
                 break;
@@ -93,27 +94,27 @@ public class SosSettingsActivity extends BaseActivity {
         }
     }
 
-    private void saveCryhelpInfo(){
-        if(!TextUtils.isEmpty(cryhelp_phone.getText().toString()) && cryhelp_phone.getText().toString().length()>0){
-            SPUtils.putShare(SosSettingsActivity.this, Constans.CRY_HELP_PHONE,cryhelp_phone.getText().toString());
-        }else{
-            NToast.shortToast(SosSettingsActivity.this,getString(R.string.TMT_is_empty_null));
+    private void saveCryhelpInfo() {
+        if (!TextUtils.isEmpty(cryhelp_phone.getText().toString()) && cryhelp_phone.getText().toString().length() > 0) {
+            SPUtils.putShare(SosSettingsActivity.this, Constans.CRY_HELP_PHONE, cryhelp_phone.getText().toString());
+        } else {
+            NToast.shortToast(SosSettingsActivity.this, getString(R.string.TMT_is_empty_null));
             return;
         }
 
-        if(!TextUtils.isEmpty(cryhelp_message.getText().toString()) && cryhelp_message.getText().toString().length()>0){
-            SPUtils.putShare(SosSettingsActivity.this,Constans.CRY_HELP_SHORTMESSAGE,cryhelp_message.getText().toString());
-            SPUtils.putShare(SosSettingsActivity.this,Constans.HELP_SHORTMESSAGE,cryhelp_message.getText().toString());
-        }else{
-            SPUtils.putShare(SosSettingsActivity.this,Constans.CRY_HELP_SHORTMESSAGE,getString(R.string.TMT_COME_ON_HELP_ME));
-            SPUtils.putShare(SosSettingsActivity.this,Constans.HELP_SHORTMESSAGE,getString(R.string.TMT_COME_ON_HELP_ME));
+        if (!TextUtils.isEmpty(cryhelp_message.getText().toString()) && cryhelp_message.getText().toString().length() > 0) {
+            SPUtils.putShare(SosSettingsActivity.this, Constans.CRY_HELP_SHORTMESSAGE, cryhelp_message.getText().toString());
+            SPUtils.putShare(SosSettingsActivity.this, Constans.HELP_SHORTMESSAGE, cryhelp_message.getText().toString());
+        } else {
+            SPUtils.putShare(SosSettingsActivity.this, Constans.CRY_HELP_SHORTMESSAGE, getString(R.string.TMT_COME_ON_HELP_ME));
+            SPUtils.putShare(SosSettingsActivity.this, Constans.HELP_SHORTMESSAGE, getString(R.string.TMT_COME_ON_HELP_ME));
         }
 
-        if(!TextUtils.isEmpty(cryhelp_timer.getText().toString()) && cryhelp_timer.getText().toString().length()>0){
-            SPUtils.putShare(SosSettingsActivity.this,Constans.CRY_HELP_TIMETIMER,cryhelp_timer.getText().toString());
-        }else{
+        if (!TextUtils.isEmpty(cryhelp_timer.getText().toString()) && cryhelp_timer.getText().toString().length() > 0) {
+            SPUtils.putShare(SosSettingsActivity.this, Constans.CRY_HELP_TIMETIMER, cryhelp_timer.getText().toString());
+        } else {
             String defaultValue = "60";
-            SPUtils.putShare(SosSettingsActivity.this,Constans.CRY_HELP_TIMETIMER,defaultValue);
+            SPUtils.putShare(SosSettingsActivity.this, Constans.CRY_HELP_TIMETIMER, defaultValue);
         }
 
        /* EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_SENDMESSAGE,new
@@ -123,34 +124,45 @@ public class SosSettingsActivity extends BaseActivity {
                 Constans.CRY_HELP_PHONE,getString(R.string.TMT_please_input_phone)).toString(),
                 Integer.valueOf(SPUtils.getShare(SosSettingsActivity.this,
                         Constans.CRY_HELP_TIMETIMER,getString(R.string.TMT_please_input_timetimer)).toString()))));*/
+        SosSendMessageModel sendMessageModel = new
+                SosSendMessageModel(SPUtils.getShare(SosSettingsActivity.this,
+                Constans.CRY_HELP_SHORTMESSAGE, getString(R.string.TMT_please_input_shortMessage)).toString(),
+                SPUtils.getShare(SosSettingsActivity.this,
+                        Constans.CRY_HELP_PHONE, getString(R.string.TMT_please_input_phone)).toString(),
+                Integer.valueOf(SPUtils.getShare(SosSettingsActivity.this,
+                        Constans.CRY_HELP_TIMETIMER, getString(R.string.TMT_please_input_timetimer)).toString()));
 
-        NToast.shortToast(SosSettingsActivity.this,getString(R.string.TMT_save_succeed));
+        if (TtPhoneDataManager.getInstance() != null) {
+            TtPhoneDataManager.getInstance().setTtPhoneSosValue(sendMessageModel);
+        }
+
+        NToast.shortToast(SosSettingsActivity.this, getString(R.string.TMT_save_succeed));
 
         finish();
     }
 
     @Override
     public void initData() {
-         if(SPUtils.containsShare(SosSettingsActivity.this,Constans.CRY_HELP_PHONE)){
-             cryhelp_phone.setText(SPUtils.getShare(SosSettingsActivity.this,
-                     Constans.CRY_HELP_PHONE,getString(R.string.TMT_please_input_phone)).toString());
-         }else{
-             cryhelp_phone.setHint(getString(R.string.TMT_please_input_phone));
-         }
+        if (SPUtils.containsShare(SosSettingsActivity.this, Constans.CRY_HELP_PHONE)) {
+            cryhelp_phone.setText(SPUtils.getShare(SosSettingsActivity.this,
+                    Constans.CRY_HELP_PHONE, getString(R.string.TMT_please_input_phone)).toString());
+        } else {
+            cryhelp_phone.setHint(getString(R.string.TMT_please_input_phone));
+        }
 
-         if(SPUtils.containsShare(SosSettingsActivity.this,Constans.CRY_HELP_SHORTMESSAGE)){
-             cryhelp_message.setText(SPUtils.getShare(SosSettingsActivity.this,
-                     Constans.CRY_HELP_SHORTMESSAGE,getString(R.string.TMT_please_input_shortMessage)).toString());
-         }else{
-             cryhelp_message.setHint(getString(R.string.TMT_please_input_shortMessage));
-         }
+        if (SPUtils.containsShare(SosSettingsActivity.this, Constans.CRY_HELP_SHORTMESSAGE)) {
+            cryhelp_message.setText(SPUtils.getShare(SosSettingsActivity.this,
+                    Constans.CRY_HELP_SHORTMESSAGE, getString(R.string.TMT_please_input_shortMessage)).toString());
+        } else {
+            cryhelp_message.setHint(getString(R.string.TMT_please_input_shortMessage));
+        }
 
-         if(SPUtils.containsShare(SosSettingsActivity.this,Constans.CRY_HELP_TIMETIMER)){
-             cryhelp_timer.setText(SPUtils.getShare(SosSettingsActivity.this,
-                     Constans.CRY_HELP_TIMETIMER,getString(R.string.TMT_please_input_timetimer)).toString());
-         }else{
-             cryhelp_timer.setHint(getString(R.string.TMT_please_input_timetimer));
-         }
+        if (SPUtils.containsShare(SosSettingsActivity.this, Constans.CRY_HELP_TIMETIMER)) {
+            cryhelp_timer.setText(SPUtils.getShare(SosSettingsActivity.this,
+                    Constans.CRY_HELP_TIMETIMER, getString(R.string.TMT_please_input_timetimer)).toString());
+        } else {
+            cryhelp_timer.setHint(getString(R.string.TMT_please_input_timetimer));
+        }
 
     }
 

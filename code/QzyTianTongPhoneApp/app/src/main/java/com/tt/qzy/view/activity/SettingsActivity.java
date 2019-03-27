@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.base.BaseActivity;
 import com.tt.qzy.view.bean.DatetimeModel;
@@ -24,14 +25,13 @@ import com.tt.qzy.view.utils.SPUtils;
 import com.tt.qzy.view.view.SettingsView;
 
 
-
 import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SettingsActivity extends BaseActivity<SettingsView> implements SettingsView{
+public class SettingsActivity extends BaseActivity<SettingsView> implements SettingsView {
 
     private AlertDialog wifiDialog;
     private AlertDialog dateDialog;
@@ -53,13 +53,13 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
         return R.layout.activity_settings;
     }
 
-    private void getIntentData(){
+    private void getIntentData() {
         Intent intent = getIntent();
-        if(null != intent.getExtras()){
-            isConnect = intent.getBooleanExtra("connect",false);
-            isSim = intent.getBooleanExtra("isSim",false);
-            isSignal = intent.getBooleanExtra("isSignal",false);
-            baterly = intent.getIntExtra("baterly",0);
+        if (null != intent.getExtras()) {
+            isConnect = intent.getBooleanExtra("connect", false);
+            isSim = intent.getBooleanExtra("isSim", false);
+            isSignal = intent.getBooleanExtra("isSignal", false);
+            baterly = intent.getIntExtra("baterly", 0);
         }
     }
 
@@ -71,35 +71,35 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
         mSwitchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if((Boolean) SPUtils.getShare(SettingsActivity.this, Constans.TTM_STATUS,false)){
-                    if(isChecked){
+                if ((Boolean) SPUtils.getShare(SettingsActivity.this, Constans.TTM_STATUS, false)) {
+                    if (isChecked) {
                         mPresenter.openTianTongBeidou(true);
-                    }else{
+                    } else {
                         mPresenter.openTianTongBeidou(false);
                     }
-                }else{
-                    NToast.shortToast(SettingsActivity.this,getString(R.string.TMT_connect_tiantong_please));
+                } else {
+                    NToast.shortToast(SettingsActivity.this, getString(R.string.TMT_connect_tiantong_please));
                     mSwitchCompat.setChecked(false);
                 }
             }
         });
         statusLayout.setBackgroundColor(getResources().getColor(R.color.tab_stander));
-        if(isConnect){
+        if (isConnect) {
             img5.setImageDrawable(getResources().getDrawable(R.drawable.search_network));
-        }else{
+        } else {
             img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonetwork));
         }
-        if(isSim){
+        if (isSim) {
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
-        }else{
+        } else {
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_noconnect));
         }
-        if(isSignal){
+        if (isSignal) {
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_one));
-        }else{
+        } else {
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
         }
-        percentBaterly.setText(baterly+"%");
+        percentBaterly.setText(baterly + "%");
         img1.setPower(baterly);
     }
 
@@ -107,72 +107,72 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
     public void initData() {
     }
 
-    @OnClick({R.id.settings_sos,R.id.setting_map,R.id.setting_about,R.id.main_quantity,R.id.settings_wifi,
-            R.id.settings_date_time,R.id.setting_factroy_reset,R.id.setting_check})
-    public void onClick(View view){
-        switch (view.getId()){
+    @OnClick({R.id.settings_sos, R.id.setting_map, R.id.setting_about, R.id.main_quantity, R.id.settings_wifi,
+            R.id.settings_date_time, R.id.setting_factroy_reset, R.id.setting_check})
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.settings_sos:
-                if(isSignal){
+                if (isSignal) {
                     jumpSosSetting();
-                }else{
-                    NToast.shortToast(this,getString(R.string.TMT_THE_DEVICE_NOT_OPERATION));
+                } else {
+                    NToast.shortToast(this, getString(R.string.TMT_THE_DEVICE_NOT_OPERATION));
                 }
                 break;
             case R.id.setting_map:
-                Intent intent = new Intent(SettingsActivity.this,OffLineMapActivity.class);
+                Intent intent = new Intent(SettingsActivity.this, OffLineMapActivity.class);
                 startActivity(intent);
                 break;
             case R.id.setting_about:
-                Intent about_intent = new Intent(SettingsActivity.this,MainAboutActivity.class);
+                Intent about_intent = new Intent(SettingsActivity.this, MainAboutActivity.class);
                 startActivity(about_intent);
                 break;
             case R.id.main_quantity:
                 finish();
                 break;
             case R.id.settings_wifi:
-                if(isSignal){
+                if (isSignal) {
                     initWIFIDialog();
-                }else{
-                    NToast.shortToast(this,getString(R.string.TMT_THE_DEVICE_NOT_OPERATION));
+                } else {
+                    NToast.shortToast(this, getString(R.string.TMT_THE_DEVICE_NOT_OPERATION));
                 }
                 break;
             case R.id.settings_date_time:
-                if(isSignal){
+                if (isSignal) {
                     initDateDialog();
-                }else{
-                    NToast.shortToast(this,getString(R.string.TMT_THE_DEVICE_NOT_OPERATION));
+                } else {
+                    NToast.shortToast(this, getString(R.string.TMT_THE_DEVICE_NOT_OPERATION));
                 }
                 break;
             case R.id.setting_factroy_reset:
-                if(isSignal){
+                if (isSignal) {
                     initSystemResetDialog();
-                }else{
-                    NToast.shortToast(this,getString(R.string.TMT_THE_DEVICE_NOT_OPERATION));
+                } else {
+                    NToast.shortToast(this, getString(R.string.TMT_THE_DEVICE_NOT_OPERATION));
                 }
                 break;
             case R.id.setting_check:
-                Intent checkUpdateIntent = new Intent(SettingsActivity.this,CheckUpdateActivity.class);
+                Intent checkUpdateIntent = new Intent(SettingsActivity.this, CheckUpdateActivity.class);
                 startActivity(checkUpdateIntent);
                 break;
         }
     }
 
-    private void jumpSosSetting(){
-        Intent intent = new Intent(SettingsActivity.this,SosSettingsActivity.class);
-        intent.putExtra("connect",isConnect);
-        intent.putExtra("isSim",isSim);
-        intent.putExtra("isSignal",isSignal);
-        intent.putExtra("baterly",baterly);
+    private void jumpSosSetting() {
+        Intent intent = new Intent(SettingsActivity.this, SosSettingsActivity.class);
+        intent.putExtra("connect", isConnect);
+        intent.putExtra("isSim", isSim);
+        intent.putExtra("isSignal", isSignal);
+        intent.putExtra("baterly", baterly);
         startActivity(intent);
     }
 
-    public void initWIFIDialog(){
+    public void initWIFIDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
         LayoutInflater inflater = LayoutInflater.from(SettingsActivity.this);
         View v = inflater.inflate(R.layout.customied_dialog_style, null);
-        final EditText custom_input = (EditText)v.findViewById(R.id.custom_input);
-        final TextView custom_cannel = (TextView)v.findViewById(R.id.custom_cannel);
-        final TextView custom_yes = (TextView)v.findViewById(R.id.custom_yes);
+        final EditText custom_input = (EditText) v.findViewById(R.id.custom_input);
+        final TextView custom_cannel = (TextView) v.findViewById(R.id.custom_cannel);
+        final TextView custom_yes = (TextView) v.findViewById(R.id.custom_yes);
         wifiDialog = builder.create();
         wifiDialog.setView(inflater.inflate(R.layout.customied_dialog_style, null));
         wifiDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
@@ -198,31 +198,34 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
             @Override
             public void onClick(View view) {
 
-                if(TextUtils.isEmpty(custom_input.getText().toString())){
-                    NToast.shortToast(SettingsActivity.this,getString(R.string.TMT_wifi_password_notnull));
+                if (TextUtils.isEmpty(custom_input.getText().toString())) {
+                    NToast.shortToast(SettingsActivity.this, getString(R.string.TMT_wifi_password_notnull));
                     return;
                 }
 
-                if(custom_input.getText().toString().length() < 8 ){
-                    NToast.shortToast(SettingsActivity.this,getString(R.string.TMT_wifi_length_greatethan_eight));
+                if (custom_input.getText().toString().length() < 8) {
+                    NToast.shortToast(SettingsActivity.this, getString(R.string.TMT_wifi_length_greatethan_eight));
                     return;
                 }
 
                 //EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_WIFI_PASSWORD, new WifiSettingModel(custom_input.getText().toString())));
-
-                NToast.shortToast(SettingsActivity.this,getResources().getString(R.string.TMT_share));
+                WifiSettingModel wifiSettingModel = new WifiSettingModel(custom_input.getText().toString());
+                if (TtPhoneDataManager.getInstance() != null) {
+                    TtPhoneDataManager.getInstance().setWifiPasswd(wifiSettingModel);
+                }
+                NToast.shortToast(SettingsActivity.this, getResources().getString(R.string.TMT_share));
                 wifiDialog.dismiss();
             }
         });
     }
 
-    private void initDateDialog(){
+    private void initDateDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
         LayoutInflater inflater = LayoutInflater.from(SettingsActivity.this);
         View v = inflater.inflate(R.layout.dialog_datetime_settings, null);
         final TextView custom_input = (TextView) v.findViewById(R.id.custom_input);
-        final TextView custom_cannel = (TextView)v.findViewById(R.id.custom_cannel);
-        final TextView custom_yes = (TextView)v.findViewById(R.id.custom_yes);
+        final TextView custom_cannel = (TextView) v.findViewById(R.id.custom_cannel);
+        final TextView custom_yes = (TextView) v.findViewById(R.id.custom_yes);
         dateDialog = builder.create();
         dateDialog.setView(inflater.inflate(R.layout.customied_dialog_style, null));
         dateDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
@@ -240,21 +243,26 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
         custom_yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              //  EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_TIME_DATE, new DatetimeModel(DateUtil.backTimeFomat(new Date()))));
-                NToast.shortToast(SettingsActivity.this,getResources().getString(R.string.TMT_date_sync_succeed));
+                //  EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_TIME_DATE, new DatetimeModel(DateUtil.backTimeFomat(new Date()))));
+                DatetimeModel datetimeModel = new DatetimeModel(DateUtil.backTimeFomat(new Date()));
+                if (TtPhoneDataManager.getInstance() != null) {
+                    TtPhoneDataManager.getInstance().setDateAndTime(datetimeModel);
+                }
+
+                NToast.shortToast(SettingsActivity.this, getResources().getString(R.string.TMT_date_sync_succeed));
                 dateDialog.dismiss();
             }
         });
     }
 
-    private void initSystemResetDialog(){
+    private void initSystemResetDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
         LayoutInflater inflater = LayoutInflater.from(SettingsActivity.this);
         View v = inflater.inflate(R.layout.dialog_datetime_settings, null);
         final TextView custom_input = (TextView) v.findViewById(R.id.custom_input);
-        final TextView custom_cannel = (TextView)v.findViewById(R.id.custom_cannel);
-        final TextView custom_yes = (TextView)v.findViewById(R.id.custom_yes);
-        final TextView title = (TextView)v.findViewById(R.id.title);
+        final TextView custom_cannel = (TextView) v.findViewById(R.id.custom_cannel);
+        final TextView custom_yes = (TextView) v.findViewById(R.id.custom_yes);
+        final TextView title = (TextView) v.findViewById(R.id.title);
         dateDialog = builder.create();
         dateDialog.setView(inflater.inflate(R.layout.customied_dialog_style, null));
         dateDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
@@ -273,9 +281,12 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
         custom_yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_RECOVER_SYSTEM));
+                // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_RECOVER_SYSTEM));
+                if (TtPhoneDataManager.getInstance() != null) {
+                    TtPhoneDataManager.getInstance().setResetFactorySettings();
+                }
                 mPresenter.recoverSystem(SettingsActivity.this);
-                NToast.shortToast(SettingsActivity.this,getString(R.string.TMT_DEVICE_IS_RECOVER_SUCCEED));
+                NToast.shortToast(SettingsActivity.this, getString(R.string.TMT_DEVICE_IS_RECOVER_SUCCEED));
                 dateDialog.dismiss();
             }
         });
@@ -283,6 +294,7 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
 
     /**
      * 设置edittext  当软键盘弹出时自动向上弹 避免内容被覆盖。
+     *
      * @param editText
      */
     public void showSoftInputFromWindow(EditText editText) {

@@ -2,6 +2,7 @@ package com.qzy.tt.phone.data.impl;
 
 import com.tt.qzy.view.bean.DatetimeModel;
 import com.tt.qzy.view.bean.SosSendMessageModel;
+import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.bean.WifiSettingModel;
 
 public interface ITtPhoneHandlerManager {
@@ -14,18 +15,18 @@ public interface ITtPhoneHandlerManager {
     //断开服务连接
     void disconnectTtPhoneServer();
 
-    //打开sos
-    void openTtPhoneSos();
+    //请求服务sos 是否打开
+    void getTtPhoneSosState();
     //关闭sos
     void closeTtPhoneSos();
 
     //打开gps
-    void openTtPhoneGps();
+    void openTtPhoneGps(TtBeidouOpenBean ttBeidouOpenBean);
     //关闭gps
-    void closeTtPhoneGps();
+    void closeTtPhoneGps(TtBeidouOpenBean ttBeidouOpenBean);
 
     //设置sos信息
-    void setTtPhoneSosValue(String phoneNumber,String text,SosSendMessageModel sosSendMessageModel);
+    void setTtPhoneSosValue(SosSendMessageModel sosSendMessageModel);
 
     //wifi密码设置
     void setWifiPasswd(WifiSettingModel wifiSettingModel);
@@ -37,9 +38,9 @@ public interface ITtPhoneHandlerManager {
     void setResetFactorySettings();
 
     //打开usb升级天通模块模式
-    void openUsbMode();
+    void openUsbMode(TtBeidouOpenBean ttBeidouOpenBean);
     //关闭usb升级天通模块模式
-    void closeUsbMode();
+    void closeUsbMode(TtBeidouOpenBean ttBeidouOpenBean);
 
 
     //拨打电话

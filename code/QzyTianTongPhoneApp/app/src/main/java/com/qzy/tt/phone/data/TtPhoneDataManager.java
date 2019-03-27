@@ -14,6 +14,7 @@ import com.qzy.tt.phone.netty.PhoneNettyManager;
 import com.socks.library.KLog;
 import com.tt.qzy.view.bean.DatetimeModel;
 import com.tt.qzy.view.bean.SosSendMessageModel;
+import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.bean.WifiSettingModel;
 import com.tt.qzy.view.presenter.manager.SyncManager;
 
@@ -47,7 +48,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
     private SyncManager mSyncManager;
 
     public static TtPhoneDataManager getInstance() {
-        if(instance == null){
+        if (instance == null) {
             instance = new TtPhoneDataManager();
         }
         return instance;
@@ -57,7 +58,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
      * 初始化
      */
     public void init(Context context, PhoneNettyManager manager) {
-        if(instance == null) {
+        if (instance == null) {
             instance = new TtPhoneDataManager();
         }
         phoneNettyManager = manager;
@@ -210,53 +211,59 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
     }
 
     @Override
-    public void openTtPhoneSos() {
-
+    public void getTtPhoneSosState() {
+        phoneNettyManager.requestServerSosStatus();
     }
+
 
     @Override
     public void closeTtPhoneSos() {
 
+        phoneNettyManager.requestServerSosClose();
     }
 
     @Override
-    public void openTtPhoneGps() {
-
+    public void openTtPhoneGps(TtBeidouOpenBean ttBeidouOpenBean) {
+        phoneNettyManager.requestGpsPosition(ttBeidouOpenBean);
     }
 
     @Override
-    public void closeTtPhoneGps() {
-
+    public void closeTtPhoneGps(TtBeidouOpenBean ttBeidouOpenBean) {
+        phoneNettyManager.requestGpsPosition(ttBeidouOpenBean);
     }
 
     @Override
-    public void setTtPhoneSosValue(String phoneNumber, String text, SosSendMessageModel sosSendMessageModel) {
+    public void setTtPhoneSosValue(SosSendMessageModel sosSendMessageModel) {
 
+        phoneNettyManager.requestSosSendMessage(sosSendMessageModel);
     }
 
     @Override
     public void setWifiPasswd(WifiSettingModel wifiSettingModel) {
 
+        phoneNettyManager.requestServerWifipassword(wifiSettingModel);
     }
 
     @Override
     public void setDateAndTime(DatetimeModel datetimeModel) {
-
+        phoneNettyManager.requestServerDatetime(datetimeModel);
     }
 
     @Override
     public void setResetFactorySettings() {
 
+        phoneNettyManager.requestServerRecoverSystem();
     }
 
     @Override
-    public void openUsbMode() {
-
+    public void openUsbMode(TtBeidouOpenBean ttBeidouOpenBean) {
+        phoneNettyManager.openBeidou(ttBeidouOpenBean);
     }
 
     @Override
-    public void closeUsbMode() {
+    public void closeUsbMode(TtBeidouOpenBean ttBeidouOpenBean) {
 
+        phoneNettyManager.openBeidou(ttBeidouOpenBean);
     }
 
     @Override

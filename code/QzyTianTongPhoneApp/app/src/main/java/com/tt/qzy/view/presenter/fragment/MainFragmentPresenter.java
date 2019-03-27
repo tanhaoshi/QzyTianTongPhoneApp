@@ -20,6 +20,7 @@ import com.qzy.utils.IPUtil;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.activity.UserEditorsActivity;
+import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
 import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.Constans;
@@ -95,6 +96,16 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     public void requestGpsPosition(boolean isSwitch){
         /*EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_ACCURACY_POSITION,
                 new TtBeidouOpenBean(isSwitch)));*/
+
+        if(TtPhoneDataManager.getInstance() != null){
+            TtBeidouOpenBean ttBeidouOpenBean = new TtBeidouOpenBean(isSwitch);
+            if(isSwitch){
+                TtPhoneDataManager.getInstance().openTtPhoneGps(ttBeidouOpenBean);
+            }else{
+                TtPhoneDataManager.getInstance().closeTtPhoneGps(ttBeidouOpenBean);
+            }
+        }
+
     }
 
     /** 检查设备服务端APP版本是否更新 */

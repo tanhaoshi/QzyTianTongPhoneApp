@@ -6,7 +6,9 @@ import com.socks.library.KLog;
 
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 
 import io.netty.bootstrap.Bootstrap;
@@ -30,7 +32,10 @@ import io.netty.handler.timeout.IdleStateHandler;
 
 public class NettyClient {
 
-    private NioEventLoopGroup groupConnected;
+    // private NioEventLoopGroup groupConnected;
+    private Bootstrap bootstrap;
+
+    private Channel channel;
 
     //发送数据句柄
     public ChannelHandlerContext connectHanlerCtx;
@@ -38,7 +43,9 @@ public class NettyClient {
     //回调接口
     private IConnectedReadDataListener connectedReadDataListener;
 
-    public NettyClient(IConnectedReadDataListener listener){
+    private BlockingQueue<String> mDataQueue = new LinkedBlockingDeque<>();
+
+    public NettyClient(IConnectedReadDataListener listener) {
         connectedReadDataListener = listener;
     }
 
@@ -46,32 +53,43 @@ public class NettyClient {
      * 连接服务
      */
     Thread mThread = null;
-//    ExecutorService executorService = null;
-        public void starConnect(final int port, final String ip){
-            mThread =  new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        // Client服务启动器 3.x的ClientBootstrap
-                        // 改为Bootstrap，且构造函数变化很大，这里用无参构造。
-                        groupConnected = new NioEventLoopGroup();
-                        Bootstrap bootstrap = new Bootstrap();
-                        // 指定channel类型
-                        bootstrap.channel(NioSocketChannel.class);
-                        // 指定Handler
-                        bootstrap.handler(connectedChannelInitializer);
-                        // 指定EventLoopGroup
-                        bootstrap.group(groupConnected);
-                        // 连接到目标IP的8000端口的服务端
-                        Channel channel = bootstrap.connect(new InetSocketAddress(ip, port)).sync().channel();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            mThread.start();
 
-        }
+    //    ExecutorService executorService = null;
+    public void starConnect(final int port, final String ip) {
+
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // Client服务启动器 3.x的ClientBootstrap
+                    // 改为Bootstrap，且构造函数变化很大，这里用无参构造。
+                    NioEventLoopGroup groupConnected = new NioEventLoopGroup();
+                    bootstrap = new Bootstrap();
+                    // 指定channel类型
+                    bootstrap.channel(NioSocketChannel.class);
+                    // 指定Handler
+                    bootstrap.handler(connectedChannelInitializer);
+                    // 指定EventLoopGroup
+                    bootstrap.group(groupConnected);
+                    // 连接到目标IP的8000端口的服务端
+                    channel = bootstrap.connect(new InetSocketAddress(ip, port)).sync().channel();
+
+                    String value = null;
+                    while ((value = mDataQueue.take()) != null) {
+                        groupConnected.shutdownGracefully();
+                        break;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
+        mThread.start();
+
+    }
 //        mThread.start();
 //        executorService = ThreadUtils.getCachedPool();
 //        executorService.execute(new Runnable() {
@@ -98,7 +116,7 @@ public class NettyClient {
             ch.pipeline().addLast(new ProtobufEncoder());*/
             ch.pipeline().addLast(new IdleStateHandler(5, 0, 0, TimeUnit.SECONDS));
             ch.pipeline().addLast(connectedChannelHandler);
-            ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE,4,4,-8,0));
+            ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 4, 4, -8, 0));
         }
     };
 
@@ -107,7 +125,7 @@ public class NettyClient {
 
         @Override
         public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-            LogUtils.e("channelRegistered" );
+            LogUtils.e("channelRegistered");
             connectHanlerCtx = ctx;
             Channel channel = ctx.channel();
 
@@ -115,7 +133,7 @@ public class NettyClient {
 
         @Override
         public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-            LogUtils.e("channelUnregistered" );
+            LogUtils.e("channelUnregistered");
             connectHanlerCtx = ctx;
             Channel channel = ctx.channel();
 
@@ -123,19 +141,19 @@ public class NettyClient {
 
         @Override
         public void channelActive(ChannelHandlerContext ctx) throws Exception {
-            LogUtils.e("channelActive" );
+            LogUtils.e("channelActive");
             connectHanlerCtx = ctx;
-            if(connectedReadDataListener != null){
+            if (connectedReadDataListener != null) {
                 connectedReadDataListener.onConnectedState(true);
             }
         }
 
         @Override
         public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-            LogUtils.e("channelInactive" );
+            LogUtils.e("channelInactive");
             KLog.i(" no connect client netty ");
             connectHanlerCtx = null;
-            if(connectedReadDataListener != null){
+            if (connectedReadDataListener != null) {
                 connectedReadDataListener.onConnectedState(false);
             }
         }
@@ -145,7 +163,7 @@ public class NettyClient {
             connectHanlerCtx = ctx;
             try {
                 ByteBuf buf = ((ByteBuf) msg);
-               // LogUtils.e("receve data = " + buf.array().length);
+                // LogUtils.e("receve data = " + buf.array().length);
                 if (dataBuf == null) {
                     dataBuf = buf;
                 } else {
@@ -175,7 +193,7 @@ public class NettyClient {
                 if (e.state() == IdleState.WRITER_IDLE) {
                     // TODO: 2018/6/13
                     //ctx.writeAndFlush(HEARTBEAT_SEQUENCE.duplicate()).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
-                }else{
+                } else {
                 }
             }
         }
@@ -188,7 +206,7 @@ public class NettyClient {
 
         @Override
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable throwable) throws Exception {
-            LogUtils.e("exceptionCaught ",throwable);
+            LogUtils.e("exceptionCaught ", throwable);
             connectHanlerCtx = ctx;
             ctx.close();
         }
@@ -213,22 +231,32 @@ public class NettyClient {
     /**
      * 断开连接
      */
-    public void stopConnected(){
+    public void stopConnected() {
         try {
-            if(groupConnected != null){
-                groupConnected.shutdownGracefully();
+            LogUtils.e("stopConnected .....");
+            mDataQueue.add("1111");
+            if (bootstrap != null) {
+                if (bootstrap.group() != null) {
+                    bootstrap.group().shutdownGracefully();
+                }
+
             }
-            if(mThread != null && mThread.isAlive()){
+            if (channel != null) {
+                channel.close();
+            }
+
+            if (mThread != null && mThread.isAlive()) {
                 mThread.interrupt();
             }
             mThread = null;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public interface IConnectedReadDataListener{
+    public interface IConnectedReadDataListener {
         void onReceiveData(ByteBufInputStream data);
+
         void onConnectedState(boolean state);
     }
 
