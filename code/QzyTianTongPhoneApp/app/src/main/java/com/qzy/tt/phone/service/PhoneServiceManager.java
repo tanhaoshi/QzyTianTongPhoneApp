@@ -39,7 +39,7 @@ public class PhoneServiceManager {
     public PhoneServiceManager(Context context) {
         mContext = context;
         mPhoneNettyManager = new PhoneNettyManager(context);
-        TtPhoneDataManager.init(mPhoneNettyManager);
+        TtPhoneDataManager.getInstance().init(context, mPhoneNettyManager);
 //        mQzySensorManager = new QzySensorManager(context);
         if (SPUtils.containsShare(context, Constans.AUTO_EXITS)) {
             KLog.i("phone service manager start record ");

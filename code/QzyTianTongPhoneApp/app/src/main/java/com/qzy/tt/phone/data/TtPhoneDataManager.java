@@ -1,63 +1,93 @@
 package com.qzy.tt.phone.data;
 
+import android.content.Context;
+
+import com.google.protobuf.GeneratedMessageV3;
+import com.qzy.tt.data.TtCallRecordProtos;
+import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.phone.data.impl.IAllTtPhoneDataListener;
 import com.qzy.tt.phone.data.impl.IMainFragment;
 import com.qzy.tt.phone.data.impl.ITtPhoneDataListener;
 import com.qzy.tt.phone.data.impl.ITtPhoneHandlerManager;
+import com.qzy.tt.phone.data.impl.ITtPhoneManager;
 import com.qzy.tt.phone.netty.PhoneNettyManager;
-import com.qzy.utils.AndroidVoiceManager;
 import com.socks.library.KLog;
 import com.tt.qzy.view.bean.DatetimeModel;
 import com.tt.qzy.view.bean.SosSendMessageModel;
 import com.tt.qzy.view.bean.WifiSettingModel;
+import com.tt.qzy.view.presenter.manager.SyncManager;
 
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
-
-
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
-import io.reactivex.FlowableEmitter;
-import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 /**
  * 数据管理类
  */
-public class TtPhoneDataManager implements ITtPhoneHandlerManager {
+public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManager {
 
+    private Context mContext;
+
+    //静态操作类
     private static TtPhoneDataManager instance;
 
+    //netty管理类
     private PhoneNettyManager phoneNettyManager;
 
+    //mainfragment 回调
     private IMainFragment iMainFragment;
 
+    //baseActivityPersenter 回调
     private ITtPhoneDataListener iTtPhoneDataListener;
 
+
+    //数据同步操作类
+    private SyncManager mSyncManager;
+
     public static TtPhoneDataManager getInstance() {
+        if(instance == null){
+            instance = new TtPhoneDataManager();
+        }
         return instance;
     }
 
     /**
      * 初始化
      */
-    public static void init(PhoneNettyManager manager) {
+    public void init(Context context, PhoneNettyManager manager) {
         KLog.i("是否初始化!");
-        instance = new TtPhoneDataManager(manager);
-    }
-
-    private TtPhoneDataManager(PhoneNettyManager manager) {
+        if(instance == null) {
+            instance = new TtPhoneDataManager();
+        }
         phoneNettyManager = manager;
+        mContext = context;
         setAllDataListener();
+
+        initSyncDataModel(context);
     }
 
-    /** 所有数据监听 */
+    private TtPhoneDataManager() {
+
+    }
+
+
+
+    /**
+     * 初始化同步数据
+     *
+     * @param context
+     */
+    private void initSyncDataModel(Context context) {
+        mSyncManager = new SyncManager(context);
+    }
+
+
+    /**
+     * 所有数据监听
+     */
     private void setAllDataListener() {
         phoneNettyManager.getmCmdHandler().setmAllDataListener(new IAllTtPhoneDataListener() {
             @Override
@@ -77,7 +107,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager {
 
                             @Override
                             public void onNext(Boolean aBoolean) {
-                                if(iMainFragment != null){
+                                if (iMainFragment != null) {
                                     iMainFragment.isTtServerConnected(aBoolean);
                                 }
 
@@ -93,13 +123,15 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager {
 
                             }
                         });
-
+               /* if(mSyncManager != null){
+                    mSyncManager
+                }*/
 
             }
 
             @Override
             public void isTtSignalStrength(int signalLevel) {
-                if(iTtPhoneDataListener != null){
+                if (iTtPhoneDataListener != null) {
                     iTtPhoneDataListener.isTtSignalStrength(signalLevel);
                 }
 
@@ -107,17 +139,40 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager {
 
             @Override
             public void isTtSimCard(boolean isIn) {
-                if(iTtPhoneDataListener != null){
+                if (iTtPhoneDataListener != null) {
                     iTtPhoneDataListener.isTtSimCard(isIn);
                 }
             }
 
             @Override
             public void isTtPhoneBattery(int level, int scal) {
-                if(iTtPhoneDataListener != null){
-                    iTtPhoneDataListener.isTtPhoneBattery(level,scal);
+                if (iTtPhoneDataListener != null) {
+                    iTtPhoneDataListener.isTtPhoneBattery(level, scal);
                 }
             }
+
+            @Override
+            public void syncCallRecord(TtCallRecordProtos.TtCallRecordProto ttCallRecordProto) {
+                if (mSyncManager != null) {
+                    mSyncManager.syncCallRecord(ttCallRecordProto);
+                }
+
+            }
+
+            @Override
+            public void syncShortMessage(TtShortMessageProtos.TtShortMessage ttShortMessage) {
+                if (mSyncManager != null) {
+                    mSyncManager.syncShortMessage(ttShortMessage);
+                }
+            }
+
+            @Override
+            public void syncShortMessageSignal(int protoId, GeneratedMessageV3 messageV3, TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessage) {
+                if (mSyncManager != null) {
+                    mSyncManager.syncShortMessageSignal(protoId, messageV3, ttShortMessage);
+                }
+            }
+
         });
     }
 
@@ -139,7 +194,13 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager {
     }
 
 
+    /**
+     * 释放资源
+     */
     public void free() {
+        if (mSyncManager != null) {
+            mSyncManager.release();
+        }
         instance = null;
     }
 
@@ -213,5 +274,12 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager {
     public void answerTtPhone() {
 
     }
+
+
+    @Override
+    public SyncManager getSyncManager() {
+        return mSyncManager;
+    }
+
 
 }

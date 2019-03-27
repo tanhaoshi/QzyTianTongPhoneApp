@@ -43,13 +43,12 @@ import io.netty.buffer.ByteBufInputStream;
 public class CmdHandler {
 
     private Context context;
-    private SyncManager mSyncManager;
+
 
     private IAllTtPhoneDataListener mAllDataListener;
 
     public CmdHandler(Context context) {
         this.context = context;
-        mSyncManager = new SyncManager(context);
     }
 
     /**
@@ -119,16 +118,25 @@ public class CmdHandler {
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_call_record:
                     TtCallRecordProtos.TtCallRecordProto ttCallRecordProto = TtCallRecordProtos.TtCallRecordProto.parseDelimitedFrom(inputStream);
-                    mSyncManager.syncCallRecord(ttCallRecordProto);
+                    //mSyncManager.syncCallRecord(ttCallRecordProto);
+                    if(mAllDataListener != null){
+                        mAllDataListener.syncCallRecord(ttCallRecordProto);
+                    }
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_short_message:
                     TtShortMessageProtos.TtShortMessage ttShortMessage = TtShortMessageProtos.TtShortMessage.parseDelimitedFrom(inputStream);
-                    mSyncManager.syncShortMessage(ttShortMessage);
+                    //mSyncManager.syncShortMessage(ttShortMessage);
+                    if(mAllDataListener != null){
+                        mAllDataListener.syncShortMessage(ttShortMessage);
+                    }
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_receiver_short_message:
                     TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessageSignal = TtShortMessageProtos.TtShortMessage.ShortMessage.parseDelimitedFrom(inputStream);
                     startSystemRingTone();
-                    mSyncManager.syncShortMessageSignal(protoId,ttShortMessageSignal,ttShortMessageSignal);
+                    //mSyncManager.syncShortMessageSignal(protoId,ttShortMessageSignal,ttShortMessageSignal);
+                    if(mAllDataListener != null){
+                        mAllDataListener.syncShortMessageSignal(protoId,ttShortMessageSignal,ttShortMessageSignal);
+                    }
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_call_phone_back:
                     CallPhoneBackProtos.CallPhoneBack callPhoneBack = CallPhoneBackProtos.CallPhoneBack.parseDelimitedFrom(inputStream);
@@ -305,7 +313,7 @@ public class CmdHandler {
 
 
     public void release(){
-        mSyncManager.release();
+
     }
 
     public IAllTtPhoneDataListener getmAllDataListener() {
