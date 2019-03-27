@@ -7,7 +7,7 @@ import com.qzy.tt.data.TtBeiDouStatuss;
 import com.qzy.tt.data.TtPhoneBatteryProtos;
 import com.qzy.tt.data.TtPhoneSignalProtos;
 import com.qzy.tt.data.TtPhoneSimCards;
-import com.qzy.tt.phone.data.ITtPhoneDataListener;
+import com.qzy.tt.phone.data.impl.ITtPhoneDataListener;
 import com.qzy.tt.phone.data.TtPhoneDataManger;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
 import com.tt.qzy.view.view.BaseMainView;
@@ -86,11 +86,6 @@ public class BaseActivityPresenter extends BasePresenter<BaseMainView> implement
         TtBeiDouStatuss.TtBeiDouStatus ttBeiDouStatus = (TtBeiDouStatuss.TtBeiDouStatus) cmd.getMessage();
         boolean isConnect = ttBeiDouStatus.getIsBeiDouStatus();
         return isConnect;
-    }
-
-    @Override
-    public void isTtServerConnected(boolean connected) {
-//
     }
 
     @Override

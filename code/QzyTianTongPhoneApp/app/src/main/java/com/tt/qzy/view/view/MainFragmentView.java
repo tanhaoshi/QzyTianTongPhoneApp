@@ -10,7 +10,7 @@ public interface MainFragmentView extends BaseView{
 
     void getTtBeiDouSwitch(TtOpenBeiDouProtos.TtOpenBeiDou ttOpenBeiDou);
 
-    void updateConnectedState(boolean isConnected);
+    void connectedState(boolean isConnected);
 
     void upgradleServerApp();
 

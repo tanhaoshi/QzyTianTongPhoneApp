@@ -33,7 +33,6 @@ import com.tt.qzy.view.bean.DatetimeModel;
 import com.tt.qzy.view.bean.EnableDataModel;
 import com.tt.qzy.view.bean.ProtobufMessageModel;
 import com.tt.qzy.view.bean.SMAgrementModel;
-import com.tt.qzy.view.bean.ServerPortIp;
 import com.tt.qzy.view.bean.SosSendMessageModel;
 import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.bean.WifiSettingModel;
@@ -141,8 +140,8 @@ public class PhoneNettyManager {
      * @param isconnected
      */
     private void sendConnectedState(boolean isconnected){
-        if( mCmdHandler.getmDataListener() != null){
-            mCmdHandler.getmDataListener().isTtServerConnected(isconnected);
+        if( mCmdHandler.getIMainFragment() != null){
+            mCmdHandler.getIMainFragment().isTtServerConnected(isconnected);
         }
     }
 

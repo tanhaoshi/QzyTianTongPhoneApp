@@ -1,5 +1,8 @@
 package com.qzy.tt.phone.data;
 
+import com.qzy.tt.phone.data.impl.IMainFragment;
+import com.qzy.tt.phone.data.impl.ITtPhoneDataListener;
+import com.qzy.tt.phone.data.impl.ITtPhoneHandlerManager;
 import com.qzy.tt.phone.netty.PhoneNettyManager;
 
 /**
@@ -35,6 +38,13 @@ public class TtPhoneDataManger implements ITtPhoneHandlerManager {
     public void setTtPhoneDataListener(ITtPhoneDataListener iTtPhoneDataListener) {
         phoneNettyManager.getmCmdHandler().setmDataListener(iTtPhoneDataListener);
     }
+
+    /** 注册MainFragment数据回调接口就*/
+    public void setMainFragmentListener(IMainFragment iMainFragment){
+        phoneNettyManager.getmCmdHandler().setIMainFragment(iMainFragment);
+    }
+
+
 
 
     public void free() {
