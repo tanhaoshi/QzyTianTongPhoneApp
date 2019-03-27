@@ -206,6 +206,11 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
     }
 
     @Override
+    public void disconnectTtPhoneServer() {
+        phoneNettyManager.stop();
+    }
+
+    @Override
     public void openTtPhoneSos() {
 
     }

@@ -11,6 +11,9 @@ public interface ITtPhoneHandlerManager {
     //连接服务
     void connectTtPhoneServer(String ip,int port);
 
+    //断开服务连接
+    void disconnectTtPhoneServer();
+
     //打开sos
     void openTtPhoneSos();
     //关闭sos
