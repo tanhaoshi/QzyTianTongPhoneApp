@@ -1,9 +1,6 @@
-package com.qzy.tt.phone.data;
+package com.qzy.tt.phone.data.impl;
 
 public interface ITtPhoneDataListener {
-
-    //服务连接状态
-    void isTtServerConnected(boolean connected);
 
     //信号强度
     void isTtSignalStrength(int signalLevel);

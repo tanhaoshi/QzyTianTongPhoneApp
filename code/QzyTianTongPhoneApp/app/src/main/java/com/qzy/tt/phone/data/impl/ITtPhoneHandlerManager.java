@@ -1,4 +1,4 @@
-package com.qzy.tt.phone.data;
+package com.qzy.tt.phone.data.impl;
 
 import com.tt.qzy.view.bean.DatetimeModel;
 import com.tt.qzy.view.bean.SosSendMessageModel;

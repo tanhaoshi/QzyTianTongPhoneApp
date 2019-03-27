@@ -16,7 +16,8 @@ import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSosStateProtos;
 import com.qzy.tt.data.TtPhoneUpdateResponseProtos;
 import com.qzy.tt.phone.common.CommonData;
-import com.qzy.tt.phone.data.ITtPhoneHandlerManager;
+import com.qzy.tt.phone.data.impl.IMainFragment;
+import com.qzy.tt.phone.data.impl.ITtPhoneHandlerManager;
 import com.qzy.tt.phone.data.TtPhoneDataManger;
 import com.qzy.utils.IPUtil;
 import com.qzy.utils.LogUtils;
@@ -24,31 +25,19 @@ import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.activity.UserEditorsActivity;
-import com.tt.qzy.view.bean.AppInfoModel;
-import com.tt.qzy.view.bean.DatetimeModel;
-import com.tt.qzy.view.bean.EnableDataModel;
-import com.tt.qzy.view.bean.ServerPortIp;
-import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
 import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.Constans;
-import com.tt.qzy.view.utils.DateUtil;
-import com.tt.qzy.view.utils.MD5Utils;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.NetworkUtil;
 import com.tt.qzy.view.view.MainFragmentView;
-
-
-
-import java.io.IOException;
-import java.util.Date;
 
 
 /**
  * Created by yj.zhang on 2018/9/17.
  */
 
-public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
+public class MainFragementPersenter extends BasePresenter<MainFragmentView> implements IMainFragment{
 
     private Context mContext;
 
@@ -58,7 +47,16 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
         mContext = context;
         //EventBus.getDefault().register(this);
         manager = TtPhoneDataManger.getInstance();
+        setMainFragmentListener();
     }
+
+    public void setMainFragmentListener(){
+        if (TtPhoneDataManger.getInstance() != null) {
+            TtPhoneDataManger.getInstance().setMainFragmentListener(this);
+        }
+    }
+
+
 
     /**
      * 查询连接状态
@@ -82,7 +80,6 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
      * 连接天通
      */
     public void startConnect() {
-
         if (CommonData.getInstance().isConnected()) {
             Intent intent = new Intent(mContext, UserEditorsActivity.class);
             ((Activity) mContext).startActivityForResult(intent, 99);
@@ -100,26 +97,6 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
         //判断是否连接着天通指定的wifi
         String ssid = NetworkUtil.getConnectWifiSsid(mContext);
 
-        LogUtils.i("ssid value = " + ssid);
-
-        if(TextUtils.isEmpty(ssid)){
-            LogUtils.i("ssid is empty ");
-        }else{
-            LogUtils.i("ssid not empty");
-        }
-
-        if(ssid.length() < 6){
-            LogUtils.i("ssid length is less 6");
-        }else{
-            LogUtils.i("ssid length is than 6");
-        }
-
-        if(ssid.contains(Constans.STANDARD_WIFI_NAME)){
-            LogUtils.i("ssid is contains wifi name");
-        }else{
-            LogUtils.i("ssid is not contains wifi name");
-        }
-
         if(!AppUtils.getIpAddress(mContext).contains(Constans.LOCAL_HEAD_IP)){
             NToast.shortToast(mContext,mContext.getString(R.string.TMT_PLEASE_CLOSE_DATA_MOBILE_AND_ENABLE_WIFI));
         }
@@ -131,10 +108,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
             return;
         }
 
-       // EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));
-
         manager.connectTtPhoneServer(Constans.IP,Constans.PORT);
-
     }
 
     /**
@@ -387,5 +361,10 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
 
     public void release(){
        // EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void isTtServerConnected(boolean connected) {
+
     }
 }

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.google.protobuf.GeneratedMessageV3;
-import com.qzy.data.PhoneCmd;
 import com.qzy.data.PrototocalTools;
 import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.CallPhoneStateProtos;
@@ -21,13 +20,12 @@ import com.qzy.tt.data.TtPhoneSimCards;
 import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.data.TtPhoneSosStateProtos;
 import com.qzy.tt.data.TtPhoneUpdateResponseProtos;
-import com.qzy.tt.data.TtPhoneUpdateSendFileProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.data.TtTimeProtos;
-import com.qzy.tt.phone.data.ITtPhoneDataListener;
+import com.qzy.tt.phone.data.impl.IMainFragment;
+import com.qzy.tt.phone.data.impl.ITtPhoneDataListener;
 import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
-import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.activity.TellPhoneIncomingActivity;
 import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.presenter.manager.SyncManager;
@@ -47,6 +45,7 @@ public class CmdHandler {
     private SyncManager mSyncManager;
 
     private ITtPhoneDataListener mDataListener;
+    private IMainFragment        mIMainFragment;
 
     public CmdHandler(Context context) {
         this.context = context;
@@ -304,11 +303,20 @@ public class CmdHandler {
         this.mDataListener = mDataListener;
     }
 
+    public void setIMainFragment(IMainFragment mainFragment) {
+        this.mIMainFragment = mainFragment;
+    }
+
+
     public void release(){
         mSyncManager.release();
     }
 
     public ITtPhoneDataListener getmDataListener() {
         return mDataListener;
+    }
+
+    public IMainFragment getIMainFragment() {
+        return mIMainFragment;
     }
 }

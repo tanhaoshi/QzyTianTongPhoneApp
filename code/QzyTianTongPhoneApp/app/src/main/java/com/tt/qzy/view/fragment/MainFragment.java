@@ -66,8 +66,6 @@ public class MainFragment extends Fragment implements MainFragmentView{
     SwitchCompat sc_settin_testxinlv;
     @BindView(R.id.sc_settin_data)
     SwitchCompat sc_settin_data;
-//    @BindView(R.id.record_voice_switch)
-//    SwitchCompat record_voice_switch;
     @BindView(R.id.frameLayout)
     FrameLayout mFrameLayout;
     @BindView(R.id.circle_loading_view)
@@ -192,36 +190,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
                 }
             }
         });
-//        sc_settin_testxinlv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if(!SPUtils.containsShare(getActivity(), Constans.CRY_HELP_PHONE)){
-//                    sc_settin_testxinlv.setChecked(false);
-//                    NToast.shortToast(getActivity(),getString(R.string.TMT_remind));
-//                    return;
-//                }
-//                if(mainActivity.isConnectStatus()){
-//                    if(mainActivity.tt_isSignal){
-//                        if(isChecked){
-//                            mPresneter.dialPhone(SPUtils.getShare(getActivity(),Constans.CRY_HELP_PHONE,"").toString());
-//                            mIntent = new Intent(getActivity(),TimerService.class);
-//                            getActivity().startService(mIntent);
-//                            mPresneter.requestGpsPosition(true);
-//                            main_location.setChecked(true);
-//                        }else{
-//                            getActivity().stopService(mIntent);
-//                            mPresneter.closeServerSos();
-//                        }
-//                    }else{
-//                        NToast.shortToast(getActivity(), "设备未入网,请先入网!");
-//                        sc_settin_testxinlv.setChecked(false);
-//                    }
-//                }else{
-//                    NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
-//                    sc_settin_testxinlv.setChecked(false);
-//                }
-//            }
-//        });
+
         sc_settin_data.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -238,25 +207,6 @@ public class MainFragment extends Fragment implements MainFragmentView{
                 }
             }
         });
-
-//        boolean voiceState = AllLocalPcmManager.getInstance(getActivity()) == null ? false : true;
-//
-//        record_voice_switch.setChecked(voiceState);
-//
-//        record_voice_switch.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // onClickListener 执行速度在 onChceckListener 后面
-//                if(!record_voice_switch.isChecked()){
-//                    if(AllLocalPcmManager.getInstance(getActivity()) != null){
-//                        AllLocalPcmManager.getInstance(getActivity()).free();
-//                    }
-//                }else{
-//                    AllLocalPcmManager.getInstance(getActivity());
-//
-//                }
-//            }
-//        });
     }
 
     @OnClick({R.id.main_editors, R.id.main_settings, R.id.tmt_noEntry})
@@ -290,11 +240,9 @@ public class MainFragment extends Fragment implements MainFragmentView{
         if (isConnected) {
             mCircleImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.yilianjie));
             connect.setText(getResources().getString(R.string.TMT_connect_succeed));
-//            NToast.shortToast(getActivity(), getString(R.string.TMT_connect_succeed_notice));
         } else {
             mCircleImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.weilianjie));
             connect.setText(getResources().getString(R.string.TMT_click_connect));
-//            NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
         }
     }
 
@@ -347,7 +295,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
     }
 
     @Override
-    public void updateConnectedState(boolean isConnected) {
+    public void connectedState(boolean isConnected) {
         setConnectStateView(isConnected);
     }
 
@@ -359,8 +307,6 @@ public class MainFragment extends Fragment implements MainFragmentView{
                     @Override
                     public void onClick(View v) {
                         viewTransition(true);
-             /*           EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_UPLOAD_APP
-                                ,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));*/
                         dialogBuilder.niftyDismiss();
 
                     }
@@ -423,7 +369,6 @@ public class MainFragment extends Fragment implements MainFragmentView{
     @Override
     public void upgradleNonconnect() {
         viewTransition(false);
-//        NToast.shortToast(getActivity(),getActivity().getString(R.string.TMT_WIFI_DISCONNECT_OF_UPDATE));
     }
 
     @Override

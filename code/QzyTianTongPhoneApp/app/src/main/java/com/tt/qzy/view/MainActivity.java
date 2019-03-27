@@ -101,12 +101,12 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
 
     @Override
     public void initView() {
-        KLog.i("MainActivity initView onCreate ");
+        mPresenter = new MainActivityPresenter(this);
+        mPresenter.onBindView(this);
+        startService();
         mHelper = new HomeKeyListenerHelper(MainActivity.this);
         mHelper.registerHomeKeyListener(this);
         showMainFragment();
-        mPresenter = new MainActivityPresenter(this);
-        mPresenter.onBindView(this);
         initBadeView();
     }
 
@@ -249,7 +249,6 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     protected void onResume() {
         super.onResume();
         SPUtils.putShare(MainActivity.this,Constans.AUTO_EXITS,true);
-        startService();
         Integer recordCount = (Integer)SPUtils.getShare(MainActivity.this, Constans.RECORD_ISREAD,0);
         remind(String.valueOf(recordCount),callBadgeView);
         Integer shortMessageCount = (Integer)SPUtils.getShare(MainActivity.this,Constans.SHORTMESSAGE_ISREAD,0);
