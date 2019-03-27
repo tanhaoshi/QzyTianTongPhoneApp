@@ -5,41 +5,46 @@ import com.qzy.tt.phone.netty.PhoneNettyManager;
 /**
  * 数据管理类
  */
-public class TtPhoneDataManger {
+public class TtPhoneDataManger implements ITtPhoneHandlerManager {
 
     private static TtPhoneDataManger instance;
 
     private PhoneNettyManager phoneNettyManager;
 
-    public static TtPhoneDataManger getInstance(){
+    public static TtPhoneDataManger getInstance() {
         return instance;
     }
 
     /**
      * 初始化
      */
-    public static void init(PhoneNettyManager manager){
-       instance = new TtPhoneDataManger(manager);
+    public static void init(PhoneNettyManager manager) {
+        instance = new TtPhoneDataManger(manager);
     }
 
-    private TtPhoneDataManger(PhoneNettyManager manager){
+    private TtPhoneDataManger(PhoneNettyManager manager) {
         phoneNettyManager = manager;
     }
 
 
     /**
      * 注册数据回调
+     *
      * @param iTtPhoneDataListener
      */
-    public void setTtPhoneDataListener(ITtPhoneDataListener iTtPhoneDataListener){
+    public void setTtPhoneDataListener(ITtPhoneDataListener iTtPhoneDataListener) {
         phoneNettyManager.getmCmdHandler().setmDataListener(iTtPhoneDataListener);
     }
 
 
-
-    public void free(){
+    public void free() {
         instance = null;
     }
 
+
+    @Override
+    public void connectTtPhoneServer(String ip, int port) {
+        phoneNettyManager.connect(port, ip);
+    }
 
 }

@@ -109,6 +109,13 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         m.unbind();
     }
 
+    /**
+     * 设置数据回调
+     */
+    public void setDataListener(){
+        mPresenter.setTtPhoneDataListener();
+    }
+
     public abstract int getContentView();
 
     public abstract void initView();

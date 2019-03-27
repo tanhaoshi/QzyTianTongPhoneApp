@@ -16,6 +16,8 @@ import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSosStateProtos;
 import com.qzy.tt.data.TtPhoneUpdateResponseProtos;
 import com.qzy.tt.phone.common.CommonData;
+import com.qzy.tt.phone.data.ITtPhoneHandlerManager;
+import com.qzy.tt.phone.data.TtPhoneDataManger;
 import com.qzy.utils.IPUtil;
 import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
@@ -50,9 +52,12 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
 
     private Context mContext;
 
+    private ITtPhoneHandlerManager manager;
+
     public MainFragementPersenter(Context context) {
         mContext = context;
         //EventBus.getDefault().register(this);
+        manager = TtPhoneDataManger.getInstance();
     }
 
     /**
@@ -127,6 +132,8 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
         }
 
        // EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));
+
+        manager.connectTtPhoneServer(Constans.IP,Constans.PORT);
 
     }
 

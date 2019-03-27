@@ -7,19 +7,31 @@ import com.qzy.tt.data.TtBeiDouStatuss;
 import com.qzy.tt.data.TtPhoneBatteryProtos;
 import com.qzy.tt.data.TtPhoneSignalProtos;
 import com.qzy.tt.data.TtPhoneSimCards;
+import com.qzy.tt.phone.data.ITtPhoneDataListener;
+import com.qzy.tt.phone.data.TtPhoneDataManger;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
 import com.tt.qzy.view.view.BaseMainView;
 
-public class BaseActivityPresenter extends BasePresenter<BaseMainView>{
+public class BaseActivityPresenter extends BasePresenter<BaseMainView> implements ITtPhoneDataListener {
 
     private Context mContext;
 
-    public BaseActivityPresenter(Context context){
+    public BaseActivityPresenter(Context context) {
         this.mContext = context;
     }
 
     /**
+     * 设置底层数据监听
+     */
+    public void setTtPhoneDataListener() {
+        if (TtPhoneDataManger.getInstance() != null) {
+            TtPhoneDataManger.getInstance().setTtPhoneDataListener(this);
+        }
+    }
+
+    /**
      * 获取天通信号强度
+     *
      * @param obj
      * @return
      */
@@ -32,10 +44,11 @@ public class BaseActivityPresenter extends BasePresenter<BaseMainView>{
 
     /**
      * 获取电量level
+     *
      * @param obj
      * @return
      */
-    public int getBatteryLevel(Object obj){
+    public int getBatteryLevel(Object obj) {
         PhoneCmd cmd = (PhoneCmd) obj;
         TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery = (TtPhoneBatteryProtos.TtPhoneBattery) cmd.getMessage();
         int level = ttPhoneBattery.getLevel();
@@ -44,10 +57,11 @@ public class BaseActivityPresenter extends BasePresenter<BaseMainView>{
 
     /**
      * 获取 sdcal
+     *
      * @param obj
      * @return
      */
-    public int getBatteryScal(Object obj){
+    public int getBatteryScal(Object obj) {
         PhoneCmd cmd = (PhoneCmd) obj;
         TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery = (TtPhoneBatteryProtos.TtPhoneBattery) cmd.getMessage();
         int scal = ttPhoneBattery.getScale();
@@ -57,9 +71,9 @@ public class BaseActivityPresenter extends BasePresenter<BaseMainView>{
     /**
      * 获取设备sim卡状态
      */
-    public boolean getTianTongSimStatus(Object obj){
-        PhoneCmd cmd = (PhoneCmd)obj;
-        TtPhoneSimCards.TtPhoneSimCard ttPhoneSimCard = (TtPhoneSimCards.TtPhoneSimCard)cmd.getMessage();
+    public boolean getTianTongSimStatus(Object obj) {
+        PhoneCmd cmd = (PhoneCmd) obj;
+        TtPhoneSimCards.TtPhoneSimCard ttPhoneSimCard = (TtPhoneSimCards.TtPhoneSimCard) cmd.getMessage();
         boolean status = ttPhoneSimCard.getIsSimCard();
         return status;
     }
@@ -67,10 +81,31 @@ public class BaseActivityPresenter extends BasePresenter<BaseMainView>{
     /**
      * 设备是否连接上北斗卫星
      */
-    public boolean getTianTongConnectBeiDou(Object obj){
-        PhoneCmd cmd = (PhoneCmd)obj;
-        TtBeiDouStatuss.TtBeiDouStatus ttBeiDouStatus = (TtBeiDouStatuss.TtBeiDouStatus)cmd.getMessage();
+    public boolean getTianTongConnectBeiDou(Object obj) {
+        PhoneCmd cmd = (PhoneCmd) obj;
+        TtBeiDouStatuss.TtBeiDouStatus ttBeiDouStatus = (TtBeiDouStatuss.TtBeiDouStatus) cmd.getMessage();
         boolean isConnect = ttBeiDouStatus.getIsBeiDouStatus();
         return isConnect;
     }
+
+    @Override
+    public void isTtServerConnected(boolean connected) {
+//
+    }
+
+    @Override
+    public void isTtSignalStrength(int signalLevel) {
+
+    }
+
+    @Override
+    public void isTtSimCard(boolean isIn) {
+
+    }
+
+    @Override
+    public void isTtPhoneBattery(int level, int scal) {
+
+    }
+
 }

@@ -281,6 +281,10 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
             mPresenter.requestPermission(Build.BRAND,this, Manifest.permission.RECORD_AUDIO);
             startService(new Intent(this, TtPhoneService.class));
         }
+
+
+        //设置数据
+        setDataListener();
     }
 
     /*
