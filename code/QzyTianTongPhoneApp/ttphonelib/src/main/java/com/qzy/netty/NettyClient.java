@@ -30,9 +30,6 @@ import io.netty.handler.timeout.IdleStateHandler;
 
 public class NettyClient {
 
-    public static final int Port = 9999;
-    public static final String IP = "192.168.43.1";
-
     private NioEventLoopGroup groupConnected;
 
     //发送数据句柄
@@ -194,7 +191,6 @@ public class NettyClient {
             LogUtils.e("exceptionCaught ",throwable);
             connectHanlerCtx = ctx;
             ctx.close();
-            groupConnected = null;
         }
 
         @Override
@@ -226,7 +222,6 @@ public class NettyClient {
                 mThread.interrupt();
             }
             mThread = null;
-            groupConnected = null;
         }catch (Exception e){
             e.printStackTrace();
         }

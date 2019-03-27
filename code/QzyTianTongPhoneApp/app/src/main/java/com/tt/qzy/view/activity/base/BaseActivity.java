@@ -197,6 +197,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         }else{
             SPUtils.putShare(BaseActivity.this, Constans.TTM_STATUS,tt_status);
             img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonetwork));
+            recoverView();
         }
     }
 

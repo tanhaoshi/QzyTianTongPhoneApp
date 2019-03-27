@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.net.wifi.WifiManager;
 import android.text.TextUtils;
-
-
 import com.qzy.data.PhoneCmd;
 
 import com.qzy.tt.data.TtOpenBeiDouProtos;
@@ -28,8 +26,6 @@ import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.NetworkUtil;
 import com.tt.qzy.view.view.MainFragmentView;
-
-
 
 /**
  * Created by yj.zhang on 2018/9/17.
@@ -90,7 +86,9 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
 
     /** 关闭连接 */
     public void stopConnect(){
-       // EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_DISCONNECT_TIANTONG));
+        if(TtPhoneDataManager.getInstance() != null){
+            TtPhoneDataManager.getInstance().disconnectTtPhoneServer();
+        }
     }
 
     /** 请求gps准确位置 */
@@ -337,5 +335,10 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     @Override
     public void isTtServerConnected(boolean connected) {
         mView.get().connectedState(connected);
+    }
+
+    @Override
+    public void disConnectServer() {
+        mView.get().connectedState(false);
     }
 }
