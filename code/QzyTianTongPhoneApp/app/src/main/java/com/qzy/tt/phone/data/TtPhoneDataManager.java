@@ -118,9 +118,9 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
                             }
                         });
-               /* if(mSyncManager != null){
-                    mSyncManager
-                }*/
+                if (mSyncManager != null && !connected) {
+                    mSyncManager.setServerDisconnected();
+                }
 
             }
 
@@ -151,7 +151,6 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
                 if (mSyncManager != null) {
                     mSyncManager.syncCallRecord(ttCallRecordProto);
                 }
-
             }
 
             @Override

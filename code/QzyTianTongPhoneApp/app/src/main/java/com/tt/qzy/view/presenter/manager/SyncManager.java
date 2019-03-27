@@ -240,4 +240,6 @@ public class SyncManager {
     public void release() {
         //  EventBus.getDefault().unregister(this);
     }
+
+
 }
