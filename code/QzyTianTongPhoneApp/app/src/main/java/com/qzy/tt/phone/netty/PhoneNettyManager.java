@@ -140,8 +140,8 @@ public class PhoneNettyManager {
      * @param isconnected
      */
     private void sendConnectedState(boolean isconnected){
-        if( mCmdHandler.getIMainFragment() != null){
-            mCmdHandler.getIMainFragment().isTtServerConnected(isconnected);
+        if( mCmdHandler.getmAllDataListener() != null){
+            mCmdHandler.getmAllDataListener().isTtServerConnected(isconnected);
         }
     }
 

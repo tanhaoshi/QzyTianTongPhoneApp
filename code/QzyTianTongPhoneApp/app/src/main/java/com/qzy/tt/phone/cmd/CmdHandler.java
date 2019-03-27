@@ -22,6 +22,7 @@ import com.qzy.tt.data.TtPhoneSosStateProtos;
 import com.qzy.tt.data.TtPhoneUpdateResponseProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.data.TtTimeProtos;
+import com.qzy.tt.phone.data.impl.IAllTtPhoneDataListener;
 import com.qzy.tt.phone.data.impl.IMainFragment;
 import com.qzy.tt.phone.data.impl.ITtPhoneDataListener;
 import com.qzy.utils.LogUtils;
@@ -44,8 +45,7 @@ public class CmdHandler {
     private Context context;
     private SyncManager mSyncManager;
 
-    private ITtPhoneDataListener mDataListener;
-    private IMainFragment        mIMainFragment;
+    private IAllTtPhoneDataListener mAllDataListener;
 
     public CmdHandler(Context context) {
         this.context = context;
@@ -213,7 +213,6 @@ public class CmdHandler {
                 incommingState(callPhoneState.getPhoneNumber());
             }else {
                // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_STATE,protoId, callPhoneState);
-
             }
         }
     }
@@ -226,8 +225,8 @@ public class CmdHandler {
      */
     private void pasreCallPhoneBattery(int protoId,TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery){
        // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_BATTERY,protoId, ttPhoneBattery);
-        if(mDataListener != null){
-            mDataListener.isTtPhoneBattery(ttPhoneBattery.getLevel(),ttPhoneBattery.getScale());
+        if(mAllDataListener != null){
+            mAllDataListener.isTtPhoneBattery(ttPhoneBattery.getLevel(),ttPhoneBattery.getScale());
         }
     }
 
@@ -238,8 +237,8 @@ public class CmdHandler {
      */
     private void parseSimCard(int protoId, TtPhoneSimCards.TtPhoneSimCard ttPhoneSimCard){
        // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SIM_CARD,protoId,ttPhoneSimCard);
-        if(mDataListener != null){
-            mDataListener.isTtSimCard(ttPhoneSimCard.getIsSimCard());
+        if(mAllDataListener != null){
+            mAllDataListener.isTtSimCard(ttPhoneSimCard.getIsSimCard());
         }
     }
 
@@ -250,8 +249,8 @@ public class CmdHandler {
      */
     private void parseSiganStregth(int protoId,TtPhoneSignalProtos.PhoneSignalStrength phoneSignalStrength){
         //sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SIGNAL,protoId,phoneSignalStrength);
-        if(mDataListener != null){
-            mDataListener.isTtSignalStrength(phoneSignalStrength.getSignalStrength());
+        if(mAllDataListener != null){
+            mAllDataListener.isTtSignalStrength(phoneSignalStrength.getSignalStrength());
         }
     }
 
@@ -262,8 +261,8 @@ public class CmdHandler {
      */
     private void parseGpsPosition(int protoId,TtPhonePositionProtos.TtPhonePosition ttPhonePosition){
        // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_ACCURACY_POSITION,protoId,ttPhonePosition);
-        /*if(mDataListener != null){
-            mDataListener.isTtSignalStrength(phoneSignalStrength.getSignalStrength());
+        /*if(mAllDataListener != null){
+            mAllDataListener.isTtSignalStrength(phoneSignalStrength.getSignalStrength());
         }*/
 
     }
@@ -299,24 +298,18 @@ public class CmdHandler {
         RingToneUtils.playRing(TtPhoneApplication.getInstance());
     }
 
-    public void setmDataListener(ITtPhoneDataListener mDataListener) {
-        this.mDataListener = mDataListener;
+    public void setmAllDataListener(IAllTtPhoneDataListener mAllDataListener) {
+        this.mAllDataListener = mAllDataListener;
     }
 
-    public void setIMainFragment(IMainFragment mainFragment) {
-        this.mIMainFragment = mainFragment;
-    }
 
 
     public void release(){
         mSyncManager.release();
     }
 
-    public ITtPhoneDataListener getmDataListener() {
-        return mDataListener;
+    public IAllTtPhoneDataListener getmAllDataListener() {
+        return mAllDataListener;
     }
 
-    public IMainFragment getIMainFragment() {
-        return mIMainFragment;
-    }
 }

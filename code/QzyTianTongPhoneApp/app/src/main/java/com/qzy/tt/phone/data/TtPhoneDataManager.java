@@ -1,13 +1,31 @@
 package com.qzy.tt.phone.data;
 
+import com.qzy.tt.phone.data.impl.IAllTtPhoneDataListener;
 import com.qzy.tt.phone.data.impl.IMainFragment;
 import com.qzy.tt.phone.data.impl.ITtPhoneDataListener;
 import com.qzy.tt.phone.data.impl.ITtPhoneHandlerManager;
 import com.qzy.tt.phone.netty.PhoneNettyManager;
+import com.qzy.utils.AndroidVoiceManager;
 import com.socks.library.KLog;
 import com.tt.qzy.view.bean.DatetimeModel;
 import com.tt.qzy.view.bean.SosSendMessageModel;
 import com.tt.qzy.view.bean.WifiSettingModel;
+
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
+
+
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.FlowableOnSubscribe;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * 数据管理类
@@ -17,6 +35,10 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager {
     private static TtPhoneDataManager instance;
 
     private PhoneNettyManager phoneNettyManager;
+
+    private IMainFragment iMainFragment;
+
+    private ITtPhoneDataListener iTtPhoneDataListener;
 
     public static TtPhoneDataManager getInstance() {
         return instance;
@@ -32,6 +54,71 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager {
 
     private TtPhoneDataManager(PhoneNettyManager manager) {
         phoneNettyManager = manager;
+        setAllDataListener();
+    }
+
+    /** 所有数据监听 */
+    private void setAllDataListener() {
+        phoneNettyManager.getmCmdHandler().setmAllDataListener(new IAllTtPhoneDataListener() {
+            @Override
+            public void isTtServerConnected(final boolean connected) {
+                Observable.create(new ObservableOnSubscribe<Boolean>() {
+                    @Override
+                    public void subscribe(ObservableEmitter<Boolean> observableEmitter) throws Exception {
+                        observableEmitter.onNext(connected);
+                    }
+                })
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<Boolean>() {
+                            @Override
+                            public void onSubscribe(Disposable disposable) {
+
+                            }
+
+                            @Override
+                            public void onNext(Boolean aBoolean) {
+                                if(iMainFragment != null){
+                                    iMainFragment.isTtServerConnected(aBoolean);
+                                }
+
+                            }
+
+                            @Override
+                            public void onError(Throwable throwable) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
+
+
+            }
+
+            @Override
+            public void isTtSignalStrength(int signalLevel) {
+                if(iTtPhoneDataListener != null){
+                    iTtPhoneDataListener.isTtSignalStrength(signalLevel);
+                }
+
+            }
+
+            @Override
+            public void isTtSimCard(boolean isIn) {
+                if(iTtPhoneDataListener != null){
+                    iTtPhoneDataListener.isTtSimCard(isIn);
+                }
+            }
+
+            @Override
+            public void isTtPhoneBattery(int level, int scal) {
+                if(iTtPhoneDataListener != null){
+                    iTtPhoneDataListener.isTtPhoneBattery(level,scal);
+                }
+            }
+        });
     }
 
 
@@ -41,15 +128,15 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager {
      * @param iTtPhoneDataListener
      */
     public void setTtPhoneDataListener(ITtPhoneDataListener iTtPhoneDataListener) {
-        phoneNettyManager.getmCmdHandler().setmDataListener(iTtPhoneDataListener);
+        this.iTtPhoneDataListener = iTtPhoneDataListener;
     }
 
-    /** 注册MainFragment数据回调接口就*/
-    public void setMainFragmentListener(IMainFragment iMainFragment){
-        phoneNettyManager.getmCmdHandler().setIMainFragment(iMainFragment);
+    /**
+     * 注册MainFragment数据回调接口就
+     */
+    public void setMainFragmentListener(IMainFragment iMainFragment) {
+        this.iMainFragment = iMainFragment;
     }
-
-
 
 
     public void free() {
