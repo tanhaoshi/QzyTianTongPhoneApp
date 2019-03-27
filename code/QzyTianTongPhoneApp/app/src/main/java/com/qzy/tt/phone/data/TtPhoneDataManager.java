@@ -12,13 +12,13 @@ import com.tt.qzy.view.bean.WifiSettingModel;
 /**
  * 数据管理类
  */
-public class TtPhoneDataManger implements ITtPhoneHandlerManager {
+public class TtPhoneDataManager implements ITtPhoneHandlerManager {
 
-    private static TtPhoneDataManger instance;
+    private static TtPhoneDataManager instance;
 
     private PhoneNettyManager phoneNettyManager;
 
-    public static TtPhoneDataManger getInstance() {
+    public static TtPhoneDataManager getInstance() {
         return instance;
     }
 
