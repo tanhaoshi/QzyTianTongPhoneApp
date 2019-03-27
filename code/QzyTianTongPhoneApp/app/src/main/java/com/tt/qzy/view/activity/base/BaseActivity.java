@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.SignalStrength;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,6 +16,12 @@ import com.qzy.eventbus.IMessageEventBustType;
 import com.qzy.eventbus.MessageEventBus;
 import com.qzy.phone.pcm.AllLocalPcmManager;
 import com.qzy.tt.data.CallPhoneBackProtos;
+import com.qzy.tt.data.CallPhoneStateProtos;
+import com.qzy.tt.data.TimerSendProtos;
+import com.qzy.tt.data.TtPhoneBatteryProtos;
+import com.qzy.tt.data.TtPhonePositionProtos;
+import com.qzy.tt.data.TtPhoneSignalProtos;
+import com.qzy.tt.data.TtPhoneSimCards;
 import com.qzy.tt.phone.common.CommonData;
 import com.socks.library.KLog;
 import com.tt.qzy.view.MainActivity;
@@ -140,7 +147,24 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
             case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_NONCONNECT:
                 recoverView();
                 break;
+            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_TIMER_MESSAGE:
+                break;
         }
+    }
+
+    /**
+     * 解析定时发送
+     */
+    private void responseTimerSend(Object o){
+        PhoneCmd cmd = (PhoneCmd)o;
+        TimerSendProtos.TimerSend timerSend = (TimerSendProtos.TimerSend)cmd.getMessage();
+        TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery = timerSend.getBatterValue();
+        TtPhoneSignalProtos.PhoneSignalStrength phoneSignalStrength = timerSend.getSigalStrength();
+        TtPhonePositionProtos.TtPhonePosition ttPhonePosition = timerSend.getTtPhoneGpsPosition();
+        TtPhoneSimCards.TtPhoneSimCard ttPhoneSimCard = timerSend.getTtPhoneSimcard();
+        onTiantongInfoReceiver(phoneSignalStrength.getSignalStrength());
+        onBatteryInfoReceiver(ttPhoneBattery.getLevel(),ttPhoneBattery.getScale());
+
     }
 
     /**
@@ -209,11 +233,9 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
 
     private void onBatteryInfoReceiver(int intLevel, int intScale) {
         int percent = intLevel * 100 / intScale;
-        if(tt_baterly != percent){
-            img1.setPower(percent);
-            percentBaterly.setText(percent+"%");
-            tt_baterly = percent;
-        }
+        img1.setPower(percent);
+        percentBaterly.setText(percent+"%");
+        tt_baterly = percent;
     }
 
     /**

@@ -1,0 +1,32 @@
+syntax = "proto3"; // 表明使用protobuf的编译器最新的版本为v3
+
+package phonedata; // proto自己的包  类似于命名空间
+import "CallPhoneState.proto";
+import "TtPhoneSignal.proto";
+import "TtPhoneBattery.proto";
+import "TtPhoneSimCard.proto";
+import "TtPhonePosition.proto";
+
+option java_package = "com.qzy.tt.data"; //生成java文件的包名
+option java_outer_classname = "TimerSendProtos"; //生成的类名
+
+message TimerSend {
+
+
+    //当前通话状态
+    phonedata.CallPhoneState callPhoneState = 1;
+    //手机信号强度
+    phonedata.PhoneSignalStrength sigalStrength = 2;
+
+    //电量
+    phonedata.TtPhoneBattery batterValue = 3;
+
+    //sim 卡
+    phonedata.TtPhoneSimCard ttPhoneSimcard = 4;
+
+    //gps
+    phonedata.TtPhonePosition ttPhoneGpsPosition = 5;
+
+    //手机好吗
+
+}

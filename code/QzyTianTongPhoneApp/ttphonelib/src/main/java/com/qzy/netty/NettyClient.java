@@ -48,33 +48,45 @@ public class NettyClient {
     /**
      * 连接服务
      */
-    Bootstrap bootstrap = null;
-    ExecutorService executorService = null;
-    public void starConnect(final int port, final String ip){
-        executorService = ThreadUtils.getCachedPool();
-        executorService.execute(new Runnable() {
-            @Override
-            public void run() {
-                try
-                {
-                    if(groupConnected == null){
+    Thread mThread = null;
+//    ExecutorService executorService = null;
+        public void starConnect(final int port, final String ip){
+            mThread =  new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        // Client服务启动器 3.x的ClientBootstrap
+                        // 改为Bootstrap，且构造函数变化很大，这里用无参构造。
                         groupConnected = new NioEventLoopGroup();
+                        Bootstrap bootstrap = new Bootstrap();
+                        // 指定channel类型
+                        bootstrap.channel(NioSocketChannel.class);
+                        // 指定Handler
+                        bootstrap.handler(connectedChannelInitializer);
+                        // 指定EventLoopGroup
+                        bootstrap.group(groupConnected);
+                        // 连接到目标IP的8000端口的服务端
+                        Channel channel = bootstrap.connect(new InetSocketAddress(ip, port)).sync().channel();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    bootstrap = new Bootstrap();
-
-                    bootstrap.channel(NioSocketChannel.class);
-                    // 指定Handler
-                    bootstrap.handler(connectedChannelInitializer);
-                    // 指定EventLoopGroup
-                    bootstrap.group(groupConnected);
-                    // 连接到目标IP的8000端口的服务端
-                    Channel channel = bootstrap.connect(new InetSocketAddress(ip, port)).sync().channel();
-                }catch (Exception e){
-                    e.printStackTrace();
                 }
-            }
-        });
-    }
+            });
+            mThread.start();
+
+        }
+//        mThread.start();
+//        executorService = ThreadUtils.getCachedPool();
+//        executorService.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                try
+//                {
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
 
     /**
      * 连接工具
@@ -142,7 +154,6 @@ public class NettyClient {
                 } else {
                     dataBuf.writeBytes(buf.array());
                 }
-
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -211,11 +222,11 @@ public class NettyClient {
             if(groupConnected != null){
                 groupConnected.shutdownGracefully();
             }
-//            if(executorService != null){
-//                executorService.shutdown();
-//            }
-//            groupConnected = null;
-//            executorService = null;
+            if(mThread != null && mThread.isAlive()){
+                mThread.interrupt();
+            }
+            mThread = null;
+            groupConnected = null;
         }catch (Exception e){
             e.printStackTrace();
         }

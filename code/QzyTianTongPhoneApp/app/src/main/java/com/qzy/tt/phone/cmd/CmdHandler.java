@@ -12,6 +12,7 @@ import com.qzy.eventbus.MessageEventBus;
 import com.qzy.ring.RingManager;
 import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.CallPhoneStateProtos;
+import com.qzy.tt.data.TimerSendProtos;
 import com.qzy.tt.data.TtBeiDouStatuss;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
@@ -60,16 +61,16 @@ public class CmdHandler {
      */
     public void handlerCmd(ByteBufInputStream inputStream) {
         try {
-
-            if (inputStream.available() > 0 && PrototocalTools.readToFour0x5aHeaderByte(inputStream)) {
-                int protoId = inputStream.readInt();
-                int len = inputStream.readInt();//包长度
-                LogUtils.e(" protoId = " + protoId + " len = " + len);
-                if (protoId > 100 && protoId % 2 == 1) {
-                    handProcessCmd(protoId, inputStream);
+            synchronized (CmdHandler.class){
+                if (inputStream.available() > 0 && PrototocalTools.readToFour0x5aHeaderByte(inputStream)) {
+                    int protoId = inputStream.readInt();
+                    int len = inputStream.readInt();//包长度
+                    LogUtils.e(" protoId = " + protoId + " len = " + len);
+                    if (protoId > 100 && protoId % 2 == 1) {
+                        handProcessCmd(protoId, inputStream);
+                    }
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -87,16 +88,7 @@ public class CmdHandler {
             switch (protoId) {
                 case PrototocalTools.IProtoClientIndex.call_phone_state:
                     CallPhoneStateProtos.CallPhoneState callPhoneState = CallPhoneStateProtos.CallPhoneState.parseDelimitedFrom(inputStream);
-                    CallPhoneStateProtos.CallPhoneState.PhoneState state = callPhoneState.getPhoneState();
-                    KLog.i("currentPhoneState = " + currentPhoneState.ordinal() + "    state = " + state.ordinal());
-                    if(currentPhoneState != state){ // 与上次的状态不同才改变
-                        currentPhoneState = state;
-                        if( state == CallPhoneStateProtos.CallPhoneState.PhoneState.INCOMING){
-                            incommingState(callPhoneState.getPhoneNumber());
-                        }else {
-                            sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_STATE,protoId, callPhoneState);
-                        }
-                    }
+                    pasreCallPhoneState(protoId,callPhoneState);
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_phone_signal:
                     TtPhoneSignalProtos.PhoneSignalStrength phoneSignalStrength = TtPhoneSignalProtos.PhoneSignalStrength.parseDelimitedFrom(inputStream);
@@ -108,11 +100,11 @@ public class CmdHandler {
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_phone_battery:
                     TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery = TtPhoneBatteryProtos.TtPhoneBattery.parseDelimitedFrom(inputStream);
-                    sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_BATTERY,protoId, ttPhoneBattery);
+                    pasreCallPhoneBattery(protoId,ttPhoneBattery);
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_phone_simcard:
                     TtPhoneSimCards.TtPhoneSimCard ttPhoneSimCard = TtPhoneSimCards.TtPhoneSimCard.parseDelimitedFrom(inputStream);
-                    sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SIM_CARD,protoId,ttPhoneSimCard);
+                     parseSimCard(protoId,ttPhoneSimCard);
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_phone_beidoustatus_usb:
                     TtBeiDouStatuss.TtBeiDouStatus ttBeiDouStatus = TtBeiDouStatuss.TtBeiDouStatus.parseDelimitedFrom(inputStream);
@@ -120,7 +112,8 @@ public class CmdHandler {
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_gps_position:
                     TtPhonePositionProtos.TtPhonePosition ttPhonePosition = TtPhonePositionProtos.TtPhonePosition.parseDelimitedFrom(inputStream);
-                    sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_ACCURACY_POSITION,protoId,ttPhonePosition);
+                    //sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_ACCURACY_POSITION,protoId,ttPhonePosition);
+                    parseGpsPosition(protoId,ttPhonePosition);
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_beidou_switch:
                     TtOpenBeiDouProtos.TtOpenBeiDou ttOpenBeiDou = TtOpenBeiDouProtos.TtOpenBeiDou.parseDelimitedFrom(inputStream);
@@ -175,11 +168,92 @@ public class CmdHandler {
                      TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState = TtPhoneSosStateProtos.TtPhoneSosState.parseDelimitedFrom(inputStream);
                      sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_SOS_STATUS,protoId,ttPhoneSosState);
                      break;
+                case PrototocalTools.IProtoClientIndex.response_server_timer_message:
+                     TimerSendProtos.TimerSend timerSend = TimerSendProtos.TimerSend.parseDelimitedFrom(inputStream);
+                     handlerAllTimeSend(timerSend);
+                     break;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 解析所有定时发送状态
+     */
+    private void handlerAllTimeSend(TimerSendProtos.TimerSend send){
+        //电话状态
+      pasreCallPhoneState(PrototocalTools.IProtoClientIndex.call_phone_state,send.getCallPhoneState());
+
+      //电量
+      pasreCallPhoneBattery(PrototocalTools.IProtoClientIndex.tt_phone_battery,send.getBatterValue());
+      //simcard
+      parseSimCard(PrototocalTools.IProtoClientIndex.tt_phone_simcard,send.getTtPhoneSimcard());
+
+      //信号强度
+      parseSiganStregth(PrototocalTools.IProtoClientIndex.tt_phone_signal,send.getSigalStrength());
+
+      //gps 位置
+      parseGpsPosition(PrototocalTools.IProtoClientIndex.tt_gps_position,send.getTtPhoneGpsPosition());
+    }
+
+
+    /**
+     * 解析电话状态并发送到ui
+     * @param protoId
+     * @param callPhoneState
+     */
+    private void pasreCallPhoneState(int protoId,CallPhoneStateProtos.CallPhoneState callPhoneState){
+        CallPhoneStateProtos.CallPhoneState.PhoneState state = callPhoneState.getPhoneState();
+        KLog.i("currentPhoneState = " + currentPhoneState.ordinal() + "    state = " + state.ordinal());
+        if(currentPhoneState != state){ // 与上次的状态不同才改变
+            currentPhoneState = state;
+            if( state == CallPhoneStateProtos.CallPhoneState.PhoneState.INCOMING){
+                incommingState(callPhoneState.getPhoneNumber());
+            }else {
+                sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_STATE,protoId, callPhoneState);
+            }
+        }
+    }
+
+
+    /**
+     * 解析电话状态并发送到ui
+     * @param protoId
+     * @param ttPhoneBattery
+     */
+    private void pasreCallPhoneBattery(int protoId,TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery){
+        sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_BATTERY,protoId, ttPhoneBattery);
+    }
+
+    /**
+     * 解析发送sim
+     * @param protoId
+     * @param ttPhoneSimCard
+     */
+    private void parseSimCard(int protoId, TtPhoneSimCards.TtPhoneSimCard ttPhoneSimCard){
+        sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SIM_CARD,protoId,ttPhoneSimCard);
+    }
+
+    /**
+     * 解析并发送信号强度
+     * @param protoId
+     * @param phoneSignalStrength
+     */
+    private void parseSiganStregth(int protoId,TtPhoneSignalProtos.PhoneSignalStrength phoneSignalStrength){
+        sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SIGNAL,protoId,phoneSignalStrength);
+    }
+
+    /**
+     * 解析gps position
+     * @param protoId
+     * @param ttPhonePosition
+     */
+    private void parseGpsPosition(int protoId,TtPhonePositionProtos.TtPhonePosition ttPhonePosition){
+        sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_ACCURACY_POSITION,protoId,ttPhonePosition);
+
+    }
+
 
     private void sendCmdToView(String messageType,int protoId, GeneratedMessageV3 messageV3) {
         EventBusUtils.post(new MessageEventBus(messageType,PhoneCmd.getPhoneCmd(protoId,messageV3)));

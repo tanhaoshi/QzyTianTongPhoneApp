@@ -101,6 +101,7 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
 
     @Override
     public void initView() {
+        KLog.i("MainActivity initView onCreate ");
         mHelper = new HomeKeyListenerHelper(MainActivity.this);
         mHelper.registerHomeKeyListener(this);
         showMainFragment();
@@ -299,6 +300,12 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
         }
         NiftyExpandDialog.getInstance(MainActivity.this).release();
         mPresenter.release();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mHelper.unregisterHomeKeyListener();
     }
 
     @Override

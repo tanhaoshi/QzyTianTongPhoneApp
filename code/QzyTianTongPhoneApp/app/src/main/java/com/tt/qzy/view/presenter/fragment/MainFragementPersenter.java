@@ -119,8 +119,6 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
             LogUtils.i("ssid is not contains wifi name");
         }
 
-        KLog.i("look up ip address chars = " + AppUtils.getIpAddress(mContext));
-
         if(!AppUtils.getIpAddress(mContext).contains(Constans.LOCAL_HEAD_IP)){
             NToast.shortToast(mContext,mContext.getString(R.string.TMT_PLEASE_CLOSE_DATA_MOBILE_AND_ENABLE_WIFI));
         }
@@ -284,7 +282,7 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView>{
         PhoneCmd cmd = (PhoneCmd)o;
         TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse)cmd.getMessage();
         if(!updateResponse.getIsSendFileFinish()){
-              NToast.shortToast(mContext,mContext.getResources().getString(R.string.TMT_WIFI_DISCONNECT_OF_UPDATE_PLEASE_OUT));
+//              NToast.shortToast(mContext,mContext.getResources().getString(R.string.TMT_WIFI_DISCONNECT_OF_UPDATE_PLEASE_OUT));
 //            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_UPLOAD_APP
 //                    ,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));
         }

@@ -5,7 +5,6 @@ import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Keep;
 import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 
@@ -33,6 +32,7 @@ import com.qzy.tiantong.service.utils.ModuleDormancyUtil;
 import com.qzy.tiantong.service.utils.PhoneUtils;
 import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.CallPhoneStateProtos;
+import com.qzy.tt.data.TimerSendProtos;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtDeleCallLogProtos;
 import com.qzy.tt.data.TtDeleSmsProtos;
@@ -96,8 +96,6 @@ public class PhoneNettyManager implements IMobileDataManager{
 
     private TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery;
 
-    private Timer timerCalling;
-
     private boolean isG4Test = false;
 
     public PhoneNettyManager(Context context, NettyServerManager manager) {
@@ -120,10 +118,8 @@ public class PhoneNettyManager implements IMobileDataManager{
 
         initSendThread();
 
-//        initBattery();
         LogUtils.e("getCallLog...11111..");
 
-        // initCallingTimer();
     }
 
     /**
@@ -148,46 +144,12 @@ public class PhoneNettyManager implements IMobileDataManager{
 
     };
 
-
-    /**
-     * 初始化电量管理
-     */
-    private void initBattery() {
-        mBatteryManager = new QzyBatteryManager(mContext, new QzyBatteryManager.onBatteryListenr() {
-            @Override
-            public void onBattery(int level, int scal) {
-                if (ttPhoneBattery == null) {
-                    ttPhoneBattery = TtPhoneBatteryProtos.TtPhoneBattery.newBuilder()
-                            .setLevel(level)
-                            .setScale(scal)
-                            .build();
-                }
-            }
-        });
-    }
-
-    /**
-     * 初始化发送线程
-     */
     private void initSendThread() {
         mStateThread = new Runnable() {
             @Override
             public void run() {
                 try {
-                    if (currentPhoneState != null) {
-                        sendTtCallPhoneStateToClient(currentPhoneState, currentPhoneNumber);
-                    }
-                    int batteryLevel;
-                    //发送手机电话状态
-                    sendSignalToPhoneClient(currentSignalValue);
-                    //发送电量
-                    batteryLevel = sendTtPhoneBatteryToClient();
-                    //sim 卡是否插入
-                    sendSimStateToPhoneClient();
-                    //定时跑当前灯的状态
-                    checkCureentLampStatus(batteryLevel);
-                    //发送gps状态
-                    mGpsManager.sendGpsState();
+                    setNewTimerSend();
                     mHandler.postDelayed(mStateThread,3000);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -195,6 +157,52 @@ public class PhoneNettyManager implements IMobileDataManager{
             }
         };
         mHandler.post(mStateThread);
+    }
+
+    private void setNewTimerSend(){
+        if(currentPhoneState == null) {
+            currentPhoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL;
+        }
+        TimerSendProtos.TimerSend timerSend = TimerSendProtos.TimerSend.newBuilder()
+                .setCallPhoneState(getTtCallPhoneStateToClient(currentPhoneState,currentPhoneNumber))
+                .setSigalStrength(TtPhoneSignalProtos.PhoneSignalStrength.newBuilder()
+                        .setSignalStrength(currentSignalValue)
+                        .build())
+                .setBatterValue(getTtPhoneBatteryToClient())
+                .setTtPhoneSimcard(sendSimStateToPhoneClientNew())
+                .setTtPhoneGpsPosition(mGpsManager.getLoactionToPhoneClientNew(mGpsManager.getmCurrenLocation()))
+                .build();
+
+        checkCureentLampStatus(getTtPhoneBatteryToClient().getLevel());
+
+        if (mNettyServerManager == null) {
+            LogUtils.e("mNettyServerManager is null ...");
+            return;
+        }
+        if(timerSend != null){
+            mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.response_server_timer_message, timerSend));
+        }
+    }
+
+    /**
+     * old 定时状态发送
+     */
+    private void setOldTimerSend(){
+
+        if (currentPhoneState != null) {
+            sendTtCallPhoneStateToClient(currentPhoneState, currentPhoneNumber);
+        }
+        int batteryLevel;
+        //发送手机电话状态
+        sendSignalToPhoneClient(currentSignalValue);
+        //发送电量
+        batteryLevel = sendTtPhoneBatteryToClient();
+        //sim 卡是否插入
+        sendSimStateToPhoneClient();
+        //定时跑当前灯的状态
+        checkCureentLampStatus(batteryLevel);
+        //发送gps状态
+        mGpsManager.sendGpsState();
     }
 
     /**
@@ -359,31 +367,6 @@ public class PhoneNettyManager implements IMobileDataManager{
     }
 
     /**
-     * 当有人进行通话时,将其他链接的ip进行挂断
-     */
-    private void disposeCallPhone(){
-        ConcurrentHashMap<String, ClientInfoBean> hashMap = PhoneClientManager.getInstance().getmHaspMapPhoneClient();
-
-        if (hashMap == null) {
-            return;
-        }
-
-        //当前有人通话的Ip
-        for (Map.Entry<String, ClientInfoBean> entry : hashMap.entrySet()) {
-            if (entry.getValue() != null && entry.getValue().isCalling()) {
-                 String callId = entry.getValue().getIp();
-            }else{
-                //当前无通话ip
-                CallPhoneStateProtos.CallPhoneState callPhoneState = CallPhoneStateProtos.CallPhoneState.newBuilder()
-                        .setPhoneState(CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL)
-                        .setPhoneNumber("")
-                        .build();
-                mNettyServerManager.sendData(entry.getValue().getIp(), PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
-            }
-        }
-    }
-
-    /**
      * 发送电话状态到客户端
      *
      * @param phoneState
@@ -411,6 +394,37 @@ public class PhoneNettyManager implements IMobileDataManager{
             //LogUtils.i("sendTtCallPhoneStateToClient callingIp = null  " + " phonestate = " + callPhoneState.getPhoneState().ordinal());
             mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.call_phone_state, callPhoneState));
         }
+    }
+
+    /**
+     * 新定时发送通话状态
+     * @param phoneState
+     * @param phoneNumber
+     * @return
+     */
+    private synchronized CallPhoneStateProtos.CallPhoneState getTtCallPhoneStateToClient(CallPhoneStateProtos.CallPhoneState.PhoneState phoneState, String phoneNumber) {
+        if (checkNettManagerIsNull()) return null;
+        if(phoneNumber == null){
+            phoneNumber = "13352528585";
+        }
+        CallPhoneStateProtos.CallPhoneState callPhoneState = CallPhoneStateProtos.CallPhoneState.newBuilder()
+                .setPhoneState(phoneState)
+                .setPhoneNumber(phoneNumber)
+                .build();
+        String callInigIp = PhoneClientManager.getInstance().isCallingIp();
+
+        if ((phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.CALL) || (phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.RING)) {
+            if(!TextUtils.isEmpty(callInigIp)){
+                //LogUtils.i("sendTtCallPhoneStateToClient callingIp = " + callInigIp + " phonestate = " + callPhoneState.getPhoneState().ordinal());
+                return callPhoneState;
+            }
+        } else {
+            if (TextUtils.isEmpty(callInigIp) && (phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.CALL)){
+                return null;
+            }
+        }
+
+        return callPhoneState;
     }
 
     /**
@@ -467,6 +481,19 @@ public class PhoneNettyManager implements IMobileDataManager{
     }
 
     /**
+     * 获取 电量
+     * @return
+     */
+    public TtPhoneBatteryProtos.TtPhoneBattery getTtPhoneBatteryToClient() {
+        String level = ModuleDormancyUtil.getNodeString(Constant.BATTERY_PATH);
+        ttPhoneBattery = TtPhoneBatteryProtos.TtPhoneBattery.newBuilder()
+                .setLevel(Integer.valueOf(level))
+                .setScale(100)
+                .build();
+        return ttPhoneBattery;
+    }
+
+    /**
      * 内部发送signal接口
      *
      * @param value
@@ -500,6 +527,30 @@ public class PhoneNettyManager implements IMobileDataManager{
                 .setIsSimCard(hasSim)
                 .build();
         mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_phone_simcard, simCard));
+    }
+
+    /**
+     * 新方式发送状态数据
+     * @return
+     */
+    private TtPhoneSimCards.TtPhoneSimCard sendSimStateToPhoneClientNew() {
+        if (checkNettManagerIsNull()) return null;
+        boolean hasSim = PhoneUtils.ishasSimCard(mContext);
+        if(!isG4Test) {
+            if(hasSim) {
+                //Netled.setNetledState(true);
+                controlSignal(currentSignalValue); // 检测卡的状态来控制灯的闪烁
+            }else{
+                //未检测到卡,下面应该常亮亮蓝灯
+                LedManager.setandCleanLedFlag(LedManager.FLAG_POWER_BLUE_LED_SWITCH,
+                        LedManager.FLAG_NET_GREEN_LED_SWITCH
+                                | LedManager.FLAG_POWER_BLUE_LED_TIMER);
+            }
+        }
+        TtPhoneSimCards.TtPhoneSimCard simCard = TtPhoneSimCards.TtPhoneSimCard.newBuilder()
+                .setIsSimCard(hasSim)
+                .build();
+        return  simCard;
     }
 
     /**
@@ -854,8 +905,5 @@ public class PhoneNettyManager implements IMobileDataManager{
         if (mBatteryManager != null) {
             mBatteryManager.free();
         }
-
-
     }
-
 }

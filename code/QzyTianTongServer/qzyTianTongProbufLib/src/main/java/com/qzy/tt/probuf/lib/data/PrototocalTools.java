@@ -36,6 +36,7 @@ public class PrototocalTools {
         int request_server_del_calllog = 142;
         int request_server_del_sms = 144;
         int request_server_call_status = 146;
+        int request_server_timer_message = 148;
     }
 
     public interface IProtoClientIndex{
@@ -62,6 +63,7 @@ public class PrototocalTools {
         int response_server_sos_init_status = 141;
         int response_server_del_calllog = 143;
         int response_server_del_sms = 145;
+        int response_server_timer_message = 147;
     }
 
 

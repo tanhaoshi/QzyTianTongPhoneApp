@@ -101,4 +101,6 @@ public interface IMessageEventBustType {
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_SHORT_MESSAGE_HISTROY = "event_bus_type_connect_tiantong_local_short_message_histroy";
     // 修改服务端数据库电话记录表中已读的状态
     String EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_RECORD_CALL_STATUS = "event_bus_type_connect_tiantong_request_server_record_call_status";
+    // 返回定时发送数据问题。
+    String EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_TIMER_MESSAGE = "event_bus_type_connect_tiantong_response_timer_message";
 }

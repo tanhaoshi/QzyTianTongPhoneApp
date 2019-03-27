@@ -333,7 +333,11 @@ public class QzyPhoneManager {
                     inPreSignal = true;
                     //要对它进行休眠
                     //1代表已经休眠 0代表正常可工作状态
-                    PowerUtils.sleepCommand();
+                    try {
+                        mLocalPcmSocketManager.sendCommand(PowerUtils.sleepCommand());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
                 }//从有到有
             }else{
                 //从有到无

@@ -3,6 +3,7 @@ package com.tt.qzy.view.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 import com.socks.library.KLog;
 
@@ -11,6 +12,9 @@ public class HomeKeyEventBroadcastReceiver extends BroadcastReceiver{
     private static final String SYSTEM_EVENT_REASON = "reason";
     private static final String SYSTEM_HOME_KEY = "homekey";
     private static final String SYSTEM_RECENT_APPS = "recentapps";
+    private static final String BUILD_NAME = "conquest";
+
+    private static final String CLOSE_SYSTEM_DIALOGS = "android.intent.action.CLOSE_SYSTEM_DIALOGS";
 
     private HomeKeyListenerHelper.HomeKeyListener listener;
 
@@ -43,6 +47,13 @@ public class HomeKeyEventBroadcastReceiver extends BroadcastReceiver{
                         listener.onHomeKeyLongPressed();
                     }
                 }
+            }
+        }
+
+        if(action.equals(CLOSE_SYSTEM_DIALOGS)){
+            if(Build.BRAND.equals(BUILD_NAME)){
+//                Intent intent1 = new Intent(context, MainActivity.class);
+//                context.startActivity(intent1);
             }
         }
     }

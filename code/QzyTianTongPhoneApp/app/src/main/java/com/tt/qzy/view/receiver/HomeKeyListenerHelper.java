@@ -10,6 +10,8 @@ public class HomeKeyListenerHelper {
     private Context context;
     private BroadcastReceiver receiver;
 
+    public static final String CLEAR_RECENTS = "com.android.systemui.recents.action.CLEAR_RECENT_TASKS";
+
     public HomeKeyListenerHelper(Context ctx) {
         context = ctx;
     }
@@ -23,6 +25,7 @@ public class HomeKeyListenerHelper {
     private void registerListener(HomeKeyListener l) {
         receiver = new HomeKeyEventBroadcastReceiver(l);
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        intentFilter.addAction(CLEAR_RECENTS);
         context.registerReceiver(receiver, intentFilter);
     }
 

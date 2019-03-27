@@ -217,7 +217,6 @@ public class GpsManager {
         sendLoactionToPhoneClient(mCurrenLocation);
     }
 
-
     /**
      * 发送经纬度给手机
      *
@@ -247,8 +246,38 @@ public class GpsManager {
             LogUtils.e("mNettyServerManager is null ...");
             return;
         }
+        if(location != null){
+            mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_gps_position, ttPhonePosition));
+        }
 
-        mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_gps_position, ttPhonePosition));
+    }
+
+    /**
+     * 获取gps
+     * @param location
+     * @return
+     */
+    public TtPhonePositionProtos.TtPhonePosition getLoactionToPhoneClientNew(Location location) {
+        TtPhonePositionProtos.TtPhonePosition ttPhonePosition = null;
+        if (location == null) {
+            ttPhonePosition = TtPhonePositionProtos.TtPhonePosition.newBuilder()
+                    .setIsOpen(isGpsOpen)
+                    .setLatItude("")
+                    .setLongItude("")
+                    .setResponseStatus(true)
+                    .build();
+
+        } else {
+            ttPhonePosition = TtPhonePositionProtos.TtPhonePosition.newBuilder()
+                    .setIsOpen(isGpsOpen)
+                    .setLatItude(location.getLatitude() + "")
+                    .setLongItude(location.getLongitude() + "")
+                    .setResponseStatus(true)
+                    .build();
+        }
+
+
+        return ttPhonePosition;
 
     }
 

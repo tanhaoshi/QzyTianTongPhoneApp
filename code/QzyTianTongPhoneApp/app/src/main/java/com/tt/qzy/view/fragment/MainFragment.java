@@ -117,9 +117,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
     private void initView() {
 
         if (!NetworkUtil.isWifiEnabled(getActivity())) {
-
             connect.setText(getActivity().getResources().getString(R.string.TMT_click_connect));
-
         } else {
 
             mPresneter.checkConnectedSate();
@@ -130,7 +128,6 @@ public class MainFragment extends Fragment implements MainFragmentView{
         setConnectStateView(mainActivity.isConnectStatus());
 
         if(mainActivity.isConnectStatus()){
-            loadData(true);
             if(mainActivity.isConnectBeiDou()){
                 main_location.setChecked(true);
             }else{
@@ -428,7 +425,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
     @Override
     public void upgradleNonconnect() {
         viewTransition(false);
-        NToast.shortToast(getActivity(),getActivity().getString(R.string.TMT_WIFI_DISCONNECT_OF_UPDATE));
+//        NToast.shortToast(getActivity(),getActivity().getString(R.string.TMT_WIFI_DISCONNECT_OF_UPDATE));
     }
 
     @Override

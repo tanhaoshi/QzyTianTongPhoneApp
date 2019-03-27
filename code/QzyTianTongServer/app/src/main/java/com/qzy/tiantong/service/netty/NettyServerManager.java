@@ -116,23 +116,24 @@ public class NettyServerManager implements NettyServer.IServerListener {
      */
     private void sendData(ChannelHandlerContext ctx, PhoneCmd cmd) {
         try {
-            if (mNettyServer != null && ctx != null) {
-                ByteBuf buff = ctx.alloc().buffer(36);
-                ByteBufOutputStream stream = new ByteBufOutputStream(buff);
-                stream.write(PrototocalTools.HEAD);  // 添加协议头
-                stream.writeInt(cmd.getProtoId());
-                Message msg = cmd.getMessage().toBuilder().build();
-                ByteBuf dataBuff = ctx.alloc().buffer();
-                ByteBufOutputStream dataStream = new ByteBufOutputStream(dataBuff);
-                msg.writeDelimitedTo(dataStream);
-                dataStream.flush();
-                int len = dataBuff.capacity();
-                stream.writeInt(len);
-                stream.write(dataBuff.array(), 0, len);
-                //stream.writeBytes(cmdData);
-                LogUtils.d("ProtoId :" + cmd.getProtoId());
-                stream.flush();
-                ctx.writeAndFlush(buff);
+                if (mNettyServer != null && ctx != null) {
+                    ByteBuf buff = ctx.alloc().buffer(36);
+                    ByteBufOutputStream stream = new ByteBufOutputStream(buff);
+                    stream.write(PrototocalTools.HEAD);  // 添加协议头
+                    stream.writeInt(cmd.getProtoId());
+                    Message msg = cmd.getMessage().toBuilder().build();
+                    ByteBuf dataBuff = ctx.alloc().buffer();
+                    ByteBufOutputStream dataStream = new ByteBufOutputStream(dataBuff);
+                    msg.writeDelimitedTo(dataStream);
+                    dataStream.flush();
+                    int len = dataBuff.capacity();
+                    stream.writeInt(len);
+                    stream.write(dataBuff.array(), 0, len);
+                    //stream.writeBytes(cmdData);
+                    LogUtils.d("ProtoId :" + cmd.getProtoId());
+                    stream.flush();
+                    ctx.writeAndFlush(buff);
+
             }
         } catch (Exception e) {
             e.printStackTrace();

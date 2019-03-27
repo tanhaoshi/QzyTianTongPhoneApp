@@ -133,9 +133,7 @@
 
         <receiver android:name=".receiver.OverallReceiver">
             <intent-filter>
-                <action android:name="android.net.wifi.RSSI_CHANGED"/>
-                <action android:name="android.net.wifi.STATE_CHANGE"/>
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
+                <action android:name="com.android.systemui.recents.action.CLEAR_RECENT_TASKS"/>
             </intent-filter>
         </receiver>
 
