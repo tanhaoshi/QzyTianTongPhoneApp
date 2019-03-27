@@ -296,8 +296,10 @@ public class QzyPhoneManager {
                     break;
                 case PhoneUtils.NETWORKTYPE_NONE:
                     LogUtils.e("network type none,signaleS = " + gsmSignalStrength);
-                    controlSignalStrength(gsmSignalStrength);
                     mServer.onPhoneSignalStrengthChange(gsmSignalStrength);
+
+                    //先去掉模块休眠的功能
+                   // controlSignalStrength(gsmSignalStrength);
                     break;
                 case -1:
                     LogUtils.e("network type -1,signaleS = " + gsmSignalStrength);
