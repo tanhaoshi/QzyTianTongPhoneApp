@@ -39,9 +39,9 @@ public class TtPhoneApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sApp = this;
-        DaemonEnv.initialize(this, TraceServiceImpl.class, DaemonEnv.DEFAULT_WAKE_UP_INTERVAL);
+      /*  DaemonEnv.initialize(this, TraceServiceImpl.class, DaemonEnv.DEFAULT_WAKE_UP_INTERVAL);
         TraceServiceImpl.sShouldStopService = false;
-        DaemonEnv.startServiceMayBind(TraceServiceImpl.class);
+        DaemonEnv.startServiceMayBind(TraceServiceImpl.class);*/
 //        if(LeakCanary.isInAnalyzerProcess(this)){
 //            return;
 //        }
