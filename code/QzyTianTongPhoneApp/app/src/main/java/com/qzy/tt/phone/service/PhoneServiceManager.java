@@ -6,7 +6,7 @@ import android.content.Context;
 import com.qzy.data.PhoneCmd;
 import com.qzy.data.PhoneStateUtils;
 import com.qzy.phone.pcm.AllLocalPcmManager;
-import com.qzy.tt.phone.data.TtPhoneDataManger;
+import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.tt.phone.netty.PhoneNettyManager;
 import com.socks.library.KLog;
 import com.tt.qzy.view.utils.Constans;
@@ -39,7 +39,7 @@ public class PhoneServiceManager {
     public PhoneServiceManager(Context context) {
         mContext = context;
         mPhoneNettyManager = new PhoneNettyManager(context);
-        TtPhoneDataManger.init(mPhoneNettyManager);
+        TtPhoneDataManager.init(mPhoneNettyManager);
 //        mQzySensorManager = new QzySensorManager(context);
         if (SPUtils.containsShare(context, Constans.AUTO_EXITS)) {
             KLog.i("phone service manager start record ");
@@ -137,8 +137,8 @@ public class PhoneServiceManager {
             mPhoneNettyManager.free();
         }
 
-        if (TtPhoneDataManger.getInstance() != null) {
-            TtPhoneDataManger.getInstance().free();
+        if (TtPhoneDataManager.getInstance() != null) {
+            TtPhoneDataManager.getInstance().free();
         }
 
         releaseProtocal();

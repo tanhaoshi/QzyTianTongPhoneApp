@@ -4,17 +4,18 @@ import com.qzy.tt.phone.data.impl.IMainFragment;
 import com.qzy.tt.phone.data.impl.ITtPhoneDataListener;
 import com.qzy.tt.phone.data.impl.ITtPhoneHandlerManager;
 import com.qzy.tt.phone.netty.PhoneNettyManager;
+import com.socks.library.KLog;
 
 /**
  * 数据管理类
  */
-public class TtPhoneDataManger implements ITtPhoneHandlerManager {
+public class TtPhoneDataManager implements ITtPhoneHandlerManager {
 
-    private static TtPhoneDataManger instance;
+    private static TtPhoneDataManager instance;
 
     private PhoneNettyManager phoneNettyManager;
 
-    public static TtPhoneDataManger getInstance() {
+    public static TtPhoneDataManager getInstance() {
         return instance;
     }
 
@@ -22,10 +23,11 @@ public class TtPhoneDataManger implements ITtPhoneHandlerManager {
      * 初始化
      */
     public static void init(PhoneNettyManager manager) {
-        instance = new TtPhoneDataManger(manager);
+        KLog.i("是否初始化!");
+        instance = new TtPhoneDataManager(manager);
     }
 
-    private TtPhoneDataManger(PhoneNettyManager manager) {
+    private TtPhoneDataManager(PhoneNettyManager manager) {
         phoneNettyManager = manager;
     }
 

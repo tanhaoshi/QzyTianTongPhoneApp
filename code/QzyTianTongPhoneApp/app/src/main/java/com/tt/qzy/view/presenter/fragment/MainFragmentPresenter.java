@@ -17,10 +17,8 @@ import com.qzy.tt.data.TtPhoneSosStateProtos;
 import com.qzy.tt.data.TtPhoneUpdateResponseProtos;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.impl.IMainFragment;
-import com.qzy.tt.phone.data.impl.ITtPhoneHandlerManager;
-import com.qzy.tt.phone.data.TtPhoneDataManger;
+import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.utils.IPUtil;
-import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.TellPhoneActivity;
@@ -32,60 +30,35 @@ import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.NetworkUtil;
 import com.tt.qzy.view.view.MainFragmentView;
 
+import io.reactivex.Observable;
+
 
 /**
  * Created by yj.zhang on 2018/9/17.
  */
 
-public class MainFragementPersenter extends BasePresenter<MainFragmentView> implements IMainFragment{
+public class MainFragmentPresenter extends BasePresenter<MainFragmentView> implements IMainFragment{
 
     private Context mContext;
 
-    private ITtPhoneHandlerManager manager;
-
-    public MainFragementPersenter(Context context) {
+    public MainFragmentPresenter(Context context) {
         mContext = context;
-        //EventBus.getDefault().register(this);
-        manager = TtPhoneDataManger.getInstance();
-        setMainFragmentListener();
     }
 
     public void setMainFragmentListener(){
-        if (TtPhoneDataManger.getInstance() != null) {
-            TtPhoneDataManger.getInstance().setMainFragmentListener(this);
+        if (TtPhoneDataManager.getInstance() != null) {
+            TtPhoneDataManager.getInstance().setMainFragmentListener(this);
         }
     }
 
-
-
-    /**
-     * 查询连接状态
-     */
-    public void checkConnectedSate() {
-        KLog.i("checkConnectedSate");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(200);
-                    //EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SELECTED));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
-    /**
-     * 连接天通
-     */
+    /** 连接天通 */
     public void startConnect() {
         if (CommonData.getInstance().isConnected()) {
             Intent intent = new Intent(mContext, UserEditorsActivity.class);
             ((Activity) mContext).startActivityForResult(intent, 99);
             return;
         }
-        //先判断wifi开关是否打开 跳转至打开wifi界面
+
         if (!NetworkUtil.isWifiEnabled(mContext)) {
             WifiManager wfManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
             wfManager.setWifiEnabled(true);
@@ -94,7 +67,6 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView> impl
             return;
         }
 
-        //判断是否连接着天通指定的wifi
         String ssid = NetworkUtil.getConnectWifiSsid(mContext);
 
         if(!AppUtils.getIpAddress(mContext).contains(Constans.LOCAL_HEAD_IP)){
@@ -108,27 +80,28 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView> impl
             return;
         }
 
-        manager.connectTtPhoneServer(Constans.IP,Constans.PORT);
+        startConnectMain();
     }
 
-    /**
-     * 关闭连接
-     */
+    private void startConnectMain(){
+        setMainFragmentListener();
+        if(TtPhoneDataManager.getInstance() != null){
+            TtPhoneDataManager.getInstance().connectTtPhoneServer(Constans.IP,Constans.PORT);
+        }
+    }
+
+    /** 关闭连接 */
     public void stopConnect(){
        // EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_DISCONNECT_TIANTONG));
     }
 
-    /**
-     * 请求gps准确位置
-     */
+    /** 请求gps准确位置 */
     public void requestGpsPosition(boolean isSwitch){
         /*EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_ACCURACY_POSITION,
                 new TtBeidouOpenBean(isSwitch)));*/
     }
 
-    /**
-     * 检查设备服务端APP版本是否更新
-     */
+    /** 检查设备服务端APP版本是否更新 */
     public void requestServerVersion(){
         AssetManager assetManager = mContext.getAssets();
         try {
@@ -365,6 +338,6 @@ public class MainFragementPersenter extends BasePresenter<MainFragmentView> impl
 
     @Override
     public void isTtServerConnected(boolean connected) {
-
+        mView.get().connectedState(connected);
     }
 }

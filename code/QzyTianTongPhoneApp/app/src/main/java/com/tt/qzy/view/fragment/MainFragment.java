@@ -14,30 +14,23 @@ import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
 
-import com.qzy.phone.pcm.AllLocalPcmManager;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
-import com.qzy.tt.phone.data.SmsBean;
-import com.socks.library.KLog;
 import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.SettingsActivity;
-import com.tt.qzy.view.activity.base.BaseActivity;
-import com.tt.qzy.view.bean.ServerPortIp;
 import com.tt.qzy.view.layout.CircleImageView;
 import com.tt.qzy.view.layout.NiftyExpandDialog;
-import com.tt.qzy.view.presenter.fragment.MainFragementPersenter;
+import com.tt.qzy.view.presenter.fragment.MainFragmentPresenter;
 import com.tt.qzy.view.service.TimerService;
 import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.NetworkUtil;
 import com.tt.qzy.view.utils.SPUtils;
-import com.tt.qzy.view.utils.ToastUtil;
 import com.tt.qzy.view.view.MainFragmentView;
 
 
@@ -73,7 +66,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
     @BindView(R.id.scrollView)
     ScrollView mScrollView;
 
-    private MainFragementPersenter mPresneter;
+    private MainFragmentPresenter mPresneter;
     private MainActivity mainActivity;
 
     private Intent mIntent;
@@ -97,7 +90,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
         if (getArguments() != null) {
         }
         setRetainInstance(true);
-        mPresneter = new MainFragementPersenter(getActivity());
+        mPresneter = new MainFragmentPresenter(getActivity());
     }
 
     @Override
@@ -116,7 +109,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
             connect.setText(getActivity().getResources().getString(R.string.TMT_click_connect));
         } else {
 
-            mPresneter.checkConnectedSate();
+//            mPresneter.checkConnectedSate();
         }
 
         mainActivity = (MainActivity)getActivity();

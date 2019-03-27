@@ -8,7 +8,7 @@ import com.qzy.tt.data.TtPhoneBatteryProtos;
 import com.qzy.tt.data.TtPhoneSignalProtos;
 import com.qzy.tt.data.TtPhoneSimCards;
 import com.qzy.tt.phone.data.impl.ITtPhoneDataListener;
-import com.qzy.tt.phone.data.TtPhoneDataManger;
+import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
 import com.tt.qzy.view.view.BaseMainView;
 
@@ -24,8 +24,8 @@ public class BaseActivityPresenter extends BasePresenter<BaseMainView> implement
      * 设置底层数据监听
      */
     public void setTtPhoneDataListener() {
-        if (TtPhoneDataManger.getInstance() != null) {
-            TtPhoneDataManger.getInstance().setTtPhoneDataListener(this);
+        if (TtPhoneDataManager.getInstance() != null) {
+            TtPhoneDataManager.getInstance().setTtPhoneDataListener(this);
         }
     }
 
