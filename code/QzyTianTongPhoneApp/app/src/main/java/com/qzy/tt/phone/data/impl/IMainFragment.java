@@ -10,4 +10,7 @@ public interface IMainFragment {
 
     //服务连接失败
     void disConnectServer();
+
+    //手动打开gps返回值
+    void autoOpenGps();
 }

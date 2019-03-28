@@ -376,4 +376,9 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     public void disConnectServer() {
         mView.get().connectedState(false);
     }
+
+    @Override
+    public void autoOpenGps() {
+
+    }
 }
