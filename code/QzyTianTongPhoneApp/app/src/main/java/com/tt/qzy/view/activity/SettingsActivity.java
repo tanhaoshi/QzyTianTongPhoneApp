@@ -73,9 +73,9 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if ((Boolean) SPUtils.getShare(SettingsActivity.this, Constans.TTM_STATUS, false)) {
                     if (isChecked) {
-                        mPresenter.openTianTongBeidou(true);
+                        mPresenter.openUsbSwtich(true);
                     } else {
-                        mPresenter.openTianTongBeidou(false);
+                        mPresenter.openUsbSwtich(false);
                     }
                 } else {
                     NToast.shortToast(SettingsActivity.this, getString(R.string.TMT_connect_tiantong_please));
@@ -289,7 +289,6 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
         custom_yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_RECOVER_SYSTEM));
                 if (TtPhoneDataManager.getInstance() != null) {
                     TtPhoneDataManager.getInstance().setResetFactorySettings();
                 }

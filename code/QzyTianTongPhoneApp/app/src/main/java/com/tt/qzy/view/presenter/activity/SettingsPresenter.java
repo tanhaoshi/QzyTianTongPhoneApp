@@ -27,8 +27,7 @@ public class SettingsPresenter extends BasePresenter<SettingsView>{
     /**
      * 打开usb开关
      */
-    public void openTianTongBeidou(boolean isSwitch){
-      //  EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_BEIDOU_SWITCH,));
+    public void openUsbSwtich(boolean isSwitch){
         if(TtPhoneDataManager.getInstance() != null){
             TtBeidouOpenBean ttBeidouOpenBean = new TtBeidouOpenBean(isSwitch);
             if(isSwitch) {
@@ -38,15 +37,6 @@ public class SettingsPresenter extends BasePresenter<SettingsView>{
             }
         }
     }
-
-  /*  @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MessageEventBus event) {
-        switch (event.getType()) {
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_BEIDOU:
-                getTianTongConnectBeiDou(event.getObject());
-                break;
-        }
-    }*/
 
     /**
      * 设备是否连接上北斗卫星

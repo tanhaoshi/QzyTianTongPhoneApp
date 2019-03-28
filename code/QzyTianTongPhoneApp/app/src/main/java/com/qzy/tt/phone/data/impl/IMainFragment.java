@@ -15,4 +15,7 @@ public interface IMainFragment {
 
     //手动打开gps返回值
     void isTtPhoneGpsPosition(PhoneCmd phoneCmd);
+
+    //获取SOS状态 初始化或手动打开
+    void isServerSosStatus(Object o);
 }
