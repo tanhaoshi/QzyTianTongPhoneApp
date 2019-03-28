@@ -178,6 +178,7 @@ public class SmsPhoneManager {
                             mSosStarted = true;
 //                            startSendSosMsg();
                             startSendSosMsgAndGPS();
+                            mCallback.onSosState(true);
                             LedManager.setSosLedStatus(true);
                         } else if ((downEventCount < 41) && mSosStarted) {
                             stopSendSosMsgAndGPS();
