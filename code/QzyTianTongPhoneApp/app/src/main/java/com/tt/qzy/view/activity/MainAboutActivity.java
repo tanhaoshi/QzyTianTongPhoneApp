@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.qzy.data.PhoneCmd;
 import com.qzy.tt.data.TtPhoneGetServerVersionProtos;
+import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.bean.DatetimeModel;
 import com.tt.qzy.view.utils.APKVersionCodeUtils;
@@ -53,6 +54,7 @@ public class MainAboutActivity extends AppCompatActivity {
 
     private void initData(){
        // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_VERSION));
+        TtPhoneDataManager.getInstance().requestServerTtPhoneVersion();
     }
 
     @OnClick({R.id.main_quantity})

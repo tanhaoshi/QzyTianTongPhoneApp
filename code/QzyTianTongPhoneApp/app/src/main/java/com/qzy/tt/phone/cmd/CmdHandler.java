@@ -197,6 +197,9 @@ public class CmdHandler {
                     TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion ttPhoneGetServerVersion = TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion
                             .parseDelimitedFrom(inputStream);
                     //sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_VERSION,protoId,ttPhoneGetServerVersion);
+                    if (mAllDataListener != null) {
+                        mAllDataListener.isTtPhoneServerVersion(PhoneCmd.getPhoneCmd(protoId, ttPhoneGetServerVersion));
+                    }
                     break;
                 case PrototocalTools.IProtoClientIndex.response_server_mobile_data_init:
                     TtPhoneMobileDataProtos.TtPhoneMobileData ttPhoneMobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.parseDelimitedFrom(inputStream);
@@ -312,7 +315,7 @@ public class CmdHandler {
             mAllDataListener.isTtSignalStrength(phoneSignalStrength.getSignalStrength());
         }*/
         if (mAllDataListener != null) {
-            mAllDataListener.isTtPhoneGpsPositon(PhoneCmd.getPhoneCmd(protoId,ttPhonePosition));
+            mAllDataListener.isTtPhoneGpsPositon(PhoneCmd.getPhoneCmd(protoId, ttPhonePosition));
         }
     }
 

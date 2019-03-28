@@ -26,6 +26,9 @@ public interface IAllTtPhoneDataListener {
     //返回gps经纬度
     void isTtPhoneGpsPositon(PhoneCmd phoneCmd);
 
+    //返回服务版本号
+    void isTtPhoneServerVersion(PhoneCmd phoneCmd);
+
     //同步通话记录
     void syncCallRecord(TtCallRecordProtos.TtCallRecordProto ttCallRecordProto);
 

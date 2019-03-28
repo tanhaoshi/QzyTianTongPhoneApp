@@ -190,6 +190,11 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
             }
 
             @Override
+            public void isTtPhoneServerVersion(PhoneCmd phoneCmd) {
+
+            }
+
+            @Override
             public void syncCallRecord(TtCallRecordProtos.TtCallRecordProto ttCallRecordProto) {
                 if (mSyncManager != null) {
                     mSyncManager.syncCallRecord(ttCallRecordProto);
@@ -393,6 +398,11 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
     @Override
     public void requestServerShortMessageStatus(SMAgrementModel smAgrementModel) {
         phoneNettyManager.requestServerShortMessageStatus(smAgrementModel);
+    }
+
+    @Override
+    public void requestServerTtPhoneVersion() {
+        phoneNettyManager.requestServerVersion();
     }
 
 

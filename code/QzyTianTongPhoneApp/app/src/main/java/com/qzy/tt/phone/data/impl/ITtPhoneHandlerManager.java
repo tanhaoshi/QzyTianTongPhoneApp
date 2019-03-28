@@ -63,6 +63,12 @@ public interface ITtPhoneHandlerManager {
     void requestServerShortMessageStatus(SMAgrementModel smAgrementModel);
 
 
+    /**
+     * 请求服务端版本号
+     */
+     void requestServerTtPhoneVersion();
+
+
 
     //设置电话数据回调接口
     void setTtPhoneDataListener(ITtPhoneDataListener iTtPhoneDataListener);
