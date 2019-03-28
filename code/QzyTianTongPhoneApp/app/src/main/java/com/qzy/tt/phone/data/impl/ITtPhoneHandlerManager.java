@@ -1,6 +1,7 @@
 package com.qzy.tt.phone.data.impl;
 
 import com.tt.qzy.view.bean.DatetimeModel;
+import com.tt.qzy.view.bean.SMAgrementModel;
 import com.tt.qzy.view.bean.SosSendMessageModel;
 import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.bean.WifiSettingModel;
@@ -8,6 +9,7 @@ import com.tt.qzy.view.bean.WifiSettingModel;
 public interface ITtPhoneHandlerManager {
 
     void setTtPhoneDataListener(ITtPhoneDataListener iTtPhoneDataListener);
+    void removeTtPhoneDataListener();
 
     //连接服务
     void connectTtPhoneServer(String ip,int port);
@@ -53,6 +55,14 @@ public interface ITtPhoneHandlerManager {
     void answerTtPhone();
 
 
+    //请求设备通话记录
+    void requestCallRecord();
+
+    //请求设备短信记录
+    void requestShortMessage();
+
+    //发送短信已读状态到服务器端
+    void requestServerShortMessageStatus(SMAgrementModel smAgrementModel);
 
 
 }

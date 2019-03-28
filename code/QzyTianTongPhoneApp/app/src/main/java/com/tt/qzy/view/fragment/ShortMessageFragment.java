@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSON;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.qzy.data.PhoneCmd;
 import com.qzy.tt.data.TtShortMessageProtos;
+import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
 import com.socks.library.KLog;
@@ -32,6 +33,7 @@ import com.tt.qzy.view.db.manager.ShortMessageManager;
 import com.tt.qzy.view.layout.PopShortMessageWindow;
 import com.tt.qzy.view.layout.PopWindow;
 import com.tt.qzy.view.presenter.fragment.ShortMessagePresenter;
+import com.tt.qzy.view.presenter.manager.SyncManager;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.utils.NToast;
@@ -47,8 +49,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ShortMessageFragment extends Fragment implements PopWindow.OnDismissListener,ShortMessageAdapter.OnItemClickListener
-,ShortMessageView,PopShortMessageWindow.ClearSignalListener{
+public class ShortMessageFragment extends Fragment implements PopWindow.OnDismissListener, ShortMessageAdapter.OnItemClickListener
+        , ShortMessageView, PopShortMessageWindow.ClearSignalListener {
 
     @BindView(R.id.base_iv_back)
     ImageView base_iv_back;
@@ -90,6 +92,8 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
         }
         setRetainInstance(true);
         mPresenter = new ShortMessagePresenter(getActivity());
+
+        setShortMsgSyncListener();
     }
 
     @Override
@@ -99,7 +103,7 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
         ButterKnife.bind(this, view);
         mPresenter.onBindView(this);
         initView();
-      //  EventBus.getDefault().register(this);
+        //  EventBus.getDefault().register(this);
         return view;
     }
 
@@ -110,29 +114,29 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
         base_tv_toolbar_right.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.more));
 
         todayRecyclerView.setNestedScrollingEnabled(false);
-        todayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        shortMessageAdapter = new ShortMessageAdapter(getActivity(),models);
+        todayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        shortMessageAdapter = new ShortMessageAdapter(getActivity(), models);
         shortMessageAdapter.setOnItemClickListener(this);
         todayRecyclerView.setAdapter(shortMessageAdapter);
         initListener();
     }
 
-    private void initListener(){
+    private void initListener() {
         mRefreshLayout.setOnRefreshLoadmoreListener(new OnRefreshLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
                 // load more
                 int count = daoListSize - offset;
-                if(count > 0){
-                    if(count < 20){
-                        mPresenter.getLoadShortMessageMore(0,offset+count);
+                if (count > 0) {
+                    if (count < 20) {
+                        mPresenter.getLoadShortMessageMore(0, offset + count);
                         refreshlayout.finishLoadmore(200);
-                    }else{
-                        mPresenter.getLoadShortMessageMore(0,offset+20);
+                    } else {
+                        mPresenter.getLoadShortMessageMore(0, offset + 20);
                         refreshlayout.finishLoadmore(200);
                     }
-                }else if(count == 0){
-                    NToast.shortToast(getActivity(),getString(R.string.TMT_dataisnull));
+                } else if (count == 0) {
+                    NToast.shortToast(getActivity(), getString(R.string.TMT_dataisnull));
                     refreshlayout.finishLoadmore(200);
                 }
             }
@@ -141,23 +145,23 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
             public void onRefresh(RefreshLayout refreshlayout) {
                 //  refresh
                 refreshlayout.finishRefresh(200);
-                mPresenter.getLoadShortMessageFresh(0,offset);
+                mPresenter.getLoadShortMessageFresh(0, offset);
             }
         });
     }
 
-    @OnClick({R.id.base_tv_toolbar_right,R.id.fab})
-    public void onClick(View view){
-        switch (view.getId()){
+    @OnClick({R.id.base_tv_toolbar_right, R.id.fab})
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.base_tv_toolbar_right:
-                if(mPopShortMessageWindow == null){
+                if (mPopShortMessageWindow == null) {
                     mPopShortMessageWindow = new PopShortMessageWindow(getActivity());
                     mPopShortMessageWindow.setOnDismissListener(this);
                     mPopShortMessageWindow.setOpenPictureListener(this);
                     setWindowAttibus(0.5f);
                     mPopShortMessageWindow.showAtLocation(getActivity().findViewById(R.id.todayRecyclerView),
                             Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                }else{
+                } else {
                     setWindowAttibus(0.5f);
                     mPopShortMessageWindow.showAtLocation(getActivity().findViewById(R.id.todayRecyclerView),
                             Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
@@ -165,11 +169,11 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
                 break;
             case R.id.fab:
                 MainActivity mainActivity = (MainActivity) getActivity();
-                if(mainActivity.tt_isSignal){
+                if (mainActivity.tt_isSignal) {
                     Intent intent = new Intent(getActivity(), SendShortMessageActivity.class);
                     startActivity(intent);
-                }else{
-                    NToast.shortToast(getActivity(),"设备未入网,请先入网!");
+                } else {
+                    NToast.shortToast(getActivity(), "设备未入网,请先入网!");
                 }
                 break;
         }
@@ -188,19 +192,19 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
 
     @Override
     public void onClick(int position) {
-        Intent intent = new Intent(getActivity(),SendShortMessageActivity.class);
-        intent.putExtra(Constans.SHORT_MESSAGE_NAME,models.get(position).getName());
-        intent.putExtra(Constans.SHORT_MESSAGE_PHONE,models.get(position).getNumberPhone());
-        intent.putExtra(Constans.SHORT_MESSAGE_CONTENT,models.get(position).getMessage());
-        intent.putExtra(Constans.SHORT_MESSAGE_TYPE,models.get(position).getState());
-        intent.putExtra(Constans.SHORT_MESSAGE_ID,models.get(position).getServerId());
+        Intent intent = new Intent(getActivity(), SendShortMessageActivity.class);
+        intent.putExtra(Constans.SHORT_MESSAGE_NAME, models.get(position).getName());
+        intent.putExtra(Constans.SHORT_MESSAGE_PHONE, models.get(position).getNumberPhone());
+        intent.putExtra(Constans.SHORT_MESSAGE_CONTENT, models.get(position).getMessage());
+        intent.putExtra(Constans.SHORT_MESSAGE_TYPE, models.get(position).getState());
+        intent.putExtra(Constans.SHORT_MESSAGE_ID, models.get(position).getServerId());
         startActivity(intent);
     }
 
     @Override
     public void onLongClick(int position) {
         mFloatingActionButton.setVisibility(View.GONE);
-        PinyinUtils.Vibrate(getActivity(),100);
+        PinyinUtils.Vibrate(getActivity(), 100);
     }
 
     @Override
@@ -251,7 +255,7 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
     @Override
     public void showError(String msg, boolean pullToRefresh) {
         mHUD.dismiss();
-        NToast.shortToast(getActivity(),msg);
+        NToast.shortToast(getActivity(), msg);
     }
 
     @Override
@@ -259,16 +263,16 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
         super.onStart();
         loadData(true);
         MainActivity mainActivity = (MainActivity) getActivity();
-        if(mainActivity != null) mainActivity.showRecordRead();
+        if (mainActivity != null) mainActivity.showRecordRead();
     }
 
     @Override
     public void loadData(boolean pullToRefresh) {
         showProgress(true);
-        mPresenter.getShortMessageDataList(0,20);
+        mPresenter.getShortMessageDataList(0, 20);
     }
 
-    private void initProgress(){
+    private void initProgress() {
         mHUD = KProgressHUD.create(getActivity())
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
                 .setDetailsLabel(getString(R.string.loading))
@@ -295,21 +299,34 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
     }*/
 
     /**
+     * 设置短信同步接口回调
+     */
+    private void setShortMsgSyncListener() {
+        TtPhoneDataManager.getInstance().setISyncMsgDataListener(new SyncManager.ISyncMsgDataListener() {
+            @Override
+            public void onShorMsgSignalSyncFinish(PhoneCmd phoneCmd) {
+                parseSmsreciver(phoneCmd);
+            }
+        });
+    }
+
+    /**
      * 解析收到短息
+     *
      * @param object
      */
-    private void parseSmsreciver(Object object){
+    private void parseSmsreciver(Object object) {
         PhoneCmd cmd = (PhoneCmd) object;
         TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage =
                 (TtShortMessageProtos.TtShortMessage.ShortMessage) cmd.getMessage();
-        if(mPresenter != null){
-            mPresenter.getShortMessageDataList(0,20);
+        if (mPresenter != null) {
+            mPresenter.getShortMessageDataList(0, 20);
         }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-       // EventBus.getDefault().unregister(this);
+        // EventBus.getDefault().unregister(this);
     }
 }

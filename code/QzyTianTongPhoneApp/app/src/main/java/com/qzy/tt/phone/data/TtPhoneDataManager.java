@@ -13,6 +13,7 @@ import com.qzy.tt.phone.data.impl.ITtPhoneManager;
 import com.qzy.tt.phone.netty.PhoneNettyManager;
 import com.socks.library.KLog;
 import com.tt.qzy.view.bean.DatetimeModel;
+import com.tt.qzy.view.bean.SMAgrementModel;
 import com.tt.qzy.view.bean.SosSendMessageModel;
 import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.bean.WifiSettingModel;
@@ -47,6 +48,13 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
     //数据同步操作类
     private SyncManager mSyncManager;
 
+
+    //同步数据回调
+    private SyncManager.ISyncDataListener iSyncDataListener;
+
+    //短信数据回调
+    private SyncManager.ISyncMsgDataListener iSyncMsgDataListener;
+
     public static TtPhoneDataManager getInstance() {
         if (instance == null) {
             instance = new TtPhoneDataManager();
@@ -79,6 +87,14 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
      */
     private void initSyncDataModel(Context context) {
         mSyncManager = new SyncManager(context);
+
+        if (iSyncDataListener != null) {
+            mSyncManager.setiSyncDataListener(iSyncDataListener);
+        }
+
+        if (iSyncMsgDataListener != null) {
+            mSyncManager.setiSyncMsgDataListener(iSyncMsgDataListener);
+        }
     }
 
     /**
@@ -181,6 +197,11 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
         this.iTtPhoneDataListener = iTtPhoneDataListener;
     }
 
+    @Override
+    public void removeTtPhoneDataListener() {
+        this.iTtPhoneDataListener = null;
+    }
+
     /**
      * 注册MainFragment数据回调接口就
      */
@@ -281,10 +302,57 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     }
 
+    @Override
+    public void requestCallRecord() {
+        phoneNettyManager.requestCallRecord();
+    }
+
+    @Override
+    public void requestShortMessage() {
+        phoneNettyManager.requestShortMessage();
+    }
+
+    @Override
+    public void requestServerShortMessageStatus(SMAgrementModel smAgrementModel) {
+        phoneNettyManager.requestServerShortMessageStatus(smAgrementModel);
+    }
+
 
     @Override
     public SyncManager getSyncManager() {
         return mSyncManager;
+    }
+
+    @Override
+    public void setISyncDataListener(SyncManager.ISyncDataListener listener) {
+        iSyncDataListener = listener;
+        if (mSyncManager != null) {
+            mSyncManager.setiSyncDataListener(listener);
+        }
+    }
+
+    @Override
+    public void removeISyncDataListener() {
+        iSyncDataListener = null;
+        if (mSyncManager != null) {
+            mSyncManager.setiSyncDataListener(iSyncDataListener);
+        }
+    }
+
+    @Override
+    public void setISyncMsgDataListener(SyncManager.ISyncMsgDataListener listener) {
+        iSyncMsgDataListener = listener;
+        if (mSyncManager != null) {
+            mSyncManager.setiSyncMsgDataListener(listener);
+        }
+    }
+
+    @Override
+    public void removeISyncMsgDataListener() {
+        iSyncMsgDataListener = null;
+        if (mSyncManager != null) {
+            mSyncManager.setiSyncMsgDataListener(iSyncMsgDataListener);
+        }
     }
 
 

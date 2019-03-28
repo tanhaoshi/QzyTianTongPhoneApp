@@ -1,15 +1,10 @@
 package com.qzy.netty;
 
-
 import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
 
 
 import java.net.InetSocketAddress;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.TimeUnit;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
@@ -22,9 +17,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import io.netty.handler.timeout.IdleState;
-import io.netty.handler.timeout.IdleStateEvent;
-import io.netty.handler.timeout.IdleStateHandler;
 
 /**
  * Created by yj.zhang on 2018/7/31/031.
@@ -32,10 +24,13 @@ import io.netty.handler.timeout.IdleStateHandler;
 
 public class NettyClient {
 
-    // private NioEventLoopGroup groupConnected;
-    private Bootstrap bootstrap;
+    public static final int Port = 9999;
+    public static final String IP = "192.168.43.1";
 
-    private Channel channel;
+    private NioEventLoopGroup groupConnected;
+
+    //连接线程
+    private Thread mThread;
 
     //发送数据句柄
     public ChannelHandlerContext connectHanlerCtx;
@@ -43,28 +38,23 @@ public class NettyClient {
     //回调接口
     private IConnectedReadDataListener connectedReadDataListener;
 
-    private BlockingQueue<String> mDataQueue = new LinkedBlockingDeque<>();
-
-    public NettyClient(IConnectedReadDataListener listener) {
+    public NettyClient(IConnectedReadDataListener listener){
         connectedReadDataListener = listener;
     }
 
     /**
      * 连接服务
      */
-    Thread mThread = null;
-
-    //    ExecutorService executorService = null;
-    public void starConnect(final int port, final String ip) {
-
-        mThread = new Thread(new Runnable() {
+    public void starConnect(final int port, final String ip){
+        mThread =  new Thread(new Runnable() {
             @Override
             public void run() {
+                groupConnected = new NioEventLoopGroup();
                 try {
                     // Client服务启动器 3.x的ClientBootstrap
                     // 改为Bootstrap，且构造函数变化很大，这里用无参构造。
-                    NioEventLoopGroup groupConnected = new NioEventLoopGroup();
-                    bootstrap = new Bootstrap();
+
+                    Bootstrap bootstrap = new Bootstrap();
                     // 指定channel类型
                     bootstrap.channel(NioSocketChannel.class);
                     // 指定Handler
@@ -72,36 +62,16 @@ public class NettyClient {
                     // 指定EventLoopGroup
                     bootstrap.group(groupConnected);
                     // 连接到目标IP的8000端口的服务端
-                    channel = bootstrap.connect(new InetSocketAddress(ip, port)).sync().channel();
-
-                    String value = null;
-                    while ((value = mDataQueue.take()) != null) {
-                        groupConnected.shutdownGracefully();
-                        break;
-                    }
-
+                    Channel channel = bootstrap.connect(new InetSocketAddress(ip, port)).sync().channel();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
             }
         });
         mThread.start();
 
     }
-//        mThread.start();
-//        executorService = ThreadUtils.getCachedPool();
-//        executorService.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                try
-//                {
-//                }catch (Exception e){
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
+
 
     /**
      * 连接工具
@@ -114,9 +84,8 @@ public class NettyClient {
            /* ch.pipeline().addLast(new ProtobufVarint32FrameDecoder());
             ch.pipeline().addLast(new ProtobufVarint32LengthFieldPrepender());
             ch.pipeline().addLast(new ProtobufEncoder());*/
-            ch.pipeline().addLast(new IdleStateHandler(5, 0, 0, TimeUnit.SECONDS));
             ch.pipeline().addLast(connectedChannelHandler);
-            ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 4, 4, -8, 0));
+            ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE,4,4,-8,0));
         }
     };
 
@@ -125,7 +94,7 @@ public class NettyClient {
 
         @Override
         public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-            LogUtils.e("channelRegistered");
+            LogUtils.e("channelRegistered" );
             connectHanlerCtx = ctx;
             Channel channel = ctx.channel();
 
@@ -133,7 +102,7 @@ public class NettyClient {
 
         @Override
         public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-            LogUtils.e("channelUnregistered");
+            LogUtils.e("channelUnregistered" );
             connectHanlerCtx = ctx;
             Channel channel = ctx.channel();
 
@@ -141,19 +110,19 @@ public class NettyClient {
 
         @Override
         public void channelActive(ChannelHandlerContext ctx) throws Exception {
-            LogUtils.e("channelActive");
+            LogUtils.e("channelActive" );
             connectHanlerCtx = ctx;
-            if (connectedReadDataListener != null) {
+            if(connectedReadDataListener != null){
                 connectedReadDataListener.onConnectedState(true);
             }
         }
 
         @Override
         public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-            LogUtils.e("channelInactive");
+            LogUtils.e("channelInactive" );
             KLog.i(" no connect client netty ");
             connectHanlerCtx = null;
-            if (connectedReadDataListener != null) {
+            if(connectedReadDataListener != null){
                 connectedReadDataListener.onConnectedState(false);
             }
         }
@@ -163,12 +132,13 @@ public class NettyClient {
             connectHanlerCtx = ctx;
             try {
                 ByteBuf buf = ((ByteBuf) msg);
-                // LogUtils.e("receve data = " + buf.array().length);
+               // LogUtils.e("receve data = " + buf.array().length);
                 if (dataBuf == null) {
                     dataBuf = buf;
                 } else {
                     dataBuf.writeBytes(buf.array());
                 }
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -176,6 +146,7 @@ public class NettyClient {
 
         @Override
         public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+            LogUtils.e("channelReadComplete ");
             connectHanlerCtx = ctx;
 
             if (connectedReadDataListener != null && dataBuf != null) {
@@ -186,16 +157,9 @@ public class NettyClient {
         }
 
         @Override
-        public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        public void userEventTriggered(ChannelHandlerContext ctx, Object o) throws Exception {
+            LogUtils.d("userEventTriggered ");
             connectHanlerCtx = ctx;
-            if (evt instanceof IdleStateEvent) {
-                IdleStateEvent e = (IdleStateEvent) evt;
-                if (e.state() == IdleState.WRITER_IDLE) {
-                    // TODO: 2018/6/13
-                    //ctx.writeAndFlush(HEARTBEAT_SEQUENCE.duplicate()).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
-                } else {
-                }
-            }
         }
 
         @Override
@@ -206,9 +170,8 @@ public class NettyClient {
 
         @Override
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable throwable) throws Exception {
-            LogUtils.e("exceptionCaught ", throwable);
+            LogUtils.e("exceptionCaught ",throwable);
             connectHanlerCtx = ctx;
-            ctx.close();
         }
 
         @Override
@@ -231,32 +194,23 @@ public class NettyClient {
     /**
      * 断开连接
      */
-    public void stopConnected() {
+    public void stopConnected(){
         try {
-            LogUtils.e("stopConnected .....");
-            mDataQueue.add("1111");
-            if (bootstrap != null) {
-                if (bootstrap.group() != null) {
-                    bootstrap.group().shutdownGracefully();
-                }
-
+            if(groupConnected != null){
+                groupConnected.shutdownGracefully();
             }
-            if (channel != null) {
-                channel.close();
-            }
-
-            if (mThread != null && mThread.isAlive()) {
+            if(mThread != null && mThread.isAlive()){
                 mThread.interrupt();
             }
-            mThread = null;
-        } catch (Exception e) {
+
+        }catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    public interface IConnectedReadDataListener {
-        void onReceiveData(ByteBufInputStream data);
 
+    public interface IConnectedReadDataListener{
+        void onReceiveData(ByteBufInputStream data);
         void onConnectedState(boolean state);
     }
 

@@ -20,6 +20,7 @@ import com.qzy.tt.data.TtPhoneSmsProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.SmsBean;
+import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.MsgAdapter;
@@ -29,6 +30,7 @@ import com.tt.qzy.view.db.dao.MailListDao;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
 import com.tt.qzy.view.db.manager.MailListManager;
 import com.tt.qzy.view.db.manager.ShortMessageManager;
+import com.tt.qzy.view.presenter.manager.SyncManager;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.utils.NToast;
@@ -74,6 +76,8 @@ public class SendShortMessageActivity extends AppCompatActivity {
         initView();
         initAdapter();
         initMsgs();
+
+        setShortMsgSyncListener();
     }
 
     private void initView() {
@@ -243,6 +247,18 @@ public class SendShortMessageActivity extends AppCompatActivity {
                 break;
         }
     }*/
+
+    /**
+     * 设置短信同步接口回调
+     */
+    private void setShortMsgSyncListener(){
+        TtPhoneDataManager.getInstance().setISyncMsgDataListener(new SyncManager.ISyncMsgDataListener() {
+            @Override
+            public void onShorMsgSignalSyncFinish(PhoneCmd phoneCmd) {
+                parseSmsreciver(phoneCmd);
+            }
+        });
+    }
 
     /**
      * 解析短信状态

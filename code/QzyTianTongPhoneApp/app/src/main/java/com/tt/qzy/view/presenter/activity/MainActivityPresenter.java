@@ -18,7 +18,9 @@ import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.Status;
+import com.qzy.data.PhoneCmd;
 import com.qzy.tt.data.TtCallRecordProtos;
+import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.socks.library.KLog;
 import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.bean.VersionCodeModel;
@@ -26,6 +28,7 @@ import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.network.NetService;
 import com.tt.qzy.view.network.NetWorkUtils;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
+import com.tt.qzy.view.presenter.manager.SyncManager;
 import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.view.MainActivityView;
@@ -50,6 +53,7 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView>{
     public MainActivityPresenter(Context context){
         this.mContext = context;
        // EventBus.getDefault().register(this);
+        setSyncListener();
     }
 
     public void getAppversionRequest(){
@@ -166,6 +170,28 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView>{
                 break;
         }
     }*/
+
+    /**
+     * 设置同步数据回调接口
+     */
+    private void setSyncListener(){
+        TtPhoneDataManager.getInstance().setISyncDataListener(new SyncManager.ISyncDataListener() {
+            @Override
+            public void onCallingLogSyncFinish(int count) {
+                mView.get().showRecordCallRead(true,count);
+            }
+
+            @Override
+            public void onShortMsgSyncFinish(int count) {
+                mView.get().showShortMessageRead(true,count);
+            }
+
+            @Override
+            public void onDisposeAlertSyncFinish(int recordCount) {
+                mView.get().showShortMessageRead(true,recordCount);
+            }
+        });
+    }
 
     /**
      * 将服务端的系统数据库修改未接状态

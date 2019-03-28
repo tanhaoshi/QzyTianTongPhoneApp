@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.protobuf.GeneratedMessageV3;
 
+import com.qzy.data.PhoneCmd;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.socks.library.KLog;
@@ -33,6 +34,10 @@ public class SyncManager {
     private Context mContext;
     private boolean isRecord = true;
     private boolean isShortMessage = true;
+
+    private ISyncDataListener iSyncDataListener;
+
+    private ISyncMsgDataListener iSyncMsgDataListener;
 
     public SyncManager(Context context) {
         this.mContext = context;
@@ -106,7 +111,9 @@ public class SyncManager {
         }
         if (isRecord) {
             // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_RECORD_CALL_HISTROY,Integer.valueOf(count)));
-
+            if(iSyncDataListener != null){
+                iSyncDataListener.onCallingLogSyncFinish(Integer.valueOf(count));
+            }
             SPUtils.putShare(mContext, Constans.RECORD_ISREAD, count);
         }
 
@@ -166,6 +173,9 @@ public class SyncManager {
         }
         if (isShortMessage) {
             //  EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_SHORT_MESSAGE_HISTROY,Integer.valueOf(count)));
+            if(iSyncDataListener != null){
+                iSyncDataListener.onShortMsgSyncFinish(Integer.valueOf(count));
+            }
 
             SPUtils.putShare(mContext, Constans.SHORTMESSAGE_ISREAD, count);
         }
@@ -192,6 +202,10 @@ public class SyncManager {
                     @Override
                     public void onNext(ShortMessageDao value) {
                         // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SHORT_MESSAGE, PhoneCmd.getPhoneCmd(protoId,messageV3)));
+
+                        if(iSyncMsgDataListener != null){
+                            iSyncMsgDataListener.onShorMsgSignalSyncFinish(PhoneCmd.getPhoneCmd(protoId,messageV3));
+                        }
                     }
 
                     @Override
@@ -217,6 +231,9 @@ public class SyncManager {
         SPUtils.putShare(mContext, Constans.SHORTMESSAGE_ISREAD, recordCount);
 
         // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_SHORT_MESSAGE_HISTROY,Integer.valueOf(recordCount)));
+        if(iSyncDataListener != null){
+            iSyncDataListener.onDisposeAlertSyncFinish(Integer.valueOf(recordCount));
+        }
     }
 
   /*  @Subscribe(threadMode = ThreadMode.MAIN)
@@ -241,5 +258,30 @@ public class SyncManager {
         //  EventBus.getDefault().unregister(this);
     }
 
+    public ISyncDataListener getiSyncDataListener() {
+        return iSyncDataListener;
+    }
+
+    public void setiSyncDataListener(ISyncDataListener iSyncDataListener) {
+        this.iSyncDataListener = iSyncDataListener;
+    }
+
+    public interface ISyncDataListener{
+        void onCallingLogSyncFinish(int count);
+        void onShortMsgSyncFinish(int count);
+        void onDisposeAlertSyncFinish(int recordCount);
+    }
+
+    public ISyncMsgDataListener getiSyncMsgDataListener() {
+        return iSyncMsgDataListener;
+    }
+
+    public void setiSyncMsgDataListener(ISyncMsgDataListener iSyncMsgDataListener) {
+        this.iSyncMsgDataListener = iSyncMsgDataListener;
+    }
+
+    public interface ISyncMsgDataListener{
+        void onShorMsgSignalSyncFinish(PhoneCmd phoneCmd);
+    }
 
 }
