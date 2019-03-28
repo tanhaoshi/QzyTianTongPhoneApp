@@ -8,6 +8,7 @@ import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.phone.data.impl.IAllTtPhoneDataListener;
+import com.qzy.tt.phone.data.impl.IMainAboutListener;
 import com.qzy.tt.phone.data.impl.IMainFragment;
 import com.qzy.tt.phone.data.impl.ITtPhoneCallStateBackListener;
 import com.qzy.tt.phone.data.impl.ITtPhoneCallStateLisenter;
@@ -73,6 +74,8 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     //存储设备电话占用
     private HashMap<String, ITtPhoneCallStateBackListener> hashMapCallStateBack = new HashMap<>();
+
+    private IMainAboutListener mIMainAboutListener;
 
     public static TtPhoneDataManager getInstance() {
         if (instance == null) {
@@ -191,7 +194,9 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
             @Override
             public void isTtPhoneServerVersion(PhoneCmd phoneCmd) {
-
+                if (mIMainAboutListener != null) {
+                    mIMainAboutListener.getServerVersion(phoneCmd);
+                }
             }
 
             @Override
@@ -283,6 +288,16 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
     @Override
     public void removeITtPhoneCallStateBackListener(String tag) {
         hashMapCallStateBack.remove(tag);
+    }
+
+    @Override
+    public void setIMainAboutListener(IMainAboutListener iMainAboutListener) {
+        mIMainAboutListener = iMainAboutListener;
+    }
+
+    @Override
+    public void removeIMainAboutListener() {
+        mIMainAboutListener = null;
     }
 
     /**

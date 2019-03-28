@@ -82,4 +82,7 @@ public interface ITtPhoneHandlerManager {
     void setITtPhoneCallStateBackListener(String tag,ITtPhoneCallStateBackListener lisenter);
     void removeITtPhoneCallStateBackListener(String tag);
 
+    //设置关于服务端app 版本号
+    void setIMainAboutListener(IMainAboutListener iMainAboutListener);
+    void removeIMainAboutListener();
 }
