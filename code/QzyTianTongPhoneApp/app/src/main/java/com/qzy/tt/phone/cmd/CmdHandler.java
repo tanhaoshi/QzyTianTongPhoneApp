@@ -123,6 +123,9 @@ public class CmdHandler {
                 case PrototocalTools.IProtoClientIndex.phone_send_sms_callback:
                     TtPhoneSmsProtos.TtPhoneSms ttPhoneSms = TtPhoneSmsProtos.TtPhoneSms.parseDelimitedFrom(inputStream);
                     // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS_STATE,protoId, ttPhoneSms);
+                    if(mAllDataListener != null){
+                        mAllDataListener.onServerTtPhoneSmsSendState(PhoneCmd.getPhoneCmd(protoId,ttPhoneSms));
+                    }
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_phone_battery: // 已完成
                     TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery = TtPhoneBatteryProtos.TtPhoneBattery.parseDelimitedFrom(inputStream);
