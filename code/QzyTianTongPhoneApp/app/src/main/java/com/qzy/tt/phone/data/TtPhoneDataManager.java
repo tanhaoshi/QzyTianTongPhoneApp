@@ -251,6 +251,9 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
             @Override
             public void onServerTtPhoneSosState(PhoneCmd phoneCmd) {
+                if (iMainFragment != null) {
+                    iMainFragment.isServerSosStatus(phoneCmd);
+                }
 
             }
 

@@ -208,6 +208,9 @@ public class CmdHandler {
                 case PrototocalTools.IProtoClientIndex.response_server_sos_init_status:   // 返回服务端 sos状态
                     TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState = TtPhoneSosStateProtos.TtPhoneSosState.parseDelimitedFrom(inputStream);
                     // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_SOS_STATUS,protoId,ttPhoneSosState);
+                    if (mAllDataListener != null) {
+                        mAllDataListener.onServerTtPhoneSosState(PhoneCmd.getPhoneCmd(protoId, ttPhoneSosState));
+                    }
                     break;
                 case PrototocalTools.IProtoClientIndex.response_server_timer_message: // 已完成
                     TimerSendProtos.TimerSend timerSend = TimerSendProtos.TimerSend.parseDelimitedFrom(inputStream);
