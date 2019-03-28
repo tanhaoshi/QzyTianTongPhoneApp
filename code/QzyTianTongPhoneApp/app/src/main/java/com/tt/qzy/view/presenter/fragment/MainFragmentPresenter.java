@@ -368,6 +368,8 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     @Override
     public void isTtServerConnected(boolean connected) {
         saveLocalWIFIIP();
+        //请求sos状态
+        TtPhoneDataManager.getInstance().getTtPhoneSosState();
         mView.get().connectedState(connected);
 
     }

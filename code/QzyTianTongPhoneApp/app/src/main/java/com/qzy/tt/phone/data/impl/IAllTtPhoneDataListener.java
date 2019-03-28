@@ -46,4 +46,7 @@ public interface IAllTtPhoneDataListener {
     //设备通话占用回调
     void onPhoneCallStateBack(PhoneCmd phoneCmd);
 
+    //返回初始化 sos状态
+    void onServerTtPhoneSosState(PhoneCmd phoneCmd);
+
 }
