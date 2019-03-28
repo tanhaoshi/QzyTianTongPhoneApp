@@ -98,41 +98,43 @@ public class PrototocalTools {
         int countIndex = 0;
         boolean isProtocal = false;
         while (true) {
+                if(stream.available() > 1){
+                    byte val = stream.readByte();
 
-                byte val = stream.readByte();
+                    if(!isStartHeaderByte(val)){
+                        continue;
+                    }
+                    countIndex += 1;
 
-                if(!isStartHeaderByte(val)){
-                    continue;
+                    val = stream.readByte();
+                    if(!isStartHeaderByte(val)){
+                        countIndex = 0;
+                        continue;
+                    }
+
+                    countIndex += 1;
+
+                    val = stream.readByte();
+                    if(!isStartHeaderByte(val)){
+                        countIndex = 0;
+                        continue;
+                    }
+
+                    countIndex += 1;
+
+                    val = stream.readByte();
+                    if(!isStartHeaderByte(val)){
+                        countIndex = 0;
+                        continue;
+                    }
+
+                    countIndex += 1;
+                    if(countIndex > 3){
+                        isProtocal = true;
+                        break;
+                    }
                 }
-                countIndex += 1;
 
-                val = stream.readByte();
-                if(!isStartHeaderByte(val)){
-                    countIndex = 0;
-                    continue;
-                }
-
-                countIndex += 1;
-
-                val = stream.readByte();
-                if(!isStartHeaderByte(val)){
-                    countIndex = 0;
-                    continue;
-                }
-
-                countIndex += 1;
-
-                val = stream.readByte();
-                if(!isStartHeaderByte(val)){
-                    countIndex = 0;
-                    continue;
-                }
-
-                countIndex += 1;
-                if(countIndex > 3){
-                    isProtocal = true;
-                    break;
-                }
             }
         return isProtocal;
     }

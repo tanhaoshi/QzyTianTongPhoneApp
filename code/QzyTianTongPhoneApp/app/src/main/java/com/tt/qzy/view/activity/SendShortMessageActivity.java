@@ -327,6 +327,6 @@ public class SendShortMessageActivity extends AppCompatActivity implements ISend
 
     @Override
     public void isSendShotMessageStatus(Object o) {
-        parseSmsState(0);
+        parseSmsState(o);
     }
 }

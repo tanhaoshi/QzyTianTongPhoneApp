@@ -231,6 +231,7 @@ public class SyncManager {
                         // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SHORT_MESSAGE, PhoneCmd.getPhoneCmd(protoId,messageV3)));
 
                         if (iSyncMsgDataListener != null) {
+                            KLog.i("iSyncMsgDataListener handleShortMessageSignal  = ");
                             iSyncMsgDataListener.onShorMsgSignalSyncFinish(PhoneCmd.getPhoneCmd(protoId, messageV3));
                         }
                     }
