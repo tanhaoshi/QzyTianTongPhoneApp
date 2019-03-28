@@ -258,7 +258,7 @@ public class SendShortMessageActivity extends AppCompatActivity implements ISend
      * 设置短信同步接口回调
      */
     private void setShortMsgSyncListener() {
-        TtPhoneDataManager.getInstance().setISyncMsgDataListener(new SyncManager.ISyncMsgDataListener() {
+        TtPhoneDataManager.getInstance().setISyncMsgDataListener("SendShortMessageActivity",new SyncManager.ISyncMsgDataListener() {
             @Override
             public void onShorMsgSignalSyncFinish(PhoneCmd phoneCmd) {
                 parseSmsreciver(phoneCmd);

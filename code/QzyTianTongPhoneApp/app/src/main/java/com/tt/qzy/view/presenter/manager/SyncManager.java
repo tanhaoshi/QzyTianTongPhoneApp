@@ -41,7 +41,8 @@ public class SyncManager {
     private boolean isShortMessage = true;
 
 
-    private ISyncMsgDataListener iSyncMsgDataListener;
+
+    private HashMap<String, ISyncMsgDataListener> hashMapSyncMsgData = new HashMap<>();
 
     private HashMap<String, ISyncDataListener> hashMapSyncData = new HashMap<>();
 
@@ -57,8 +58,7 @@ public class SyncManager {
         handleShortMessage(ttShortMessage.getShortMessageList());
     }
 
-    public void syncShortMessageSignal(final int protoId, final GeneratedMessageV3 messageV3,
-                                       TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessage) {
+    public void syncShortMessageSignal(final int protoId, final GeneratedMessageV3 messageV3, TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessage) {
         handleShortMessageSignal(protoId, messageV3, ttShortMessage);
     }
 
@@ -209,14 +209,14 @@ public class SyncManager {
         return shortMessageDaos;
     }
 
-    private void handleShortMessageSignal(final int protoId, final GeneratedMessageV3 messageV3,
-                                          final TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessage) {
+    private void handleShortMessageSignal(final int protoId, final GeneratedMessageV3 messageV3, final TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessage) {
+
         Observable.create(new ObservableOnSubscribe<ShortMessageDao>() {
             @Override
             public void subscribe(ObservableEmitter<ShortMessageDao> e) {
                 ShortMessageManager.getInstance(mContext).insertShortMessage(meragingShortMessage(ttShortMessage), mContext);
-                disposeAlert();
                 e.onNext(meragingShortMessage(ttShortMessage));
+                e.onComplete();
             }
         }).subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
@@ -228,11 +228,21 @@ public class SyncManager {
 
                     @Override
                     public void onNext(ShortMessageDao value) {
+                        disposeAlert();
                         // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SHORT_MESSAGE, PhoneCmd.getPhoneCmd(protoId,messageV3)));
-
-                        if (iSyncMsgDataListener != null) {
+                        /*if (iSyncMsgDataListener != null) {
                             KLog.i("iSyncMsgDataListener handleShortMessageSignal  = ");
                             iSyncMsgDataListener.onShorMsgSignalSyncFinish(PhoneCmd.getPhoneCmd(protoId, messageV3));
+                        }*/
+                        Iterator iter = hashMapSyncMsgData.entrySet().iterator();
+                        while (iter.hasNext()) {
+                            Map.Entry entry = (Map.Entry) iter.next();
+                            //Object key = entry.getKey();
+                            ISyncMsgDataListener val = (ISyncMsgDataListener) entry.getValue();
+                            if (val != null) {
+                                KLog.i("iSyncMsgDataListener handleShortMessageSignal  = ");
+                                val.onShorMsgSignalSyncFinish(PhoneCmd.getPhoneCmd(protoId, messageV3));
+                            }
                         }
                     }
 
@@ -316,12 +326,12 @@ public class SyncManager {
         void onDisposeAlertSyncFinish(int recordCount);
     }
 
-    public ISyncMsgDataListener getiSyncMsgDataListener() {
-        return iSyncMsgDataListener;
+    public void removeiSyncMsgDataListener() {
+        hashMapSyncMsgData = null;
     }
 
-    public void setiSyncMsgDataListener(ISyncMsgDataListener iSyncMsgDataListener) {
-        this.iSyncMsgDataListener = iSyncMsgDataListener;
+    public void setiSyncMsgDataListener(HashMap<String, ISyncMsgDataListener> map) {
+        hashMapSyncMsgData = map;
     }
 
     public interface ISyncMsgDataListener {

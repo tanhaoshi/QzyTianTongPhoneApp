@@ -13,9 +13,9 @@ public interface ITtPhoneManager {
     SyncManager.ISyncDataListener getISyncDataListener(String tag);
 
     //短信同步回调
-    void setISyncMsgDataListener(SyncManager.ISyncMsgDataListener listener);
+    void setISyncMsgDataListener(String tag,SyncManager.ISyncMsgDataListener listener);
 
-    void removeISyncMsgDataListener();
+    void removeISyncMsgDataListener(String tag);
 
     void setISendShortMessage(ISendShortMessage listener);
 

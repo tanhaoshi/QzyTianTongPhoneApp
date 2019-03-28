@@ -68,7 +68,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
     private HashMap<String, SyncManager.ISyncDataListener> hashMapSyncData = new HashMap<>();
 
     //短信数据回调
-    private SyncManager.ISyncMsgDataListener iSyncMsgDataListener;
+    private HashMap<String, SyncManager.ISyncMsgDataListener> hashMapSyncMsgData = new HashMap<>();
 
     //存储电话状态
     private HashMap<String, ITtPhoneCallStateLisenter> hashMapCallState = new HashMap<>();
@@ -119,8 +119,8 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
             mSyncManager.setiSyncDataListener(hashMapSyncData);
         }
 
-        if (iSyncMsgDataListener != null) {
-            mSyncManager.setiSyncMsgDataListener(iSyncMsgDataListener);
+        if (hashMapSyncMsgData != null) {
+            mSyncManager.setiSyncMsgDataListener(hashMapSyncMsgData);
         }
     }
 
@@ -482,18 +482,21 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
     }
 
     @Override
-    public void setISyncMsgDataListener(SyncManager.ISyncMsgDataListener listener) {
-        iSyncMsgDataListener = listener;
+    public void setISyncMsgDataListener(String tag, SyncManager.ISyncMsgDataListener listener) {
+        if (hashMapSyncMsgData == null) {
+            hashMapSyncMsgData = new HashMap<>();
+        }
+        hashMapSyncMsgData.put(tag, listener);
         if (mSyncManager != null) {
-            mSyncManager.setiSyncMsgDataListener(listener);
+            mSyncManager.setiSyncMsgDataListener(hashMapSyncMsgData);
         }
     }
 
     @Override
-    public void removeISyncMsgDataListener() {
-        iSyncMsgDataListener = null;
+    public void removeISyncMsgDataListener(String tag) {
+        hashMapSyncMsgData = null;
         if (mSyncManager != null) {
-            mSyncManager.setiSyncMsgDataListener(iSyncMsgDataListener);
+            mSyncManager.setiSyncMsgDataListener(hashMapSyncMsgData);
         }
     }
 
