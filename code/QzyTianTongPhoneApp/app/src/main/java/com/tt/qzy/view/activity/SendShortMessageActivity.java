@@ -21,6 +21,7 @@ import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.SmsBean;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
+import com.qzy.tt.phone.data.impl.ISendShortMessage;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.MsgAdapter;
@@ -45,7 +46,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SendShortMessageActivity extends AppCompatActivity {
+public class SendShortMessageActivity extends AppCompatActivity implements ISendShortMessage{
 
     @BindView(R.id.sms_base_tv_toolbar_right)
     ImageView mImageView;
@@ -313,5 +314,10 @@ public class SendShortMessageActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         // EventBusUtils.unregister(this);
+    }
+
+    @Override
+    public void isSendShotMessageStatus(Object o) {
+
     }
 }
