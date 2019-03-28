@@ -5,6 +5,7 @@ import android.content.Context;
 import com.google.protobuf.GeneratedMessageV3;
 import com.qzy.data.PhoneCmd;
 import com.qzy.tt.data.TtCallRecordProtos;
+import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.phone.data.impl.IAllTtPhoneDataListener;
 import com.qzy.tt.phone.data.impl.IMainFragment;
@@ -14,6 +15,7 @@ import com.qzy.tt.phone.data.impl.ITtPhoneDataListener;
 import com.qzy.tt.phone.data.impl.ITtPhoneHandlerManager;
 import com.qzy.tt.phone.data.impl.ITtPhoneManager;
 import com.qzy.tt.phone.netty.PhoneNettyManager;
+import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.bean.DatetimeModel;
 import com.tt.qzy.view.bean.SMAgrementModel;
@@ -181,6 +183,13 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
             }
 
             @Override
+            public void isTtPhoneGpsPositon(TtPhonePositionProtos.TtPhonePosition ttPhonePosition) {
+                if (iMainFragment != null) {
+                    iMainFragment.isTtServerConnected(aBoolean);
+                }
+            }
+
+            @Override
             public void syncCallRecord(TtCallRecordProtos.TtCallRecordProto ttCallRecordProto) {
                 if (mSyncManager != null) {
                     mSyncManager.syncCallRecord(ttCallRecordProto);
@@ -224,6 +233,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
                     //Object key = entry.getKey();
                     ITtPhoneCallStateBackListener val = (ITtPhoneCallStateBackListener) entry.getValue();
                     if (val != null) {
+                        LogUtils.i("onPhoneCallStateBack phonCmd = " + phoneCmd.getProtoId() );
                         val.onPhoneCallStateBack(phoneCmd);
                     }
                 }

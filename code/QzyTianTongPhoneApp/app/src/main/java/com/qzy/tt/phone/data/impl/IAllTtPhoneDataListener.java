@@ -3,6 +3,7 @@ package com.qzy.tt.phone.data.impl;
 import com.google.protobuf.GeneratedMessageV3;
 import com.qzy.data.PhoneCmd;
 import com.qzy.tt.data.TtCallRecordProtos;
+import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 
 /**
@@ -21,6 +22,9 @@ public interface IAllTtPhoneDataListener {
 
     //电池电量
     void isTtPhoneBattery(int level,int scal);
+
+    //返回gps经纬度
+    void isTtPhoneGpsPositon(TtPhonePositionProtos.TtPhonePosition ttPhonePosition);
 
     //同步通话记录
     void syncCallRecord(TtCallRecordProtos.TtCallRecordProto ttCallRecordProto);

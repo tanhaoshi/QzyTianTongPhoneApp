@@ -311,7 +311,9 @@ public class CmdHandler {
         /*if(mAllDataListener != null){
             mAllDataListener.isTtSignalStrength(phoneSignalStrength.getSignalStrength());
         }*/
-
+        if (mAllDataListener != null) {
+            mAllDataListener.isTtPhoneGpsPositon(ttPhonePosition);
+        }
     }
 
 
