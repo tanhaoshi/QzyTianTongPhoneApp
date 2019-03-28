@@ -108,6 +108,7 @@ public class PhoneClientManager {
             infoBean.setCalling(false);
             mHaspMapPhoneClient.put(ip, infoBean);
         }
+        setEndCallUser();
     }
 
     /**

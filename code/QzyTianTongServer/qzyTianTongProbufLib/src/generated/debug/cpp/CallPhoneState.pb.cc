@@ -37,10 +37,11 @@ void protobuf_AssignDesc_CallPhoneState_2eproto() {
       "CallPhoneState.proto");
   GOOGLE_CHECK(file != NULL);
   CallPhoneState_descriptor_ = file->message_type(0);
-  static const int CallPhoneState_offsets_[3] = {
+  static const int CallPhoneState_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CallPhoneState, phonestate_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CallPhoneState, ttphonesignal_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CallPhoneState, phonenumber_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CallPhoneState, nowcallingip_),
   };
   CallPhoneState_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -95,13 +96,14 @@ void protobuf_AddDesc_CallPhoneState_2eproto_impl() {
 
   protobuf_InitDefaults_CallPhoneState_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\024CallPhoneState.proto\022\tphonedata\"\277\001\n\016Ca"
+    "\n\024CallPhoneState.proto\022\tphonedata\"\325\001\n\016Ca"
     "llPhoneState\0228\n\nphoneState\030\001 \001(\0162$.phone"
     "data.CallPhoneState.PhoneState\022\025\n\rttPhon"
-    "eSignal\030\002 \001(\005\022\023\n\013phoneNumber\030\003 \001(\t\"G\n\nPh"
-    "oneState\022\n\n\006NOCALL\020\000\022\010\n\004RING\020\001\022\010\n\004CALL\020\002"
-    "\022\013\n\007HUANGUP\020\003\022\014\n\010INCOMING\020\004B\'\n\017com.qzy.t"
-    "t.dataB\024CallPhoneStateProtosb\006proto3", 276);
+    "eSignal\030\002 \001(\005\022\023\n\013phoneNumber\030\003 \001(\t\022\024\n\014no"
+    "wCallingIp\030\004 \001(\t\"G\n\nPhoneState\022\n\n\006NOCALL"
+    "\020\000\022\010\n\004RING\020\001\022\010\n\004CALL\020\002\022\013\n\007HUANGUP\020\003\022\014\n\010I"
+    "NCOMING\020\004B\'\n\017com.qzy.tt.dataB\024CallPhoneS"
+    "tateProtosb\006proto3", 298);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "CallPhoneState.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_CallPhoneState_2eproto);
@@ -162,6 +164,7 @@ const int CallPhoneState::PhoneState_ARRAYSIZE;
 const int CallPhoneState::kPhoneStateFieldNumber;
 const int CallPhoneState::kTtPhoneSignalFieldNumber;
 const int CallPhoneState::kPhoneNumberFieldNumber;
+const int CallPhoneState::kNowCallingIpFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 CallPhoneState::CallPhoneState()
@@ -184,6 +187,7 @@ CallPhoneState::CallPhoneState(const CallPhoneState& from)
 
 void CallPhoneState::SharedCtor() {
   phonenumber_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  nowcallingip_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&phonestate_, 0, reinterpret_cast<char*>(&ttphonesignal_) -
     reinterpret_cast<char*>(&phonestate_) + sizeof(ttphonesignal_));
   _cached_size_ = 0;
@@ -196,6 +200,7 @@ CallPhoneState::~CallPhoneState() {
 
 void CallPhoneState::SharedDtor() {
   phonenumber_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  nowcallingip_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 void CallPhoneState::SetCachedSize(int size) const {
@@ -243,6 +248,7 @@ void CallPhoneState::Clear() {
 
   ZR_(phonestate_, ttphonesignal_);
   phonenumber_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  nowcallingip_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 
 #undef ZR_HELPER_
 #undef ZR_
@@ -302,6 +308,23 @@ bool CallPhoneState::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(34)) goto parse_nowCallingIp;
+        break;
+      }
+
+      // optional string nowCallingIp = 4;
+      case 4: {
+        if (tag == 34) {
+         parse_nowCallingIp:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_nowcallingip()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->nowcallingip().data(), this->nowcallingip().length(),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "phonedata.CallPhoneState.nowCallingIp"));
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -351,6 +374,16 @@ void CallPhoneState::SerializeWithCachedSizes(
       3, this->phonenumber(), output);
   }
 
+  // optional string nowCallingIp = 4;
+  if (this->nowcallingip().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->nowcallingip().data(), this->nowcallingip().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "phonedata.CallPhoneState.nowCallingIp");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      4, this->nowcallingip(), output);
+  }
+
   // @@protoc_insertion_point(serialize_end:phonedata.CallPhoneState)
 }
 
@@ -380,6 +413,17 @@ void CallPhoneState::SerializeWithCachedSizes(
         3, this->phonenumber(), target);
   }
 
+  // optional string nowCallingIp = 4;
+  if (this->nowcallingip().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->nowcallingip().data(), this->nowcallingip().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "phonedata.CallPhoneState.nowCallingIp");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        4, this->nowcallingip(), target);
+  }
+
   // @@protoc_insertion_point(serialize_to_array_end:phonedata.CallPhoneState)
   return target;
 }
@@ -406,6 +450,13 @@ size_t CallPhoneState::ByteSizeLong() const {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::StringSize(
         this->phonenumber());
+  }
+
+  // optional string nowCallingIp = 4;
+  if (this->nowcallingip().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->nowcallingip());
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -451,6 +502,10 @@ void CallPhoneState::UnsafeMergeFrom(const CallPhoneState& from) {
 
     phonenumber_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.phonenumber_);
   }
+  if (from.nowcallingip().size() > 0) {
+
+    nowcallingip_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.nowcallingip_);
+  }
 }
 
 void CallPhoneState::CopyFrom(const ::google::protobuf::Message& from) {
@@ -480,6 +535,7 @@ void CallPhoneState::InternalSwap(CallPhoneState* other) {
   std::swap(phonestate_, other->phonestate_);
   std::swap(ttphonesignal_, other->ttphonesignal_);
   phonenumber_.Swap(&other->phonenumber_);
+  nowcallingip_.Swap(&other->nowcallingip_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
@@ -565,6 +621,50 @@ void CallPhoneState::set_allocated_phonenumber(::std::string* phonenumber) {
   }
   phonenumber_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), phonenumber);
   // @@protoc_insertion_point(field_set_allocated:phonedata.CallPhoneState.phoneNumber)
+}
+
+// optional string nowCallingIp = 4;
+void CallPhoneState::clear_nowcallingip() {
+  nowcallingip_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+const ::std::string& CallPhoneState::nowcallingip() const {
+  // @@protoc_insertion_point(field_get:phonedata.CallPhoneState.nowCallingIp)
+  return nowcallingip_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+void CallPhoneState::set_nowcallingip(const ::std::string& value) {
+  
+  nowcallingip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:phonedata.CallPhoneState.nowCallingIp)
+}
+void CallPhoneState::set_nowcallingip(const char* value) {
+  
+  nowcallingip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:phonedata.CallPhoneState.nowCallingIp)
+}
+void CallPhoneState::set_nowcallingip(const char* value, size_t size) {
+  
+  nowcallingip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:phonedata.CallPhoneState.nowCallingIp)
+}
+::std::string* CallPhoneState::mutable_nowcallingip() {
+  
+  // @@protoc_insertion_point(field_mutable:phonedata.CallPhoneState.nowCallingIp)
+  return nowcallingip_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+::std::string* CallPhoneState::release_nowcallingip() {
+  // @@protoc_insertion_point(field_release:phonedata.CallPhoneState.nowCallingIp)
+  
+  return nowcallingip_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+void CallPhoneState::set_allocated_nowcallingip(::std::string* nowcallingip) {
+  if (nowcallingip != NULL) {
+    
+  } else {
+    
+  }
+  nowcallingip_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), nowcallingip);
+  // @@protoc_insertion_point(field_set_allocated:phonedata.CallPhoneState.nowCallingIp)
 }
 
 inline const CallPhoneState* CallPhoneState::internal_default_instance() {

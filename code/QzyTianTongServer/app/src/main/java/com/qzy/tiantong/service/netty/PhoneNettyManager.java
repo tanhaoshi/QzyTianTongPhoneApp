@@ -379,11 +379,16 @@ public class PhoneNettyManager implements IMobileDataManager{
         if(phoneNumber == null){
             phoneNumber = "13352528585";
         }
+
+        String callInigIp = PhoneClientManager.getInstance().isCallingIp();
+        if(TextUtils.isEmpty(callInigIp)){
+            callInigIp = "192.168.43.1";
+        }
         CallPhoneStateProtos.CallPhoneState callPhoneState = CallPhoneStateProtos.CallPhoneState.newBuilder()
                 .setPhoneState(phoneState)
                 .setPhoneNumber(phoneNumber)
+                .setNowCallingIp(callInigIp)
                 .build();
-        String callInigIp = PhoneClientManager.getInstance().isCallingIp();
 
         if ((phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.CALL) || (phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.RING)) {
             if(!TextUtils.isEmpty(callInigIp)){
@@ -410,20 +415,25 @@ public class PhoneNettyManager implements IMobileDataManager{
         if(phoneNumber == null){
             phoneNumber = "13352528585";
         }
+
+        String callInigIp = PhoneClientManager.getInstance().isCallingIp();
+        if(TextUtils.isEmpty(callInigIp)){
+            callInigIp = "192.168.43.1";
+        }
         CallPhoneStateProtos.CallPhoneState callPhoneState = CallPhoneStateProtos.CallPhoneState.newBuilder()
                 .setPhoneState(phoneState)
                 .setPhoneNumber(phoneNumber)
+                .setNowCallingIp(callInigIp)
                 .build();
-        String callInigIp = PhoneClientManager.getInstance().isCallingIp();
-
         if ((phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.CALL) || (phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.RING)) {
             if(!TextUtils.isEmpty(callInigIp)){
                 //LogUtils.i("sendTtCallPhoneStateToClient callingIp = " + callInigIp + " phonestate = " + callPhoneState.getPhoneState().ordinal());
+
                 return callPhoneState;
             }
         } else {
             if (TextUtils.isEmpty(callInigIp) && (phoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.CALL)){
-                return null;
+                return callPhoneState;
             }
         }
 

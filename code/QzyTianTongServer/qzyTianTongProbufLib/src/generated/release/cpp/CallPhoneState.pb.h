@@ -184,11 +184,23 @@ class CallPhoneState : public ::google::protobuf::Message /* @@protoc_insertion_
   ::std::string* release_phonenumber();
   void set_allocated_phonenumber(::std::string* phonenumber);
 
+  // optional string nowCallingIp = 4;
+  void clear_nowcallingip();
+  static const int kNowCallingIpFieldNumber = 4;
+  const ::std::string& nowcallingip() const;
+  void set_nowcallingip(const ::std::string& value);
+  void set_nowcallingip(const char* value);
+  void set_nowcallingip(const char* value, size_t size);
+  ::std::string* mutable_nowcallingip();
+  ::std::string* release_nowcallingip();
+  void set_allocated_nowcallingip(::std::string* nowcallingip);
+
   // @@protoc_insertion_point(class_scope:phonedata.CallPhoneState)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::ArenaStringPtr phonenumber_;
+  ::google::protobuf::internal::ArenaStringPtr nowcallingip_;
   int phonestate_;
   ::google::protobuf::int32 ttphonesignal_;
   mutable int _cached_size_;
@@ -279,6 +291,50 @@ inline void CallPhoneState::set_allocated_phonenumber(::std::string* phonenumber
   }
   phonenumber_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), phonenumber);
   // @@protoc_insertion_point(field_set_allocated:phonedata.CallPhoneState.phoneNumber)
+}
+
+// optional string nowCallingIp = 4;
+inline void CallPhoneState::clear_nowcallingip() {
+  nowcallingip_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& CallPhoneState::nowcallingip() const {
+  // @@protoc_insertion_point(field_get:phonedata.CallPhoneState.nowCallingIp)
+  return nowcallingip_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void CallPhoneState::set_nowcallingip(const ::std::string& value) {
+  
+  nowcallingip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:phonedata.CallPhoneState.nowCallingIp)
+}
+inline void CallPhoneState::set_nowcallingip(const char* value) {
+  
+  nowcallingip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:phonedata.CallPhoneState.nowCallingIp)
+}
+inline void CallPhoneState::set_nowcallingip(const char* value, size_t size) {
+  
+  nowcallingip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:phonedata.CallPhoneState.nowCallingIp)
+}
+inline ::std::string* CallPhoneState::mutable_nowcallingip() {
+  
+  // @@protoc_insertion_point(field_mutable:phonedata.CallPhoneState.nowCallingIp)
+  return nowcallingip_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* CallPhoneState::release_nowcallingip() {
+  // @@protoc_insertion_point(field_release:phonedata.CallPhoneState.nowCallingIp)
+  
+  return nowcallingip_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void CallPhoneState::set_allocated_nowcallingip(::std::string* nowcallingip) {
+  if (nowcallingip != NULL) {
+    
+  } else {
+    
+  }
+  nowcallingip_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), nowcallingip);
+  // @@protoc_insertion_point(field_set_allocated:phonedata.CallPhoneState.nowCallingIp)
 }
 
 inline const CallPhoneState* CallPhoneState::internal_default_instance() {

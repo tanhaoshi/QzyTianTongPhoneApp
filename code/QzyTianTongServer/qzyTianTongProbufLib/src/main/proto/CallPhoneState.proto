@@ -21,5 +21,6 @@ message CallPhoneState {
     int32 ttPhoneSignal = 2;
     string phoneNumber = 3;
 
+    string nowCallingIp = 4;
 }
 
