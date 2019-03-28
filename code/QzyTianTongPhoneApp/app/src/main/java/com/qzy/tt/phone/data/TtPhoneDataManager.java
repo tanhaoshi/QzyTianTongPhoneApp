@@ -271,7 +271,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
     }
 
     /**
-     * 注册MainFragment数据回调接口就
+     * 注册MainFragment数据回调接口
      */
     public void setMainFragmentListener(IMainFragment iMainFragment) {
         this.iMainFragment = iMainFragment;

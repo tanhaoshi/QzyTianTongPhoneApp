@@ -7,7 +7,6 @@ import com.qzy.data.PhoneCmd;
 import com.qzy.data.PhoneStateUtils;
 import com.qzy.phone.pcm.AllLocalPcmManager;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
-import com.qzy.tt.phone.data.impl.ITtPhoneCallStateLisenter;
 import com.qzy.tt.phone.netty.PhoneNettyManager;
 import com.socks.library.KLog;
 import com.tt.qzy.view.utils.Constans;
@@ -42,11 +41,7 @@ public class PhoneServiceManager {
         mPhoneNettyManager = new PhoneNettyManager(context);
         TtPhoneDataManager.getInstance().init(context, mPhoneNettyManager);
         setTtPhoneCallState();
-//        mQzySensorManager = new QzySensorManager(context);
-        if (SPUtils.containsShare(context, Constans.AUTO_EXITS)) {
-            KLog.i("phone service manager start record ");
-            initProtocal();
-        }
+        initProtocal();
     }
 
     /**
@@ -158,10 +153,5 @@ public class PhoneServiceManager {
         }
 
         releaseProtocal();
-
-
-//        if (mQzySensorManager != null) {
-//            mQzySensorManager.freeSenerState();
-//        }
     }
 }

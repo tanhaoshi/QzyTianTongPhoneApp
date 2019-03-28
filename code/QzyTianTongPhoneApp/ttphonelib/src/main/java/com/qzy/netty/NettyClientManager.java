@@ -114,8 +114,6 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
                 int len = dataBuff.capacity();
                 stream.writeInt(len);
                 stream.write(dataBuff.array(), 0, len);
-                //stream.writeBytes(cmdData);
-//                KLog.d("write buff:" + ByteUtils.byteArrToHexString(buff.array()));
                 stream.flush();
                 mNettyClent.getConnectHanlerCtx().writeAndFlush(buff);
             }

@@ -3,7 +3,6 @@ package com.qzy.netty;
 import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
 
-
 import java.net.InetSocketAddress;
 
 import io.netty.bootstrap.Bootstrap;
@@ -28,6 +27,8 @@ public class NettyClient {
     public static final String IP = "192.168.43.1";
 
     private NioEventLoopGroup groupConnected;
+
+    Channel channel;
 
     //连接线程
     private Thread mThread;
@@ -62,7 +63,7 @@ public class NettyClient {
                     // 指定EventLoopGroup
                     bootstrap.group(groupConnected);
                     // 连接到目标IP的8000端口的服务端
-                    Channel channel = bootstrap.connect(new InetSocketAddress(ip, port)).sync().channel();
+                    channel = bootstrap.connect(new InetSocketAddress(ip, port)).sync().channel();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -139,6 +140,8 @@ public class NettyClient {
                     dataBuf.writeBytes(buf.array());
                 }
 
+                ctx.flush();
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -154,6 +157,8 @@ public class NettyClient {
                 connectedReadDataListener.onReceiveData(inputStream);
                 dataBuf = null;
             }
+
+            ctx.flush();
         }
 
         @Override
@@ -172,6 +177,7 @@ public class NettyClient {
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable throwable) throws Exception {
             LogUtils.e("exceptionCaught ",throwable);
             connectHanlerCtx = ctx;
+            ctx.close();
         }
 
         @Override

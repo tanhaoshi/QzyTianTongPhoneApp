@@ -172,7 +172,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
                             main_location.setChecked(true);
                         }else{
                             getActivity().stopService(mIntent);
-                            mPresneter.closeServerSos();
+                            mPresneter.requestGpsPosition(false);
                         }
                     }else{
                         NToast.shortToast(getActivity(), getString(R.string.TMT_THE_DEVICE_NOT_INTERNET_NOW));

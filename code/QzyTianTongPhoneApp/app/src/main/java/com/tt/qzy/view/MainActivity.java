@@ -48,7 +48,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class MainActivity extends BaseActivity<MainActivityView> implements MainActivityView,HomeKeyListenerHelper.HomeKeyListener{
+public class MainActivity extends BaseActivity<MainActivityView> implements MainActivityView{
 
     @BindView(R.id.shortMessage)
     Button shortMessage;
@@ -76,7 +76,6 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
 
     private BadgeView callBadgeView;
     private BadgeView shortMessageBadgeView;
-    private HomeKeyListenerHelper mHelper;
 
     public FrameLayout getBottomBar() {
         return bottomBar;
@@ -103,8 +102,6 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     public void initView() {
         mPresenter = new MainActivityPresenter(this);
         mPresenter.onBindView(this);
-        mHelper = new HomeKeyListenerHelper(MainActivity.this);
-        mHelper.registerHomeKeyListener(this);
         showMainFragment();
         initBadeView();
     }
@@ -247,14 +244,10 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     @Override
     protected void onResume() {
         super.onResume();
-        SPUtils.putShare(MainActivity.this,Constans.AUTO_EXITS,true);
-        startService();
         Integer recordCount = (Integer)SPUtils.getShare(MainActivity.this, Constans.RECORD_ISREAD,0);
         remind(String.valueOf(recordCount),callBadgeView);
         Integer shortMessageCount = (Integer)SPUtils.getShare(MainActivity.this,Constans.SHORTMESSAGE_ISREAD,0);
         remind(String.valueOf(shortMessageCount),shortMessageBadgeView);
-        //设置数据
-        setDataListener();
     }
 
     public void showRecordRead(){
@@ -265,7 +258,9 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     @Override
     protected void onStart() {
         super.onStart();
+        startService();
         mPresenter.getAppversionRequest();
+        setDataListener();
     }
 
     /**
@@ -275,38 +270,22 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
      */
     private void startService() {
         if(mPresenter.checkPermissionExist()){
-//            if(!AppUtils.isServiceRunning("com.qzy.tt.phone.service.TtPhoneService",MainActivity.this)){
+            if(!AppUtils.isServiceRunning("com.qzy.tt.phone.service.TtPhoneService",MainActivity.this)){
                 startService(new Intent(this, TtPhoneService.class));
-//            }
+            }
         }else{
             mPresenter.requestPermission(Build.BRAND,this, Manifest.permission.RECORD_AUDIO);
             startService(new Intent(this, TtPhoneService.class));
         }
     }
 
-    /*
-     * stop service
-     */
     public void stopService() {
         stopService(new Intent(this, TtPhoneService.class));
     }
 
     public void release(){
-        SPUtils.removeShare(MainActivity.this,Constans.AUTO_EXITS);
-        mHelper.unregisterHomeKeyListener();
-        if(AllLocalPcmManager.instance != null){
-            AllLocalPcmManager.instance.free();
-        }else{
-            AllLocalPcmManager.getInstance(MainActivity.this).free();
-        }
         NiftyExpandDialog.getInstance(MainActivity.this).release();
         mPresenter.release();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mHelper.unregisterHomeKeyListener();
     }
 
     @Override
@@ -451,20 +430,5 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     public void onBackPressed() {
         super.onBackPressed();
         IntentWrapper.onBackPressed(this);
-    }
-
-    @Override
-    public void onHomeKeyShortPressed() {
-        if(AllLocalPcmManager.instance != null){
-            AllLocalPcmManager.instance.free();
-            SPUtils.removeShare(MainActivity.this,Constans.AUTO_EXITS);
-        }else{
-            AllLocalPcmManager.getInstance(MainActivity.this).free();
-        }
-    }
-
-    @Override
-    public void onHomeKeyLongPressed() {
-
     }
 }
