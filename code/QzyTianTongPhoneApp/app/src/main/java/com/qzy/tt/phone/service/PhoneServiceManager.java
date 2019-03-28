@@ -83,7 +83,7 @@ public class PhoneServiceManager {
      */
     private void updatePhoneState(PhoneCmd cmd) {
         String callingIp = PhoneStateUtils.getTtPhoneStateNowCallingIp(cmd);
-        KLog.i(" callingIp = " + callingIp  + " phone state = " + PhoneStateUtils.getTtPhoneState(cmd).ordinal());
+        KLog.i(" callingIp = " + callingIp  + " phone state = " + PhoneStateUtils.getTtPhoneState(cmd).ordinal() + " localip = " + CommonData.getInstance().getLocalWifiIp());
         switch (PhoneStateUtils.getTtPhoneState(cmd)) {
             case NOCALL:
                 stopProtocal();
