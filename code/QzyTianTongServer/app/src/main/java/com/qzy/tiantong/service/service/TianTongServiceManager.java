@@ -86,7 +86,7 @@ public class TianTongServiceManager implements ITianTongServer {
         if (isUdpPcmLocal) {
             mLocalPcmSocketManager = new LocalPcmSocketManager(context);
         }
-        mQzyPhoneManager = new QzyPhoneManager(context, this,mLocalPcmSocketManager);
+        mQzyPhoneManager = new QzyPhoneManager(context, this, mLocalPcmSocketManager);
         mTianTongHandler = new TianTongHandler(this);
         mCmdHandler = new CmdHandler(mTianTongHandler);
 
@@ -128,7 +128,8 @@ public class TianTongServiceManager implements ITianTongServer {
                 }
                 Global.IP = ip;
 
-
+                //主动发送当前状态信息
+                mPhoneNettyManager.setNewTimerSend(ip);
                 //发送通讯录
                 CallLogManager.syncCallLogInfo(ip, mContext, mPhoneNettyManager);
 

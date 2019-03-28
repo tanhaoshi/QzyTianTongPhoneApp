@@ -149,7 +149,7 @@ public class PhoneNettyManager implements IMobileDataManager{
             @Override
             public void run() {
                 try {
-                    setNewTimerSend();
+                    setNewTimerSend(null);
                     mHandler.postDelayed(mStateThread,3000);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -159,7 +159,10 @@ public class PhoneNettyManager implements IMobileDataManager{
         mHandler.post(mStateThread);
     }
 
-    private void setNewTimerSend(){
+    /**
+     * 新定时发送
+     */
+    public void setNewTimerSend(String ip){
         if(currentPhoneState == null) {
             currentPhoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL;
         }
@@ -180,7 +183,7 @@ public class PhoneNettyManager implements IMobileDataManager{
             return;
         }
         if(timerSend != null){
-            mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.response_server_timer_message, timerSend));
+            mNettyServerManager.sendData(ip, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.response_server_timer_message, timerSend));
         }
     }
 
