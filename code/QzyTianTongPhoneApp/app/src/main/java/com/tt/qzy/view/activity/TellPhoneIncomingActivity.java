@@ -15,6 +15,9 @@ import com.qzy.data.PhoneStateUtils;
 import com.qzy.ring.RingManager;
 import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.phone.common.CommonData;
+import com.qzy.tt.phone.data.TtPhoneDataManager;
+import com.qzy.tt.phone.data.impl.ITtPhoneCallStateBackListener;
+import com.qzy.tt.phone.data.impl.ITtPhoneCallStateLisenter;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.application.TtPhoneApplication;
@@ -61,12 +64,14 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tell_phone_incoming);
         RingManager.playDefaultCallMediaPlayer(TtPhoneApplication.getInstance());
         ButterKnife.bind(this);
-        phoneNumber= getIntent().getStringExtra("diapadNumber");
+        phoneNumber = getIntent().getStringExtra("diapadNumber");
         txtv_phoneNumber.setText(phoneNumber);
         if (!TextUtils.isEmpty(phoneNumber) && phoneNumber.length() >= 3) {
         }
         mTellPhoneActivityPresenter = new TellPhoneActivityPresenter(this);
-      //  EventBusUtils.register(this);
+        //  EventBusUtils.register(this);
+        setTtPhoneCallState();
+        setTtPhoneCallStateBackListener();
     }
 
     @OnClick({R.id.btn_accept, R.id.btn_endcall})
@@ -76,15 +81,15 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
                 onCallingState();
                 String name = getPhoneKeyForName(phoneNumber);
 
-                if(null != name && name.length() > 0){
-                    CallRecordDao callRecordDao = new CallRecordDao(phoneNumber,name,"","1", DateUtil.backTimeFomat(new Date()),20);
+                if (null != name && name.length() > 0) {
+                    CallRecordDao callRecordDao = new CallRecordDao(phoneNumber, name, "", "1", DateUtil.backTimeFomat(new Date()), 20);
 
-                    CallRecordManager.getInstance(this).insertCallRecord(callRecordDao,this);
+                    CallRecordManager.getInstance(this).insertCallRecord(callRecordDao, this);
 
-                }else{
-                    CallRecordDao callRecordDao = new CallRecordDao(phoneNumber,"","","1",DateUtil.backTimeFomat(new Date()),20);
+                } else {
+                    CallRecordDao callRecordDao = new CallRecordDao(phoneNumber, "", "", "1", DateUtil.backTimeFomat(new Date()), 20);
 
-                    CallRecordManager.getInstance(this).insertCallRecord(callRecordDao,this);
+                    CallRecordManager.getInstance(this).insertCallRecord(callRecordDao, this);
                 }
                 break;
             case R.id.btn_endcall:
@@ -93,27 +98,27 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
 
                 String phoneName = getPhoneKeyForName(phoneNumber);
 
-                if(null != phoneName && phoneName.length() > 0){
-                    CallRecordDao callRecordDao = new CallRecordDao(phoneNumber,phoneName,"","3",DateUtil.backTimeFomat(new Date()),20);
+                if (null != phoneName && phoneName.length() > 0) {
+                    CallRecordDao callRecordDao = new CallRecordDao(phoneNumber, phoneName, "", "3", DateUtil.backTimeFomat(new Date()), 20);
 
-                    CallRecordManager.getInstance(this).insertCallRecord(callRecordDao,this);
+                    CallRecordManager.getInstance(this).insertCallRecord(callRecordDao, this);
 
-                }else{
+                } else {
 
-                    CallRecordDao callRecordDao = new CallRecordDao(phoneNumber,"","","3",DateUtil.backTimeFomat(new Date()),20);
+                    CallRecordDao callRecordDao = new CallRecordDao(phoneNumber, "", "", "3", DateUtil.backTimeFomat(new Date()), 20);
 
-                    CallRecordManager.getInstance(this).insertCallRecord(callRecordDao,this);
+                    CallRecordManager.getInstance(this).insertCallRecord(callRecordDao, this);
                 }
                 break;
         }
     }
 
-    public String getPhoneKeyForName(String phone){
+    public String getPhoneKeyForName(String phone) {
         List<MailListDao> listModels = MailListManager.getInstance(this).getByPhoneList(phone);
         String name;
-        if(listModels.size() > 0){
+        if (listModels.size() > 0) {
             name = listModels.get(0).getName();
-        }else{
+        } else {
             name = "";
         }
         return name;
@@ -131,17 +136,44 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         }
     }*/
 
-    public void onTianTongCallStatus(Object o){
-        PhoneCmd cmd = (PhoneCmd) o;
-        CallPhoneBackProtos.CallPhoneBack callPhoneBack = (CallPhoneBackProtos.CallPhoneBack)cmd.getMessage();
-        KLog.i("tt_call_status is = " + callPhoneBack.getIsCalling());
-        if(callPhoneBack.getIsCalling()){
-            if(callPhoneBack.getIp().equals(CommonData.getInstance().getLocalWifiIp())){
 
-            }else{
+    /**
+     * 设置电话设备占用回调
+     */
+    private void setTtPhoneCallStateBackListener() {
+        TtPhoneDataManager.getInstance().setITtPhoneCallStateBackListener("BaseActivity", new ITtPhoneCallStateBackListener() {
+            @Override
+            public void onPhoneCallStateBack(PhoneCmd phoneCmd) {
+                onTianTongCallStatus(phoneCmd);
+            }
+        });
+    }
+
+
+    /**
+     * 设置电话通话状态
+     */
+    private void setTtPhoneCallState() {
+        TtPhoneDataManager.getInstance().setTtPhoneCallStateLisenter("TellPhoneIncomingActivity", new ITtPhoneCallStateLisenter() {
+            @Override
+            public void onTtPhoneCallState(PhoneCmd phoneCmd) {
+                updatePhoneState(phoneCmd);
+            }
+        });
+
+    }
+
+    public void onTianTongCallStatus(Object o) {
+        PhoneCmd cmd = (PhoneCmd) o;
+        CallPhoneBackProtos.CallPhoneBack callPhoneBack = (CallPhoneBackProtos.CallPhoneBack) cmd.getMessage();
+        KLog.i("tt_call_status is = " + callPhoneBack.getIsCalling());
+        if (callPhoneBack.getIsCalling()) {
+            if (callPhoneBack.getIp().equals(CommonData.getInstance().getLocalWifiIp())) {
+
+            } else {
                 finish();
             }
-        }else{
+        } else {
             finish();
         }
     }
@@ -151,9 +183,9 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
      */
     private void onCallingState() {
         Intent intent = new Intent(TellPhoneIncomingActivity.this, TellPhoneActivity.class);
-       // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("diapadNumber", phoneNumber);
-        intent.putExtra("acceptCall",true);
+        intent.putExtra("acceptCall", true);
         startActivity(intent);
         RingManager.stopDefaultCallMediaPlayer(TtPhoneApplication.getInstance());
         mTellPhoneActivityPresenter.acceptCall();
@@ -193,16 +225,16 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
 
                 String phoneName = getPhoneKeyForName(phoneNumber);
 
-                if(null != phoneName && phoneName.length() > 0){
-                    CallRecordDao callRecordDao = new CallRecordDao(phoneNumber,phoneName,"","3",DateUtil.backTimeFomat(new Date()),20);
+                if (null != phoneName && phoneName.length() > 0) {
+                    CallRecordDao callRecordDao = new CallRecordDao(phoneNumber, phoneName, "", "3", DateUtil.backTimeFomat(new Date()), 20);
 
-                    CallRecordManager.getInstance(this).insertCallRecord(callRecordDao,this);
+                    CallRecordManager.getInstance(this).insertCallRecord(callRecordDao, this);
 
-                }else{
+                } else {
 
-                    CallRecordDao callRecordDao = new CallRecordDao(phoneNumber,"","","3",DateUtil.backTimeFomat(new Date()),20);
+                    CallRecordDao callRecordDao = new CallRecordDao(phoneNumber, "", "", "3", DateUtil.backTimeFomat(new Date()), 20);
 
-                    CallRecordManager.getInstance(this).insertCallRecord(callRecordDao,this);
+                    CallRecordManager.getInstance(this).insertCallRecord(callRecordDao, this);
                 }
                 break;
             case INCOMING:
@@ -215,11 +247,11 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
 
     private boolean isAlert = true;
 
-    private synchronized void disposeAlert(){
-        if(isAlert){
-            Integer recordCount = (Integer) SPUtils.getShare(this, Constans.RECORD_ISREAD,0);
+    private synchronized void disposeAlert() {
+        if (isAlert) {
+            Integer recordCount = (Integer) SPUtils.getShare(this, Constans.RECORD_ISREAD, 0);
             recordCount = recordCount + 1;
-            SPUtils.putShare(this,Constans.RECORD_ISREAD,recordCount);
+            SPUtils.putShare(this, Constans.RECORD_ISREAD, recordCount);
 
           /*  EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_RECORD_CALL_HISTROY
                     ,Integer.valueOf(recordCount)));*/
@@ -231,7 +263,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         RingManager.stopDefaultCallMediaPlayer(TtPhoneApplication.getInstance());
-       // EventBusUtils.unregister(this);
+        // EventBusUtils.unregister(this);
         isAlert = true;
     }
 }

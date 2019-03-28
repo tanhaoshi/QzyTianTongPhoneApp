@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.qzy.tt.phone.common.CommonData;
+import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.bean.ContactsModel;
@@ -93,7 +94,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
                     }
 
                   //  EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL, mContactsModelns.get(position).getPhone()));
-
+                    dialPhoneToServer( mContactsModelns.get(position).getPhone());
                     Intent intent = new Intent(mContext, TellPhoneActivity.class);
                     intent.putExtra("diapadNumber", mContactsModelns.get(position).getPhone());
                     mContext.startActivity(intent);
@@ -101,4 +102,13 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
             });
         }
     }
+
+    /**
+     * 底层打电话接口
+     * @param phoneMumber
+     */
+    private void dialPhoneToServer(String phoneMumber) {
+        TtPhoneDataManager.getInstance().dialTtPhone(phoneMumber);
+    }
+
 }

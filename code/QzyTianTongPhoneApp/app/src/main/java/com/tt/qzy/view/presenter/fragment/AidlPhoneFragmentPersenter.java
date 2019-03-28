@@ -1,7 +1,9 @@
 package com.tt.qzy.view.presenter.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -10,6 +12,7 @@ import com.qzy.data.PhoneCmd;
 import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.phone.common.CommonData;
+import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.AidlContactsActivity;
@@ -48,7 +51,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by yj.zhang on 2018/9/17.
  */
 
-public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
+public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView> {
 
     private Context mContext;
 
@@ -63,10 +66,12 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
     public AidlPhoneFragmentPersenter(Context context) {
         mContext = context;
         //EventBus.getDefault().register(this);
+        registerReceiver();
     }
 
     /**
      * 拨打电话
+     *
      * @param phoneNumber
      */
     public void dialPhone(String phoneNumber) {
@@ -82,28 +87,37 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
 
         phone = phoneNumber;
 
-       // EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber));
-
+        // EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber));
+        dialPhoneToServer(phoneNumber);
         String name = getPhoneKeyForName(phone);
 
-        if(null != name && name.length() > 0){
-            CallRecordDao callRecordDao = new CallRecordDao(phoneNumber,name,"","2",DateUtil.backTimeFomat(new Date()),20);
+        if (null != name && name.length() > 0) {
+            CallRecordDao callRecordDao = new CallRecordDao(phoneNumber, name, "", "2", DateUtil.backTimeFomat(new Date()), 20);
 
-            CallRecordManager.getInstance(mContext).insertCallRecord(callRecordDao,mContext);
+            CallRecordManager.getInstance(mContext).insertCallRecord(callRecordDao, mContext);
 
-        }else{
-            CallRecordDao callRecordDao = new CallRecordDao(phoneNumber,"","","2",DateUtil.backTimeFomat(new Date()),20);
+        } else {
+            CallRecordDao callRecordDao = new CallRecordDao(phoneNumber, "", "", "2", DateUtil.backTimeFomat(new Date()), 20);
 
-            CallRecordManager.getInstance(mContext).insertCallRecord(callRecordDao,mContext);
+            CallRecordManager.getInstance(mContext).insertCallRecord(callRecordDao, mContext);
         }
     }
 
-    public String getPhoneKeyForName(String phone){
+    /**
+     * 底层打电话接口
+     *
+     * @param phoneMumber
+     */
+    private void dialPhoneToServer(String phoneMumber) {
+        TtPhoneDataManager.getInstance().dialTtPhone(phoneMumber);
+    }
+
+    public String getPhoneKeyForName(String phone) {
         List<MailListDao> listModels = MailListManager.getInstance(mContext).getByPhoneList(phone);
         String name;
-        if(listModels.size() > 0){
+        if (listModels.size() > 0) {
             name = listModels.get(0).getName();
-        }else{
+        } else {
             name = "";
         }
         return name;
@@ -120,50 +134,37 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
         }
     }*/
 
-    public void getCallHistroy(final int offset,final int limit){
+    private void registerReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.qzy.tt.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE");
+        mContext.registerReceiver(mReceiver, intentFilter);
+    }
+
+    private void unregisterReceiver() {
+        mContext.unregisterReceiver(mReceiver);
+    }
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            KLog.i("action = " + action);
+            if (action.equals("com.qzy.tt.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE")) {
+                Intent intent1 = new Intent(mContext, TellPhoneActivity.class);
+                intent1.putExtra("diapadNumber", phone);
+                mContext.startActivity(intent1);
+            }
+        }
+    };
+
+    public void getCallHistroy(final int offset, final int limit) {
         Observable.create(new ObservableOnSubscribe<List<CallRecordDao>>() {
             @Override
-            public void subscribe(ObservableEmitter<List<CallRecordDao>> e){
+            public void subscribe(ObservableEmitter<List<CallRecordDao>> e) {
                 List<CallRecordDao> callRecordDaos = CallRecordManager.getInstance(mContext).queryCallRecordList();
                 KLog.i("look over callrecod data getCall = " + JSON.toJSONString(callRecordDaos));
                 mView.get().getDaoListSize(callRecordDaos.size());
-                List<CallRecordDao> listDao = CallRecordManager.getInstance(mContext).limitCallRecordList(offset,limit);
-                mView.get().getListSize(listDao.size());
-                e.onNext(arrangementData(listDao));
-            }
-        })
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Observer<List<CallRecordDao>>() {
-                @Override
-                public void onSubscribe(Disposable d) {
-                }
-
-                @Override
-                public void onNext(List<CallRecordDao> value) {
-                    mView.get().loadRefresh(value);
-                    onComplete();
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    KLog.i(" look over error message = "+e.getMessage().toString());
-                    mView.get().showError(e.getMessage().toString(),true);
-                }
-
-                @Override
-                public void onComplete() {
-                    mView.get().hideProgress();
-                }
-            });
-    }
-
-    public void getRefresh(final int offset,final int limit){
-        Observable.create(new ObservableOnSubscribe<List<CallRecordDao>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<CallRecordDao>> e){
-                List<CallRecordDao> listDao = CallRecordManager.getInstance(mContext).limitCallRecordList(offset,limit);
+                List<CallRecordDao> listDao = CallRecordManager.getInstance(mContext).limitCallRecordList(offset, limit);
                 mView.get().getListSize(listDao.size());
                 e.onNext(arrangementData(listDao));
             }
@@ -175,6 +176,43 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
                     @Override
                     public void onSubscribe(Disposable d) {
                     }
+
+                    @Override
+                    public void onNext(List<CallRecordDao> value) {
+                        mView.get().loadRefresh(value);
+                        onComplete();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        KLog.i(" look over error message = " + e.getMessage().toString());
+                        mView.get().showError(e.getMessage().toString(), true);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        mView.get().hideProgress();
+                    }
+                });
+    }
+
+    public void getRefresh(final int offset, final int limit) {
+        Observable.create(new ObservableOnSubscribe<List<CallRecordDao>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<CallRecordDao>> e) {
+                List<CallRecordDao> listDao = CallRecordManager.getInstance(mContext).limitCallRecordList(offset, limit);
+                mView.get().getListSize(listDao.size());
+                e.onNext(arrangementData(listDao));
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<CallRecordDao>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
                     @Override
                     public void onNext(List<CallRecordDao> value) {
                         mView.get().loadRefresh(value);
@@ -190,11 +228,11 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
                 });
     }
 
-    public void getLoadMore(final int offset, final int limit){
+    public void getLoadMore(final int offset, final int limit) {
         Observable.create(new ObservableOnSubscribe<List<CallRecordDao>>() {
             @Override
-            public void subscribe(ObservableEmitter<List<CallRecordDao>> e){
-                List<CallRecordDao> listDao = CallRecordManager.getInstance(mContext).limitCallRecordList(offset,limit);
+            public void subscribe(ObservableEmitter<List<CallRecordDao>> e) {
+                List<CallRecordDao> listDao = CallRecordManager.getInstance(mContext).limitCallRecordList(offset, limit);
                 mView.get().getListSize(listDao.size());
                 e.onNext(arrangementData(listDao));
             }
@@ -222,27 +260,27 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
                 });
     }
 
-    public List<CallRecordDao> arrangementData(List<CallRecordDao> list){
+    public List<CallRecordDao> arrangementData(List<CallRecordDao> list) {
         List<CallRecordDao> mModelList = new ArrayList<>();
-        if(list.size() > 0){
+        if (list.size() > 0) {
             sortData(list);
-            mModelList.add(new CallRecordDao("","","","","",1,"今天"));
-            for(CallRecordDao recordModel : list){
-                if(DateUtil.isToday(recordModel.getDate())){
+            mModelList.add(new CallRecordDao("", "", "", "", "", 1, "今天"));
+            for (CallRecordDao recordModel : list) {
+                if (DateUtil.isToday(recordModel.getDate())) {
                     mModelList.add(recordModel);
-                }else if(DateUtil.isYesterday(recordModel.getDate())){
-                    if(isYesterday){
-                        mModelList.add(new CallRecordDao("","","","","",1,"昨天"));
+                } else if (DateUtil.isYesterday(recordModel.getDate())) {
+                    if (isYesterday) {
+                        mModelList.add(new CallRecordDao("", "", "", "", "", 1, "昨天"));
                         isYesterday = false;
                     }
                     mModelList.add(recordModel);
-                }else{
-                    if(isYesterday){
-                        mModelList.add(new CallRecordDao("","","","","",1,"昨天"));
+                } else {
+                    if (isYesterday) {
+                        mModelList.add(new CallRecordDao("", "", "", "", "", 1, "昨天"));
                         isYesterday = false;
                     }
-                    if(isEarlier){
-                        mModelList.add(new CallRecordDao("","","","","",1,"更早"));
+                    if (isEarlier) {
+                        mModelList.add(new CallRecordDao("", "", "", "", "", 1, "更早"));
                         isEarlier = false;
                     }
                     mModelList.add(recordModel);
@@ -270,13 +308,13 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
         return mList;
     }
 
-    public void startTargetActivity(Context context ,String phone){
+    public void startTargetActivity(Context context, String phone) {
         Intent intent = new Intent(context, AidlContactsActivity.class);
-        intent.putExtra("phone",phone);
+        intent.putExtra("phone", phone);
         context.startActivity(intent);
     }
 
-    public void deleteAllRecord(){
+    public void deleteAllRecord() {
 
         ProtobufMessageModel protobufMessageModel = new ProtobufMessageModel();
 
@@ -288,11 +326,12 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView>{
 
         CallRecordManager.getInstance(mContext).deleteRecordList();
 
-        NToast.shortToast(mContext,"删除成功!");
+        NToast.shortToast(mContext, "删除成功!");
     }
 
-    public void release(){
+    public void release() {
 
+        unregisterReceiver();
         //EventBus.getDefault().unregister(this);
     }
 

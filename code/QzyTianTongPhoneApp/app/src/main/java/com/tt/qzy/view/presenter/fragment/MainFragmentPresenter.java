@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.net.wifi.WifiManager;
 import android.text.TextUtils;
+
 import com.qzy.data.PhoneCmd;
 
 import com.qzy.tt.data.TtOpenBeiDouProtos;
@@ -32,7 +33,7 @@ import com.tt.qzy.view.view.MainFragmentView;
  * Created by yj.zhang on 2018/9/17.
  */
 
-public class MainFragmentPresenter extends BasePresenter<MainFragmentView> implements IMainFragment{
+public class MainFragmentPresenter extends BasePresenter<MainFragmentView> implements IMainFragment {
 
     private Context mContext;
 
@@ -40,13 +41,15 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
         mContext = context;
     }
 
-    public void setMainFragmentListener(){
+    public void setMainFragmentListener() {
         if (TtPhoneDataManager.getInstance() != null) {
             TtPhoneDataManager.getInstance().setMainFragmentListener(this);
         }
     }
 
-    /** 连接天通 */
+    /**
+     * 连接天通
+     */
     public void startConnect() {
         if (CommonData.getInstance().isConnected()) {
             Intent intent = new Intent(mContext, UserEditorsActivity.class);
@@ -64,11 +67,11 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
 
         String ssid = NetworkUtil.getConnectWifiSsid(mContext);
 
-        if(!AppUtils.getIpAddress(mContext).contains(Constans.LOCAL_HEAD_IP)){
-            NToast.shortToast(mContext,mContext.getString(R.string.TMT_PLEASE_CLOSE_DATA_MOBILE_AND_ENABLE_WIFI));
+        if (!AppUtils.getIpAddress(mContext).contains(Constans.LOCAL_HEAD_IP)) {
+            NToast.shortToast(mContext, mContext.getString(R.string.TMT_PLEASE_CLOSE_DATA_MOBILE_AND_ENABLE_WIFI));
         }
 
-        if(TextUtils.isEmpty(ssid) || ssid.length() < 6 || !ssid.contains(Constans.STANDARD_WIFI_NAME)){
+        if (TextUtils.isEmpty(ssid) || ssid.length() < 6 || !ssid.contains(Constans.STANDARD_WIFI_NAME)) {
             NToast.shortToast(mContext, mContext.getString(R.string.TMT_connect_tiantong_please));
             Intent intent = new Intent("android.settings.WIFI_SETTINGS");
             mContext.startActivity(intent);
@@ -78,38 +81,44 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
         startConnectMain();
     }
 
-    private void startConnectMain(){
+    private void startConnectMain() {
         setMainFragmentListener();
-        if(TtPhoneDataManager.getInstance() != null){
-            TtPhoneDataManager.getInstance().connectTtPhoneServer(Constans.IP,Constans.PORT);
+        if (TtPhoneDataManager.getInstance() != null) {
+            TtPhoneDataManager.getInstance().connectTtPhoneServer(Constans.IP, Constans.PORT);
         }
     }
 
-    /** 关闭连接 */
-    public void stopConnect(){
-        if(TtPhoneDataManager.getInstance() != null){
+    /**
+     * 关闭连接
+     */
+    public void stopConnect() {
+        if (TtPhoneDataManager.getInstance() != null) {
             TtPhoneDataManager.getInstance().disconnectTtPhoneServer();
         }
     }
 
-    /** 请求gps准确位置 */
-    public void requestGpsPosition(boolean isSwitch){
+    /**
+     * 请求gps准确位置
+     */
+    public void requestGpsPosition(boolean isSwitch) {
         /*EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_ACCURACY_POSITION,
                 new TtBeidouOpenBean(isSwitch)));*/
 
-        if(TtPhoneDataManager.getInstance() != null){
+        if (TtPhoneDataManager.getInstance() != null) {
             TtBeidouOpenBean ttBeidouOpenBean = new TtBeidouOpenBean(isSwitch);
-            if(isSwitch){
+            if (isSwitch) {
                 TtPhoneDataManager.getInstance().openTtPhoneGps(ttBeidouOpenBean);
-            }else{
+            } else {
                 TtPhoneDataManager.getInstance().closeTtPhoneGps(ttBeidouOpenBean);
             }
         }
 
     }
 
-    /** 检查设备服务端APP版本是否更新 */
-    public void requestServerVersion(){
+    /**
+     * 检查设备服务端APP版本是否更新
+     */
+    public void requestServerVersion() {
         AssetManager assetManager = mContext.getAssets();
         try {
            /* EventBus.getDefault().post(new MessageEventBus((IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_APP_VERSION),
@@ -123,7 +132,7 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     /**
      * 发送当前时间至服务器
      */
-    public void requestServerDatetime(){
+    public void requestServerDatetime() {
       /*  EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_TIME_DATE,
                 new DatetimeModel(DateUtil.backTimeFomat(new Date()))));*/
     }
@@ -131,28 +140,28 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     /**
      * 打开设备移动数据
      */
-    public void requestEnableData(boolean isSwitch){
-       // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_ENABLE_DATA, new EnableDataModel(isSwitch)));
+    public void requestEnableData(boolean isSwitch) {
+        // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_ENABLE_DATA, new EnableDataModel(isSwitch)));
     }
 
     /**
      * 获取服务初始化数据状态
      */
-    public void requestServerMobileStatus(){
-       // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_MOBILE_STATUS));
+    public void requestServerMobileStatus() {
+        // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_MOBILE_STATUS));
     }
 
     /**
      * 查询设备sos初始状态
      */
-    public void requestServerSosStatus(){
+    public void requestServerSosStatus() {
         //EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_STATUS));
     }
 
     /**
      * 关闭设备SOS
      */
-    public void closeServerSos(){
+    public void closeServerSos() {
         //EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_CLOSE));
     }
 
@@ -204,13 +213,14 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
         }
     }
 */
+
     /**
      * 解析设备初始化状态
      */
-    private void getServerSosStatus(Object o){
-        PhoneCmd cmd = (PhoneCmd)o;
-        TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState = (TtPhoneSosStateProtos.TtPhoneSosState)cmd.getMessage();
-        if(ttPhoneSosState.getIsResponse()){
+    private void getServerSosStatus(Object o) {
+        PhoneCmd cmd = (PhoneCmd) o;
+        TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState = (TtPhoneSosStateProtos.TtPhoneSosState) cmd.getMessage();
+        if (ttPhoneSosState.getIsResponse()) {
             mView.get().getServerSosStatus(ttPhoneSosState.getIsSwitch());
         }
     }
@@ -218,26 +228,26 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     /**
      * 保存连接wifi后的ip地址
      */
-    private void saveLocalWIFIIP(){
+    private void saveLocalWIFIIP() {
         CommonData.getInstance().setLocalWifiIp(IPUtil.getLocalIPAddress(mContext));
     }
 
     /**
      * 解析初始化服务底层数据状态
      */
-    private void parseServerMobileDataInit(Object o){
-        PhoneCmd cmd = (PhoneCmd)o;
-        TtPhoneMobileDataProtos.TtPhoneMobileData ttPhoneMobileData = (TtPhoneMobileDataProtos.TtPhoneMobileData)cmd.getMessage();
+    private void parseServerMobileDataInit(Object o) {
+        PhoneCmd cmd = (PhoneCmd) o;
+        TtPhoneMobileDataProtos.TtPhoneMobileData ttPhoneMobileData = (TtPhoneMobileDataProtos.TtPhoneMobileData) cmd.getMessage();
         mView.get().getSetverInitMobileStatus(ttPhoneMobileData.getResponseStatus());
     }
 
     /**
      * 服务器验证MD5文件失败
      */
-    private void parseServerUpgradleFailed(Object o){
-        PhoneCmd cmd = (PhoneCmd)o;
-        TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse)cmd.getMessage();
-        if(!updateResponse.getIsSendFileFinish()){
+    private void parseServerUpgradleFailed(Object o) {
+        PhoneCmd cmd = (PhoneCmd) o;
+        TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse) cmd.getMessage();
+        if (!updateResponse.getIsSendFileFinish()) {
 //              NToast.shortToast(mContext,mContext.getResources().getString(R.string.TMT_WIFI_DISCONNECT_OF_UPDATE_PLEASE_OUT));
 //            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_UPLOAD_APP
 //                    ,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));
@@ -247,14 +257,14 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     /**
      * 服务端升级出现链接中断
      */
-    private void upgradleBreakoff(){
+    private void upgradleBreakoff() {
         mView.get().upgradleNonconnect();
     }
 
     /**
      * 解析服务端升级的进度条
      */
-    private void parseServerPercent(Object o){
+    private void parseServerPercent(Object o) {
         Integer i = (Integer) o;
         mView.get().serverAppUpgradlePercent(i);
     }
@@ -262,12 +272,12 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     /**
      * 设备打开数据流量失败或成功
      */
-    private void parseServerDataEnable(Object o){
-        PhoneCmd cmd = (PhoneCmd)o;
-        TtPhoneMobileDataProtos.TtPhoneMobileData ttPhoneMobileData = (TtPhoneMobileDataProtos.TtPhoneMobileData)cmd.getMessage();
-        if(ttPhoneMobileData.getResponseStatus()){
+    private void parseServerDataEnable(Object o) {
+        PhoneCmd cmd = (PhoneCmd) o;
+        TtPhoneMobileDataProtos.TtPhoneMobileData ttPhoneMobileData = (TtPhoneMobileDataProtos.TtPhoneMobileData) cmd.getMessage();
+        if (ttPhoneMobileData.getResponseStatus()) {
             mView.get().getMobileDataShow(true);
-        }else{
+        } else {
             mView.get().getMobileDataShow(false);
         }
     }
@@ -275,46 +285,48 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     /**
      * 关闭设备链接
      */
-    private void parseAppUploadFinsh(Object o){
-        PhoneCmd cmd = (PhoneCmd)o;
-        TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse)cmd.getMessage();
-        if(updateResponse.getIsUpdateFinish()){
+    private void parseAppUploadFinsh(Object o) {
+        PhoneCmd cmd = (PhoneCmd) o;
+        TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse) cmd.getMessage();
+        if (updateResponse.getIsUpdateFinish()) {
             mView.get().isServerUpdate(true);
-           // EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_DISCONNECT_TIANTONG));
-           // EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.PORT)));
+            // EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_DISCONNECT_TIANTONG));
+            // EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.PORT)));
         }
     }
 
     /**
      * 返回设备服务端APP是否需要更新
      */
-    private void parseServerAppVersion(Object o){
-        PhoneCmd cmd = (PhoneCmd)o;
-        TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse)cmd.getMessage();
-        if(updateResponse.getIsUpdate()){
+    private void parseServerAppVersion(Object o) {
+        PhoneCmd cmd = (PhoneCmd) o;
+        TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse) cmd.getMessage();
+        if (updateResponse.getIsUpdate()) {
             mView.get().upgradleServerApp();
-        }else{
-          //  EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.PORT)));
+        } else {
+            //  EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.PORT)));
         }
     }
 
     /**
      * 返回gps准确位置进行解析
+     *
      * @param object
      */
     private void parseGpsPostion(Object object) {
         PhoneCmd cmd = (PhoneCmd) object;
-        TtPhonePositionProtos.TtPhonePosition ttPhonePosition = (TtPhonePositionProtos.TtPhonePosition)cmd.getMessage();
+        TtPhonePositionProtos.TtPhonePosition ttPhonePosition = (TtPhonePositionProtos.TtPhonePosition) cmd.getMessage();
         mView.get().getTtPhonePosition(ttPhonePosition);
     }
 
     /**
      * 解析设备北斗开关是否打开
+     *
      * @param object
      */
-    private void parseBeiDouSwitch(Object object){
-        PhoneCmd cmd = (PhoneCmd)object;
-        TtOpenBeiDouProtos.TtOpenBeiDou ttOpenBeiDou = (TtOpenBeiDouProtos.TtOpenBeiDou)cmd.getMessage();
+    private void parseBeiDouSwitch(Object object) {
+        PhoneCmd cmd = (PhoneCmd) object;
+        TtOpenBeiDouProtos.TtOpenBeiDou ttOpenBeiDou = (TtOpenBeiDouProtos.TtOpenBeiDou) cmd.getMessage();
         mView.get().getTtBeiDouSwitch(ttOpenBeiDou);
     }
 
@@ -332,20 +344,32 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
             return;
         }
 
-       // EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber));
+        // EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber));
+        dialPhoneToServer(phoneNumber);
 
         Intent intent = new Intent(mContext, TellPhoneActivity.class);
         intent.putExtra("diapadNumber", phoneNumber);
         mContext.startActivity(intent);
     }
 
-    public void release(){
-       // EventBus.getDefault().unregister(this);
+    /**
+     * 底层打电话接口
+     *
+     * @param phoneMumber
+     */
+    private void dialPhoneToServer(String phoneMumber) {
+        TtPhoneDataManager.getInstance().dialTtPhone(phoneMumber);
+    }
+
+    public void release() {
+        // EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void isTtServerConnected(boolean connected) {
+        saveLocalWIFIIP();
         mView.get().connectedState(connected);
+
     }
 
     @Override

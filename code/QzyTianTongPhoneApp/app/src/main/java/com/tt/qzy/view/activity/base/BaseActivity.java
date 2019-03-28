@@ -18,6 +18,8 @@ import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSignalProtos;
 import com.qzy.tt.data.TtPhoneSimCards;
 import com.qzy.tt.phone.common.CommonData;
+import com.qzy.tt.phone.data.TtPhoneDataManager;
+import com.qzy.tt.phone.data.impl.ITtPhoneCallStateBackListener;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.layout.BatteryView;
@@ -39,7 +41,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
-public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity implements BaseMainView{
+public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity implements BaseMainView {
 
     public BatteryView img1;
     public ImageView img2;
@@ -65,9 +67,9 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     @Override
     public Resources getResources() {
         Resources res = super.getResources();
-        Configuration config=new Configuration();
+        Configuration config = new Configuration();
         config.setToDefaults();
-        res.updateConfiguration(config,res.getDisplayMetrics() );
+        res.updateConfiguration(config, res.getDisplayMetrics());
         return res;
     }
 
@@ -78,21 +80,24 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         ButterKnife.bind(this);
         mPresenter = new BaseActivityPresenter(this);
         mPresenter.onBindView(this);
-        if(!isInitView){
+        if (!isInitView) {
             initStatusBar();
             initView();
             initData();
         }
+
+        // 设置电话设备占用回调
+        setTtPhoneCallStateBackListener();
     }
 
-    private void initStatusBar(){
+    private void initStatusBar() {
         img1 = (BatteryView) findViewById(R.id.img1);
         img2 = (ImageView) findViewById(R.id.img2);
         img3 = (ImageView) findViewById(R.id.img3);
         img4 = (ImageView) findViewById(R.id.img4);
         img5 = (ImageView) findViewById(R.id.img5);
         statusLayout = (RelativeLayout) findViewById(R.id.statusLayout);
-        percentBaterly = (TextView)findViewById(R.id.percent);
+        percentBaterly = (TextView) findViewById(R.id.percent);
         percentBaterly.setText("0%");
     }
 
@@ -111,7 +116,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     /**
      * 设置数据回调
      */
-    public void setDataListener(){
+    public void setDataListener() {
         mPresenter.setTtPhoneDataListener();
     }
 
@@ -154,17 +159,30 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     }*/
 
     /**
+     * 设置电话设备占用回调
+     */
+    private void setTtPhoneCallStateBackListener() {
+        TtPhoneDataManager.getInstance().setITtPhoneCallStateBackListener("BaseActivity", new ITtPhoneCallStateBackListener() {
+            @Override
+            public void onPhoneCallStateBack(PhoneCmd phoneCmd) {
+                onTianTongCallStatus(phoneCmd);
+            }
+        });
+    }
+
+
+    /**
      * 解析定时发送
      */
-    private void responseTimerSend(Object o){
-        PhoneCmd cmd = (PhoneCmd)o;
-        TimerSendProtos.TimerSend timerSend = (TimerSendProtos.TimerSend)cmd.getMessage();
+    private void responseTimerSend(Object o) {
+        PhoneCmd cmd = (PhoneCmd) o;
+        TimerSendProtos.TimerSend timerSend = (TimerSendProtos.TimerSend) cmd.getMessage();
         TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery = timerSend.getBatterValue();
         TtPhoneSignalProtos.PhoneSignalStrength phoneSignalStrength = timerSend.getSigalStrength();
         TtPhonePositionProtos.TtPhonePosition ttPhonePosition = timerSend.getTtPhoneGpsPosition();
         TtPhoneSimCards.TtPhoneSimCard ttPhoneSimCard = timerSend.getTtPhoneSimcard();
         onTiantongInfoReceiver(phoneSignalStrength.getSignalStrength());
-        onBatteryInfoReceiver(ttPhoneBattery.getLevel(),ttPhoneBattery.getScale());
+        onBatteryInfoReceiver(ttPhoneBattery.getLevel(), ttPhoneBattery.getScale());
 
     }
 
@@ -176,26 +194,28 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_noconnect));
         img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
         img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonetwork));
-        percentBaterly.setText(0+"%");
+        percentBaterly.setText(0 + "%");
         stopTimerService();
     }
 
-    private void stopTimerService(){
-        if(AppUtils.isServiceRunning("com.tt.qzy.view.service.TimerService",BaseActivity.this)){
+    private void stopTimerService() {
+        if (AppUtils.isServiceRunning("com.tt.qzy.view.service.TimerService", BaseActivity.this)) {
             //服务存活
             Intent intent = new Intent(BaseActivity.this, TimerService.class);
             stopService(intent);
         }
     }
 
-    /** 连接设备成功 */
-    public void connectTianTongControl(boolean connectState){
+    /**
+     * 连接设备成功
+     */
+    public void connectTianTongControl(boolean connectState) {
         tt_status = connectState;
-        if(tt_status){
-            SPUtils.putShare(BaseActivity.this, Constans.TTM_STATUS,tt_status);
+        if (tt_status) {
+            SPUtils.putShare(BaseActivity.this, Constans.TTM_STATUS, tt_status);
             img5.setImageDrawable(getResources().getDrawable(R.drawable.search_network));
-        }else{
-            SPUtils.putShare(BaseActivity.this, Constans.TTM_STATUS,tt_status);
+        } else {
+            SPUtils.putShare(BaseActivity.this, Constans.TTM_STATUS, tt_status);
             img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonetwork));
             recoverView();
         }
@@ -204,11 +224,11 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     /**
      * 设备有无插入sim卡
      */
-    private void getTianTongSimcardStatsu(boolean status){
-        if(status){
+    private void getTianTongSimcardStatsu(boolean status) {
+        if (status) {
             tt_isSim = true;
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
-        }else{
+        } else {
             tt_isSim = false;
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_noconnect));
             stopTimerService();
@@ -218,11 +238,11 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     /**
      * 设备是否连接上北斗卫星
      */
-    private void getTianTongConnectBeiDou(boolean isConnect){
+    private void getTianTongConnectBeiDou(boolean isConnect) {
         tt_beidou_status = isConnect;
-        if(isConnect){
+        if (isConnect) {
             img3.setImageDrawable(getResources().getDrawable(R.drawable.satellite_connect));
-        }else{
+        } else {
             img3.setImageDrawable(getResources().getDrawable(R.drawable.satellite_noconnect));
         }
     }
@@ -230,7 +250,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     private void onBatteryInfoReceiver(int intLevel, int intScale) {
         int percent = intLevel * 100 / intScale;
         img1.setPower(percent);
-        percentBaterly.setText(percent+"%");
+        percentBaterly.setText(percent + "%");
         tt_baterly = percent;
     }
 
@@ -266,51 +286,53 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
             tt_isSignal = true;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_one));
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
-        }else if (intLevel >= 2 && intLevel <= 4) {
+        } else if (intLevel >= 2 && intLevel <= 4) {
             tt_isSignal = true;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_two));
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
-        }else if (intLevel >= 5 && intLevel <= 7) {
+        } else if (intLevel >= 5 && intLevel <= 7) {
             tt_isSignal = true;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_three));
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
-        }else if (intLevel >= 8) {
+        } else if (intLevel >= 8) {
             tt_isSignal = true;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_four));
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
         }
     }
 
-    public void onTianTongCallStatus(Object o){
+    public void onTianTongCallStatus(Object o) {
         PhoneCmd cmd = (PhoneCmd) o;
-        CallPhoneBackProtos.CallPhoneBack callPhoneBack = (CallPhoneBackProtos.CallPhoneBack)cmd.getMessage();
-        if(callPhoneBack.getIsCalling()){
-            if(callPhoneBack.getIp().equals(CommonData.getInstance().getLocalWifiIp())){
+        CallPhoneBackProtos.CallPhoneBack callPhoneBack = (CallPhoneBackProtos.CallPhoneBack) cmd.getMessage();
+        if (callPhoneBack.getIsCalling()) {
+            if (callPhoneBack.getIp().equals(CommonData.getInstance().getLocalWifiIp())) {
                 tt_call_status = true;
-               // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE));
-            }else{
+                // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE));
+                Intent intent = new Intent("com.qzy.tt.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE");
+                sendBroadcast(intent);
+            } else {
                 tt_call_status = true;
             }
-        }else{
+        } else {
             tt_call_status = false;
         }
     }
 
-    public boolean isConnectStatus(){
+    public boolean isConnectStatus() {
         return tt_status;
     }
 
-    public boolean isConnectBeiDou(){
+    public boolean isConnectBeiDou() {
         return tt_beidou_status;
     }
 
-    public boolean isCallStatus(){
+    public boolean isCallStatus() {
         return tt_call_status;
     }
 
     @Override
-    public void isTtPhoneBattery(int level,int scal) {
-        onBatteryInfoReceiver(level,scal);
+    public void isTtPhoneBattery(int level, int scal) {
+        onBatteryInfoReceiver(level, scal);
     }
 
     @Override

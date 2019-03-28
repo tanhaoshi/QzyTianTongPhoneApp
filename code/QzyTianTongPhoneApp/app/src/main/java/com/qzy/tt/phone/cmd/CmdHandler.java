@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.google.protobuf.GeneratedMessageV3;
+import com.qzy.data.PhoneCmd;
 import com.qzy.data.PrototocalTools;
 import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.CallPhoneStateProtos;
@@ -169,6 +170,9 @@ public class CmdHandler {
                 case PrototocalTools.IProtoClientIndex.tt_call_phone_back:
                     CallPhoneBackProtos.CallPhoneBack callPhoneBack = CallPhoneBackProtos.CallPhoneBack.parseDelimitedFrom(inputStream);
                     // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_CALL_STATE,protoId,callPhoneBack);
+                    if (mAllDataListener != null) {
+                        mAllDataListener.onPhoneCallStateBack(PhoneCmd.getPhoneCmd(protoId, callPhoneBack));
+                    }
                     break;
                 case PrototocalTools.IProtoClientIndex.response_update_phone_aapinfo:
                     TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = TtPhoneUpdateResponseProtos.UpdateResponse.parseDelimitedFrom(inputStream);
@@ -249,6 +253,9 @@ public class CmdHandler {
                 incommingState(callPhoneState.getPhoneNumber());
             } else {
                 // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_STATE,protoId, callPhoneState);
+                if (mAllDataListener != null) {
+                    mAllDataListener.onTtPhoneCallState(PhoneCmd.getPhoneCmd(protoId, callPhoneState));
+                }
             }
         }
     }

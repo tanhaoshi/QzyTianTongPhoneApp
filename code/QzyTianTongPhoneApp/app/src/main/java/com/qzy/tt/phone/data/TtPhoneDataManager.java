@@ -3,10 +3,13 @@ package com.qzy.tt.phone.data;
 import android.content.Context;
 
 import com.google.protobuf.GeneratedMessageV3;
+import com.qzy.data.PhoneCmd;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.phone.data.impl.IAllTtPhoneDataListener;
 import com.qzy.tt.phone.data.impl.IMainFragment;
+import com.qzy.tt.phone.data.impl.ITtPhoneCallStateBackListener;
+import com.qzy.tt.phone.data.impl.ITtPhoneCallStateLisenter;
 import com.qzy.tt.phone.data.impl.ITtPhoneDataListener;
 import com.qzy.tt.phone.data.impl.ITtPhoneHandlerManager;
 import com.qzy.tt.phone.data.impl.ITtPhoneManager;
@@ -19,12 +22,20 @@ import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.bean.WifiSettingModel;
 import com.tt.qzy.view.presenter.manager.SyncManager;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
+import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 数据管理类
@@ -54,6 +65,12 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     //短信数据回调
     private SyncManager.ISyncMsgDataListener iSyncMsgDataListener;
+
+    //存储电话状态
+    private HashMap<String, ITtPhoneCallStateLisenter> hashMapCallState = new HashMap<>();
+
+    //存储设备电话占用
+    private HashMap<String, ITtPhoneCallStateBackListener> hashMapCallStateBack = new HashMap<>();
 
     public static TtPhoneDataManager getInstance() {
         if (instance == null) {
@@ -184,6 +201,34 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
                 }
             }
 
+            @Override
+            public void onTtPhoneCallState(PhoneCmd phoneCmd) {
+                Iterator iter = hashMapCallState.entrySet().iterator();
+                while (iter.hasNext()) {
+                    Map.Entry entry = (Map.Entry) iter.next();
+                    //Object key = entry.getKey();
+                    ITtPhoneCallStateLisenter val = (ITtPhoneCallStateLisenter) entry.getValue();
+                    if (val != null) {
+                        val.onTtPhoneCallState(phoneCmd);
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onPhoneCallStateBack(PhoneCmd phoneCmd) {
+                Iterator iter = hashMapCallStateBack.entrySet().iterator();
+                while (iter.hasNext()) {
+                    Map.Entry entry = (Map.Entry) iter.next();
+                    //Object key = entry.getKey();
+                    ITtPhoneCallStateBackListener val = (ITtPhoneCallStateBackListener) entry.getValue();
+                    if (val != null) {
+                        val.onPhoneCallStateBack(phoneCmd);
+                    }
+                }
+            }
+
         });
     }
 
@@ -200,6 +245,29 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
     @Override
     public void removeTtPhoneDataListener() {
         this.iTtPhoneDataListener = null;
+    }
+
+    @Override
+    public void setTtPhoneCallStateLisenter(String tag, ITtPhoneCallStateLisenter lisenter) {
+
+        hashMapCallState.put(tag, lisenter);
+
+    }
+
+
+    @Override
+    public void removeTtPhoneCallStateLisenter(String tag) {
+        hashMapCallState.remove(tag);
+    }
+
+    @Override
+    public void setITtPhoneCallStateBackListener(String tag, ITtPhoneCallStateBackListener lisenter) {
+        hashMapCallStateBack.put(tag, lisenter);
+    }
+
+    @Override
+    public void removeITtPhoneCallStateBackListener(String tag) {
+        hashMapCallStateBack.remove(tag);
     }
 
     /**
@@ -288,18 +356,18 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
     }
 
     @Override
-    public void dialTtPhone() {
-
+    public void dialTtPhone(String phoneNumber) {
+        phoneNettyManager.dialPhone(phoneNumber);
     }
 
     @Override
     public void hangupTtPhone() {
-
+        phoneNettyManager.endCall();
     }
 
     @Override
     public void answerTtPhone() {
-
+        phoneNettyManager.acceptCall();
     }
 
     @Override

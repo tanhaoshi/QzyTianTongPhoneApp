@@ -1,6 +1,7 @@
 package com.qzy.tt.phone.data.impl;
 
 import com.google.protobuf.GeneratedMessageV3;
+import com.qzy.data.PhoneCmd;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 
@@ -30,5 +31,12 @@ public interface IAllTtPhoneDataListener {
     //同步短信信号
     void syncShortMessageSignal(int protoId, GeneratedMessageV3 messageV3, TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessage);
 
+
+    //电话状态回调
+    void onTtPhoneCallState(PhoneCmd phoneCmd);
+
+
+    //设备通话占用回调
+    void onPhoneCallStateBack(PhoneCmd phoneCmd);
 
 }

@@ -1,5 +1,6 @@
 package com.qzy.tt.phone.data.impl;
 
+import com.qzy.data.PhoneCmd;
 import com.tt.qzy.view.bean.DatetimeModel;
 import com.tt.qzy.view.bean.SMAgrementModel;
 import com.tt.qzy.view.bean.SosSendMessageModel;
@@ -7,9 +8,6 @@ import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.bean.WifiSettingModel;
 
 public interface ITtPhoneHandlerManager {
-
-    void setTtPhoneDataListener(ITtPhoneDataListener iTtPhoneDataListener);
-    void removeTtPhoneDataListener();
 
     //连接服务
     void connectTtPhoneServer(String ip,int port);
@@ -46,7 +44,7 @@ public interface ITtPhoneHandlerManager {
 
 
     //拨打电话
-    void dialTtPhone();
+    void dialTtPhone(String phoneNumber);
 
     //挂断电话
     void hangupTtPhone();
@@ -64,5 +62,18 @@ public interface ITtPhoneHandlerManager {
     //发送短信已读状态到服务器端
     void requestServerShortMessageStatus(SMAgrementModel smAgrementModel);
 
+
+
+    //设置电话数据回调接口
+    void setTtPhoneDataListener(ITtPhoneDataListener iTtPhoneDataListener);
+    void removeTtPhoneDataListener();
+
+    //设置通话状态回调接口
+    void setTtPhoneCallStateLisenter(String tag,ITtPhoneCallStateLisenter lisenter);
+    void removeTtPhoneCallStateLisenter(String tag);
+
+    //设置电话设置占用回调
+    void setITtPhoneCallStateBackListener(String tag,ITtPhoneCallStateBackListener lisenter);
+    void removeITtPhoneCallStateBackListener(String tag);
 
 }

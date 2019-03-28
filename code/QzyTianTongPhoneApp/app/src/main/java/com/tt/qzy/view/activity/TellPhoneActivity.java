@@ -16,6 +16,8 @@ import com.qzy.data.PhoneCmd;
 import com.qzy.data.PhoneStateUtils;
 
 import com.qzy.phone.pcm.AllLocalPcmManager;
+import com.qzy.tt.phone.data.TtPhoneDataManager;
+import com.qzy.tt.phone.data.impl.ITtPhoneCallStateLisenter;
 import com.qzy.utils.AndroidVoiceManager;
 import com.qzy.utils.LogUtils;
 import com.qzy.utils.TimeToolUtils;
@@ -73,7 +75,7 @@ public class TellPhoneActivity extends AppCompatActivity {
         if (!TextUtils.isEmpty(number) && number.length() >= 3) {
         }
         mTellPhoneActivityPresenter = new TellPhoneActivityPresenter(this);
-        if(mTellPhoneActivityPresenter.getPhoneKeyForName(number) != null && mTellPhoneActivityPresenter.getPhoneKeyForName(number).length() > 0){
+        if (mTellPhoneActivityPresenter.getPhoneKeyForName(number) != null && mTellPhoneActivityPresenter.getPhoneKeyForName(number).length() > 0) {
             aidlName.setText(mTellPhoneActivityPresenter.getPhoneKeyForName(number));
         }
         //EventBusUtils.register(TellPhoneActivity.this);
@@ -94,14 +96,16 @@ public class TellPhoneActivity extends AppCompatActivity {
 
         AndroidVoiceManager.setVoiceCall(this);
 
-        boolean isFlag = getIntent().getBooleanExtra("acceptCall",false);
+        boolean isFlag = getIntent().getBooleanExtra("acceptCall", false);
 
-        if(isFlag){
+        if (isFlag) {
             text_state.setText("正在接听");
             onCallingState();
-        }else{
+        } else {
 //            mAnswerBellManager = new AnswerBellManager(TtPhoneApplication.getInstance());
         }
+
+        setTtPhoneCallState();
     }
 
    /* @Subscribe(threadMode = ThreadMode.MAIN)
@@ -112,6 +116,20 @@ public class TellPhoneActivity extends AppCompatActivity {
                 break;
         }
     }*/
+
+
+    /**
+     * 设置电话通话状态
+     */
+    private void setTtPhoneCallState() {
+        TtPhoneDataManager.getInstance().setTtPhoneCallStateLisenter("TellPhoneActivity", new ITtPhoneCallStateLisenter() {
+            @Override
+            public void onTtPhoneCallState(PhoneCmd phoneCmd) {
+                updatePhoneState(phoneCmd);
+            }
+        });
+
+    }
 
     /**
      * 刷新通话时长
@@ -130,18 +148,18 @@ public class TellPhoneActivity extends AppCompatActivity {
     /**
      * 挂断中
      */
-    private void endCallDailing(){
+    private void endCallDailing() {
         text_state.setText(getString(R.string.TMT_dial_endcall));
     }
 
     private WorkHandler mHandler = new WorkHandler(this);
 
-    static class WorkHandler extends Handler{
+    static class WorkHandler extends Handler {
 
         private WeakReference<TellPhoneActivity> mWeakReference;
         private int time = 0;
 
-        public WorkHandler(TellPhoneActivity tellPhoneActivity){
+        public WorkHandler(TellPhoneActivity tellPhoneActivity) {
             mWeakReference = new WeakReference<TellPhoneActivity>(tellPhoneActivity);
         }
 
@@ -149,7 +167,7 @@ public class TellPhoneActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             TellPhoneActivity activity = mWeakReference.get();
-            if(null != activity){
+            if (null != activity) {
                 switch (msg.what) {
                     case msg_calling_time:
                         time += 1000;
@@ -170,7 +188,8 @@ public class TellPhoneActivity extends AppCompatActivity {
 
     long startTime = 0;
     int count = 5;
-    private void countTime(){
+
+    private void countTime() {
         startTime = System.currentTimeMillis();
     }
 
@@ -191,6 +210,16 @@ public class TellPhoneActivity extends AppCompatActivity {
         finish();
     }
 
+
+    /**
+     * 底层打电话接口
+     *
+     * @param phoneMumber
+     */
+    private void dialPhoneToServer(String phoneMumber) {
+        TtPhoneDataManager.getInstance().dialTtPhone(phoneMumber);
+    }
+
     /**
      * 更新天通电话状态
      *
@@ -201,12 +230,13 @@ public class TellPhoneActivity extends AppCompatActivity {
 
         switch (PhoneStateUtils.getTtPhoneState(cmd)) {
             case NOCALL:
-                if(isFinsh){
+                if (isFinsh) {
                     long timeDuration1 = System.currentTimeMillis() - startTime;
                     LogUtils.e("timeDuration1 = " + timeDuration1 + " count = " + count);
-                    if(timeDuration1 < 5 * 1000 && count > 0){
+                    if (timeDuration1 < 5 * 1000 && count > 0) {
                         //EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber.getText().toString()));
-                        count --;
+                        dialPhoneToServer(phoneNumber.getText().toString().trim());
+                        count--;
                         countTime();
                         break;
                     }
@@ -219,9 +249,9 @@ public class TellPhoneActivity extends AppCompatActivity {
             case RING:
                 break;
             case CALL:
-                if(isFinsh){
+                if (isFinsh) {
                     long timeDuration = System.currentTimeMillis() - startTime;
-                    if(timeDuration < 5 * 1000){
+                    if (timeDuration < 5 * 1000) {
                         break;
                     }
                 }
@@ -231,12 +261,13 @@ public class TellPhoneActivity extends AppCompatActivity {
                 onCallingState();
                 break;
             case HUANGUP:
-                if(isFinsh){
+                if (isFinsh) {
                     long timeDuration2 = System.currentTimeMillis() - startTime;
                     LogUtils.e("timeDuration2 = " + timeDuration2 + " count = " + count);
-                    if(timeDuration2 < 5 * 1000 && count > 0){
-                      //  EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber.getText().toString()));
-                        count --;
+                    if (timeDuration2 < 5 * 1000 && count > 0) {
+                        //  EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber.getText().toString()));
+                        dialPhoneToServer(phoneNumber.getText().toString().trim());
+                        count--;
                         countTime();
                         break;
                     }
@@ -258,9 +289,9 @@ public class TellPhoneActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) { //按下的如果是BACK，同时没有重复
-            NToast.shortToast(TellPhoneActivity.this,"请点击挂断键,完成退出!");
+            NToast.shortToast(TellPhoneActivity.this, "请点击挂断键,完成退出!");
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -271,8 +302,8 @@ public class TellPhoneActivity extends AppCompatActivity {
         super.onStop();
         isFinsh = false;
         mQzySensorManager.freeSenerState();
-       // EventBusUtils.unregister(TellPhoneActivity.this);
-       //finish();
+        // EventBusUtils.unregister(TellPhoneActivity.this);
+        //finish();
     }
 
     @Override

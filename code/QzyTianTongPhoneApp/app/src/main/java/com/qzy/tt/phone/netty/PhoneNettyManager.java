@@ -93,7 +93,7 @@ public class PhoneNettyManager {
      *
      * @param phoneNumber
      */
-    private void dialPhone(String phoneNumber) {
+    public void dialPhone(String phoneNumber) {
         CallPhoneProtos.CallPhone callPhone = CallPhoneProtos.CallPhone.newBuilder()
                 .setIp(CommonData.getInstance().getLocalWifiIp())
                 .setPhoneNumber(phoneNumber)
@@ -105,7 +105,7 @@ public class PhoneNettyManager {
     /**
      * 挂断电话
      */
-    private void endCall() {
+    public void endCall() {
         CallPhoneProtos.CallPhone callPhone = CallPhoneProtos.CallPhone.newBuilder()
                 .setIp(CommonData.getInstance().getLocalWifiIp())
                 .setPhonecommand(CallPhoneProtos.CallPhone.PhoneCommand.HUANGUP)
@@ -116,7 +116,7 @@ public class PhoneNettyManager {
     /**
      * 接听电话接口
      */
-    private void acceptCall() {
+    public void acceptCall() {
         CallPhoneProtos.CallPhone callPhone = CallPhoneProtos.CallPhone.newBuilder()
                 .setIp(CommonData.getInstance().getLocalWifiIp())
                 .setPhonecommand(CallPhoneProtos.CallPhone.PhoneCommand.ACCEPTCALL)
