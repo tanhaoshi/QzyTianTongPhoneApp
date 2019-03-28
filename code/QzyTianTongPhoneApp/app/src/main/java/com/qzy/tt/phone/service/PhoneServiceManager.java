@@ -83,22 +83,21 @@ public class PhoneServiceManager {
      */
     private void updatePhoneState(PhoneCmd cmd) {
         String callingIp = PhoneStateUtils.getTtPhoneStateNowCallingIp(cmd);
-        KLog.i(" calling ip = " +  callingIp  + "  phone state = " + PhoneStateUtils.getTtPhoneState(cmd).ordinal());
-
+        KLog.i(" callingIp = " + callingIp  + " phone state = " + PhoneStateUtils.getTtPhoneState(cmd).ordinal());
         switch (PhoneStateUtils.getTtPhoneState(cmd)) {
             case NOCALL:
                 stopProtocal();
                 break;
             case RING:
-                if(isSelfCalling(callingIp)){
+                if(isCallingIp(callingIp)) {
                     startPlayerProtocal();
                 }
-
                 break;
             case CALL:
-                if(isSelfCalling(callingIp)){
+                if(isCallingIp(callingIp)) {
                     startProtocal();
                 }
+
                 break;
             case HUANGUP:
                 stopProtocal();
@@ -111,12 +110,14 @@ public class PhoneServiceManager {
         }
     }
 
+
     /**
-     * 判断是否当前自己在通话
+     * 是否是自己在通话
      * @param ip
      * @return
      */
-    private boolean isSelfCalling(String ip){
+    private boolean isCallingIp(String ip) {
+
         return ip.equals(CommonData.getInstance().getLocalWifiIp());
     }
 

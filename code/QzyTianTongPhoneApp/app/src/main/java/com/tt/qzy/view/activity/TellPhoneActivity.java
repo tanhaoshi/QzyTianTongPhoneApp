@@ -205,7 +205,9 @@ public class TellPhoneActivity extends AppCompatActivity {
      */
     private void onEndCallState() {
         mTellPhoneActivityPresenter.endCall();
-        mHandler.sendEmptyMessage(msg_calling_time_remove);
+        if(mHandler != null) {
+            mHandler.sendEmptyMessage(msg_calling_time_remove);
+        }
         isFinsh = false;
         finish();
     }
