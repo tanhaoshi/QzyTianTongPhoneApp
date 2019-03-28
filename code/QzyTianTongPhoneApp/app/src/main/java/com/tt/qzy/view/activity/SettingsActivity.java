@@ -123,8 +123,7 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
                 startActivity(intent);
                 break;
             case R.id.setting_about:
-                Intent about_intent = new Intent(SettingsActivity.this, MainAboutActivity.class);
-                startActivity(about_intent);
+                jumpMainAboutSetting();
                 break;
             case R.id.main_quantity:
                 finish();
@@ -164,6 +163,15 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
         intent.putExtra("isSignal", isSignal);
         intent.putExtra("baterly", baterly);
         startActivity(intent);
+    }
+
+    private void jumpMainAboutSetting(){
+        Intent about_intent = new Intent(SettingsActivity.this, MainAboutActivity.class);
+        about_intent.putExtra("connect", isConnect);
+        about_intent.putExtra("isSim", isSim);
+        about_intent.putExtra("isSignal", isSignal);
+        about_intent.putExtra("baterly", baterly);
+        startActivity(about_intent);
     }
 
     public void initWIFIDialog() {

@@ -7,7 +7,11 @@
     android:orientation="vertical"
     tools:context="com.tt.qzy.view.activity.MainAboutActivity">
 
+    <include layout="@layout/status_bar"/>
+
     <include layout="@layout/left_toobar_layout"/>
+
+    <include layout="@layout/line_dimens"/>
 
     <LinearLayout
         android:layout_marginTop="13dp"
