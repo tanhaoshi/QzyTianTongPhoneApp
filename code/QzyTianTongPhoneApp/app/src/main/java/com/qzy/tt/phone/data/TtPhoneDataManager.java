@@ -10,6 +10,7 @@ import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.phone.data.impl.IAllTtPhoneDataListener;
 import com.qzy.tt.phone.data.impl.IMainAboutListener;
 import com.qzy.tt.phone.data.impl.IMainFragment;
+import com.qzy.tt.phone.data.impl.ISendShortMessage;
 import com.qzy.tt.phone.data.impl.ITtPhoneCallStateBackListener;
 import com.qzy.tt.phone.data.impl.ITtPhoneCallStateLisenter;
 import com.qzy.tt.phone.data.impl.ITtPhoneDataListener;
@@ -75,7 +76,11 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
     //存储设备电话占用
     private HashMap<String, ITtPhoneCallStateBackListener> hashMapCallStateBack = new HashMap<>();
 
+    //关于服务器版本回调
     private IMainAboutListener mIMainAboutListener;
+
+    //短信发送状态回调
+    private ISendShortMessage iSendShortMessage;
 
     public static TtPhoneDataManager getInstance() {
         if (instance == null) {
@@ -259,6 +264,10 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
             @Override
             public void onServerTtPhoneSmsSendState(PhoneCmd phoneCmd) {
+
+                if (iSendShortMessage != null) {
+                    iSendShortMessage.isSendShotMessageStatus(phoneCmd);
+                }
 
             }
 
@@ -486,6 +495,16 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
         if (mSyncManager != null) {
             mSyncManager.setiSyncMsgDataListener(iSyncMsgDataListener);
         }
+    }
+
+    @Override
+    public void setISendShortMessage(ISendShortMessage listener) {
+        iSendShortMessage = listener;
+    }
+
+    @Override
+    public void removeISendShortMessage() {
+        iSendShortMessage = null;
     }
 
 

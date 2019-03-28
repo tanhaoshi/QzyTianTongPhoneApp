@@ -46,7 +46,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SendShortMessageActivity extends AppCompatActivity implements ISendShortMessage{
+public class SendShortMessageActivity extends AppCompatActivity implements ISendShortMessage {
 
     @BindView(R.id.sms_base_tv_toolbar_right)
     ImageView mImageView;
@@ -78,6 +78,7 @@ public class SendShortMessageActivity extends AppCompatActivity implements ISend
         initMsgs();
 
         setShortMsgSyncListener();
+        setSendShortMsgStateListener();
     }
 
     private void initView() {
@@ -265,6 +266,14 @@ public class SendShortMessageActivity extends AppCompatActivity implements ISend
         });
     }
 
+
+    /**
+     * 发送短信状态回调
+     */
+    private void setSendShortMsgStateListener() {
+        TtPhoneDataManager.getInstance().setISendShortMessage(this);
+    }
+
     /**
      * 解析短信状态
      *
@@ -318,6 +327,6 @@ public class SendShortMessageActivity extends AppCompatActivity implements ISend
 
     @Override
     public void isSendShotMessageStatus(Object o) {
-
+        parseSmsState(0);
     }
 }

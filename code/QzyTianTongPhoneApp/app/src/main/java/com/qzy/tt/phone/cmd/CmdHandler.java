@@ -120,7 +120,7 @@ public class CmdHandler {
                     TtPhoneSignalProtos.PhoneSignalStrength phoneSignalStrength = TtPhoneSignalProtos.PhoneSignalStrength.parseDelimitedFrom(inputStream);
                     // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SIGNAL,protoId, phoneSignalStrength);
                     break;
-                case PrototocalTools.IProtoClientIndex.phone_send_sms_callback:
+                case PrototocalTools.IProtoClientIndex.phone_send_sms_callback: // 已完成
                     TtPhoneSmsProtos.TtPhoneSms ttPhoneSms = TtPhoneSmsProtos.TtPhoneSms.parseDelimitedFrom(inputStream);
                     // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS_STATE,protoId, ttPhoneSms);
                     if(mAllDataListener != null){
