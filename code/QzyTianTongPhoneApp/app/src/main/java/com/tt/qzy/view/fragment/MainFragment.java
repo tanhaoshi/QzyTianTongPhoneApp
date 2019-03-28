@@ -168,11 +168,12 @@ public class MainFragment extends Fragment implements MainFragmentView{
                             mPresneter.dialPhone(SPUtils.getShare(getActivity(),Constans.CRY_HELP_PHONE,"").toString());
                             mIntent = new Intent(getActivity(),TimerService.class);
                             getActivity().startService(mIntent);
-                            mPresneter.requestGpsPosition(true);
+//                            mPresneter.requestGpsPosition(true);
                             main_location.setChecked(true);
                         }else{
                             getActivity().stopService(mIntent);
-                            mPresneter.requestGpsPosition(false);
+//                            mPresneter.requestGpsPosition(false);
+                            main_location.setChecked(false);
                         }
                     }else{
                         NToast.shortToast(getActivity(), getString(R.string.TMT_THE_DEVICE_NOT_INTERNET_NOW));
