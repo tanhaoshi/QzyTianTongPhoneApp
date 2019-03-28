@@ -378,7 +378,9 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     }
 
     @Override
-    public void autoOpenGps() {
-
+    public void isTtPhoneGpsPosition(PhoneCmd phoneCmd) {
+        parseGpsPostion(phoneCmd);
     }
+
+
 }
