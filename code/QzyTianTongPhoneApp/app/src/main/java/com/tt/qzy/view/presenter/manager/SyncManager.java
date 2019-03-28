@@ -7,6 +7,8 @@ import com.google.protobuf.GeneratedMessageV3;
 import com.qzy.data.PhoneCmd;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
+import com.qzy.tt.phone.data.impl.ITtPhoneCallStateBackListener;
+import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
@@ -19,7 +21,10 @@ import com.tt.qzy.view.utils.SPUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -35,9 +40,10 @@ public class SyncManager {
     private boolean isRecord = true;
     private boolean isShortMessage = true;
 
-    private ISyncDataListener iSyncDataListener;
 
     private ISyncMsgDataListener iSyncMsgDataListener;
+
+    private HashMap<String, ISyncDataListener> hashMapSyncData = new HashMap<>();
 
     public SyncManager(Context context) {
         this.mContext = context;
@@ -111,8 +117,20 @@ public class SyncManager {
         }
         if (isRecord) {
             // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_RECORD_CALL_HISTROY,Integer.valueOf(count)));
-            if(iSyncDataListener != null){
+            /*if(iSyncDataListener != null){
                 iSyncDataListener.onCallingLogSyncFinish(Integer.valueOf(count));
+            }*/
+            if (hashMapSyncData != null) {
+                Iterator iter = hashMapSyncData.entrySet().iterator();
+                while (iter.hasNext()) {
+                    Map.Entry entry = (Map.Entry) iter.next();
+                    //Object key = entry.getKey();
+                    ISyncDataListener val = (ISyncDataListener) entry.getValue();
+                    if (val != null) {
+                        LogUtils.i("handlerCallRecordAgrementData count = " + Integer.valueOf(count));
+                        val.onCallingLogSyncFinish(Integer.valueOf(count));
+                    }
+                }
             }
             SPUtils.putShare(mContext, Constans.RECORD_ISREAD, count);
         }
@@ -173,8 +191,17 @@ public class SyncManager {
         }
         if (isShortMessage) {
             //  EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_SHORT_MESSAGE_HISTROY,Integer.valueOf(count)));
-            if(iSyncDataListener != null){
-                iSyncDataListener.onShortMsgSyncFinish(Integer.valueOf(count));
+            if (hashMapSyncData != null) {
+                Iterator iter = hashMapSyncData.entrySet().iterator();
+                while (iter.hasNext()) {
+                    Map.Entry entry = (Map.Entry) iter.next();
+                    //Object key = entry.getKey();
+                    ISyncDataListener val = (ISyncDataListener) entry.getValue();
+                    if (val != null) {
+                        LogUtils.i("handlerShortMessageAgrementData count = " + Integer.valueOf(count));
+                        val.onShortMsgSyncFinish(Integer.valueOf(count));
+                    }
+                }
             }
 
             SPUtils.putShare(mContext, Constans.SHORTMESSAGE_ISREAD, count);
@@ -203,8 +230,8 @@ public class SyncManager {
                     public void onNext(ShortMessageDao value) {
                         // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SHORT_MESSAGE, PhoneCmd.getPhoneCmd(protoId,messageV3)));
 
-                        if(iSyncMsgDataListener != null){
-                            iSyncMsgDataListener.onShorMsgSignalSyncFinish(PhoneCmd.getPhoneCmd(protoId,messageV3));
+                        if (iSyncMsgDataListener != null) {
+                            iSyncMsgDataListener.onShorMsgSignalSyncFinish(PhoneCmd.getPhoneCmd(protoId, messageV3));
                         }
                     }
 
@@ -231,9 +258,23 @@ public class SyncManager {
         SPUtils.putShare(mContext, Constans.SHORTMESSAGE_ISREAD, recordCount);
 
         // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_SHORT_MESSAGE_HISTROY,Integer.valueOf(recordCount)));
-        if(iSyncDataListener != null){
+       /* if(iSyncDataListener != null){
             iSyncDataListener.onDisposeAlertSyncFinish(Integer.valueOf(recordCount));
+        }*/
+
+        if (hashMapSyncData != null) {
+            Iterator iter = hashMapSyncData.entrySet().iterator();
+            while (iter.hasNext()) {
+                Map.Entry entry = (Map.Entry) iter.next();
+                Object key = entry.getKey();
+                ISyncDataListener val = (ISyncDataListener) entry.getValue();
+                if (val != null) {
+                    LogUtils.i("disposeAlert recordCount key = " +  key + "  " + Integer.valueOf(recordCount));
+                    val.onDisposeAlertSyncFinish(Integer.valueOf(recordCount));
+                }
+            }
         }
+
     }
 
   /*  @Subscribe(threadMode = ThreadMode.MAIN)
@@ -258,17 +299,19 @@ public class SyncManager {
         //  EventBus.getDefault().unregister(this);
     }
 
-    public ISyncDataListener getiSyncDataListener() {
-        return iSyncDataListener;
+    public void removeiSyncDataListener() {
+        hashMapSyncData = null;
     }
 
-    public void setiSyncDataListener(ISyncDataListener iSyncDataListener) {
-        this.iSyncDataListener = iSyncDataListener;
+    public void setiSyncDataListener(HashMap<String, ISyncDataListener> hashMapSyncData) {
+        this.hashMapSyncData = hashMapSyncData;
     }
 
-    public interface ISyncDataListener{
+    public interface ISyncDataListener {
         void onCallingLogSyncFinish(int count);
+
         void onShortMsgSyncFinish(int count);
+
         void onDisposeAlertSyncFinish(int recordCount);
     }
 
@@ -280,7 +323,7 @@ public class SyncManager {
         this.iSyncMsgDataListener = iSyncMsgDataListener;
     }
 
-    public interface ISyncMsgDataListener{
+    public interface ISyncMsgDataListener {
         void onShorMsgSignalSyncFinish(PhoneCmd phoneCmd);
     }
 

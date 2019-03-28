@@ -64,7 +64,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
 
     //同步数据回调
-    private SyncManager.ISyncDataListener iSyncDataListener;
+    private HashMap<String, SyncManager.ISyncDataListener> hashMapSyncData = new HashMap<>();
 
     //短信数据回调
     private SyncManager.ISyncMsgDataListener iSyncMsgDataListener;
@@ -110,8 +110,8 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
     private void initSyncDataModel(Context context) {
         mSyncManager = new SyncManager(context);
 
-        if (iSyncDataListener != null) {
-            mSyncManager.setiSyncDataListener(iSyncDataListener);
+        if (hashMapSyncData != null) {
+            mSyncManager.setiSyncDataListener(hashMapSyncData);
         }
 
         if (iSyncMsgDataListener != null) {
@@ -435,19 +435,31 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
     }
 
     @Override
-    public void setISyncDataListener(SyncManager.ISyncDataListener listener) {
-        iSyncDataListener = listener;
+    public void setISyncDataListener(String tag, SyncManager.ISyncDataListener listener) {
+        if (hashMapSyncData == null) {
+            hashMapSyncData = new HashMap<>();
+        }
+        hashMapSyncData.put(tag, listener);
         if (mSyncManager != null) {
-            mSyncManager.setiSyncDataListener(listener);
+            mSyncManager.setiSyncDataListener(hashMapSyncData);
+        }
+    }
+
+
+    @Override
+    public void removeISyncDataListener() {
+        hashMapSyncData = null;
+        if (mSyncManager != null) {
+            mSyncManager.removeiSyncDataListener();
         }
     }
 
     @Override
-    public void removeISyncDataListener() {
-        iSyncDataListener = null;
-        if (mSyncManager != null) {
-            mSyncManager.setiSyncDataListener(iSyncDataListener);
+    public SyncManager.ISyncDataListener getISyncDataListener(String tag) {
+        if (hashMapSyncData != null) {
+            return hashMapSyncData.get(tag);
         }
+        return null;
     }
 
     @Override

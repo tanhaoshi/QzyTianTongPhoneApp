@@ -21,6 +21,7 @@ import com.downloader.Status;
 import com.qzy.data.PhoneCmd;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
+import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.bean.VersionCodeModel;
@@ -175,7 +176,7 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView>{
      * 设置同步数据回调接口
      */
     private void setSyncListener(){
-        TtPhoneDataManager.getInstance().setISyncDataListener(new SyncManager.ISyncDataListener() {
+        TtPhoneDataManager.getInstance().setISyncDataListener("MainActivityPresenter",new SyncManager.ISyncDataListener() {
             @Override
             public void onCallingLogSyncFinish(int count) {
                 mView.get().showRecordCallRead(true,count);
@@ -188,6 +189,7 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView>{
 
             @Override
             public void onDisposeAlertSyncFinish(int recordCount) {
+                LogUtils.d("onDisposeAlertSyncFinish = " + recordCount);
                 mView.get().showShortMessageRead(true,recordCount);
             }
         });

@@ -26,6 +26,7 @@ import com.tt.qzy.view.db.dao.MailListDao;
 import com.tt.qzy.view.db.manager.CallRecordManager;
 import com.tt.qzy.view.db.manager.MailListManager;
 import com.tt.qzy.view.presenter.activity.TellPhoneActivityPresenter;
+import com.tt.qzy.view.presenter.manager.SyncManager;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.utils.SPUtils;
@@ -255,6 +256,9 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
 
           /*  EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_RECORD_CALL_HISTROY
                     ,Integer.valueOf(recordCount)));*/
+
+          TtPhoneDataManager.getInstance().getISyncDataListener("MainActivityPresenter").onCallingLogSyncFinish(Integer.valueOf(recordCount));
+
             isAlert = false;
         }
     }
