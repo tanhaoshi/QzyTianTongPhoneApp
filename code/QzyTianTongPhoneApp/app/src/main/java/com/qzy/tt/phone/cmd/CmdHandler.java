@@ -112,7 +112,7 @@ public class CmdHandler {
     private void handProcessModel(int protoId, ByteBufInputStream inputStream) {
         try {
             switch (protoId) {
-                case PrototocalTools.IProtoClientIndex.call_phone_state:
+                case PrototocalTools.IProtoClientIndex.call_phone_state: // 已完成
                     CallPhoneStateProtos.CallPhoneState callPhoneState = CallPhoneStateProtos.CallPhoneState.parseDelimitedFrom(inputStream);
                     pasreCallPhoneState(protoId, callPhoneState);
                     break;
@@ -124,11 +124,11 @@ public class CmdHandler {
                     TtPhoneSmsProtos.TtPhoneSms ttPhoneSms = TtPhoneSmsProtos.TtPhoneSms.parseDelimitedFrom(inputStream);
                     // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS_STATE,protoId, ttPhoneSms);
                     break;
-                case PrototocalTools.IProtoClientIndex.tt_phone_battery:
+                case PrototocalTools.IProtoClientIndex.tt_phone_battery: // 已完成
                     TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery = TtPhoneBatteryProtos.TtPhoneBattery.parseDelimitedFrom(inputStream);
                     pasreCallPhoneBattery(protoId, ttPhoneBattery);
                     break;
-                case PrototocalTools.IProtoClientIndex.tt_phone_simcard:
+                case PrototocalTools.IProtoClientIndex.tt_phone_simcard: // 已完成
                     TtPhoneSimCards.TtPhoneSimCard ttPhoneSimCard = TtPhoneSimCards.TtPhoneSimCard.parseDelimitedFrom(inputStream);
                     parseSimCard(protoId, ttPhoneSimCard);
                     break;
@@ -136,7 +136,7 @@ public class CmdHandler {
                     TtBeiDouStatuss.TtBeiDouStatus ttBeiDouStatus = TtBeiDouStatuss.TtBeiDouStatus.parseDelimitedFrom(inputStream);
                     //sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_BEIDOU,protoId,ttBeiDouStatus);
                     break;
-                case PrototocalTools.IProtoClientIndex.tt_gps_position:
+                case PrototocalTools.IProtoClientIndex.tt_gps_position:// 已完成
                     TtPhonePositionProtos.TtPhonePosition ttPhonePosition = TtPhonePositionProtos.TtPhonePosition.parseDelimitedFrom(inputStream);
                     //sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_ACCURACY_POSITION,protoId,ttPhonePosition);
                     parseGpsPosition(protoId, ttPhonePosition);
@@ -145,21 +145,21 @@ public class CmdHandler {
                     TtOpenBeiDouProtos.TtOpenBeiDou ttOpenBeiDou = TtOpenBeiDouProtos.TtOpenBeiDou.parseDelimitedFrom(inputStream);
                     //sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_BEIDOU_SWITCH,protoId,ttOpenBeiDou);
                     break;
-                case PrototocalTools.IProtoClientIndex.tt_call_record:
+                case PrototocalTools.IProtoClientIndex.tt_call_record: // 已完成
                     TtCallRecordProtos.TtCallRecordProto ttCallRecordProto = TtCallRecordProtos.TtCallRecordProto.parseDelimitedFrom(inputStream);
                     //mSyncManager.syncCallRecord(ttCallRecordProto);
                     if (mAllDataListener != null) {
                         mAllDataListener.syncCallRecord(ttCallRecordProto);
                     }
                     break;
-                case PrototocalTools.IProtoClientIndex.tt_short_message:
+                case PrototocalTools.IProtoClientIndex.tt_short_message: // 已完成
                     TtShortMessageProtos.TtShortMessage ttShortMessage = TtShortMessageProtos.TtShortMessage.parseDelimitedFrom(inputStream);
                     //mSyncManager.syncShortMessage(ttShortMessage);
                     if (mAllDataListener != null) {
                         mAllDataListener.syncShortMessage(ttShortMessage);
                     }
                     break;
-                case PrototocalTools.IProtoClientIndex.tt_receiver_short_message:
+                case PrototocalTools.IProtoClientIndex.tt_receiver_short_message: // 已完成
                     TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessageSignal = TtShortMessageProtos.TtShortMessage.ShortMessage.parseDelimitedFrom(inputStream);
                     startSystemRingTone();
                     //mSyncManager.syncShortMessageSignal(protoId,ttShortMessageSignal,ttShortMessageSignal);
@@ -167,7 +167,7 @@ public class CmdHandler {
                         mAllDataListener.syncShortMessageSignal(protoId, ttShortMessageSignal, ttShortMessageSignal);
                     }
                     break;
-                case PrototocalTools.IProtoClientIndex.tt_call_phone_back:
+                case PrototocalTools.IProtoClientIndex.tt_call_phone_back: // 已完成
                     CallPhoneBackProtos.CallPhoneBack callPhoneBack = CallPhoneBackProtos.CallPhoneBack.parseDelimitedFrom(inputStream);
                     // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_CALL_STATE,protoId,callPhoneBack);
                     if (mAllDataListener != null) {
@@ -193,7 +193,7 @@ public class CmdHandler {
                     TtPhoneUpdateResponseProtos.UpdateResponse updateResponse2 = TtPhoneUpdateResponseProtos.UpdateResponse.parseDelimitedFrom(inputStream);
                     // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_UPGRADLE,protoId,updateResponse2);
                     break;
-                case PrototocalTools.IProtoClientIndex.response_server_version_info:
+                case PrototocalTools.IProtoClientIndex.response_server_version_info: // 已完成
                     TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion ttPhoneGetServerVersion = TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion
                             .parseDelimitedFrom(inputStream);
                     //sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_VERSION,protoId,ttPhoneGetServerVersion);
@@ -209,7 +209,7 @@ public class CmdHandler {
                     TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState = TtPhoneSosStateProtos.TtPhoneSosState.parseDelimitedFrom(inputStream);
                     // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_SOS_STATUS,protoId,ttPhoneSosState);
                     break;
-                case PrototocalTools.IProtoClientIndex.response_server_timer_message:
+                case PrototocalTools.IProtoClientIndex.response_server_timer_message: // 已完成
                     TimerSendProtos.TimerSend timerSend = TimerSendProtos.TimerSend.parseDelimitedFrom(inputStream);
                     handlerAllTimeSend(timerSend);
                     break;
