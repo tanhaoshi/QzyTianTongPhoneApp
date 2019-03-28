@@ -6,6 +6,7 @@ import android.content.Context;
 import com.qzy.data.PhoneCmd;
 import com.qzy.data.PhoneStateUtils;
 import com.qzy.phone.pcm.AllLocalPcmManager;
+import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.tt.phone.data.impl.ITtPhoneCallStateLisenter;
 import com.qzy.tt.phone.netty.PhoneNettyManager;
@@ -81,16 +82,23 @@ public class PhoneServiceManager {
      * @param cmd
      */
     private void updatePhoneState(PhoneCmd cmd) {
-        KLog.i("phone state = " + PhoneStateUtils.getTtPhoneState(cmd).ordinal());
+        String callingIp = PhoneStateUtils.getTtPhoneStateNowCallingIp(cmd);
+        KLog.i(" calling ip = " +  callingIp  + "  phone state = " + PhoneStateUtils.getTtPhoneState(cmd).ordinal());
+
         switch (PhoneStateUtils.getTtPhoneState(cmd)) {
             case NOCALL:
                 stopProtocal();
                 break;
             case RING:
-                startPlayerProtocal();
+                if(isSelfCalling(callingIp)){
+                    startPlayerProtocal();
+                }
+
                 break;
             case CALL:
-                startProtocal();
+                if(isSelfCalling(callingIp)){
+                    startProtocal();
+                }
                 break;
             case HUANGUP:
                 stopProtocal();
@@ -101,6 +109,15 @@ public class PhoneServiceManager {
                 stopProtocal();
                 break;
         }
+    }
+
+    /**
+     * 判断是否当前自己在通话
+     * @param ip
+     * @return
+     */
+    private boolean isSelfCalling(String ip){
+        return ip.equals(CommonData.getInstance().getLocalWifiIp());
     }
 
     /**

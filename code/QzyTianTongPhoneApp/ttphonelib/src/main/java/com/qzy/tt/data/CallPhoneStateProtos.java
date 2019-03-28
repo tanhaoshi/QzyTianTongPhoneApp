@@ -41,6 +41,16 @@ public final class CallPhoneStateProtos {
      */
     com.google.protobuf.ByteString
         getPhoneNumberBytes();
+
+    /**
+     * <code>optional string nowCallingIp = 4;</code>
+     */
+    String getNowCallingIp();
+    /**
+     * <code>optional string nowCallingIp = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getNowCallingIpBytes();
   }
   /**
    * Protobuf type {@code phonedata.CallPhoneState}
@@ -57,6 +67,7 @@ public final class CallPhoneStateProtos {
       phoneState_ = 0;
       ttPhoneSignal_ = 0;
       phoneNumber_ = "";
+      nowCallingIp_ = "";
     }
 
     @Override
@@ -99,6 +110,12 @@ public final class CallPhoneStateProtos {
               String s = input.readStringRequireUtf8();
 
               phoneNumber_ = s;
+              break;
+            }
+            case 34: {
+              String s = input.readStringRequireUtf8();
+
+              nowCallingIp_ = s;
               break;
             }
           }
@@ -308,6 +325,40 @@ public final class CallPhoneStateProtos {
       }
     }
 
+    public static final int NOWCALLINGIP_FIELD_NUMBER = 4;
+    private volatile Object nowCallingIp_;
+    /**
+     * <code>optional string nowCallingIp = 4;</code>
+     */
+    public String getNowCallingIp() {
+      Object ref = nowCallingIp_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        nowCallingIp_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>optional string nowCallingIp = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getNowCallingIpBytes() {
+      Object ref = nowCallingIp_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        nowCallingIp_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -329,6 +380,9 @@ public final class CallPhoneStateProtos {
       if (!getPhoneNumberBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 3, phoneNumber_);
       }
+      if (!getNowCallingIpBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, nowCallingIp_);
+      }
     }
 
     public int getSerializedSize() {
@@ -346,6 +400,9 @@ public final class CallPhoneStateProtos {
       }
       if (!getPhoneNumberBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, phoneNumber_);
+      }
+      if (!getNowCallingIpBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, nowCallingIp_);
       }
       memoizedSize = size;
       return size;
@@ -368,6 +425,8 @@ public final class CallPhoneStateProtos {
           == other.getTtPhoneSignal());
       result = result && getPhoneNumber()
           .equals(other.getPhoneNumber());
+      result = result && getNowCallingIp()
+          .equals(other.getNowCallingIp());
       return result;
     }
 
@@ -384,6 +443,8 @@ public final class CallPhoneStateProtos {
       hash = (53 * hash) + getTtPhoneSignal();
       hash = (37 * hash) + PHONENUMBER_FIELD_NUMBER;
       hash = (53 * hash) + getPhoneNumber().hashCode();
+      hash = (37 * hash) + NOWCALLINGIP_FIELD_NUMBER;
+      hash = (53 * hash) + getNowCallingIp().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -508,6 +569,8 @@ public final class CallPhoneStateProtos {
 
         phoneNumber_ = "";
 
+        nowCallingIp_ = "";
+
         return this;
       }
 
@@ -533,6 +596,7 @@ public final class CallPhoneStateProtos {
         result.phoneState_ = phoneState_;
         result.ttPhoneSignal_ = ttPhoneSignal_;
         result.phoneNumber_ = phoneNumber_;
+        result.nowCallingIp_ = nowCallingIp_;
         onBuilt();
         return result;
       }
@@ -582,6 +646,10 @@ public final class CallPhoneStateProtos {
         }
         if (!other.getPhoneNumber().isEmpty()) {
           phoneNumber_ = other.phoneNumber_;
+          onChanged();
+        }
+        if (!other.getNowCallingIp().isEmpty()) {
+          nowCallingIp_ = other.nowCallingIp_;
           onChanged();
         }
         onChanged();
@@ -748,6 +816,75 @@ public final class CallPhoneStateProtos {
         onChanged();
         return this;
       }
+
+      private Object nowCallingIp_ = "";
+      /**
+       * <code>optional string nowCallingIp = 4;</code>
+       */
+      public String getNowCallingIp() {
+        Object ref = nowCallingIp_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          nowCallingIp_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      /**
+       * <code>optional string nowCallingIp = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getNowCallingIpBytes() {
+        Object ref = nowCallingIp_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (String) ref);
+          nowCallingIp_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string nowCallingIp = 4;</code>
+       */
+      public Builder setNowCallingIp(
+          String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+
+        nowCallingIp_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string nowCallingIp = 4;</code>
+       */
+      public Builder clearNowCallingIp() {
+
+        nowCallingIp_ = getDefaultInstance().getNowCallingIp();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string nowCallingIp = 4;</code>
+       */
+      public Builder setNowCallingIpBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+
+        nowCallingIp_ = value;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return this;
@@ -811,13 +948,14 @@ public final class CallPhoneStateProtos {
       descriptor;
   static {
     String[] descriptorData = {
-      "\n\024CallPhoneState.proto\022\tphonedata\"\277\001\n\016Ca" +
+      "\n\024CallPhoneState.proto\022\tphonedata\"\325\001\n\016Ca" +
       "llPhoneState\0228\n\nphoneState\030\001 \001(\0162$.phone" +
       "data.CallPhoneState.PhoneState\022\025\n\rttPhon" +
-      "eSignal\030\002 \001(\005\022\023\n\013phoneNumber\030\003 \001(\t\"G\n\nPh" +
-      "oneState\022\n\n\006NOCALL\020\000\022\010\n\004RING\020\001\022\010\n\004CALL\020\002" +
-      "\022\013\n\007HUANGUP\020\003\022\014\n\010INCOMING\020\004B\'\n\017com.qzy.t" +
-      "t.dataB\024CallPhoneStateProtosb\006proto3"
+      "eSignal\030\002 \001(\005\022\023\n\013phoneNumber\030\003 \001(\t\022\024\n\014no" +
+      "wCallingIp\030\004 \001(\t\"G\n\nPhoneState\022\n\n\006NOCALL" +
+      "\020\000\022\010\n\004RING\020\001\022\010\n\004CALL\020\002\022\013\n\007HUANGUP\020\003\022\014\n\010I" +
+      "NCOMING\020\004B\'\n\017com.qzy.tt.dataB\024CallPhoneS" +
+      "tateProtosb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -836,7 +974,7 @@ public final class CallPhoneStateProtos {
     internal_static_phonedata_CallPhoneState_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_phonedata_CallPhoneState_descriptor,
-        new String[] { "PhoneState", "TtPhoneSignal", "PhoneNumber", });
+        new String[] { "PhoneState", "TtPhoneSignal", "PhoneNumber", "NowCallingIp", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

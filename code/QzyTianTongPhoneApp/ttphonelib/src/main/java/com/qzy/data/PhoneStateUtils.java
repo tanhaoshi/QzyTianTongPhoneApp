@@ -29,4 +29,19 @@ public class PhoneStateUtils {
         }
         return ttPhoneState;
     }
+
+    /**
+     * 获取当前通话ip
+     * @param cmd
+     * @return
+     */
+    public static String getTtPhoneStateNowCallingIp(PhoneCmd cmd){
+        TtPhoneState ttPhoneState = TtPhoneState.UNRECOGNIZED;
+        CallPhoneStateProtos.CallPhoneState callPhoneState = (CallPhoneStateProtos.CallPhoneState) cmd.getMessage();
+        String ip = callPhoneState.getNowCallingIp();
+        LogUtils.e("call Phone State now calling ip = " + ip);
+
+        return ip;
+    }
+
 }
