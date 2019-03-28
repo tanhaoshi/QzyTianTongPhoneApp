@@ -257,6 +257,11 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
             }
 
+            @Override
+            public void onServerTtPhoneSmsSendState(PhoneCmd phoneCmd) {
+
+            }
+
         });
     }
 
@@ -406,6 +411,11 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
     @Override
     public void answerTtPhone() {
         phoneNettyManager.acceptCall();
+    }
+
+    @Override
+    public void sendSmsTtPhone(SmsBean smsBean) {
+        phoneNettyManager.sendSms(smsBean);
     }
 
     @Override

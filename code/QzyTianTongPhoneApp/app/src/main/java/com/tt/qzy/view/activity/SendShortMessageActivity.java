@@ -37,7 +37,6 @@ import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.SPUtils;
 
 
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -72,7 +71,7 @@ public class SendShortMessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_short_message);
         ButterKnife.bind(this);
-       // EventBusUtils.register(this);
+        // EventBusUtils.register(this);
         initView();
         initAdapter();
         initMsgs();
@@ -103,17 +102,17 @@ public class SendShortMessageActivity extends AppCompatActivity {
 
     private void initMsgs() {
         Intent intent = getIntent();
-        if(intent.getExtras() != null){
+        if (intent.getExtras() != null) {
             mImageView.setVisibility(View.GONE);
             List<MailListDao> mailListDaos = MailListManager.getInstance(SendShortMessageActivity.this).
                     getByPhoneList(intent.getStringExtra(Constans.SHORT_MESSAGE_PHONE));
 
-            if(mailListDaos.size() > 0){
+            if (mailListDaos.size() > 0) {
                 sms_et_name.setText(mailListDaos.get(0).getName());
                 sms_et_name.setFocusable(false);
                 name = mailListDaos.get(0).getName();
                 phone = intent.getStringExtra(Constans.SHORT_MESSAGE_PHONE);
-            }else{
+            } else {
                 sms_et_name.setText(intent.getStringExtra(Constans.SHORT_MESSAGE_PHONE));
                 sms_et_name.setFocusable(false);
                 phone = intent.getStringExtra(Constans.SHORT_MESSAGE_PHONE);
@@ -124,13 +123,13 @@ public class SendShortMessageActivity extends AppCompatActivity {
 
             KLog.i("look short message = " + JSON.toJSONString(daoList));
 
-            for(ShortMessageDao shortMessageDao : daoList){
+            for (ShortMessageDao shortMessageDao : daoList) {
 
                 MsgModel msgModel = new MsgModel(shortMessageDao.getMessage(), Integer.valueOf(shortMessageDao.getState()));
 
                 msgList.add(msgModel);
 
-                if(!shortMessageDao.getIsStatus()){
+                if (!shortMessageDao.getIsStatus()) {
                     disposeChangeRead(shortMessageDao);
                 }
             }
@@ -155,9 +154,11 @@ public class SendShortMessageActivity extends AppCompatActivity {
         }
     }
 
-    private void disposeChangeRead(ShortMessageDao shortMessageDao){
-       // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SHORT_MESSAGE,new SMAgrementModel(shortMessageDao.getServerId())));
+    private void disposeChangeRead(ShortMessageDao shortMessageDao) {
+        // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SHORT_MESSAGE,new SMAgrementModel(shortMessageDao.getServerId())));
 
+        SMAgrementModel smAgrementModel = new SMAgrementModel(shortMessageDao.getServerId());
+        TtPhoneDataManager.getInstance().requestServerShortMessageStatus(smAgrementModel);
         shortMessageDao.setIsStatus(true);
 
         ShortMessageManager.getInstance(SendShortMessageActivity.this).updateShortMessageName(shortMessageDao);
@@ -166,18 +167,18 @@ public class SendShortMessageActivity extends AppCompatActivity {
 
     }
 
-    private void updateMainAlert(){
-        Integer integer = (Integer) SPUtils.getShare(this,Constans.SHORTMESSAGE_ISREAD,0);
+    private void updateMainAlert() {
+        Integer integer = (Integer) SPUtils.getShare(this, Constans.SHORTMESSAGE_ISREAD, 0);
 
-        if(integer > 0){
-            integer --;
-        }else{
+        if (integer > 0) {
+            integer--;
+        } else {
             return;
         }
 
-        SPUtils.putShare(this,Constans.SHORTMESSAGE_ISREAD,integer);
+        SPUtils.putShare(this, Constans.SHORTMESSAGE_ISREAD, integer);
 
-       // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_SHORT_MESSAGE_HISTROY,Integer.valueOf(Integer.valueOf(integer))));
+        // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_SHORT_MESSAGE_HISTROY,Integer.valueOf(Integer.valueOf(integer))));
     }
 
     private void initAdapter() {
@@ -196,18 +197,19 @@ public class SendShortMessageActivity extends AppCompatActivity {
                 sendMessage(MsgModel.TYPE_RECEIVE);
                 break;
             case R.id.sms_base_tv_toolbar_right:
-                Intent intent = new Intent(SendShortMessageActivity.this,SelectContactsActivity.class);
-                startActivityForResult(intent,REQUEST_CODE);
+                Intent intent = new Intent(SendShortMessageActivity.this, SelectContactsActivity.class);
+                startActivityForResult(intent, REQUEST_CODE);
                 break;
         }
     }
 
     /**
      * 发送短信
+     *
      * @param model
      */
     private void sendMessage(int model) {
-        if(!CommonData.getInstance().isConnected()){
+        if (!CommonData.getInstance().isConnected()) {
             NToast.shortToast(this, R.string.TMT_connect_tiantong_please);
             return;
         }
@@ -228,12 +230,14 @@ public class SendShortMessageActivity extends AppCompatActivity {
             mRecyclerView.scrollToPosition(msgList.size() - 1);
             custom_input.setText("");
             //EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS, new SmsBean(receive, content)));
+            SmsBean smsBean = new SmsBean(receive, content);
+            TtPhoneDataManager.getInstance().sendSmsTtPhone(smsBean);
         }
 
-        ShortMessageDao shortMessageDao = new ShortMessageDao(phone,content,
-                DateUtil.backTimeFomat(new Date()),0,"",String.valueOf(MsgModel.TYPE_RECEIVE),name,true);
+        ShortMessageDao shortMessageDao = new ShortMessageDao(phone, content,
+                DateUtil.backTimeFomat(new Date()), 0, "", String.valueOf(MsgModel.TYPE_RECEIVE), name, true);
 
-        ShortMessageManager.getInstance(SendShortMessageActivity.this).insertShortMessage(shortMessageDao,SendShortMessageActivity.this);
+        ShortMessageManager.getInstance(SendShortMessageActivity.this).insertShortMessage(shortMessageDao, SendShortMessageActivity.this);
     }
 /*
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -251,7 +255,7 @@ public class SendShortMessageActivity extends AppCompatActivity {
     /**
      * 设置短信同步接口回调
      */
-    private void setShortMsgSyncListener(){
+    private void setShortMsgSyncListener() {
         TtPhoneDataManager.getInstance().setISyncMsgDataListener(new SyncManager.ISyncMsgDataListener() {
             @Override
             public void onShorMsgSignalSyncFinish(PhoneCmd phoneCmd) {
@@ -270,27 +274,28 @@ public class SendShortMessageActivity extends AppCompatActivity {
         TtPhoneSmsProtos.TtPhoneSms ttPhoneSms = (TtPhoneSmsProtos.TtPhoneSms) cmd.getMessage();
         if (ttPhoneSms.getIsSendSuccess()) {
             NToast.shortToast(this, R.string.TMT_sendMessage_success);
-        }else{
+        } else {
             NToast.shortToast(this, R.string.TMT_sendMessage_failed);
         }
     }
 
     /**
      * 解析收到短息
+     *
      * @param object
      */
-    private void parseSmsreciver(Object object){
+    private void parseSmsreciver(Object object) {
         PhoneCmd cmd = (PhoneCmd) object;
         TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage =
                 (TtShortMessageProtos.TtShortMessage.ShortMessage) cmd.getMessage();
-        MsgModel msgModel = new MsgModel(shortMessage.getMessage(),shortMessage.getType());
-        msgList.add(msgList.size(),msgModel);
+        MsgModel msgModel = new MsgModel(shortMessage.getMessage(), shortMessage.getType());
+        msgList.add(msgList.size(), msgModel);
         adapter.setData(msgList);
-        if (msgList.size()-1 != 0) {
-            mRecyclerView.scrollToPosition(msgList.size()-1);
+        if (msgList.size() - 1 != 0) {
+            mRecyclerView.scrollToPosition(msgList.size() - 1);
             LinearLayoutManager mLayoutManager =
                     (LinearLayoutManager) mRecyclerView.getLayoutManager();
-            mLayoutManager.scrollToPositionWithOffset(msgList.size()-1, 0);
+            mLayoutManager.scrollToPositionWithOffset(msgList.size() - 1, 0);
         }
     }
 
@@ -307,6 +312,6 @@ public class SendShortMessageActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-       // EventBusUtils.unregister(this);
+        // EventBusUtils.unregister(this);
     }
 }

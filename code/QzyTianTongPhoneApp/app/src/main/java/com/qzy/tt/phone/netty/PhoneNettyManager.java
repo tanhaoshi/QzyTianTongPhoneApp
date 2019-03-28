@@ -149,7 +149,7 @@ public class PhoneNettyManager {
      * 发送短信
      * @param object
      */
-    private void sendSms(Object object){
+    public void sendSms(Object object){
         SmsBean smsBean = (SmsBean) object;
         TtPhoneSmsProtos.TtPhoneSms ttPhoneSms = TtPhoneSmsProtos.TtPhoneSms.newBuilder()
                 .setIp(CommonData.getInstance().getLocalWifiIp())

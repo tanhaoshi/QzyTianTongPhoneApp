@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 
 import com.qzy.tt.phone.data.SmsBean;
+import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.socks.library.KLog;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.SPUtils;
@@ -54,6 +55,8 @@ public class TimerService extends Service{
         content = SPUtils.getShare(getApplicationContext(),Constans.CRY_HELP_SHORTMESSAGE,"").toString()
         +"经度:"+longitude + " 纬度:"+latitude;
         //EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS, new SmsBean(receive, content)));
+        SmsBean smsBean = new SmsBean(receive, content);
+        TtPhoneDataManager.getInstance().sendSmsTtPhone(smsBean);
     }
 
     @Override

@@ -49,4 +49,7 @@ public interface IAllTtPhoneDataListener {
     //返回初始化 sos状态
     void onServerTtPhoneSosState(PhoneCmd phoneCmd);
 
+    //短信发送状态回调
+    void onServerTtPhoneSmsSendState(PhoneCmd phoneCmd);
+
 }

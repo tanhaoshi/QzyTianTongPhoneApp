@@ -1,6 +1,7 @@
 package com.qzy.tt.phone.data.impl;
 
 import com.qzy.data.PhoneCmd;
+import com.qzy.tt.phone.data.SmsBean;
 import com.tt.qzy.view.bean.DatetimeModel;
 import com.tt.qzy.view.bean.SMAgrementModel;
 import com.tt.qzy.view.bean.SosSendMessageModel;
@@ -52,6 +53,8 @@ public interface ITtPhoneHandlerManager {
     //接听
     void answerTtPhone();
 
+    //发送短信
+    void sendSmsTtPhone(SmsBean smsBean);
 
     //请求设备通话记录
     void requestCallRecord();
