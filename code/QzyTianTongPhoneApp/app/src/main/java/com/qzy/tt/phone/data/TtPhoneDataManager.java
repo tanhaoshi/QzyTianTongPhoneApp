@@ -183,9 +183,9 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
             }
 
             @Override
-            public void isTtPhoneGpsPositon(TtPhonePositionProtos.TtPhonePosition ttPhonePosition) {
+            public void isTtPhoneGpsPositon(PhoneCmd phoneCmd) {
                 if (iMainFragment != null) {
-                    iMainFragment.isTtServerConnected(aBoolean);
+                    iMainFragment.isTtPhoneGpsPosition(phoneCmd);
                 }
             }
 
@@ -233,7 +233,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
                     //Object key = entry.getKey();
                     ITtPhoneCallStateBackListener val = (ITtPhoneCallStateBackListener) entry.getValue();
                     if (val != null) {
-                        LogUtils.i("onPhoneCallStateBack phonCmd = " + phoneCmd.getProtoId() );
+                        LogUtils.i("onPhoneCallStateBack phonCmd = " + phoneCmd.getProtoId());
                         val.onPhoneCallStateBack(phoneCmd);
                     }
                 }

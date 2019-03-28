@@ -24,7 +24,7 @@ public interface IAllTtPhoneDataListener {
     void isTtPhoneBattery(int level,int scal);
 
     //返回gps经纬度
-    void isTtPhoneGpsPositon(TtPhonePositionProtos.TtPhonePosition ttPhonePosition);
+    void isTtPhoneGpsPositon(PhoneCmd phoneCmd);
 
     //同步通话记录
     void syncCallRecord(TtCallRecordProtos.TtCallRecordProto ttCallRecordProto);

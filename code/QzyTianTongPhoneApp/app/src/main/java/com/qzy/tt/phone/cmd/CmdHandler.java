@@ -312,7 +312,7 @@ public class CmdHandler {
             mAllDataListener.isTtSignalStrength(phoneSignalStrength.getSignalStrength());
         }*/
         if (mAllDataListener != null) {
-            mAllDataListener.isTtPhoneGpsPositon(ttPhonePosition);
+            mAllDataListener.isTtPhoneGpsPositon(PhoneCmd.getPhoneCmd(protoId,ttPhonePosition));
         }
     }
 

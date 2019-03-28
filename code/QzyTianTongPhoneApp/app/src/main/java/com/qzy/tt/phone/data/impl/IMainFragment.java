@@ -1,5 +1,7 @@
 package com.qzy.tt.phone.data.impl;
 
+import com.qzy.data.PhoneCmd;
+
 /**
  * 连接状态回调类
  */
@@ -12,5 +14,5 @@ public interface IMainFragment {
     void disConnectServer();
 
     //手动打开gps返回值
-    void autoOpenGps();
+    void isTtPhoneGpsPosition(PhoneCmd phoneCmd);
 }
