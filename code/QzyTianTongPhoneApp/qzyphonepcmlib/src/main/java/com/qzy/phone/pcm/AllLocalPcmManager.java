@@ -79,7 +79,7 @@ public class AllLocalPcmManager {
     public void start(){
         try{
             Log.e("zyj","...AllLocalPcmManager........start.......");
-            if(thread != null) {
+            //if(thread != null) {
 
                 initAudioDevice();
 
@@ -88,7 +88,7 @@ public class AllLocalPcmManager {
 
                 Log.i("zyj","start record !!!!");
                 NativeAudio.startRecord();
-            }
+           // }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -96,11 +96,11 @@ public class AllLocalPcmManager {
 
     public void startPlayer(){
         try{
-            Log.e("startPlayer","...AllLocalPcmManager........startPlayer.......");
-            if(thread != null){
+            Log.e("zyj","...AllLocalPcmManager........startPlayer.......");
+            //if(thread != null){
                 initAudioDevice();
                 NativeAudio.startPlayer();
-            }
+           // }
            // NativeAudio.startRecord();
         }catch (Exception e){
             e.printStackTrace();
@@ -110,11 +110,11 @@ public class AllLocalPcmManager {
     public void stop(){
         try{
             Log.e("zyj","...AllLocalPcmManager........stop.......");
-            if(thread != null){
+           // if(thread != null){
                 NativeAudio.stopPlayer();
                 NativeAudio.stopRecord();
                 releaseAudioDevice();
-            }
+          //  }
         }catch (Exception e){
             e.printStackTrace();
         }
