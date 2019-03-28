@@ -28,23 +28,17 @@ public class PhoneServiceManager {
 
     private AllLocalPcmManager mAllLocalPcmManager;
 
-
     /**
      * sensor
      *
      * @param context
      */
 
-//    private QzySensorManager mQzySensorManager;
     public PhoneServiceManager(Context context) {
         mContext = context;
         mPhoneNettyManager = new PhoneNettyManager(context);
         TtPhoneDataManager.getInstance().init(context, mPhoneNettyManager);
-//        mQzySensorManager = new QzySensorManager(context);
-        if (SPUtils.containsShare(context, Constans.AUTO_EXITS)) {
-            KLog.i("phone service manager start record ");
-            initProtocal();
-        }
+        initProtocal();
     }
 
     /**
@@ -53,15 +47,6 @@ public class PhoneServiceManager {
     private void initProtocal() {
         mAllLocalPcmManager = AllLocalPcmManager.getInstance(mContext);
     }
-
-    /*@Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onMessageEvent(MessageEventBus event) {
-        switch (event.getType()) {
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_STATE:
-                updatePhoneState((PhoneCmd) event.getObject());
-                break;
-        }
-    }*/
 
     /**
      * 更新天通电话状态
@@ -142,10 +127,5 @@ public class PhoneServiceManager {
         }
 
         releaseProtocal();
-
-
-//        if (mQzySensorManager != null) {
-//            mQzySensorManager.freeSenerState();
-//        }
     }
 }

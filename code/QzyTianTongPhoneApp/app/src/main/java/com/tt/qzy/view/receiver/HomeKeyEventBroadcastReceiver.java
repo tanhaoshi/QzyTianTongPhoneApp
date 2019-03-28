@@ -52,8 +52,7 @@ public class HomeKeyEventBroadcastReceiver extends BroadcastReceiver{
 
         if(action.equals(CLOSE_SYSTEM_DIALOGS)){
             if(Build.BRAND.equals(BUILD_NAME)){
-//                Intent intent1 = new Intent(context, MainActivity.class);
-//                context.startActivity(intent1);
+//
             }
         }
     }
