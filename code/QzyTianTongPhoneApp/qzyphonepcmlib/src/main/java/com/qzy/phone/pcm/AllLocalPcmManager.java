@@ -19,6 +19,8 @@ public class AllLocalPcmManager {
 
     private Context mContext;
 
+    private boolean isAudioDeviceInit = false;
+
     public static AllLocalPcmManager getInstance(Context context){
         if(instance == null){
             instance = new AllLocalPcmManager(context);
@@ -34,7 +36,6 @@ public class AllLocalPcmManager {
     private void init(){
        try{
            Log.e("zyj","...AllLocalPcmManager........init.......");
-           NativeAudio.createEngine(8000,1,1,480);
            thread = new Thread(new Runnable() {
                @Override
                public void run() {
@@ -46,16 +47,46 @@ public class AllLocalPcmManager {
        }catch (Exception e){
            e.printStackTrace();
        }
+    }
+
+    /**
+     * 初始化audio device
+     */
+    public void initAudioDevice(){
+        try{
+            if(!isAudioDeviceInit) {
+                isAudioDeviceInit = true;
+                NativeAudio.createEngine(8000, 1, 1, 480);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 
+    /**
+     * 释放播放器
+     */
+    public void releaseAudioDevice(){
+        try{
+            isAudioDeviceInit = false;
+            NativeAudio.realeseAudioDevice();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void start(){
         try{
             Log.e("zyj","...AllLocalPcmManager........start.......");
             if(thread != null) {
+
+                initAudioDevice();
+
                 Log.i("zyj","start play !!!!");
                 NativeAudio.startPlayer();
+
+                Log.i("zyj","start record !!!!");
                 NativeAudio.startRecord();
             }
         }catch (Exception e){
@@ -67,6 +98,7 @@ public class AllLocalPcmManager {
         try{
             Log.e("startPlayer","...AllLocalPcmManager........startPlayer.......");
             if(thread != null){
+                initAudioDevice();
                 NativeAudio.startPlayer();
             }
            // NativeAudio.startRecord();
@@ -81,6 +113,7 @@ public class AllLocalPcmManager {
             if(thread != null){
                 NativeAudio.stopPlayer();
                 NativeAudio.stopRecord();
+                releaseAudioDevice();
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -91,7 +124,7 @@ public class AllLocalPcmManager {
     public void free(){
         try{
             Log.e("zyj","...AllLocalPcmManager........free.......");
-
+            NativeAudio.realeseAudioDevice();
             NativeAudio.shutdown();
 
             if(thread != null || thread.isAlive()){

@@ -27,6 +27,7 @@ public class NativeAudio {
     public static native void stopRecord();
     public static native void stopPlayer();
 
+    public static native void realeseAudioDevice();
 
 
 }
