@@ -382,5 +382,10 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
         parseGpsPostion(phoneCmd);
     }
 
+    @Override
+    public void isServerSosStatus(Object o) {
+        getServerSosStatus(o);
+    }
+
 
 }
