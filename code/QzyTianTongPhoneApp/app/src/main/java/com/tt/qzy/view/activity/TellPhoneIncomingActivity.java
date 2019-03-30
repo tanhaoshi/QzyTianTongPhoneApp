@@ -18,6 +18,7 @@ import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.tt.phone.data.impl.ITtPhoneCallStateBackListener;
 import com.qzy.tt.phone.data.impl.ITtPhoneCallStateLisenter;
+import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.application.TtPhoneApplication;
@@ -218,6 +219,10 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
             case RING:
                 break;
             case CALL:
+                if(!CommonData.getInstance().isCallingIp(PhoneStateUtils.getTtPhoneStateNowCallingIp(cmd))){
+                    KLog.d("is not me calling  = ");
+                    break;
+                }
                 onCallingState();
                 break;
             case HUANGUP:

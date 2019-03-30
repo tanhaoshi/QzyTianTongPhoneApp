@@ -332,6 +332,7 @@ public class CmdHandler {
     }
 
     private void incommingState(String number) {
+        KLog.e("incommingState number = " + number);
        /* Intent intent = new Intent("com.qzy.tt.incoming");
         intent.putExtra("phone_number",number);
         context.sendBroadcast(intent);*/

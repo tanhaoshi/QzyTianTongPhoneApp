@@ -93,13 +93,13 @@ public class PhoneServiceManager {
                 isRing = false;
                 break;
             case RING:
-                if (isCallingIp(callingIp)) {
+                if (CommonData.getInstance().isCallingIp(callingIp)) {
                     isRing = true;
                     startPlayerProtocal();
                 }
                 break;
             case CALL:
-                if (isCallingIp(callingIp)) {
+                if (CommonData.getInstance().isCallingIp(callingIp)) {
                     if (!isRing) {
                         startPlayerProtocal();
                     }
@@ -125,16 +125,6 @@ public class PhoneServiceManager {
     }
 
 
-    /**
-     * 是否是自己在通话
-     *
-     * @param ip
-     * @return
-     */
-    private boolean isCallingIp(String ip) {
-
-        return ip.equals(CommonData.getInstance().getLocalWifiIp());
-    }
 
     /**
      * 开始录音

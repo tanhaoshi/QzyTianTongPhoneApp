@@ -16,6 +16,7 @@ import com.qzy.data.PhoneCmd;
 import com.qzy.data.PhoneStateUtils;
 
 import com.qzy.phone.pcm.AllLocalPcmManager;
+import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.tt.phone.data.impl.ITtPhoneCallStateLisenter;
 import com.qzy.utils.AndroidVoiceManager;
@@ -127,7 +128,7 @@ public class TellPhoneActivity extends AppCompatActivity {
         TtPhoneDataManager.getInstance().setTtPhoneCallStateLisenter("TellPhoneActivity", new ITtPhoneCallStateLisenter() {
             @Override
             public void onTtPhoneCallState(PhoneCmd phoneCmd) {
-                updatePhoneState(phoneCmd);
+                    updatePhoneState(phoneCmd);
             }
         });
 
@@ -253,6 +254,10 @@ public class TellPhoneActivity extends AppCompatActivity {
             case RING:
                 break;
             case CALL:
+                if(!CommonData.getInstance().isCallingIp(PhoneStateUtils.getTtPhoneStateNowCallingIp(cmd))){
+                    KLog.d("is not me calling  = ");
+                    break;
+                }
                 if (isFinsh) {
                     long timeDuration = System.currentTimeMillis() - startTime;
                     if (timeDuration < 5 * 1000) {

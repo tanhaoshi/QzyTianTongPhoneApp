@@ -59,6 +59,18 @@ public class CommonData {
     }
 
     /**
+     * 是否是自己在通话
+     *
+     * @param ip
+     * @return
+     */
+    public boolean isCallingIp(String ip) {
+
+        return ip.equals(CommonData.getInstance().getLocalWifiIp());
+    }
+
+
+    /**
      * 释放资源
      */
     public void free() {
