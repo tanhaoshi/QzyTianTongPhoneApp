@@ -417,6 +417,9 @@ public class SmsPhoneManager {
                         String phone = sosMessage.getPhoneNumber();
 
                         if (!TextUtils.isEmpty(phone)) {
+                            if(sosMessage != null) {
+                                LogUtils.e("send sos msg ...." + sosMessage.toString());
+                            }
                             sendSms("192.168.43.1", phone, message);
                         }
 
