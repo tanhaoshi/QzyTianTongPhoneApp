@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.text.TextUtils;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.lib.utils.QzySystemUtils;
@@ -49,8 +50,12 @@ public class WifiUtils {
         if (TextUtils.isEmpty(ssid)) {
             ssid = QzyTtContants.WIFI_SSID + QzySystemUtils.getEmmcId();
             setSsidToSharedpref(ssid);
-        }*/                                         //QzySystemUtils.getEmmcId()
-        String ssid = QzyTtContants.WIFI_SSID + QzySystemUtils.getSerialNumberCustom();
+        }*/
+        //QzySystemUtils.getEmmcId()
+        String ssid = QzySystemUtils.getSerialNumberCustom();
+        if(TextUtils.isEmpty(ssid)){
+            ssid = QzySystemUtils.getEmmcId();
+        }
         return ssid;
     }
 
