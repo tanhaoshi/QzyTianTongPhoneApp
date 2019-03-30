@@ -21,13 +21,17 @@ import com.qzy.utils.IPUtil;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.activity.UserEditorsActivity;
+import com.tt.qzy.view.bean.DatetimeModel;
 import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
 import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.Constans;
+import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.NetworkUtil;
 import com.tt.qzy.view.view.MainFragmentView;
+
+import java.util.Date;
 
 /**
  * Created by yj.zhang on 2018/9/17.
@@ -368,9 +372,16 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     @Override
     public void isTtServerConnected(boolean connected) {
         saveLocalWIFIIP();
+        mView.get().connectedState(connected);
+
         //请求sos状态
         TtPhoneDataManager.getInstance().getTtPhoneSosState();
-        mView.get().connectedState(connected);
+
+        //发送手机时间到服务器端
+        if (TtPhoneDataManager.getInstance() != null) {
+            DatetimeModel datetimeModel = new DatetimeModel(DateUtil.backTimeFomat(new Date()));
+            TtPhoneDataManager.getInstance().setDateAndTime(datetimeModel);
+        }
 
     }
 

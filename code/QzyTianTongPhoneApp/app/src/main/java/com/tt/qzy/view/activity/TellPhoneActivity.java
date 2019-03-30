@@ -57,7 +57,7 @@ public class TellPhoneActivity extends AppCompatActivity {
     private TellPhoneActivityPresenter mTellPhoneActivityPresenter;
 
     private QzySensorManager mQzySensorManager;
-//    private AnswerBellManager mAnswerBellManager;
+    private AnswerBellManager mAnswerBellManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +105,7 @@ public class TellPhoneActivity extends AppCompatActivity {
             text_state.setText("正在接听");
             onCallingState();
         } else {
-//            mAnswerBellManager = new AnswerBellManager(TtPhoneApplication.getInstance());
+            mAnswerBellManager = new AnswerBellManager(TtPhoneApplication.getInstance());
         }
 
         setTtPhoneCallState();
@@ -246,17 +246,23 @@ public class TellPhoneActivity extends AppCompatActivity {
                         break;
                     }
                 }
-//                if(mAnswerBellManager != null){
-//                    mAnswerBellManager.stopPlay();
-//                }
+                if(mAnswerBellManager != null){
+                    mAnswerBellManager.stopPlay();
+                }
                 onEndCallState();
                 break;
             case RING:
+                if(mAnswerBellManager != null){
+                    mAnswerBellManager.stopPlay();
+                }
                 break;
             case CALL:
                 if(!CommonData.getInstance().isCallingIp(PhoneStateUtils.getTtPhoneStateNowCallingIp(cmd))){
                     KLog.d("is not me calling  = ");
                     break;
+                }
+                if(mAnswerBellManager != null){
+                    mAnswerBellManager.stopPlay();
                 }
                 if (isFinsh) {
                     long timeDuration = System.currentTimeMillis() - startTime;
@@ -264,9 +270,6 @@ public class TellPhoneActivity extends AppCompatActivity {
                         break;
                     }
                 }
-//                if(mAnswerBellManager != null){
-//                    mAnswerBellManager.stopPlay();
-//                }
                 onCallingState();
                 break;
             case HUANGUP:
@@ -281,17 +284,17 @@ public class TellPhoneActivity extends AppCompatActivity {
                         break;
                     }
                 }
-//                if(mAnswerBellManager != null){
-//                    mAnswerBellManager.stopPlay();
-//                }
+                if(mAnswerBellManager != null){
+                    mAnswerBellManager.stopPlay();
+                }
                 onEndCallState();
                 break;
             case INCOMING:
                 break;
             case UNRECOGNIZED:
-//                if(mAnswerBellManager != null){
-//                    mAnswerBellManager.stopPlay();
-//                }
+                if(mAnswerBellManager != null){
+                    mAnswerBellManager.stopPlay();
+                }
                 onEndCallState();
                 break;
         }
@@ -319,10 +322,10 @@ public class TellPhoneActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mHandler = null;
-//        if(mAnswerBellManager != null){
-//            mAnswerBellManager.release();
-//            mAnswerBellManager = null;
-//        }
+        if(mAnswerBellManager != null){
+            mAnswerBellManager.release();
+            mAnswerBellManager = null;
+        }
         AndroidVoiceManager.setVoiceMusic(this);
     }
 }
