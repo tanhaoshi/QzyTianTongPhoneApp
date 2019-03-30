@@ -135,7 +135,12 @@ public class BroadcastManager {
            LogUtils.i("send Phone STATE ... 1111111");
            mServer.initTtPcmDevice();
            mServer.onPhoneStateChange(TtPhoneState.RING);
+
+       }else if(0 == state){
+           mServer.initTtPcmDevice();
+           mServer.onPhoneStateChange(TtPhoneState.CALL);
        }
+
     }
 
     /**
