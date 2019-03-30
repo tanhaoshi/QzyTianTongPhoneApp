@@ -91,6 +91,7 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
             mShortMessageFragment = (ShortMessageFragment)fragmentManager.findFragmentByTag("mShortMessageFragment");
             mMailListFragment     = (MailListFragment)fragmentManager.findFragmentByTag("mMailListFragment");
         }
+        startService();
     }
 
     @Override
@@ -258,7 +259,6 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     @Override
     protected void onStart() {
         super.onStart();
-        startService();
         mPresenter.getAppversionRequest();
         setDataListener();
     }

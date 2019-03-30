@@ -83,6 +83,8 @@ public class TellPhoneActivity extends AppCompatActivity {
         input_call.setListener(new InputPwdViewCall.InputPwdListener() {
             @Override
             public void inputString(String diapadNumber) {
+
+                mTellPhoneActivityPresenter.endCall();
                 //挂断
                 onEndCallState();
             }
@@ -204,7 +206,6 @@ public class TellPhoneActivity extends AppCompatActivity {
      * 挂断状态
      */
     private void onEndCallState() {
-        mTellPhoneActivityPresenter.endCall();
         if(mHandler != null) {
             mHandler.sendEmptyMessage(msg_calling_time_remove);
         }
@@ -237,6 +238,7 @@ public class TellPhoneActivity extends AppCompatActivity {
                     LogUtils.e("timeDuration1 = " + timeDuration1 + " count = " + count);
                     if (timeDuration1 < 5 * 1000 && count > 0) {
                         //EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber.getText().toString()));
+
                         dialPhoneToServer(phoneNumber.getText().toString().trim());
                         count--;
                         countTime();

@@ -28,7 +28,6 @@ public class NettyClient {
 
     private NioEventLoopGroup groupConnected;
 
-    Channel channel;
 
     //连接线程
     private Thread mThread;
@@ -40,6 +39,7 @@ public class NettyClient {
     private IConnectedReadDataListener connectedReadDataListener;
 
     public NettyClient(IConnectedReadDataListener listener){
+
         connectedReadDataListener = listener;
     }
 
@@ -63,7 +63,7 @@ public class NettyClient {
                     // 指定EventLoopGroup
                     bootstrap.group(groupConnected);
                     // 连接到目标IP的8000端口的服务端
-                    channel = bootstrap.connect(new InetSocketAddress(ip, port)).sync().channel();
+                    Channel channel = bootstrap.connect(new InetSocketAddress(ip, port)).sync().channel();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -149,7 +149,7 @@ public class NettyClient {
 
         @Override
         public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-            LogUtils.e("channelReadComplete ");
+            //LogUtils.e("channelReadComplete ");
             connectHanlerCtx = ctx;
 
             if (connectedReadDataListener != null && dataBuf != null) {
@@ -205,10 +205,12 @@ public class NettyClient {
             if(groupConnected != null){
                 groupConnected.shutdownGracefully();
             }
-            if(mThread != null && mThread.isAlive()){
-                mThread.interrupt();
-            }
+            if(mThread != null || mThread.isAlive()){
+              //  if(mThread.isAlive()){
+                    mThread.interrupt();
+             //  }
 
+            }
         }catch (Exception e){
             e.printStackTrace();
         }

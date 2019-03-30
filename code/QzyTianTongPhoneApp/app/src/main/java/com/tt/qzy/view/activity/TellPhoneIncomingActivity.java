@@ -95,6 +95,9 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
                 break;
             case R.id.btn_endcall:
 
+                //挂断
+                mTellPhoneActivityPresenter.endCall();
+
                 onEndCallState();
 
                 String phoneName = getPhoneKeyForName(phoneNumber);
@@ -142,7 +145,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
      * 设置电话设备占用回调
      */
     private void setTtPhoneCallStateBackListener() {
-        TtPhoneDataManager.getInstance().setITtPhoneCallStateBackListener("BaseActivity", new ITtPhoneCallStateBackListener() {
+        TtPhoneDataManager.getInstance().setITtPhoneCallStateBackListener("TellPhoneIncomingActivity", new ITtPhoneCallStateBackListener() {
             @Override
             public void onPhoneCallStateBack(PhoneCmd phoneCmd) {
                 onTianTongCallStatus(phoneCmd);
@@ -198,7 +201,6 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
      */
     private void onEndCallState() {
         RingManager.stopDefaultCallMediaPlayer(TtPhoneApplication.getInstance());
-        mTellPhoneActivityPresenter.endCall();
         finish();
     }
 

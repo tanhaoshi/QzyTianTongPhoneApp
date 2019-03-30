@@ -21,6 +21,8 @@ public class AllLocalPcmManager {
 
     private boolean isAudioDeviceInit = false;
 
+    private boolean isStart = false;
+
     public static AllLocalPcmManager getInstance(Context context){
         if(instance == null){
             instance = new AllLocalPcmManager(context);
@@ -35,11 +37,11 @@ public class AllLocalPcmManager {
 
     private void init(){
        try{
-           Log.e("zyj","...AllLocalPcmManager........init.......");
+           Log.e("NativeAudio_zyj","...AllLocalPcmManager........init.......");
            thread = new Thread(new Runnable() {
                @Override
                public void run() {
-                   Log.e("zyj","...AllLocalPcmManager........init...22222...");
+                   Log.e("NativeAudio_zyj","...AllLocalPcmManager........init...22222...");
                    NativeAudio.createUdpSocket("192.168.43.1",(short) 8999);
                }
            });
@@ -69,8 +71,10 @@ public class AllLocalPcmManager {
      */
     public void releaseAudioDevice(){
         try{
-            isAudioDeviceInit = false;
-            NativeAudio.realeseAudioDevice();
+            if(isAudioDeviceInit) {
+                isAudioDeviceInit = false;
+                NativeAudio.realeseAudioDevice();
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -78,16 +82,21 @@ public class AllLocalPcmManager {
 
     public void start(){
         try{
-            Log.e("zyj","...AllLocalPcmManager........start.......");
+            Log.e("NativeAudio_zyj","...AllLocalPcmManager........start.......");
             //if(thread != null) {
 
+                isStart = true;
                 initAudioDevice();
 
-                Log.i("zyj","start play !!!!");
-                NativeAudio.startPlayer();
+                Log.i("NativeAudio_zyj", "start play !!!!");
+                //NativeAudio.startPlayer();
 
-                Log.i("zyj","start record !!!!");
-                NativeAudio.startRecord();
+                Log.i("NativeAudio_zyj", "start record !!!!");
+            long startTime = System.currentTimeMillis();
+            Log.e("NativeAudio_zyj","...AllLocalPcmManager........startRecord....start..... " );
+            NativeAudio.startRecord();
+            Log.e("NativeAudio_zyj","...AllLocalPcmManager........startRecord....end..... "  + (System.currentTimeMillis() - startTime) );
+
            // }
         }catch (Exception e){
             e.printStackTrace();
@@ -96,10 +105,15 @@ public class AllLocalPcmManager {
 
     public void startPlayer(){
         try{
-            Log.e("zyj","...AllLocalPcmManager........startPlayer.......");
+            Log.e("NativeAudio_zyj","...AllLocalPcmManager........startPlayer.......");
             //if(thread != null){
                 initAudioDevice();
-                NativeAudio.startPlayer();
+
+            long startTime = System.currentTimeMillis();
+            Log.e("NativeAudio_zyj","...AllLocalPcmManager........startPlayer....start..... " );
+            NativeAudio.startPlayer();
+            Log.e("NativeAudio_zyj","...AllLocalPcmManager........startPlayer....end..... "  + (System.currentTimeMillis() - startTime) );
+
            // }
            // NativeAudio.startRecord();
         }catch (Exception e){
@@ -109,21 +123,32 @@ public class AllLocalPcmManager {
 
     public void stop(){
         try{
-            Log.e("zyj","...AllLocalPcmManager........stop.......");
-           // if(thread != null){
+            Log.e("NativeAudio_zyj","...AllLocalPcmManager........stop....isAudioDeviceInit... " + isAudioDeviceInit); // if(thread != null){
+            if(isAudioDeviceInit) {
+                Log.e("NativeAudio_zyj","...AllLocalPcmManager........stopPlayer....start..... " );
+                Long startTime = System.currentTimeMillis();
                 NativeAudio.stopPlayer();
+                Log.e("NativeAudio_zyj","...AllLocalPcmManager........stopPlayer....end..... "  + (System.currentTimeMillis() - startTime) );
+
+                startTime = System.currentTimeMillis();
+                Log.e("NativeAudio_zyj","...AllLocalPcmManager........stopRecord....start..... " );
                 NativeAudio.stopRecord();
+                Log.e("NativeAudio_zyj","...AllLocalPcmManager........stopRecord....end..... "  + (System.currentTimeMillis() - startTime) );
+
+                startTime = System.currentTimeMillis();
+                Log.e("NativeAudio_zyj","...AllLocalPcmManager........releaseAudioDevice....start..... " );
                 releaseAudioDevice();
+                Log.e("NativeAudio_zyj","...AllLocalPcmManager........releaseAudioDevice....end..... "  + (System.currentTimeMillis() - startTime) );
+            }
           //  }
         }catch (Exception e){
             e.printStackTrace();
         }
-
     }
 
     public void free(){
         try{
-            Log.e("zyj","...AllLocalPcmManager........free.......");
+            Log.e("NativeAudio_zyj","...AllLocalPcmManager........free.......");
             NativeAudio.realeseAudioDevice();
             NativeAudio.shutdown();
 

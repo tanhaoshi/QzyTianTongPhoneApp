@@ -1,6 +1,7 @@
 package com.qzy.tt.phone.service;
 
 import android.content.Context;
+import android.util.Log;
 
 
 import com.qzy.data.PhoneCmd;
@@ -81,31 +82,44 @@ public class PhoneServiceManager {
      *
      * @param cmd
      */
+    private boolean isRing = false;
+
     private void updatePhoneState(PhoneCmd cmd) {
         String callingIp = PhoneStateUtils.getTtPhoneStateNowCallingIp(cmd);
-        KLog.i(" callingIp = " + callingIp  + " phone state = " + PhoneStateUtils.getTtPhoneState(cmd).ordinal() + " localip = " + CommonData.getInstance().getLocalWifiIp());
+        KLog.i(" callingIp = " + callingIp + " phone state = " + PhoneStateUtils.getTtPhoneState(cmd).ordinal() + " localip = " + CommonData.getInstance().getLocalWifiIp());
         switch (PhoneStateUtils.getTtPhoneState(cmd)) {
             case NOCALL:
                 stopProtocal();
+                isRing = false;
                 break;
             case RING:
-                if(isCallingIp(callingIp)) {
+                if (isCallingIp(callingIp)) {
+                    isRing = true;
                     startPlayerProtocal();
                 }
                 break;
             case CALL:
-                if(isCallingIp(callingIp)) {
+                if (isCallingIp(callingIp)) {
+                    if (!isRing) {
+                        startPlayerProtocal();
+                    }
                     startProtocal();
                 }
 
                 break;
             case HUANGUP:
+                isRing = false;
                 stopProtocal();
                 break;
             case INCOMING:
+                isRing = false;
                 break;
             case UNRECOGNIZED:
+                isRing = false;
                 stopProtocal();
+                break;
+            default:
+                isRing = false;
                 break;
         }
     }
@@ -113,6 +127,7 @@ public class PhoneServiceManager {
 
     /**
      * 是否是自己在通话
+     *
      * @param ip
      * @return
      */
@@ -125,18 +140,29 @@ public class PhoneServiceManager {
      * 开始录音
      */
     public void startProtocal() {
-        if (mAllLocalPcmManager != null) {
-            mAllLocalPcmManager.start();
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (mAllLocalPcmManager != null) {
+                    mAllLocalPcmManager.start();
+                }
+            }
+        }).start();
+
     }
 
     /**
      * 开始播放
      */
     public void startPlayerProtocal() {
-        if (mAllLocalPcmManager != null) {
-            mAllLocalPcmManager.startPlayer();
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (mAllLocalPcmManager != null) {
+                    mAllLocalPcmManager.startPlayer();
+                }
+            }
+        }).start();
 
     }
 
@@ -144,9 +170,15 @@ public class PhoneServiceManager {
      * 结束录音
      */
     public void stopProtocal() {
-        if (mAllLocalPcmManager != null) {
-            mAllLocalPcmManager.stop();
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (mAllLocalPcmManager != null) {
+                    mAllLocalPcmManager.stop();
+                }
+            }
+        }).start();
+
     }
 
 
@@ -154,15 +186,22 @@ public class PhoneServiceManager {
      * 释放协议资源
      */
     private void releaseProtocal() {
-        if (mAllLocalPcmManager != null) {
-            mAllLocalPcmManager.free();  // modifed by yj.zhang 2019 03 19  把onstop改成了free
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (mAllLocalPcmManager != null) {
+                    mAllLocalPcmManager.free();  // modifed by yj.zhang 2019 03 19  把onstop改成了free
+                }
+            }
+        }).start();
+
     }
 
     /**
      * 释放
      */
     public void relese() {
+        KLog.e("relese ..... ");
         if (mPhoneNettyManager != null) {
             mPhoneNettyManager.free();
         }

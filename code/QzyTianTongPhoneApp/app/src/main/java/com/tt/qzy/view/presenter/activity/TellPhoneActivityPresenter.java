@@ -38,6 +38,7 @@ public class TellPhoneActivityPresenter {
      * 底层挂断接口
      */
     private void endCallToServer() {
+        LogUtils.e(" tellphoneactivitypersenter endCallToServer = ");
         TtPhoneDataManager.getInstance().hangupTtPhone();
     }
 

@@ -58,9 +58,9 @@ public class TraceServiceImpl extends AbsWorkService {
             // alive
         }else{
             // dead
-            Intent intent = new Intent(this, TtPhoneService.class);
+           /* Intent intent = new Intent(this, TtPhoneService.class);
             startService(intent);
-            SPUtils.putShare(this, Constans.SERVER_FLAG,true);
+            SPUtils.putShare(this, Constans.SERVER_FLAG,true);*/
         }
     }
 

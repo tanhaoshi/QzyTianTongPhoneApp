@@ -72,7 +72,7 @@ public class CmdHandler {
                 if (inputStream.available() > 0 && PrototocalTools.readToFour0x5aHeaderByte(inputStream)) {
                     int protoId = inputStream.readInt();
                     int len = inputStream.readInt();//包长度
-                    LogUtils.e(" protoId = " + protoId + " len = " + len);
+                   // LogUtils.e(" protoId = " + protoId + " len = " + len);
                     if (protoId > 100 && protoId % 2 == 1) {
                         handProcessCmd(protoId, inputStream);
                     }
@@ -255,8 +255,9 @@ public class CmdHandler {
      */
     private void pasreCallPhoneState(int protoId, CallPhoneStateProtos.CallPhoneState callPhoneState) {
         CallPhoneStateProtos.CallPhoneState.PhoneState state = callPhoneState.getPhoneState();
-        KLog.i("currentPhoneState = " + currentPhoneState.ordinal() + "    state = " + state.ordinal());
+
         if (currentPhoneState != state) { // 与上次的状态不同才改变
+            KLog.i("currentPhoneState = " + currentPhoneState.ordinal() + "    state = " + state.ordinal());
             currentPhoneState = state;
             if (state == CallPhoneStateProtos.CallPhoneState.PhoneState.INCOMING) {
                 incommingState(callPhoneState.getPhoneNumber());
