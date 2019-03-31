@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ShortMessageManager {
 
-   public static ShortMessageManager sShortMessageManager;
+   public static volatile ShortMessageManager sShortMessageManager;
 
    private DaoMaster daoMaster;
    private DaoSession daoSession;
@@ -28,7 +28,11 @@ public class ShortMessageManager {
 
    public static ShortMessageManager getInstance(Context context){
        if(sShortMessageManager == null){
-           sShortMessageManager = new ShortMessageManager(context);
+           synchronized (ShortMessageManager.class){
+               if(sShortMessageManager == null){
+                   sShortMessageManager = new ShortMessageManager(context);
+               }
+           }
        }
        return sShortMessageManager;
    }
@@ -79,8 +83,8 @@ public class ShortMessageManager {
         if (shortMessageDaos == null || shortMessageDaos.isEmpty()) {
             return;
         }
-        DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
-        DaoSession daoSession = daoMaster.newSession();
+//        DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
+//        DaoSession daoSession = daoMaster.newSession();
         ShortMessageDaoDao shortMessageDaoDao = daoSession.getShortMessageDaoDao();
         shortMessageDaoDao.insertInTx(shortMessageDaos);
     }
@@ -89,8 +93,8 @@ public class ShortMessageManager {
         if (shortMessageDao == null) {
             return;
         }
-        DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
-        DaoSession daoSession = daoMaster.newSession();
+//        DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
+//        DaoSession daoSession = daoMaster.newSession();
         ShortMessageDaoDao shortMessageDaoDao = daoSession.getShortMessageDaoDao();
         shortMessageDaoDao.insert(shortMessageDao);
     }

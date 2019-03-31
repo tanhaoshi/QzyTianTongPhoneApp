@@ -34,17 +34,17 @@ public class CallLogManager {
             @Override
             public void run() {
                 int page = 0;
-                int pageCount = 10;
-                while (true) {
+                int pageCount = 20;
+//                while (true) {
                     LogUtils.e("getCall log sync .....");
                     List<CallLogInfo> callLogInfo = PhoneUtils.getCallLog(context, page, pageCount);
-                    page++;
-                    if (callLogInfo == null || callLogInfo.size() <= 0) {
-                        TtCallRecordProtos.TtCallRecordProto.Builder listRecorder = TtCallRecordProtos.TtCallRecordProto.newBuilder();
-                        phoneNettyManager.sendCallLogToPhoneClient(ip, listRecorder.build());
-                        LogUtils.e("getCall log fininsh .....");
-                        break;
-                    }
+//                    page++;
+//                    if (callLogInfo == null || callLogInfo.size() <= 0) {
+//                        TtCallRecordProtos.TtCallRecordProto.Builder listRecorder = TtCallRecordProtos.TtCallRecordProto.newBuilder();
+//                        phoneNettyManager.sendCallLogToPhoneClient(ip, listRecorder.build());
+//                        LogUtils.e("getCall log fininsh .....");
+//                        break;
+//                    }
 
                     LogUtils.e("callLogInfo size  = " + callLogInfo.size());
                     TtCallRecordProtos.TtCallRecordProto.Builder listRecorder = TtCallRecordProtos.TtCallRecordProto.newBuilder();
@@ -65,7 +65,7 @@ public class CallLogManager {
                         phoneNettyManager.sendCallLogToPhoneClient(ip, listRecorder.build());
                     }
                 }
-            }
+//            }
         });
 
     }
@@ -82,17 +82,17 @@ public class CallLogManager {
             @Override
             public void run() {
                 int page = 0;
-                int pageCount = 10;
-                while (true) {
+                int pageCount = 20;
+//                while (true) {
                     LogUtils.e("getSms sync .....");
                     List<SmsInfo> smsList = PhoneUtils.getSms(context, page, pageCount);
-                    page++;
-                    if (smsList == null || smsList.size() <= 0) {
-                        TtShortMessageProtos.TtShortMessage.Builder ttShortMessage = TtShortMessageProtos.TtShortMessage.newBuilder();
-                        phoneNettyManager.sendCallLogToPhoneClient(ip, ttShortMessage.build());
-                        LogUtils.e("getSms sync finish .....");
-                        break;
-                    }
+//                    page++;
+//                    if (smsList == null || smsList.size() <= 0) {
+//                        TtShortMessageProtos.TtShortMessage.Builder ttShortMessage = TtShortMessageProtos.TtShortMessage.newBuilder();
+//                        phoneNettyManager.sendCallLogToPhoneClient(ip, ttShortMessage.build());
+//                        LogUtils.e("getSms sync finish .....");
+//                        break;
+//                    }
                     LogUtils.e("getSms sync size = " + smsList.size());
                     TtShortMessageProtos.TtShortMessage.Builder ttShortMessage = TtShortMessageProtos.TtShortMessage.newBuilder();
                     for (SmsInfo smsInfo : smsList) {
@@ -115,7 +115,7 @@ public class CallLogManager {
                     }
 
                 }
-            }
+//            }
         });
     }
 

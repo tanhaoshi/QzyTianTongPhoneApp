@@ -162,7 +162,6 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView> {
             @Override
             public void subscribe(ObservableEmitter<List<CallRecordDao>> e) {
                 List<CallRecordDao> callRecordDaos = CallRecordManager.getInstance(mContext).queryCallRecordList();
-                KLog.i("look over callrecod data getCall = " + JSON.toJSONString(callRecordDaos));
                 mView.get().getDaoListSize(callRecordDaos.size());
                 List<CallRecordDao> listDao = CallRecordManager.getInstance(mContext).limitCallRecordList(offset, limit);
                 mView.get().getListSize(listDao.size());

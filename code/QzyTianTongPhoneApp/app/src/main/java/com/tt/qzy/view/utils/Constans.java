@@ -5,8 +5,8 @@ package com.tt.qzy.view.utils;
  */
 
 public interface Constans {
-    //QzyTTWifi_Tcp_1
-    String STANDARD_WIFI_NAME = "HWA_6";
+    //QzyTTWifi_Tcp_1  conquest
+    String STANDARD_WIFI_NAME = "conquest";
     String CRY_HELP_PHONE = "cry_help_phone";
     String CRY_HELP_SHORTMESSAGE = "cry_help_shortmessage";
     String HELP_SHORTMESSAGE = "help_shortmessage";
@@ -45,4 +45,7 @@ public interface Constans {
     String SERVER_FLAG = "server_flag";
     //存在 exist 退出 exits
     String AUTO_EXITS = "auto_exits";
+
+    //SOS打电话状态值保存
+    String SOS_FLAG = "sos_flag";
 }

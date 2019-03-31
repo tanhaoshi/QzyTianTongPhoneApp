@@ -39,7 +39,9 @@ public class TimerService extends Service{
             mTimeTask = new TimeTask(timerDuration, new TimerTask() {
                 @Override
                 public void run() {
-                    timerSendMessage();
+//                    if(!SPUtils.containsShare(TimerService.this,Constans.SOS_FLAG)){
+                        timerSendMessage();
+//                    }
                 }
             });
             mTimeTask.start();

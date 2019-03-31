@@ -28,7 +28,9 @@ import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.layout.dialpad.InputPwdViewCall;
 import com.tt.qzy.view.presenter.activity.TellPhoneActivityPresenter;
 import com.tt.qzy.view.utils.AnswerBellManager;
+import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NToast;
+import com.tt.qzy.view.utils.SPUtils;
 
 
 import java.lang.ref.WeakReference;
@@ -288,6 +290,7 @@ public class TellPhoneActivity extends AppCompatActivity {
                     mAnswerBellManager.stopPlay();
                 }
                 onEndCallState();
+//                SPUtils.removeShare(TellPhoneActivity.this, Constans.SOS_FLAG);
                 break;
             case INCOMING:
                 break;
@@ -296,6 +299,7 @@ public class TellPhoneActivity extends AppCompatActivity {
                     mAnswerBellManager.stopPlay();
                 }
                 onEndCallState();
+                SPUtils.removeShare(TellPhoneActivity.this, Constans.SOS_FLAG);
                 break;
         }
     }

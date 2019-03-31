@@ -14,7 +14,7 @@ import java.util.List;
 
 public class CallRecordManager {
 
-    public static CallRecordManager sCallRecordManager;
+    public static volatile CallRecordManager sCallRecordManager;
 
     private DaoMaster daoMaster;
     private DaoSession daoSession;
@@ -27,10 +27,12 @@ public class CallRecordManager {
     }
 
     public static CallRecordManager getInstance(Context context){
-
         if(sCallRecordManager == null){
-
-            sCallRecordManager = new CallRecordManager(context);
+            synchronized (CallRecordManager.class){
+                if(sCallRecordManager == null){
+                    sCallRecordManager = new CallRecordManager(context);
+                }
+            }
         }
 
         return sCallRecordManager;
@@ -79,8 +81,8 @@ public class CallRecordManager {
         if (callRecordDaos == null || callRecordDaos.isEmpty()) {
             return;
         }
-        DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
-        DaoSession daoSession = daoMaster.newSession();
+//        DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
+//        DaoSession daoSession = daoMaster.newSession();
         CallRecordDaoDao callRecordDao = daoSession.getCallRecordDaoDao();
 //        callRecordDao.insertOrReplaceInTx(callRecordDaos);
         callRecordDao.insertInTx(callRecordDaos);
@@ -90,8 +92,8 @@ public class CallRecordManager {
         if( null == dao){
             return;
         }
-        DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
-        DaoSession daoSession = daoMaster.newSession();
+//        DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
+//        DaoSession daoSession = daoMaster.newSession();
         CallRecordDaoDao callRecordDao = daoSession.getCallRecordDaoDao();
         callRecordDao.insert(dao);
     }

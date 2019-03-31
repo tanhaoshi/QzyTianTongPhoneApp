@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
@@ -165,15 +166,22 @@ public class MainFragment extends Fragment implements MainFragmentView{
                 if(mainActivity.isConnectStatus()){
                     if(mainActivity.tt_isSignal){
                         if(sc_settin_testxinlv.isChecked()){
-                            mPresneter.dialPhone(SPUtils.getShare(getActivity(),Constans.CRY_HELP_PHONE,"").toString());
-                            mIntent = new Intent(getActivity(),TimerService.class);
-                            getActivity().startService(mIntent);
-//                            mPresneter.requestGpsPosition(true);
                             main_location.setChecked(true);
+                            SPUtils.putShare(getActivity(),Constans.SOS_FLAG,"value");
+                            mPresneter.dialPhone(SPUtils.getShare(getActivity(),Constans.CRY_HELP_PHONE,"").toString());
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mIntent = new Intent(getActivity(),TimerService.class);
+                                    getActivity().startService(mIntent);
+                                }
+                            },30000);
+//                            mPresneter.requestGpsPosition(true);
                         }else{
+                            SPUtils.removeShare(getActivity(),Constans.SOS_FLAG);
+                            main_location.setChecked(false);
                             getActivity().stopService(mIntent);
 //                            mPresneter.requestGpsPosition(false);
-                            main_location.setChecked(false);
                         }
                     }else{
                         NToast.shortToast(getActivity(), getString(R.string.TMT_THE_DEVICE_NOT_INTERNET_NOW));

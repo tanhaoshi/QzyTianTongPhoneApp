@@ -12,7 +12,6 @@ public class NativeAudio {
 
     }
 
-
     /*sampleRate 8000, input_chs , outpu_chs 都传入1， frames 传入480*/
     public static native void createEngine(int sampleRate, int input_chs, int output_chs, int frames);
     // true == PLAYING, false == PAUSED
