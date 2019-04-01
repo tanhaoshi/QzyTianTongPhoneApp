@@ -153,6 +153,10 @@ public class CmdHandler implements ICmdHandler {
                     TtCallRecordProtos.TtCallRecordProto ttCallRecordProto = TtCallRecordProtos.TtCallRecordProto.parseDelimitedFrom(inputStream);
                     senMsg(protoId,ttCallRecordProto);
                     break;
+                case PrototocalTools.IProtoServerIndex.request_server_sos_info_msg:
+                    TtPhoneSosMessageProtos.TtPhoneSosMessage ttPhoneSosMessage1 = TtPhoneSosMessageProtos.TtPhoneSosMessage.parseDelimitedFrom(inputStream);
+                    senMsg(protoId,ttPhoneSosMessage1);
+                    break;
                 default:
                     break;
             }
