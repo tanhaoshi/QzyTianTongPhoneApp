@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
@@ -23,7 +22,6 @@ import com.qzy.tt.data.TtPhonePositionProtos;
 import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.SettingsActivity;
-import com.tt.qzy.view.activity.base.BaseActivity;
 import com.tt.qzy.view.layout.CircleImageView;
 import com.tt.qzy.view.layout.NiftyExpandDialog;
 import com.tt.qzy.view.presenter.fragment.MainFragmentPresenter;
@@ -163,34 +161,37 @@ public class MainFragment extends Fragment implements MainFragmentView{
                     }
                     return;
                 }
+
                 if(mainActivity.isConnectStatus()){
-                    if(mainActivity.tt_isSignal){
+//                    if(mainActivity.tt_isSignal){
                         if(sc_settin_testxinlv.isChecked()){
-                            main_location.setChecked(true);
-                            SPUtils.putShare(getActivity(),Constans.SOS_FLAG,"value");
+                           // main_location.setChecked(true);
                             mPresneter.dialPhone(SPUtils.getShare(getActivity(),Constans.CRY_HELP_PHONE,"").toString());
-                            new Handler().postDelayed(new Runnable() {
+                            mPresneter.switchServerSos(true);
+                           /* new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     mIntent = new Intent(getActivity(),TimerService.class);
                                     getActivity().startService(mIntent);
                                 }
-                            },30000);
+                            },30000);*/
 //                            mPresneter.requestGpsPosition(true);
+
                         }else{
-                            SPUtils.removeShare(getActivity(),Constans.SOS_FLAG);
-                            main_location.setChecked(false);
-                            getActivity().stopService(mIntent);
+                            mPresneter.switchServerSos(false);
+
+                            //main_location.setChecked(false);
+                           // getActivity().stopService(mIntent);
 //                            mPresneter.requestGpsPosition(false);
                         }
                     }else{
                         NToast.shortToast(getActivity(), getString(R.string.TMT_THE_DEVICE_NOT_INTERNET_NOW));
                         sc_settin_testxinlv.setChecked(false);
                     }
-                }else{
-                    NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
-                    sc_settin_testxinlv.setChecked(false);
-                }
+//                }else{
+//                    NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
+//                    sc_settin_testxinlv.setChecked(false);
+//                }
             }
         });
 

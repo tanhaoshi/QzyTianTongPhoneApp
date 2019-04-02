@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -20,9 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
-import com.qzy.phone.pcm.AllLocalPcmManager;
 import com.qzy.tt.phone.service.TtPhoneService;
-import com.socks.library.KLog;
 import com.tt.qzy.view.activity.base.BaseActivity;
 import com.tt.qzy.view.bean.VersionCodeModel;
 import com.tt.qzy.view.db.dao.CallRecordDao;
@@ -34,7 +33,6 @@ import com.tt.qzy.view.fragment.ShortMessageFragment;
 import com.tt.qzy.view.layout.BadgeView;
 import com.tt.qzy.view.layout.NiftyExpandDialog;
 import com.tt.qzy.view.presenter.activity.MainActivityPresenter;
-import com.tt.qzy.view.receiver.HomeKeyListenerHelper;
 import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NToast;
@@ -48,6 +46,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class MainActivity extends BaseActivity<MainActivityView> implements MainActivityView{
 
     @BindView(R.id.shortMessage)
@@ -259,7 +258,7 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     @Override
     protected void onStart() {
         super.onStart();
-        mPresenter.getAppversionRequest();
+//        mPresenter.getAppversionRequest();
         setDataListener();
     }
 

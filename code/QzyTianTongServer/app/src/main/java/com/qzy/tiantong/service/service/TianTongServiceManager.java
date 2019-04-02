@@ -128,13 +128,17 @@ public class TianTongServiceManager implements ITianTongServer {
                 }
                 Global.IP = ip;
 
+                mPhoneNettyManager.getSosMsgInfoip(ip);
+
                 //主动发送当前状态信息
                 mPhoneNettyManager.setNewTimerSend(ip);
+
                 //发送通讯录
                 CallLogManager.syncCallLogInfo(ip, mContext, mPhoneNettyManager);
 
                 //发送短信数据库
                 CallLogManager.syncSmsInfo(ip, mContext, mPhoneNettyManager);
+
 
             }
 

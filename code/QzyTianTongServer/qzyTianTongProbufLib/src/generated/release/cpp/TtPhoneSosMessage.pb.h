@@ -143,6 +143,12 @@ class TtPhoneSosMessage : public ::google::protobuf::Message /* @@protoc_inserti
   ::google::protobuf::int32 delaytime() const;
   void set_delaytime(::google::protobuf::int32 value);
 
+  // optional bool existSetting = 5;
+  void clear_existsetting();
+  static const int kExistSettingFieldNumber = 5;
+  bool existsetting() const;
+  void set_existsetting(bool value);
+
   // @@protoc_insertion_point(class_scope:phonedata.TtPhoneSosMessage)
  private:
 
@@ -151,6 +157,7 @@ class TtPhoneSosMessage : public ::google::protobuf::Message /* @@protoc_inserti
   ::google::protobuf::internal::ArenaStringPtr phonenumber_;
   ::google::protobuf::internal::ArenaStringPtr messagecontent_;
   ::google::protobuf::int32 delaytime_;
+  bool existsetting_;
   mutable int _cached_size_;
   friend void  protobuf_InitDefaults_TtPhoneSosMessage_2eproto_impl();
   friend void  protobuf_AddDesc_TtPhoneSosMessage_2eproto_impl();
@@ -313,6 +320,20 @@ inline void TtPhoneSosMessage::set_delaytime(::google::protobuf::int32 value) {
   
   delaytime_ = value;
   // @@protoc_insertion_point(field_set:phonedata.TtPhoneSosMessage.delaytime)
+}
+
+// optional bool existSetting = 5;
+inline void TtPhoneSosMessage::clear_existsetting() {
+  existsetting_ = false;
+}
+inline bool TtPhoneSosMessage::existsetting() const {
+  // @@protoc_insertion_point(field_get:phonedata.TtPhoneSosMessage.existSetting)
+  return existsetting_;
+}
+inline void TtPhoneSosMessage::set_existsetting(bool value) {
+  
+  existsetting_ = value;
+  // @@protoc_insertion_point(field_set:phonedata.TtPhoneSosMessage.existSetting)
 }
 
 inline const TtPhoneSosMessage* TtPhoneSosMessage::internal_default_instance() {

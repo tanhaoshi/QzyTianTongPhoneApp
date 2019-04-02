@@ -19,6 +19,7 @@ import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtPhoneSignalProtos;
 import com.qzy.tt.data.TtPhoneSimCards;
 import com.qzy.tt.data.TtPhoneSmsProtos;
+import com.qzy.tt.data.TtPhoneSosMessageProtos;
 import com.qzy.tt.data.TtPhoneSosStateProtos;
 import com.qzy.tt.data.TtPhoneUpdateResponseProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
@@ -29,11 +30,14 @@ import com.qzy.tt.phone.data.impl.IMainFragment;
 import com.qzy.tt.phone.data.impl.ITtPhoneDataListener;
 import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
+import com.tt.qzy.view.activity.SosSettingsActivity;
 import com.tt.qzy.view.activity.TellPhoneIncomingActivity;
 import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.presenter.manager.SyncManager;
 import com.tt.qzy.view.utils.AppUtils;
+import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.RingToneUtils;
+import com.tt.qzy.view.utils.SPUtils;
 
 
 import io.netty.buffer.ByteBufInputStream;
@@ -156,11 +160,11 @@ public class CmdHandler {
                     }
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_short_message: // 已完成
-                    TtShortMessageProtos.TtShortMessage ttShortMessage = TtShortMessageProtos.TtShortMessage.parseDelimitedFrom(inputStream);
-                    //mSyncManager.syncShortMessage(ttShortMessage);
-                    if (mAllDataListener != null) {
-                        mAllDataListener.syncShortMessage(ttShortMessage);
-                    }
+//                    TtShortMessageProtos.TtShortMessage ttShortMessage = TtShortMessageProtos.TtShortMessage.parseDelimitedFrom(inputStream);
+//                    //mSyncManager.syncShortMessage(ttShortMessage);
+//                    if (mAllDataListener != null) {
+//                        mAllDataListener.syncShortMessage(ttShortMessage);
+//                    }
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_receiver_short_message: // 已完成
                     TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessageSignal = TtShortMessageProtos.TtShortMessage.ShortMessage.parseDelimitedFrom(inputStream);
@@ -219,6 +223,10 @@ public class CmdHandler {
                     TimerSendProtos.TimerSend timerSend = TimerSendProtos.TimerSend.parseDelimitedFrom(inputStream);
                     handlerAllTimeSend(timerSend);
                     break;
+                case PrototocalTools.IProtoClientIndex.response_server_sos_info_msg:
+                    TtPhoneSosMessageProtos.TtPhoneSosMessage ttPhoneSosMessage = TtPhoneSosMessageProtos.TtPhoneSosMessage.parseDelimitedFrom(inputStream);
+                    parseServerSosInfo(ttPhoneSosMessage);
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -242,7 +250,6 @@ public class CmdHandler {
 
         //gps 位置
         parseGpsPosition(PrototocalTools.IProtoClientIndex.tt_gps_position, send.getTtPhoneGpsPosition());
-
 
     }
 
@@ -369,6 +376,17 @@ public class CmdHandler {
 
     public IAllTtPhoneDataListener getmAllDataListener() {
         return mAllDataListener;
+    }
+
+    /** 解析服务返回SOS保存信息 */
+    private void parseServerSosInfo(TtPhoneSosMessageProtos.TtPhoneSosMessage ttPhoneSosMessage){
+        if(ttPhoneSosMessage != null){
+            if(ttPhoneSosMessage.getExistSetting()){
+                SPUtils.putShare(context, Constans.CRY_HELP_TIMETIMER, ttPhoneSosMessage.getDelaytime());
+                SPUtils.putShare(context, Constans.CRY_HELP_PHONE, ttPhoneSosMessage.getPhoneNumber());
+                SPUtils.putShare(context, Constans.CRY_HELP_SHORTMESSAGE, ttPhoneSosMessage.getMessageContent());
+            }
+        }
     }
 
 }

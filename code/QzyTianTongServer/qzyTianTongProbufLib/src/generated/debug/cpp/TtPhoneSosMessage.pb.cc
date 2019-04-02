@@ -36,11 +36,12 @@ void protobuf_AssignDesc_TtPhoneSosMessage_2eproto() {
       "TtPhoneSosMessage.proto");
   GOOGLE_CHECK(file != NULL);
   TtPhoneSosMessage_descriptor_ = file->message_type(0);
-  static const int TtPhoneSosMessage_offsets_[4] = {
+  static const int TtPhoneSosMessage_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtPhoneSosMessage, ip_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtPhoneSosMessage, phonenumber_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtPhoneSosMessage, messagecontent_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtPhoneSosMessage, delaytime_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtPhoneSosMessage, existsetting_),
   };
   TtPhoneSosMessage_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -94,11 +95,12 @@ void protobuf_AddDesc_TtPhoneSosMessage_2eproto_impl() {
 
   protobuf_InitDefaults_TtPhoneSosMessage_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\027TtPhoneSosMessage.proto\022\tphonedata\"_\n\021"
+    "\n\027TtPhoneSosMessage.proto\022\tphonedata\"u\n\021"
     "TtPhoneSosMessage\022\n\n\002ip\030\001 \001(\t\022\023\n\013phoneNu"
     "mber\030\002 \001(\t\022\026\n\016messageContent\030\003 \001(\t\022\021\n\tde"
-    "laytime\030\004 \001(\005B*\n\017com.qzy.tt.dataB\027TtPhon"
-    "eSosMessageProtosb\006proto3", 185);
+    "laytime\030\004 \001(\005\022\024\n\014existSetting\030\005 \001(\010B*\n\017c"
+    "om.qzy.tt.dataB\027TtPhoneSosMessageProtosb"
+    "\006proto3", 207);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "TtPhoneSosMessage.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_TtPhoneSosMessage_2eproto);
@@ -133,6 +135,7 @@ const int TtPhoneSosMessage::kIpFieldNumber;
 const int TtPhoneSosMessage::kPhoneNumberFieldNumber;
 const int TtPhoneSosMessage::kMessageContentFieldNumber;
 const int TtPhoneSosMessage::kDelaytimeFieldNumber;
+const int TtPhoneSosMessage::kExistSettingFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 TtPhoneSosMessage::TtPhoneSosMessage()
@@ -157,7 +160,8 @@ void TtPhoneSosMessage::SharedCtor() {
   ip_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   phonenumber_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   messagecontent_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  delaytime_ = 0;
+  ::memset(&delaytime_, 0, reinterpret_cast<char*>(&existsetting_) -
+    reinterpret_cast<char*>(&delaytime_) + sizeof(existsetting_));
   _cached_size_ = 0;
 }
 
@@ -199,10 +203,30 @@ TtPhoneSosMessage* TtPhoneSosMessage::New(::google::protobuf::Arena* arena) cons
 
 void TtPhoneSosMessage::Clear() {
 // @@protoc_insertion_point(message_clear_start:phonedata.TtPhoneSosMessage)
+#if defined(__clang__)
+#define ZR_HELPER_(f) \
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(TtPhoneSosMessage, f) \
+  _Pragma("clang diagnostic pop")
+#else
+#define ZR_HELPER_(f) reinterpret_cast<char*>(\
+  &reinterpret_cast<TtPhoneSosMessage*>(16)->f)
+#endif
+
+#define ZR_(first, last) do {\
+  ::memset(&(first), 0,\
+           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
+} while (0)
+
+  ZR_(delaytime_, existsetting_);
   ip_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   phonenumber_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   messagecontent_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  delaytime_ = 0;
+
+#undef ZR_HELPER_
+#undef ZR_
+
 }
 
 bool TtPhoneSosMessage::MergePartialFromCodedStream(
@@ -276,6 +300,21 @@ bool TtPhoneSosMessage::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(40)) goto parse_existSetting;
+        break;
+      }
+
+      // optional bool existSetting = 5;
+      case 5: {
+        if (tag == 40) {
+         parse_existSetting:
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &existsetting_)));
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -339,6 +378,11 @@ void TtPhoneSosMessage::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->delaytime(), output);
   }
 
+  // optional bool existSetting = 5;
+  if (this->existsetting() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(5, this->existsetting(), output);
+  }
+
   // @@protoc_insertion_point(serialize_end:phonedata.TtPhoneSosMessage)
 }
 
@@ -384,6 +428,11 @@ void TtPhoneSosMessage::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->delaytime(), target);
   }
 
+  // optional bool existSetting = 5;
+  if (this->existsetting() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(5, this->existsetting(), target);
+  }
+
   // @@protoc_insertion_point(serialize_to_array_end:phonedata.TtPhoneSosMessage)
   return target;
 }
@@ -418,6 +467,11 @@ size_t TtPhoneSosMessage::ByteSizeLong() const {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->delaytime());
+  }
+
+  // optional bool existSetting = 5;
+  if (this->existsetting() != 0) {
+    total_size += 1 + 1;
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -468,6 +522,9 @@ void TtPhoneSosMessage::UnsafeMergeFrom(const TtPhoneSosMessage& from) {
   if (from.delaytime() != 0) {
     set_delaytime(from.delaytime());
   }
+  if (from.existsetting() != 0) {
+    set_existsetting(from.existsetting());
+  }
 }
 
 void TtPhoneSosMessage::CopyFrom(const ::google::protobuf::Message& from) {
@@ -498,6 +555,7 @@ void TtPhoneSosMessage::InternalSwap(TtPhoneSosMessage* other) {
   phonenumber_.Swap(&other->phonenumber_);
   messagecontent_.Swap(&other->messagecontent_);
   std::swap(delaytime_, other->delaytime_);
+  std::swap(existsetting_, other->existsetting_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
@@ -657,6 +715,20 @@ void TtPhoneSosMessage::set_delaytime(::google::protobuf::int32 value) {
   
   delaytime_ = value;
   // @@protoc_insertion_point(field_set:phonedata.TtPhoneSosMessage.delaytime)
+}
+
+// optional bool existSetting = 5;
+void TtPhoneSosMessage::clear_existsetting() {
+  existsetting_ = false;
+}
+bool TtPhoneSosMessage::existsetting() const {
+  // @@protoc_insertion_point(field_get:phonedata.TtPhoneSosMessage.existSetting)
+  return existsetting_;
+}
+void TtPhoneSosMessage::set_existsetting(bool value) {
+  
+  existsetting_ = value;
+  // @@protoc_insertion_point(field_set:phonedata.TtPhoneSosMessage.existSetting)
 }
 
 inline const TtPhoneSosMessage* TtPhoneSosMessage::internal_default_instance() {

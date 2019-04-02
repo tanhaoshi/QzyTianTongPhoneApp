@@ -130,6 +130,7 @@ public class NettyClient {
 
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg) {
+            LogUtils.e("channelRead ");
             connectHanlerCtx = ctx;
             try {
                 ByteBuf buf = ((ByteBuf) msg);
@@ -149,7 +150,7 @@ public class NettyClient {
 
         @Override
         public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-            //LogUtils.e("channelReadComplete ");
+            LogUtils.e("channelReadComplete ");
             connectHanlerCtx = ctx;
 
             if (connectedReadDataListener != null && dataBuf != null) {

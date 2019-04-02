@@ -231,7 +231,8 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
 
     @Override
     public void onClickSeeDetails(int position) {
-        mPersenter.startTargetActivity(getActivity(),mModelList.get(position).getPhoneNumber());
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mPersenter.startTargetActivity(getActivity(),mModelList.get(position).getPhoneNumber(),mainActivity);
     }
 
     @Override

@@ -176,17 +176,12 @@ public class SmsPhoneManager {
                         downEventCount++;
                         if ((downEventCount > 40) && (!mSosStarted)) {
                             mSosStarted = true;
-//                            startSendSosMsg();
-                            startSendSosMsgAndGPS();
-                            mCallback.onSosState(true);
-                            LedManager.setSosLedStatus(true);
+                            switchServerSos(mSosStarted);
                         } else if ((downEventCount < 41) && mSosStarted) {
-                            stopSendSosMsgAndGPS();
-                            mCallback.onSosState(false);
-//                            stopSendSosMsg();
                             mSosStarted = false;
-                            LedManager.setSosLedStatus(false);
+                            switchServerSos(mSosStarted);
                         }
+
                     } else if (KeyEvent.ACTION_UP == event.getAction()) {
                         downEventCount = 0;
                     }
@@ -198,6 +193,23 @@ public class SmsPhoneManager {
     };
 
     public boolean isKeyF2Incoming = false;
+
+    /**
+     * 控制sos 开关
+     * @param isOpen
+     */
+    public void switchServerSos(boolean isOpen){
+        if(isOpen){
+            startSendSosMsgAndGPS();
+            mCallback.onSosState(true);
+            LedManager.setSosLedStatus(true);
+        }else{
+            stopSendSosMsgAndGPS();
+            mCallback.onSosState(false);
+            LedManager.setSosLedStatus(false);
+        }
+
+    }
 
 
     /**

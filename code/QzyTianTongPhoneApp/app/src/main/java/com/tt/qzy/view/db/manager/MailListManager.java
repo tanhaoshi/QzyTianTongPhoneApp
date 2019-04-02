@@ -2,6 +2,7 @@ package com.tt.qzy.view.db.manager;
 
 import android.content.Context;
 
+import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.db.DaoMaster;
 import com.tt.qzy.view.db.DaoSession;
 import com.tt.qzy.view.db.MailListDaoDao;
@@ -15,12 +16,10 @@ public class MailListManager {
 
     public static volatile MailListManager sMailListManager;
 
-    private DaoMaster daoMaster;
     private DaoSession daoSession;
 
     private MailListManager(Context context){
-        daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
-        daoSession = daoMaster.newSession();
+        daoSession = TtPhoneApplication.getInstance().getDaoSession();
     }
 
     public static MailListManager getInstance(Context context){

@@ -3,8 +3,10 @@ package com.tt.qzy.view.activity.base;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -22,6 +24,7 @@ import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.tt.phone.data.impl.ITtPhoneCallStateBackListener;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
+import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.layout.BatteryView;
 import com.tt.qzy.view.presenter.activity.BaseActivityPresenter;
 import com.tt.qzy.view.service.TimerService;
@@ -73,11 +76,13 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         return res;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getContentView());
         ButterKnife.bind(this);
+        TtPhoneApplication.getInstance().addActivity(this);
         mPresenter = new BaseActivityPresenter(this);
         mPresenter.onBindView(this);
         if (!isInitView) {
@@ -107,10 +112,12 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         m = ButterKnife.bind(this);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onDestroy() {
         super.onDestroy();
         m.unbind();
+        TtPhoneApplication.getInstance().removeActivity(this);
     }
 
     /**
@@ -344,4 +351,5 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     public void isTtSignalStrength(int signalLevel) {
         onTiantongInfoReceiver(signalLevel);
     }
+
 }

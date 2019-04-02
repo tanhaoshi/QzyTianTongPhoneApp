@@ -105,9 +105,6 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
      * 请求gps准确位置
      */
     public void requestGpsPosition(boolean isSwitch) {
-        /*EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_ACCURACY_POSITION,
-                new TtBeidouOpenBean(isSwitch)));*/
-
         if (TtPhoneDataManager.getInstance() != null) {
             TtBeidouOpenBean ttBeidouOpenBean = new TtBeidouOpenBean(isSwitch);
             if (isSwitch) {
@@ -116,7 +113,6 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
                 TtPhoneDataManager.getInstance().closeTtPhoneGps(ttBeidouOpenBean);
             }
         }
-
     }
 
     /**
@@ -165,8 +161,9 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     /**
      * 关闭设备SOS
      */
-    public void closeServerSos() {
+    public void switchServerSos(boolean isOpen) {
         //EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_CLOSE));
+        TtPhoneDataManager.getInstance().requestTtPhoneSos(isOpen);
     }
 
     /*@Subscribe(threadMode = ThreadMode.MAIN)

@@ -1,8 +1,13 @@
 package com.tt.qzy.view.application;
 
+import android.app.Activity;
 import android.app.Application;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.multidex.MultiDex;
 
 import com.downloader.PRDownloader;
@@ -16,18 +21,34 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.socks.library.KLog;
+import com.tt.qzy.view.db.DaoMaster;
+import com.tt.qzy.view.db.DaoSession;
 import com.tt.qzy.view.trace.TraceServiceImpl;
+import com.tt.qzy.view.utils.CrashHandler;
 import com.xdandroid.hellodaemon.DaemonEnv;
+
+import org.greenrobot.greendao.database.Database;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by yj.zhang on 2018/8/25.
  */
-
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class TtPhoneApplication extends Application {
 
-//    private RefWatcher refWatcher;
+    private final static String dbName = "tiantong_db";
 
     public static TtPhoneApplication sApp;
+
+    private DaoSession daoSession;
+
+    private PendingIntent restartIntent;
+
+    public List<Activity> mActivities = new ArrayList<>();
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -39,28 +60,15 @@ public class TtPhoneApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sApp = this;
-       /* DaemonEnv.initialize(this, TraceServiceImpl.class, DaemonEnv.DEFAULT_WAKE_UP_INTERVAL);
-        TraceServiceImpl.sShouldStopService = false;
-        DaemonEnv.startServiceMayBind(TraceServiceImpl.class);*/
-//        if(LeakCanary.isInAnalyzerProcess(this)){
-//            return;
-//        }
-//        LeakCanary.install(this);
+        catchCrashExeption();
         initAppRefresh();
-//        refWatcher = setupLeakCanary();
         initPRDownloader();
+        initGreenDao();
     }
 
     public static TtPhoneApplication getInstance(){
         return sApp;
     }
-
-//    private void checkActivityMemory(){
-//        if(LeakCanary.isInAnalyzerProcess(this)){
-//            return;
-//        }
-//        LeakCanary.install(this);
-//    }
 
     private void initAppRefresh(){
         SmartRefreshLayout.setDefaultRefreshHeaderCreater(new DefaultRefreshHeaderCreater() {
@@ -79,22 +87,58 @@ public class TtPhoneApplication extends Application {
         });
     }
 
-//    private RefWatcher setupLeakCanary() {
-//        if (LeakCanary.isInAnalyzerProcess(this)) {
-//            return RefWatcher.DISABLED;
-//        }
-//        return LeakCanary.install(this);
-//    }
-//
-//    public static RefWatcher getRefWatcher(Context context) {
-//        TtPhoneApplication leakApplication = (TtPhoneApplication) context.getApplicationContext();
-//        return leakApplication.refWatcher;
-//    }
-
     public void initPRDownloader(){
         PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
                 .setDatabaseEnabled(true)
                 .build();
         PRDownloader.initialize(this, config);
     }
+
+    private void initGreenDao(){
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, dbName);
+        Database db = helper.getWritableDb();
+        daoSession = new DaoMaster(db).newSession();
+    }
+
+    public DaoSession getDaoSession() {
+        return daoSession;
+    }
+
+    private void catchCrashExeption(){
+        CrashHandler.CrashUploader crashUploader = new CrashHandler.CrashUploader() {
+
+            @Override
+            public void uploadCrashMessage(ConcurrentHashMap<String, Object> info) {
+            }
+        };
+
+        CrashHandler.getInstance().init(this, crashUploader, restartIntent,false);
+    }
+
+    private void initDemonService(){
+        DaemonEnv.initialize(this, TraceServiceImpl.class, DaemonEnv.DEFAULT_WAKE_UP_INTERVAL);
+        TraceServiceImpl.sShouldStopService = false;
+        DaemonEnv.startServiceMayBind(TraceServiceImpl.class);
+    }
+
+    public void addActivity(Activity activity){
+        if(!mActivities.contains(activity)){
+            mActivities.add(activity);
+        }
+    }
+
+    public void removeActivity(Activity activity){
+        if(!mActivities.contains(activity)){
+            mActivities.remove(activity);
+        }
+    }
+
+    public void removeAllActivity(){
+        for(Activity activity : mActivities){
+            if(activity != null){
+                activity.finish();
+            }
+        }
+    }
+
 }

@@ -19,7 +19,7 @@ public interface ITtPhoneHandlerManager {
     //请求服务sos 是否打开
     void getTtPhoneSosState();
     //关闭sos
-    void closeTtPhoneSos();
+    void requestTtPhoneSos(boolean isOpen);
 
     //打开gps
     void openTtPhoneGps(TtBeidouOpenBean ttBeidouOpenBean);
@@ -28,6 +28,9 @@ public interface ITtPhoneHandlerManager {
 
     //设置sos信息
     void setTtPhoneSosValue(SosSendMessageModel sosSendMessageModel);
+
+    //获取SOS信息值
+    void requestTtPhoneSosValue();
 
     //wifi密码设置
     void setWifiPasswd(WifiSettingModel wifiSettingModel);

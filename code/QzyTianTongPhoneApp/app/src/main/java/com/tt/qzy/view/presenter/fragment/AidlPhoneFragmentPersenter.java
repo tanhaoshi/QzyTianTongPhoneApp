@@ -14,6 +14,7 @@ import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.socks.library.KLog;
+import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.AidlContactsActivity;
 import com.tt.qzy.view.activity.ContactsActivity;
@@ -307,9 +308,13 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView> {
         return mList;
     }
 
-    public void startTargetActivity(Context context, String phone) {
+    public void startTargetActivity(Context context, String phone, MainActivity mainActivity) {
         Intent intent = new Intent(context, AidlContactsActivity.class);
         intent.putExtra("phone", phone);
+        intent.putExtra("connect",mainActivity.isConnectStatus());
+        intent.putExtra("isSim",mainActivity.tt_isSim);
+        intent.putExtra("isSignal",mainActivity.tt_isSignal);
+        intent.putExtra("baterly",mainActivity.tt_baterly);
         context.startActivity(intent);
     }
 

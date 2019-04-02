@@ -2,6 +2,7 @@ package com.tt.qzy.view.db.manager;
 
 import android.content.Context;
 
+import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.db.CallRecordDaoDao;
 import com.tt.qzy.view.db.DaoMaster;
 import com.tt.qzy.view.db.DaoSession;
@@ -16,14 +17,11 @@ public class CallRecordManager {
 
     public static volatile CallRecordManager sCallRecordManager;
 
-    private DaoMaster daoMaster;
     private DaoSession daoSession;
 
     private CallRecordManager(Context context){
 
-        daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
-
-        daoSession = daoMaster.newSession();
+        daoSession = TtPhoneApplication.getInstance().getDaoSession();
     }
 
     public static CallRecordManager getInstance(Context context){

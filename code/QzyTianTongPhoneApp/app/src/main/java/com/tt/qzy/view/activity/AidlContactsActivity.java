@@ -57,6 +57,11 @@ public class AidlContactsActivity extends BaseActivity<AidlContactsView> impleme
     private List<CallRecordDao> openList = new ArrayList<>();
     private AidlContactsAdapter contactsAdapter;
 
+    private boolean isConnect;
+    private boolean isSim;
+    private boolean isSignal;
+    private int baterly = 0;
+
     @Override
     public int getContentView() {
         return R.layout.activity_aidl_contacts;
@@ -67,6 +72,7 @@ public class AidlContactsActivity extends BaseActivity<AidlContactsView> impleme
         mPresenter = new AidlContactsPresenter(this);
         mPresenter.onBindView(this);
         getIntentDataValue();
+        setBarLayout();
         base_tv_toolbar_right.setVisibility(View.GONE);
         statusLayout.setBackgroundColor(getResources().getColor(R.color.tab_stander));
         base_tv_toolbar_title.setText(getResources().getString(R.string.TMT_contacts));
@@ -83,7 +89,31 @@ public class AidlContactsActivity extends BaseActivity<AidlContactsView> impleme
             email.setText("");
             qq.setText("");
             send.setText("");
+            isConnect = intent.getBooleanExtra("connect", false);
+            isSim = intent.getBooleanExtra("isSim", false);
+            isSignal = intent.getBooleanExtra("isSignal", false);
+            baterly = intent.getIntExtra("baterly", 0);
         }
+    }
+
+    private void setBarLayout(){
+        if (isConnect) {
+            img5.setImageDrawable(getResources().getDrawable(R.drawable.search_network));
+        } else {
+            img5.setImageDrawable(getResources().getDrawable(R.drawable.search_nonetwork));
+        }
+        if (isSim) {
+            img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
+        } else {
+            img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_noconnect));
+        }
+        if (isSignal) {
+            img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_one));
+        } else {
+            img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
+        }
+        percentBaterly.setText(baterly + "%");
+        img1.setPower(baterly);
     }
 
     @Override

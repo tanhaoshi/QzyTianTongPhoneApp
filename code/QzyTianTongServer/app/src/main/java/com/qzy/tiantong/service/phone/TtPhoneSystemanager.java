@@ -58,6 +58,8 @@ public class TtPhoneSystemanager {
             fileWriter.flush();
             fileWriter.close();
 
+            Runtime.getRuntime().exec("sync");
+
         } catch (Exception e) {
             e.printStackTrace();
         }

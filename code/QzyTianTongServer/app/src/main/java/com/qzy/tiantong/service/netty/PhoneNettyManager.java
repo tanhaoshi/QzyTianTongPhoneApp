@@ -296,6 +296,13 @@ public class PhoneNettyManager implements IMobileDataManager {
      * 返回sos存储信息
      */
     public void getSosMsgInfo(TtPhoneSosMessageProtos.TtPhoneSosMessage sosmsg) {
+        getSosMsgInfoip(sosmsg.getIp());
+    }
+
+    /**
+     * 返回sos存储信息
+     */
+    public void getSosMsgInfoip(String ip) {
         SosMessage sosMessage = TtPhoneSystemanager.getSosMessage();
         boolean isExist = true;
         if (sosMessage == null) {
@@ -319,7 +326,7 @@ public class PhoneNettyManager implements IMobileDataManager {
                 .setDelaytime(delayTime)
                 .build();
 
-        mNettyServerManager.sendData(sosmsg.getIp(), PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.response_server_sos_info_msg, ttPhoneSosMessage));
+        mNettyServerManager.sendData(ip, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.response_server_sos_info_msg, ttPhoneSosMessage));
 
     }
 
@@ -846,14 +853,15 @@ public class PhoneNettyManager implements IMobileDataManager {
     }
 
     /**
-     * 关闭服务天通猫服务
+     * 控制天通猫服务开启关闭sos
      */
-    public void closeServerSos(TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState) {
+    public void switchServerSos(TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState) {
         if (ttPhoneSosState == null) {
             return;
         }
-        mSmsPhoneManager.stopSendSosMsgAndGPS();
+        mSmsPhoneManager.switchServerSos(ttPhoneSosState.getIsSwitch());
     }
+
 
     /**
      * 删除通话记录

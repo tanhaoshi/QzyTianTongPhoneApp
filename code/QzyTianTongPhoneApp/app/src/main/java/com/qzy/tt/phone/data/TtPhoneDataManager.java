@@ -5,7 +5,6 @@ import android.content.Context;
 import com.google.protobuf.GeneratedMessageV3;
 import com.qzy.data.PhoneCmd;
 import com.qzy.tt.data.TtCallRecordProtos;
-import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.phone.data.impl.IAllTtPhoneDataListener;
 import com.qzy.tt.phone.data.impl.IMainAboutListener;
@@ -18,7 +17,6 @@ import com.qzy.tt.phone.data.impl.ITtPhoneHandlerManager;
 import com.qzy.tt.phone.data.impl.ITtPhoneManager;
 import com.qzy.tt.phone.netty.PhoneNettyManager;
 import com.qzy.utils.LogUtils;
-import com.socks.library.KLog;
 import com.tt.qzy.view.bean.DatetimeModel;
 import com.tt.qzy.view.bean.SMAgrementModel;
 import com.tt.qzy.view.bean.SosSendMessageModel;
@@ -30,16 +28,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * 数据管理类
@@ -358,9 +352,8 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
 
     @Override
-    public void closeTtPhoneSos() {
-
-        phoneNettyManager.requestServerSosClose();
+    public void requestTtPhoneSos(boolean isOpen) {
+        phoneNettyManager.requestServerSosSwitch(isOpen);
     }
 
     @Override
@@ -375,8 +368,12 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void setTtPhoneSosValue(SosSendMessageModel sosSendMessageModel) {
-
         phoneNettyManager.requestSosSendMessage(sosSendMessageModel);
+    }
+
+    @Override
+    public void requestTtPhoneSosValue() {
+        phoneNettyManager.requesSosMessageValue();
     }
 
     @Override
@@ -403,7 +400,6 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void closeUsbMode(TtBeidouOpenBean ttBeidouOpenBean) {
-
         phoneNettyManager.openBeidou(ttBeidouOpenBean);
     }
 

@@ -40,7 +40,7 @@ public class SyncManager {
     private boolean isRecord = true;
     private boolean isShortMessage = true;
 
-
+    private List<List<TtShortMessageProtos.TtShortMessage.ShortMessage>> mMessageList = new ArrayList<>();
 
     private HashMap<String, ISyncMsgDataListener> hashMapSyncMsgData = new HashMap<>();
 
@@ -99,7 +99,7 @@ public class SyncManager {
         }
         List<CallRecordDao> callRecordDaos = handlerCallRecordAgrementData(list);
 
-        CallRecordManager.getInstance(mContext).insertCallRecordList(callRecordDaos, mContext);
+//        CallRecordManager.getInstance(mContext).insertCallRecordList(callRecordDaos, mContext);
     }
 
     public List<CallRecordDao> handlerCallRecordAgrementData(List<TtCallRecordProtos.TtCallRecordProto.CallRecord> list) {
@@ -167,13 +167,15 @@ public class SyncManager {
                 });
     }
 
-    private void dateMerging(List<TtShortMessageProtos.TtShortMessage.ShortMessage> list) {
-        if (isShortMessage) {
-            ShortMessageManager.getInstance(mContext).deleteShortMessageList();
-            isShortMessage = false;
-        }
-        List<ShortMessageDao> shortMessagList = handlerShortMessageAgrementData(list);
-        ShortMessageManager.getInstance(mContext).insertShortMessageList(shortMessagList, mContext);
+    public void dateMerging(List<TtShortMessageProtos.TtShortMessage.ShortMessage> list) {
+          mMessageList.add(list);
+//        if (isShortMessage) {
+//            ShortMessageManager.getInstance(mContext).deleteShortMessageList();
+//            isShortMessage = false;
+//        }
+//        List<ShortMessageDao> shortMessagList = handlerShortMessageAgrementData(list);
+//        ShortMessageManager.getInstance(mContext).insertShortMessageList(shortMessagList, mContext);
+         KLog.i("look over list size = " + mMessageList.size());
     }
 
     public List<ShortMessageDao> handlerShortMessageAgrementData(List<TtShortMessageProtos.TtShortMessage.ShortMessage> list) {

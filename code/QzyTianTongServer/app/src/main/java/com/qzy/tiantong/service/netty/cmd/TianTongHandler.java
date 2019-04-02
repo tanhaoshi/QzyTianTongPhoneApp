@@ -99,6 +99,7 @@ public class TianTongHandler extends Handler {
                     break;
                 case PrototocalTools.IProtoServerIndex.request_sos_message_send:
                     mServer.getPhoneNettyManager().getmSmsPhoneManager().getSaveSosMsg((TtPhoneSosMessageProtos.TtPhoneSosMessage) msg.obj);
+                    mServer.getPhoneNettyManager().getSosMsgInfoip(null);
                     break;
                 case PrototocalTools.IProtoServerIndex.request_phone_server_mobile_init:
                     mServer.getPhoneNettyManager().getServerMobileDataStatus();
@@ -107,7 +108,7 @@ public class TianTongHandler extends Handler {
                     mServer.getPhoneNettyManager().getServerSosInitStatus();
                     break;
                 case PrototocalTools.IProtoServerIndex.request_server_sos_close:
-                    mServer.getPhoneNettyManager().closeServerSos((TtPhoneSosStateProtos.TtPhoneSosState) msg.obj);
+                    mServer.getPhoneNettyManager().switchServerSos((TtPhoneSosStateProtos.TtPhoneSosState) msg.obj);
                     break;
                 case PrototocalTools.IProtoServerIndex.request_server_del_calllog:
                     mServer.getPhoneNettyManager().deleteCallLog((TtDeleCallLogProtos.TtDeleCallLog) msg.obj);

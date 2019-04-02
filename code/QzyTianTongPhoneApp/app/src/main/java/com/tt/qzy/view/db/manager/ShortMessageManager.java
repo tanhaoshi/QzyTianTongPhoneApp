@@ -2,6 +2,7 @@ package com.tt.qzy.view.db.manager;
 
 import android.content.Context;
 
+import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.db.DaoMaster;
 import com.tt.qzy.view.db.DaoSession;
 import com.tt.qzy.view.db.ShortMessageDaoDao;
@@ -16,14 +17,10 @@ public class ShortMessageManager {
 
    public static volatile ShortMessageManager sShortMessageManager;
 
-   private DaoMaster daoMaster;
    private DaoSession daoSession;
 
    private ShortMessageManager(Context context){
-
-       daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
-
-       daoSession = daoMaster.newSession();
+       daoSession = TtPhoneApplication.getInstance().getDaoSession();
    }
 
    public static ShortMessageManager getInstance(Context context){

@@ -52,6 +52,11 @@ public final class TtPhoneSosMessageProtos {
      * <code>optional int32 delaytime = 4;</code>
      */
     int getDelaytime();
+
+    /**
+     * <code>optional bool existSetting = 5;</code>
+     */
+    boolean getExistSetting();
   }
   /**
    * Protobuf type {@code phonedata.TtPhoneSosMessage}
@@ -69,6 +74,7 @@ public final class TtPhoneSosMessageProtos {
       phoneNumber_ = "";
       messageContent_ = "";
       delaytime_ = 0;
+      existSetting_ = false;
     }
 
     @java.lang.Override
@@ -117,6 +123,11 @@ public final class TtPhoneSosMessageProtos {
             case 32: {
 
               delaytime_ = input.readInt32();
+              break;
+            }
+            case 40: {
+
+              existSetting_ = input.readBool();
               break;
             }
           }
@@ -253,6 +264,15 @@ public final class TtPhoneSosMessageProtos {
       return delaytime_;
     }
 
+    public static final int EXISTSETTING_FIELD_NUMBER = 5;
+    private boolean existSetting_;
+    /**
+     * <code>optional bool existSetting = 5;</code>
+     */
+    public boolean getExistSetting() {
+      return existSetting_;
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -277,6 +297,9 @@ public final class TtPhoneSosMessageProtos {
       if (delaytime_ != 0) {
         output.writeInt32(4, delaytime_);
       }
+      if (existSetting_ != false) {
+        output.writeBool(5, existSetting_);
+      }
     }
 
     public int getSerializedSize() {
@@ -296,6 +319,10 @@ public final class TtPhoneSosMessageProtos {
       if (delaytime_ != 0) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(4, delaytime_);
+      }
+      if (existSetting_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(5, existSetting_);
       }
       memoizedSize = size;
       return size;
@@ -321,6 +348,8 @@ public final class TtPhoneSosMessageProtos {
           .equals(other.getMessageContent());
       result = result && (getDelaytime()
           == other.getDelaytime());
+      result = result && (getExistSetting()
+          == other.getExistSetting());
       return result;
     }
 
@@ -339,6 +368,9 @@ public final class TtPhoneSosMessageProtos {
       hash = (53 * hash) + getMessageContent().hashCode();
       hash = (37 * hash) + DELAYTIME_FIELD_NUMBER;
       hash = (53 * hash) + getDelaytime();
+      hash = (37 * hash) + EXISTSETTING_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getExistSetting());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -465,6 +497,8 @@ public final class TtPhoneSosMessageProtos {
 
         delaytime_ = 0;
 
+        existSetting_ = false;
+
         return this;
       }
 
@@ -491,6 +525,7 @@ public final class TtPhoneSosMessageProtos {
         result.phoneNumber_ = phoneNumber_;
         result.messageContent_ = messageContent_;
         result.delaytime_ = delaytime_;
+        result.existSetting_ = existSetting_;
         onBuilt();
         return result;
       }
@@ -546,6 +581,9 @@ public final class TtPhoneSosMessageProtos {
         }
         if (other.getDelaytime() != 0) {
           setDelaytime(other.getDelaytime());
+        }
+        if (other.getExistSetting() != false) {
+          setExistSetting(other.getExistSetting());
         }
         onChanged();
         return this;
@@ -805,6 +843,32 @@ public final class TtPhoneSosMessageProtos {
         onChanged();
         return this;
       }
+
+      private boolean existSetting_ ;
+      /**
+       * <code>optional bool existSetting = 5;</code>
+       */
+      public boolean getExistSetting() {
+        return existSetting_;
+      }
+      /**
+       * <code>optional bool existSetting = 5;</code>
+       */
+      public Builder setExistSetting(boolean value) {
+        
+        existSetting_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool existSetting = 5;</code>
+       */
+      public Builder clearExistSetting() {
+        
+        existSetting_ = false;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return this;
@@ -868,11 +932,12 @@ public final class TtPhoneSosMessageProtos {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\027TtPhoneSosMessage.proto\022\tphonedata\"_\n\021" +
+      "\n\027TtPhoneSosMessage.proto\022\tphonedata\"u\n\021" +
       "TtPhoneSosMessage\022\n\n\002ip\030\001 \001(\t\022\023\n\013phoneNu" +
       "mber\030\002 \001(\t\022\026\n\016messageContent\030\003 \001(\t\022\021\n\tde" +
-      "laytime\030\004 \001(\005B*\n\017com.qzy.tt.dataB\027TtPhon" +
-      "eSosMessageProtosb\006proto3"
+      "laytime\030\004 \001(\005\022\024\n\014existSetting\030\005 \001(\010B*\n\017c" +
+      "om.qzy.tt.dataB\027TtPhoneSosMessageProtosb" +
+      "\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -891,7 +956,7 @@ public final class TtPhoneSosMessageProtos {
     internal_static_phonedata_TtPhoneSosMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_phonedata_TtPhoneSosMessage_descriptor,
-        new java.lang.String[] { "Ip", "PhoneNumber", "MessageContent", "Delaytime", });
+        new java.lang.String[] { "Ip", "PhoneNumber", "MessageContent", "Delaytime", "ExistSetting", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

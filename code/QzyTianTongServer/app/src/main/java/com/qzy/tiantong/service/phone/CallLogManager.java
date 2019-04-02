@@ -64,6 +64,11 @@ public class CallLogManager {
                     if (phoneNettyManager != null) {
                         phoneNettyManager.sendCallLogToPhoneClient(ip, listRecorder.build());
                     }
+                    try {
+                        Thread.sleep(30);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -113,7 +118,11 @@ public class CallLogManager {
                     if (phoneNettyManager != null) {
                         phoneNettyManager.sendCallLogToPhoneClient(ip, ttShortMessage.build());
                     }
-
+                    try {
+                        Thread.sleep(30);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });

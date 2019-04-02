@@ -88,12 +88,13 @@ public class PhoneNettyManager {
         mNettyClientManager.release();
     }
 
-    /**
+    /*
      * 拨打电话
      *
      * @param phoneNumber
      */
     public void dialPhone(String phoneNumber) {
+        KLog.i("tell Phone phoneNumber ... ");
         CallPhoneProtos.CallPhone callPhone = CallPhoneProtos.CallPhone.newBuilder()
                 .setIp(CommonData.getInstance().getLocalWifiIp())
                 .setPhoneNumber(phoneNumber)
@@ -367,12 +368,13 @@ public class PhoneNettyManager {
      * 请求服务端版本号
      */
     public void requestServerVersion(){
-        TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion ttPhoneGetServerVersion = TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion.newBuilder()
-                .setIsRequest(true)
-                .setIp(CommonData.getInstance().getLocalWifiIp())
-                .build();
-        KLog.i("ip : "+CommonData.getInstance().getLocalWifiIp());
-        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_version_info,ttPhoneGetServerVersion));
+        if(!(CommonData.getInstance().getLocalWifiIp() == null)){
+            TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion ttPhoneGetServerVersion = TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion.newBuilder()
+                    .setIsRequest(true)
+                    .setIp(CommonData.getInstance().getLocalWifiIp())
+                    .build();
+            sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_version_info,ttPhoneGetServerVersion));
+        }
     }
 
     /**
@@ -387,6 +389,14 @@ public class PhoneNettyManager {
                 .setIp(CommonData.getInstance().getLocalWifiIp())
                 .build();
         sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_sos_message_send,ttPhoneSosMessage));
+    }
+
+    /** 获取SOS信息值 */
+    public void requesSosMessageValue(){
+        TtPhoneSosMessageProtos.TtPhoneSosMessage ttPhoneSosMessage = TtPhoneSosMessageProtos.TtPhoneSosMessage.newBuilder()
+                .setIp(CommonData.getInstance().getLocalWifiIp())
+                .build();
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_sos_info_msg,ttPhoneSosMessage));
     }
 
     /**
@@ -422,10 +432,10 @@ public class PhoneNettyManager {
     /**
      * 关闭服务设备SOS
      */
-    public void requestServerSosClose(){
+    public void requestServerSosSwitch(boolean isOpen){
         TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState = TtPhoneSosStateProtos.TtPhoneSosState.newBuilder()
                 .setIsRequest(true)
-                .setIsSwitch(false)
+                .setIsSwitch(isOpen)
                 .build();
         sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_sos_close,ttPhoneSosState));
     }

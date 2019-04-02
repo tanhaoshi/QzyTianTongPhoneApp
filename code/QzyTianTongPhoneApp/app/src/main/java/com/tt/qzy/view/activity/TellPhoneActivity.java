@@ -290,7 +290,6 @@ public class TellPhoneActivity extends AppCompatActivity {
                     mAnswerBellManager.stopPlay();
                 }
                 onEndCallState();
-//                SPUtils.removeShare(TellPhoneActivity.this, Constans.SOS_FLAG);
                 break;
             case INCOMING:
                 break;
@@ -299,7 +298,6 @@ public class TellPhoneActivity extends AppCompatActivity {
                     mAnswerBellManager.stopPlay();
                 }
                 onEndCallState();
-                SPUtils.removeShare(TellPhoneActivity.this, Constans.SOS_FLAG);
                 break;
         }
     }

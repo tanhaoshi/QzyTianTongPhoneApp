@@ -73,7 +73,6 @@ public class PhoneServiceManager {
                 updatePhoneState(phoneCmd);
             }
         });
-
     }
 
 
