@@ -53,6 +53,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     public ImageView img5;
     public RelativeLayout statusLayout;
     public TextView percentBaterly;
+    public TextView signal;
 
     private Unbinder m;
     private BaseActivityPresenter mPresenter;
@@ -66,6 +67,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     public boolean tt_isSim = false;
     public boolean tt_isSignal = false;
     public int tt_baterly = 0;
+    public int signalValue = 99;
 
     @Override
     public Resources getResources() {
@@ -101,6 +103,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         img3 = (ImageView) findViewById(R.id.img3);
         img4 = (ImageView) findViewById(R.id.img4);
         img5 = (ImageView) findViewById(R.id.img5);
+        signal = (TextView) findViewById(R.id.signal);
         statusLayout = (RelativeLayout) findViewById(R.id.statusLayout);
         percentBaterly = (TextView) findViewById(R.id.percent);
         percentBaterly.setText("0%");
@@ -277,6 +280,8 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
      * @param intLevel
      */
     private void onTiantongInfoReceiver(int intLevel) {
+        signalValue = intLevel;
+        signal.setText(String.valueOf(signalValue));
         if (intLevel == 97) {
             tt_isSignal = false;
             stopTimerService();

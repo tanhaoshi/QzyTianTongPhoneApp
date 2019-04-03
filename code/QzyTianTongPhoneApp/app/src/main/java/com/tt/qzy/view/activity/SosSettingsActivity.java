@@ -40,6 +40,7 @@ public class SosSettingsActivity extends BaseActivity {
     private boolean isSim;
     private boolean isSignal;
     private int baterly;
+    private int signalValue = 99;
 
     @Override
     public int getContentView() {
@@ -53,6 +54,7 @@ public class SosSettingsActivity extends BaseActivity {
             isSim = intent.getBooleanExtra("isSim", false);
             isSignal = intent.getBooleanExtra("isSignal", false);
             baterly = intent.getIntExtra("baterly", 0);
+            signalValue = intent.getIntExtra("signalValue",99);
         }
     }
 
@@ -80,6 +82,7 @@ public class SosSettingsActivity extends BaseActivity {
         }
         percentBaterly.setText(baterly + "%");
         img1.setPower(baterly);
+        signal.setText(String.valueOf(signalValue));
     }
 
     @OnClick({R.id.base_iv_back, R.id.btn_yes})

@@ -229,6 +229,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
                 settings_intent.putExtra("isSim",mainActivity.tt_isSim);
                 settings_intent.putExtra("isSignal",mainActivity.tt_isSignal);
                 settings_intent.putExtra("baterly",mainActivity.tt_baterly);
+                settings_intent.putExtra("signalValue",mainActivity.signalValue);
                 startActivity(settings_intent);
                 break;
             case R.id.tmt_noEntry:

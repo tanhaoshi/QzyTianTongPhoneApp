@@ -315,6 +315,7 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView> {
         intent.putExtra("isSim",mainActivity.tt_isSim);
         intent.putExtra("isSignal",mainActivity.tt_isSignal);
         intent.putExtra("baterly",mainActivity.tt_baterly);
+        intent.putExtra("signalValue",mainActivity.signalValue);
         context.startActivity(intent);
     }
 

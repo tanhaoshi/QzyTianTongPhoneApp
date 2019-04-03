@@ -61,6 +61,7 @@ public class AidlContactsActivity extends BaseActivity<AidlContactsView> impleme
     private boolean isSim;
     private boolean isSignal;
     private int baterly = 0;
+    private int signalValue = 99;
 
     @Override
     public int getContentView() {
@@ -93,6 +94,8 @@ public class AidlContactsActivity extends BaseActivity<AidlContactsView> impleme
             isSim = intent.getBooleanExtra("isSim", false);
             isSignal = intent.getBooleanExtra("isSignal", false);
             baterly = intent.getIntExtra("baterly", 0);
+            signalValue = intent.getIntExtra("signalValue",99);
+            signal.setText(String.valueOf(signalValue));
         }
     }
 
@@ -114,6 +117,7 @@ public class AidlContactsActivity extends BaseActivity<AidlContactsView> impleme
         }
         percentBaterly.setText(baterly + "%");
         img1.setPower(baterly);
+        signal.setText(String.valueOf(signalValue));
     }
 
     @Override

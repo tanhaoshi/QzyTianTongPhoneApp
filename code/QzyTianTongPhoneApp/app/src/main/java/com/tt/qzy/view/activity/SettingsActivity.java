@@ -47,6 +47,7 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
     private boolean isSim;
     private boolean isSignal;
     private int baterly = 0;
+    private int signalValue = 99;
 
     @Override
     public int getContentView() {
@@ -60,6 +61,7 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
             isSim = intent.getBooleanExtra("isSim", false);
             isSignal = intent.getBooleanExtra("isSignal", false);
             baterly = intent.getIntExtra("baterly", 0);
+            signalValue = intent.getIntExtra("signalValue",99);
         }
     }
 
@@ -101,6 +103,7 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
         }
         percentBaterly.setText(baterly + "%");
         img1.setPower(baterly);
+        signal.setText(String.valueOf(signalValue));
     }
 
     @Override
@@ -162,6 +165,7 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
         intent.putExtra("isSim", isSim);
         intent.putExtra("isSignal", isSignal);
         intent.putExtra("baterly", baterly);
+        intent.putExtra("signalValue",signalValue);
         startActivity(intent);
     }
 
@@ -171,6 +175,7 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
         about_intent.putExtra("isSim", isSim);
         about_intent.putExtra("isSignal", isSignal);
         about_intent.putExtra("baterly", baterly);
+        about_intent.putExtra("signalValue",signalValue);
         startActivity(about_intent);
     }
 
