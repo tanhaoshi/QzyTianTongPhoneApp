@@ -33,7 +33,7 @@ public class TimerService extends Service{
     @Override
     public void onCreate() {
         super.onCreate();
-        String timerStr =  (String) SPUtils.getShare(this,Constans.CRY_HELP_TIMETIMER,"60");
+        String timerStr =  (String) SPUtils.getShare(this,Constans.CRY_HELP_TIMETIMER,60);
         Long timerDuration = Long.valueOf(timerStr) * 1000 ;
         if(mTimeTask == null){
             mTimeTask = new TimeTask(timerDuration, new TimerTask() {

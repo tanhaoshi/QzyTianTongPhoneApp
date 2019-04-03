@@ -2,6 +2,8 @@ package com.qzy.tt.phone.cmd;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 
 import com.google.protobuf.GeneratedMessageV3;
 import com.qzy.data.PhoneCmd;
@@ -72,16 +74,16 @@ public class CmdHandler {
      */
     public void handlerCmd(ByteBufInputStream inputStream) {
         try {
-            synchronized (CmdHandler.class) {
+            //synchronized (CmdHandler.class) {
                 if (inputStream.available() > 0 && PrototocalTools.readToFour0x5aHeaderByte(inputStream)) {
                     int protoId = inputStream.readInt();
                     int len = inputStream.readInt();//包长度
-                   // LogUtils.e(" protoId = " + protoId + " len = " + len);
+                    LogUtils.e(" protoId = " + protoId + " len = " + len);
                     if (protoId > 100 && protoId % 2 == 1) {
                         handProcessCmd(protoId, inputStream);
                     }
                 }
-            }
+           // }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -113,6 +115,7 @@ public class CmdHandler {
                 });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void handProcessModel(int protoId, ByteBufInputStream inputStream) {
         try {
             switch (protoId) {
@@ -360,6 +363,7 @@ public class CmdHandler {
     /**
      * 收到短信播放系统铃声
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void startSystemRingTone() {
         RingToneUtils ringToneUtils = new RingToneUtils(context);
         RingToneUtils.playRing(TtPhoneApplication.getInstance());

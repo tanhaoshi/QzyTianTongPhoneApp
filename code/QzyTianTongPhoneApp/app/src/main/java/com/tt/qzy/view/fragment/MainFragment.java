@@ -153,17 +153,17 @@ public class MainFragment extends Fragment implements MainFragmentView{
                 if(!SPUtils.containsShare(getActivity(), Constans.CRY_HELP_PHONE)){
                     sc_settin_testxinlv.setChecked(false);
                     NToast.shortToast(getActivity(),getString(R.string.TMT_remind));
-                    if(sc_settin_testxinlv.isChecked()){
-                        if(AppUtils.isServiceRunning("com.tt.qzy.view.service.TimerService",getActivity())){
-                            Intent intent = new Intent(getActivity(), TimerService.class);
-                            getActivity().stopService(intent);
-                        }
-                    }
+//                    if(sc_settin_testxinlv.isChecked()){
+//                        if(AppUtils.isServiceRunning("com.tt.qzy.view.service.TimerService",getActivity())){
+//                            Intent intent = new Intent(getActivity(), TimerService.class);
+//                            getActivity().stopService(intent);
+//                        }
+//                    }
                     return;
                 }
 
                 if(mainActivity.isConnectStatus()){
-//                    if(mainActivity.tt_isSignal){
+                    if(mainActivity.tt_isSignal){
                         if(sc_settin_testxinlv.isChecked()){
                            // main_location.setChecked(true);
                             mPresneter.dialPhone(SPUtils.getShare(getActivity(),Constans.CRY_HELP_PHONE,"").toString());
@@ -191,7 +191,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
 //                }else{
 //                    NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
 //                    sc_settin_testxinlv.setChecked(false);
-//                }
+                }
             }
         });
 

@@ -158,8 +158,8 @@ public class SosSettingsActivity extends BaseActivity {
         }
 
         if (SPUtils.containsShare(SosSettingsActivity.this, Constans.CRY_HELP_TIMETIMER)) {
-            cryhelp_timer.setText(SPUtils.getShare(SosSettingsActivity.this,
-                    Constans.CRY_HELP_TIMETIMER, getString(R.string.TMT_please_input_timetimer)).toString());
+            cryhelp_timer.setText(String.valueOf(SPUtils.getShare(SosSettingsActivity.this,
+                    Constans.CRY_HELP_TIMETIMER,60)));
         } else {
             cryhelp_timer.setHint(getString(R.string.TMT_please_input_timetimer));
         }

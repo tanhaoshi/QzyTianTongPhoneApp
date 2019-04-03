@@ -21,7 +21,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
-import com.socks.library.KLog;
+import com.tt.qzy.view.BuildConfig;
 import com.tt.qzy.view.db.DaoMaster;
 import com.tt.qzy.view.db.DaoSession;
 import com.tt.qzy.view.trace.TraceServiceImpl;
@@ -112,7 +112,11 @@ public class TtPhoneApplication extends Application {
             }
         };
 
-        CrashHandler.getInstance().init(this, crashUploader, restartIntent,false);
+        if( BuildConfig.DEBUG) {
+            CrashHandler.getInstance().init(this, crashUploader, restartIntent,true);
+        }else{
+            CrashHandler.getInstance().init(this, crashUploader, restartIntent,false);
+        }
     }
 
     private void initDemonService(){
