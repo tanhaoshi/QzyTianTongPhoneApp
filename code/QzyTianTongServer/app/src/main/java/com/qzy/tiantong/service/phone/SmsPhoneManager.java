@@ -175,11 +175,10 @@ public class SmsPhoneManager {
                     if (KeyEvent.ACTION_DOWN == event.getAction()) {
                         downEventCount++;
                         if ((downEventCount > 40) && (!mSosStarted)) {
-                            mSosStarted = true;
-                            switchServerSos(mSosStarted);
+
+                            switchServerSos(true);
                         } else if ((downEventCount < 41) && mSosStarted) {
-                            mSosStarted = false;
-                            switchServerSos(mSosStarted);
+                            switchServerSos(false);
                         }
 
                     } else if (KeyEvent.ACTION_UP == event.getAction()) {
@@ -199,6 +198,7 @@ public class SmsPhoneManager {
      * @param isOpen
      */
     public void switchServerSos(boolean isOpen){
+        mSosStarted = isOpen;
         if(isOpen){
             startSendSosMsgAndGPS();
             mCallback.onSosState(true);
@@ -390,7 +390,7 @@ public class SmsPhoneManager {
                 LogUtils.e("sosMessage is null ....");
             }
 
-            final int delayTime = sosMessage.getDelayTime() * 1000;
+
 
             if (mGpsManager != null) {
                 mGpsManager.openGps();
@@ -434,7 +434,7 @@ public class SmsPhoneManager {
                             }
                             sendSms("192.168.43.1", phone, message);
                         }
-
+                        final int delayTime = sosMessage.getDelayTime() * 1000;
                         mHandler.postDelayed(mRunnable, delayTime);
                     }
                 }
@@ -572,10 +572,11 @@ public class SmsPhoneManager {
      * @return
      */
     public boolean isSosState() {
-        if (mThreadSendSos == null) {
+       /* if (mThreadSendSos == null) {
             return false;
         }
-        return true;
+        return true;*/
+       return mSosStarted;
     }
 
 

@@ -88,7 +88,6 @@ public final class SystemSleepManager {
             }
         };
         countDownTimer.start();
-
     }
 
     private Handler mHandler = new Handler(Looper.getMainLooper()){
@@ -102,23 +101,16 @@ public final class SystemSleepManager {
                     break;
 
             }
-
-
         }
     };
 
-
     private void controlSleep() {
         try {
-
-
             if (!checkCurrentSingnalValue()) {
                 //LogUtils.i("checkCurrentSingnalValue");
                 controlSystemSleep();
                 return;
             }
-
-
             if (checkPhoneStateImcoming()) {
                 //.i("checkPhoneStateImcoming");
                 controlSystemSleep();
@@ -133,10 +125,7 @@ public final class SystemSleepManager {
                 controlSystemSleep();
                 return;
             }
-
-
             doSleeep();
-
 
         } catch (Exception e) {
             e.printStackTrace();

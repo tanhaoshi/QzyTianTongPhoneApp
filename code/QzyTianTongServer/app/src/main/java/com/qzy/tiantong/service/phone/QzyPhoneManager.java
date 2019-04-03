@@ -121,15 +121,21 @@ public class QzyPhoneManager {
      *
      * @param
      */
-    public void hangupPhone(String ip) {
-        mServer.setEndCallingIp(ip);
-        endCall();
-        try {
-            mLocalPcmSocketManager.sendCommand(PowerUtils.sleepCommand());
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        endCallingAndClearIp();
+    public void hangupPhone(final String ip) {
+       new Thread(new Runnable() {
+           @Override
+           public void run() {
+               LogUtils.e("hangupPhone ..  " );
+               mServer.setEndCallingIp(ip);
+               endCall();
+               try {
+                   mLocalPcmSocketManager.sendCommand(PowerUtils.sleepCommand());
+               } catch (RemoteException e) {
+                   e.printStackTrace();
+               }
+               endCallingAndClearIp();
+           }
+       }).start();
     }
 
 
@@ -164,10 +170,10 @@ public class QzyPhoneManager {
         // IBinder iBinder = ServiceManager.getService(TELEPHONY_SERVICE);
         // ServiceManager 是被系统隐藏掉了 所以只能用反射的方法获取
         try {
-            Method method = Class.forName("android.os.ServiceManager").getMethod("getService", String.class);
+           /* Method method = Class.forName("android.os.ServiceManager").getMethod("getService", String.class);
             IBinder binder = (IBinder) method.invoke(null, new Object[]{Context.TELEPHONY_SERVICE});
             ITelephony telephony = ITelephony.Stub.asInterface(binder);
-            telephony.endCall();
+            telephony.endCall();*/
             if(mAtCommandToolManager != null){
                 mAtCommandToolManager.sendAtCommand(AtCommandTools.at_command_hungup);
             }

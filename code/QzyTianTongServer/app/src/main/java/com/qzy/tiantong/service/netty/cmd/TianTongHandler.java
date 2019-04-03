@@ -119,6 +119,9 @@ public class TianTongHandler extends Handler {
                 case PrototocalTools.IProtoServerIndex.request_server_call_status:
                     mServer.getPhoneNettyManager().updateCallRecordStatus((TtCallRecordProtos.TtCallRecordProto) msg.obj);
                     break;
+                case PrototocalTools.IProtoServerIndex.request_server_sos_info_msg:
+                    mServer.getPhoneNettyManager().getSosMsgInfo((TtPhoneSosMessageProtos.TtPhoneSosMessage) msg.obj);
+                    break;
                 default:
                     break;
             }

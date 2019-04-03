@@ -21,6 +21,10 @@ public class ModuleDormancyUtil {
     public static String getNodeString(String path) {
         String prop = "1";// 默认值
         try {
+            File file = new File(path);
+            if(!file.exists()){
+                return "-1";
+            }
             FileReader fileReader = new FileReader(path);
             BufferedReader reader = new BufferedReader(fileReader);
             prop = reader.readLine();
@@ -163,6 +167,9 @@ public class ModuleDormancyUtil {
                         OutputStreamWriter outputWrite = null;
                         PrintWriter print = null;
                         File file = new File(path);
+                        if(!file.exists()){
+                            break;
+                        }
                         Log.i("ModuleDormancyUtil", "write file[" + path + "] with value (" + state + ")");
 
                         output = new FileOutputStream(file);

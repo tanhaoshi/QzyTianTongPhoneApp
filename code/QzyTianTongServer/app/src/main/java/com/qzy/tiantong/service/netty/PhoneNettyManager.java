@@ -3,6 +3,7 @@ package com.qzy.tiantong.service.netty;
 import android.content.Context;
 import android.os.BatteryManager;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
@@ -146,25 +147,41 @@ public class PhoneNettyManager implements IMobileDataManager {
 
     };
 
+    private CountDownTimer countDownTimer;
+
     private void initSendThread() {
-        mStateThread = new Runnable() {
+        /*mStateThread = new Runnable() {
             @Override
             public void run() {
                 try {
-                    setNewTimerSend(null);
+
                     mHandler.postDelayed(mStateThread, 3000);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         };
-        mHandler.post(mStateThread);
+        mHandler.post(mStateThread);*/
+        setNewTimerSend(null);
+        countDownTimer = new CountDownTimer(3 * 1000, 1000) {
+            @Override
+            public void onTick(long l) {
+            // LogUtils.e("onTick = " + (l/1000));
+            }
+
+            @Override
+            public void onFinish() {
+                initSendThread();
+            }
+        };
+        countDownTimer.start();
     }
 
     /**
      * 新定时发送
      */
     public void setNewTimerSend(String ip) {
+        LogUtils.e("setNewTimerSend... " );
         if (currentPhoneState == null) {
             currentPhoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL;
         }
@@ -948,6 +965,10 @@ public class PhoneNettyManager implements IMobileDataManager {
             mHandler.removeMessages(1);
         }
         mHandler = null;
+
+        if(countDownTimer != null){
+            countDownTimer.cancel();
+        }
 
         EventBus.getDefault().unregister(this);
         freeSingnal();

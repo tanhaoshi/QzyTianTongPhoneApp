@@ -34,7 +34,7 @@ public class CallLogManager {
             @Override
             public void run() {
                 int page = 0;
-                int pageCount = 20;
+                int pageCount = 10;
                 while (true) {
                     LogUtils.e("getCall log sync .....");
                     List<CallLogInfo> callLogInfo = PhoneUtils.getCallLog(context, page, pageCount);
@@ -87,7 +87,7 @@ public class CallLogManager {
             @Override
             public void run() {
                 int page = 0;
-                int pageCount = 20;
+                int pageCount = 10;
                 while (true) {
                     LogUtils.e("getSms sync .....");
                     List<SmsInfo> smsList = PhoneUtils.getSms(context, page, pageCount);
