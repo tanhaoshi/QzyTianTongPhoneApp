@@ -108,6 +108,7 @@ public class CmdHandler {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<PhoneDataBean>() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void accept(PhoneDataBean phoneDataBean) throws Exception {
                         handProcessModel(phoneDataBean.getProtoId(), phoneDataBean.getInputStream());
