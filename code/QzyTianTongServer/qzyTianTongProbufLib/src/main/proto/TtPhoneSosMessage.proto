@@ -6,9 +6,11 @@ option java_package = "com.qzy.tt.data"; //生成java文件的包名
 option java_outer_classname = "TtPhoneSosMessageProtos"; //生成的类名
 
 message TtPhoneSosMessage{
+
     string ip = 1;
     string phoneNumber =2;
     string messageContent = 3;
     int32  delaytime = 4;
+    bool existSetting = 5;
 }
 
