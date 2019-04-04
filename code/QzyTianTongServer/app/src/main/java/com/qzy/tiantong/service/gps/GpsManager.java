@@ -1,25 +1,16 @@
 package com.qzy.tiantong.service.gps;
 
-import android.app.KeyguardManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.location.Criteria;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.UserHandle;
 import android.provider.Settings;
-import android.util.Log;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.atcommand.AtCommandToolManager;
@@ -30,8 +21,6 @@ import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.probuf.lib.data.PhoneCmd;
 import com.qzy.tt.probuf.lib.data.PrototocalTools;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.Iterator;
 
 public class GpsManager {

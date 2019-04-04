@@ -16,6 +16,7 @@ import com.qzy.tiantong.lib.power.PowerUtils;
 import com.qzy.tiantong.lib.utils.ByteUtils;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.netty.PhoneNettyManager;
+import com.qzy.tiantong.service.netty.cmd.TianTongHandler;
 import com.qzy.tiantong.service.utils.TimeTask;
 import com.qzy.tt.data.CallPhoneStateProtos;
 
@@ -27,6 +28,7 @@ import java.util.TimerTask;
 public final class SystemSleepManager {
 
     private LocalPcmSocketManager mLocalPcmSocketManager;
+
     private PhoneNettyManager mPhoneNettyManager;
 
 
@@ -34,12 +36,23 @@ public final class SystemSleepManager {
 
     private Context mContext;
 
+    //计时器
     private CountDownTimer countDownTimer;
 
-    public SystemSleepManager(Context context, PhoneNettyManager phoneNettyManager, LocalPcmSocketManager localPcmSocketManager) {
-        this.mLocalPcmSocketManager = localPcmSocketManager;
-        this.mPhoneNettyManager = phoneNettyManager;
+    private long duration = 30 * 1000;
+
+
+    public SystemSleepManager(Context context, ITianTongServer server) {
+        this.mLocalPcmSocketManager = server.getLocalSocketManager();
+        this.mPhoneNettyManager = server.getPhoneNettyManager();
         mContext = context;
+        init();
+    }
+
+    /**
+     * 初始化
+     */
+    private void init() {
         controlSystemSleep();
 
         mLocalPcmSocketManager.setSocketCallback(new LocalPcmSocketManager.ISocketCallback() {
@@ -64,15 +77,14 @@ public final class SystemSleepManager {
                 }
             }
         });
-
-
     }
 
-    private long duration = 30 * 1000;
-
+    /**
+     * 控制系统休眠
+     */
     public void controlSystemSleep() {
 
-        if(countDownTimer != null){
+        if (countDownTimer != null) {
             countDownTimer.cancel();
         }
 
@@ -84,26 +96,15 @@ public final class SystemSleepManager {
 
             @Override
             public void onFinish() {
-                mHandler.sendEmptyMessage(1);
+                controlSleep();
             }
         };
         countDownTimer.start();
     }
 
-    private Handler mHandler = new Handler(Looper.getMainLooper()){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what){
-                case 1:
-                    LogUtils.i("handleMessage 1111 " );
-                    controlSleep();
-                    break;
-
-            }
-        }
-    };
-
+    /**
+     * 休眠逻辑判断
+     */
     private void controlSleep() {
         try {
             if (!checkCurrentSingnalValue()) {
@@ -119,8 +120,9 @@ public final class SystemSleepManager {
 
             boolean isCalling = checkPhoneStateCalling();
             boolean isSos = isSosState();
+            boolean isGpsOpne = isGpsState();
 
-            if (isCalling || isSos) {
+            if (isCalling || isSos || isGpsOpne) {
                 LogUtils.i("checkPhoneStateCalling()  = " + isCalling + "  isSosState " + isSos);
                 controlSystemSleep();
                 return;
@@ -130,48 +132,50 @@ public final class SystemSleepManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
 
     /**
-     * 实际休眠处理
+     * 先让模块休眠  再然系统休眠
      */
-    public void doSleeep() {
+    private void doSleeep() {
         try {
 
             LogUtils.i("control system go to sleep start = " + isTtSleep);
-            //控制天通休眠
-            // controlSignalStrength(mPhoneNettyManager.currentSignalValue);
 
-            mLocalPcmSocketManager.sendCommand(PowerUtils.sleepCommand());
+            sleepTianTong();
 
-
-//            mLocalPcmSocketManager.sendCommand(PowerUtils.checkTtModeCommand());
-
-
+            checkTiantongSleepState();
             LogUtils.i("control system go to sleep end  = " + isTtSleep);
 
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //if (isTtSleep) {
-                        LogUtils.i("gotoSleep  = " + isTtSleep);
-                        gotoSleep();
-                   // }
+            if (isTtSleep) {
+                gotoSleep();
+            } else {
+                CountDownTimer timers = new CountDownTimer(1000, 1000) {
+                    @Override
+                    public void onTick(long l) {
 
-                }
-            }, 20 * 1000);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        controlSleep();
+                    }
+                };
+                timers.start();
+            }
 
 
-        } catch (RemoteException e) {
+        } catch (Exception e) {
 
             e.printStackTrace();
         }
     }
 
 
+    /**
+     * 系统休眠接口
+     */
     private void gotoSleep() {
         PowerManager powerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
         try {
@@ -241,10 +245,63 @@ public final class SystemSleepManager {
         return !mPhoneNettyManager.getmSmsPhoneManager().isThread;
     }
 
+    /**
+     * gps 是否打开
+     *
+     * @return
+     */
+    private boolean isGpsState() {
+        return mPhoneNettyManager.getmGpsManager().getmCurrenLocation() == null ? false : true;
+    }
+
+    /**
+     * 发送天通模块休眠
+     */
+    public void sleepTianTong() {
+        try {
+            LogUtils.i("control model go to sleep");
+            mLocalPcmSocketManager.sendCommand(PowerUtils.sleepCommand());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 唤醒天通模块
+     */
+    public void wakeupTianTong() {
+        try {
+            LogUtils.i("control model go to wakeup ");
+            mLocalPcmSocketManager.sendCommand(PowerUtils.wakeupCommand());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 检查天通休眠状态
+     */
+    public void checkTiantongSleepState() {
+        try {
+            LogUtils.i("check model  sleep state");
+            mLocalPcmSocketManager.sendCommand(PowerUtils.checkTtModeCommand());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    /**
+     * 信号控制模块休眠
+     */
     private boolean inPreSignal = false;
     private boolean inPreNoSignal = true;
 
-    private synchronized void controlSignalStrength(int gsmSignalStrength) {
+    @android.support.annotation.RequiresApi(api = Build.VERSION_CODES.O)
+    public synchronized void controlSignalStrength(int gsmSignalStrength) {
         // 入网
         if (gsmSignalStrength >= 0 && gsmSignalStrength < 97) {
             //从无到有
@@ -254,16 +311,11 @@ public final class SystemSleepManager {
                 inPreSignal = true;
                 //要对它进行休眠
                 //1代表已经休眠 0代表正常可工作状态
-                try {
-                    LogUtils.i("control model go to sleep");
-                    mLocalPcmSocketManager.sendCommand(PowerUtils.sleepCommand());
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+                sleepTianTong();
             }//从有到有
         } else {
             //从有到无
-            LogUtils.i("control model go to wakeup ");
+            //LogUtils.i("control model go to wakeup ");
             if (inPreSignal) {
                 inPreNoSignal = true;
                 inPreSignal = false;
@@ -274,7 +326,6 @@ public final class SystemSleepManager {
             }//从无到无
         }
     }
-
 
     /**
      * 释放

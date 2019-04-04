@@ -80,18 +80,22 @@ public class TianTongServiceManager implements ITianTongServer {
     private boolean isUdpPcmLocal = true;
     private LocalPcmSocketManager mLocalPcmSocketManager;
 
+    //休眠控制类
+    private SystemSleepManager mSystemSleepManager;
 
     public TianTongServiceManager(Context context) {
         mContext = context;
         if (isUdpPcmLocal) {
             mLocalPcmSocketManager = new LocalPcmSocketManager(context);
         }
-        mQzyPhoneManager = new QzyPhoneManager(context, this, mLocalPcmSocketManager);
+        mQzyPhoneManager = new QzyPhoneManager(context, this);
         mTianTongHandler = new TianTongHandler(this);
         mCmdHandler = new CmdHandler(mTianTongHandler);
 
         initNettyServer();
         initPhoneNettyManager();
+
+        mSystemSleepManager = new SystemSleepManager(context, this);
 
         initBroadcast();
 
@@ -267,6 +271,16 @@ public class TianTongServiceManager implements ITianTongServer {
     }
 
     @Override
+    public SystemSleepManager getSystemSleepManager() {
+        return mSystemSleepManager;
+    }
+
+    @Override
+    public LocalPcmSocketManager getLocalSocketManager() {
+        return mLocalPcmSocketManager;
+    }
+
+    @Override
     public void onPhoneStateChange(TtPhoneState state) {
 
         if (mPhoneNettyManager != null) {
@@ -361,6 +375,8 @@ public class TianTongServiceManager implements ITianTongServer {
     @Override
     public void sendSms(TtPhoneSmsProtos.TtPhoneSms ttPhoneSms) {
         if (mPhoneNettyManager != null) {
+            //发送短信时也需要唤醒模块
+            mSystemSleepManager.wakeupTianTong();
             mPhoneNettyManager.getmSmsPhoneManager().senSms(ttPhoneSms);
         }
     }

@@ -120,6 +120,7 @@ public class BroadcastManager {
                 disposePhoneState(intent);
             }else if(action.equals(Intent.ACTION_SCREEN_ON)){
                 LogUtils.i("The system process broad cast on");
+                mServer.getSystemSleepManager().controlSystemSleep();
             }else if(action.equals(Intent.ACTION_SCREEN_OFF)){
                 LogUtils.i("The system process broad cast off");
             }

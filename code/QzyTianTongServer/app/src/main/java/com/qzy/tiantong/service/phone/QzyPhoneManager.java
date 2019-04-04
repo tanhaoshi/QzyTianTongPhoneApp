@@ -38,14 +38,11 @@ public class QzyPhoneManager {
     private Context mContext;
     private ITianTongServer mServer;
     private int mstate;
-    // 休眠标记位
-    private boolean dormancyFlag = true;
 
     private AtCommandToolManager mAtCommandToolManager;
 
-    private LocalPcmSocketManager mLocalPcmSocketManager;
 
-    public QzyPhoneManager(Context context, ITianTongServer server,LocalPcmSocketManager localPcmSocketManager) {
+    public QzyPhoneManager(Context context, ITianTongServer server) {
         mContext = context;
         mServer = server;
 
@@ -57,7 +54,6 @@ public class QzyPhoneManager {
 
             }
         });
-        this.mLocalPcmSocketManager = localPcmSocketManager;
     }
 
     /**
@@ -88,7 +84,10 @@ public class QzyPhoneManager {
      */
     public void callPhone(String ip, String phoneNum) {
 
-        wakeupCallChannel();
+        /** 打电话之前将模块进行唤醒 */
+        if (mServer != null) {
+            mServer.getSystemSleepManager().wakeupTianTong();
+        }
 
         LogUtils.i("start call phone ...");
 
@@ -106,15 +105,6 @@ public class QzyPhoneManager {
         LogUtils.e("tel phone ..  " + phoneNum);
     }
 
-    /** 打电话之前将模块进行唤醒 */
-    private void wakeupCallChannel(){
-        try {
-            mLocalPcmSocketManager.sendCommand(PowerUtils.wakeupCommand());
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     /**
      * 挂断电话
@@ -122,28 +112,27 @@ public class QzyPhoneManager {
      * @param
      */
     public void hangupPhone(final String ip) {
-       new Thread(new Runnable() {
-           @Override
-           public void run() {
-               LogUtils.e("hangupPhone ..  " );
-               mServer.setEndCallingIp(ip);
-               endCall();
-               try {
-                   mLocalPcmSocketManager.sendCommand(PowerUtils.sleepCommand());
-               } catch (RemoteException e) {
-                   e.printStackTrace();
-               }
-               endCallingAndClearIp();
-           }
-       }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                LogUtils.e("hangupPhone ..  ");
+                mServer.setEndCallingIp(ip);
+                endCall();
+                endCallingAndClearIp();
+                //挂断电话立马休眠模块
+                if (mServer != null) {
+                    mServer.getSystemSleepManager().sleepTianTong();
+                }
+            }
+        }).start();
     }
 
 
     /**
      * 挂断并清除通话ip
      */
-    private void endCallingAndClearIp(){
-        LogUtils.e("endCallingAndClearIp ..  " );
+    private void endCallingAndClearIp() {
+        LogUtils.e("endCallingAndClearIp ..  ");
         mServer.freeTtPcmDevice();
         mServer.onPhoneStateChange(TtPhoneState.HUANGUP);
     }
@@ -170,11 +159,11 @@ public class QzyPhoneManager {
         // IBinder iBinder = ServiceManager.getService(TELEPHONY_SERVICE);
         // ServiceManager 是被系统隐藏掉了 所以只能用反射的方法获取
         try {
-           /* Method method = Class.forName("android.os.ServiceManager").getMethod("getService", String.class);
+            Method method = Class.forName("android.os.ServiceManager").getMethod("getService", String.class);
             IBinder binder = (IBinder) method.invoke(null, new Object[]{Context.TELEPHONY_SERVICE});
             ITelephony telephony = ITelephony.Stub.asInterface(binder);
-            telephony.endCall();*/
-            if(mAtCommandToolManager != null){
+            telephony.endCall();
+            if (mAtCommandToolManager != null) {
                 mAtCommandToolManager.sendAtCommand(AtCommandTools.at_command_hungup);
             }
             LogUtils.d("endcall .....");
@@ -183,7 +172,6 @@ public class QzyPhoneManager {
             e.printStackTrace();
         }
     }
-
 
 
     private boolean answerRingCall() {
@@ -305,7 +293,9 @@ public class QzyPhoneManager {
                     mServer.onPhoneSignalStrengthChange(gsmSignalStrength);
 
                     //先去掉模块休眠的功能
-                    controlSignalStrength(gsmSignalStrength);
+                    if (mServer != null) {
+                        mServer.getSystemSleepManager().controlSignalStrength(gsmSignalStrength);
+                    }
                     break;
                 case -1:
                     LogUtils.e("network type -1,signaleS = " + gsmSignalStrength);
@@ -328,38 +318,6 @@ public class QzyPhoneManager {
         }
     }
 
-    private boolean inPreSignal = false;
-    private boolean inPreNoSignal = true;
-    @android.support.annotation.RequiresApi(api = Build.VERSION_CODES.O)
-    private synchronized void controlSignalStrength(int gsmSignalStrength){
-        // 入网
-            if(gsmSignalStrength >= 0 && gsmSignalStrength < 97){
-                //从无到有
-                LogUtils.i("control model go to sleep");
-                if(inPreNoSignal) {
-                    inPreNoSignal = false;
-                    inPreSignal = true;
-                    //要对它进行休眠
-                    //1代表已经休眠 0代表正常可工作状态
-                    try {
-                        mLocalPcmSocketManager.sendCommand(PowerUtils.sleepCommand());
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    }
-                }//从有到有
-            }else{
-                //从有到无
-                LogUtils.i("control model go to wakeup ");
-                if(inPreSignal) {
-                    inPreNoSignal = true;
-                    inPreSignal = false;
-                    LogUtils.i("signal loss do wakeup\n");
-//                    if(!PowerControl.getTTStatus()) {
-//                        PowerControl.doWakeup();
-//                    }
-                }//从无到无
-            }
-    }
 
     public void release() {
 
