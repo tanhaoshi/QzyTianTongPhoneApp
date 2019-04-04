@@ -83,6 +83,11 @@ public final class SystemSleepManager {
      * 控制系统休眠
      */
     public void controlSystemSleep() {
+        //去掉系统休眠
+        boolean isTest = true;
+        if (isTest) {
+            return;
+        }
 
         if (countDownTimer != null) {
             countDownTimer.cancel();
