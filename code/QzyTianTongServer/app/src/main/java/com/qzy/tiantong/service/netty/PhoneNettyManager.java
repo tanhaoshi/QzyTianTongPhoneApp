@@ -181,7 +181,7 @@ public class PhoneNettyManager implements IMobileDataManager {
      * 新定时发送
      */
     public void setNewTimerSend(String ip) {
-        LogUtils.e("setNewTimerSend... " );
+       // LogUtils.e("setNewTimerSend... " );
         if (currentPhoneState == null) {
             currentPhoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL;
         }

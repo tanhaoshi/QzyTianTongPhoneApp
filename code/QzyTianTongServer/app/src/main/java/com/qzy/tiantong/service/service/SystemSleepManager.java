@@ -10,6 +10,7 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.os.RemoteException;
 import android.os.SystemClock;
+import android.text.TextUtils;
 
 import com.qzy.tiantong.lib.localsocket.LocalPcmSocketManager;
 import com.qzy.tiantong.lib.power.PowerUtils;
@@ -17,10 +18,13 @@ import com.qzy.tiantong.lib.utils.ByteUtils;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.netty.PhoneNettyManager;
 import com.qzy.tiantong.service.netty.cmd.TianTongHandler;
+import com.qzy.tiantong.service.phone.PhoneClientManager;
 import com.qzy.tiantong.service.utils.TimeTask;
 import com.qzy.tt.data.CallPhoneStateProtos;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -40,6 +44,9 @@ public final class SystemSleepManager {
     private CountDownTimer countDownTimer;
 
     private long duration = 30 * 1000;
+
+    //系统休眠开关
+    private boolean isTest = true;
 
 
     public SystemSleepManager(Context context, ITianTongServer server) {
@@ -83,12 +90,12 @@ public final class SystemSleepManager {
      * 控制系统休眠
      */
     public void controlSystemSleep() {
-        //去掉系统休眠
-        boolean isTest = true;
+
         if (isTest) {
             return;
         }
-
+        isTtSleep = getTianTongModeSleep();
+        LogUtils.e("controlSystemSleep isTtSleep = " + isTtSleep);
         if (countDownTimer != null) {
             countDownTimer.cancel();
         }
@@ -96,7 +103,7 @@ public final class SystemSleepManager {
         countDownTimer = new CountDownTimer(duration, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                LogUtils.i("ontick " + millisUntilFinished);
+                LogUtils.i("ontick " + millisUntilFinished / 1000);
             }
 
             @Override
@@ -125,10 +132,9 @@ public final class SystemSleepManager {
 
             boolean isCalling = checkPhoneStateCalling();
             boolean isSos = isSosState();
-            boolean isGpsOpne = isGpsState();
-
-            if (isCalling || isSos || isGpsOpne) {
-                LogUtils.i("checkPhoneStateCalling()  = " + isCalling + "  isSosState " + isSos);
+            boolean isGpsOpen = isGpsState();
+            LogUtils.i("controlSleep isCalling = " + isCalling + "  isSosState " + isSos + " isGpsOpen = " + isGpsOpen);
+            if (isCalling || isSos || isGpsOpen) {
                 controlSystemSleep();
                 return;
             }
@@ -150,10 +156,12 @@ public final class SystemSleepManager {
 
             sleepTianTong();
 
-            checkTiantongSleepState();
+            //checkTiantongSleepState();
+            isTtSleep = getTianTongModeSleep();
             LogUtils.i("control system go to sleep end  = " + isTtSleep);
 
             if (isTtSleep) {
+                duration = 20 * 1000;
                 gotoSleep();
             } else {
                 CountDownTimer timers = new CountDownTimer(1000, 1000) {
@@ -169,7 +177,20 @@ public final class SystemSleepManager {
                 };
                 timers.start();
             }
+            /*CountDownTimer timers = new CountDownTimer(10 * 1000, 1000) {
+                @Override
+                public void onTick(long l) {
 
+                }
+
+                @Override
+                public void onFinish() {
+                    isTtSleep = getTianTongModeSleep();
+                    LogUtils.i("onFinish control system go to sleep end  = " + isTtSleep);
+                    gotoSleep();
+                }
+            };
+            timers.start();*/
 
         } catch (Exception e) {
 
@@ -216,6 +237,12 @@ public final class SystemSleepManager {
      * @return
      */
     private boolean checkPhoneStateCalling() {
+        String callingIp = PhoneClientManager.getInstance().isCallingIp();
+
+        if (!TextUtils.isEmpty(callingIp)) {
+            LogUtils.e("calling ip = " + callingIp);
+            return true;
+        }
         if (mPhoneNettyManager.currentPhoneState != null) {
             if (mPhoneNettyManager.currentPhoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.HUANGUP ||
                     mPhoneNettyManager.currentPhoneState == CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL) {
@@ -256,7 +283,7 @@ public final class SystemSleepManager {
      * @return
      */
     private boolean isGpsState() {
-        return mPhoneNettyManager.getmGpsManager().getmCurrenLocation() == null ? false : true;
+        return mPhoneNettyManager.getmGpsManager().isGpsOpen;
     }
 
     /**
@@ -298,6 +325,28 @@ public final class SystemSleepManager {
 
     }
 
+    /**
+     * 读取天通休眠模块
+     *
+     * @return
+     */
+    public boolean getTianTongModeSleep() {
+        try {
+
+            File file = new File("/sys/bus/platform/drivers/tt-platdata/bp_mode");
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String value = br.readLine().trim();
+            LogUtils.d("getTianTongModeSleep value = " + value);
+            if (value.equals("1")) {
+                return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
     /**
      * 信号控制模块休眠
@@ -316,7 +365,13 @@ public final class SystemSleepManager {
                 inPreSignal = true;
                 //要对它进行休眠
                 //1代表已经休眠 0代表正常可工作状态
-                sleepTianTong();
+                //sleepTianTong();
+                if (isTest) {
+                    sleepTianTong();
+
+                } else {
+                    controlSystemSleep();
+                }
             }//从有到有
         } else {
             //从有到无

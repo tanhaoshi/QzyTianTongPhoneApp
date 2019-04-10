@@ -51,6 +51,7 @@ public class BroadcastManager {
         intentFilter.addAction(ACTION_PRECISE_CALL_STATE_CHANGED); //监听系统层电话状态
         intentFilter.addAction(Intent.ACTION_SCREEN_ON);
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        intentFilter.addAction("android.os.OWNED.AWAKE");
         mContext.registerReceiver(mReceiver, intentFilter);
     }
 
@@ -120,9 +121,12 @@ public class BroadcastManager {
                 disposePhoneState(intent);
             }else if(action.equals(Intent.ACTION_SCREEN_ON)){
                 LogUtils.i("The system process broad cast on");
-                mServer.getSystemSleepManager().controlSystemSleep();
+                //mServer.getSystemSleepManager().controlSystemSleep();
             }else if(action.equals(Intent.ACTION_SCREEN_OFF)){
                 LogUtils.i("The system process broad cast off");
+            }else if(action.equals("android.os.OWNED.AWAKE")){
+                LogUtils.i("The system process broad cast android.os.OWNED.AWAKE");
+                mServer.getSystemSleepManager().controlSystemSleep();
             }
         }
     };

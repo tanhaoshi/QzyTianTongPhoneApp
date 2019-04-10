@@ -35,7 +35,7 @@ public class GpsManager {
 
     private Location mCurrenLocation;
 
-    private boolean isGpsOpen = false;
+    public boolean isGpsOpen = false;
 
     //at 指令管理
     private AtCommandToolManager mAtCommandToolManager;
@@ -180,6 +180,7 @@ public class GpsManager {
         if (mAtCommandToolManager != null) {
             mAtCommandToolManager.sendAtCommand(AtCommandTools.at_command_open_gps);
         }
+        isGpsOpen = true;
         LogUtils.d("open gps .....");
     }
 
@@ -194,6 +195,7 @@ public class GpsManager {
             mCurrenLocation = null;
             sendGpsState();
         }
+        isGpsOpen = false;
         LogUtils.d("close gps .....");
 
 
