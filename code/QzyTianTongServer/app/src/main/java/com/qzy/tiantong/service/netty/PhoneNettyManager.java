@@ -26,6 +26,7 @@ import com.qzy.tiantong.service.phone.data.CallLogInfo;
 import com.qzy.tiantong.service.phone.data.ClientInfoBean;
 import com.qzy.tiantong.service.phone.data.SmsInfo;
 import com.qzy.tiantong.service.phone.data.SosMessage;
+import com.qzy.tiantong.service.service.ITianTongServer;
 import com.qzy.tiantong.service.time.DateTimeManager;
 import com.qzy.tiantong.service.usb.TtUsbManager;
 import com.qzy.tiantong.service.utils.Constant;
@@ -68,6 +69,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PhoneNettyManager implements IMobileDataManager {
 
+    private ITianTongServer mServer;
+
     //服务端netty管理工具
     private NettyServerManager mNettyServerManager;
 
@@ -101,12 +104,13 @@ public class PhoneNettyManager implements IMobileDataManager {
 
     private boolean isG4Test = false;
 
-    public PhoneNettyManager(Context context, NettyServerManager manager) {
+    public PhoneNettyManager(Context context, ITianTongServer server,NettyServerManager manager) {
         mContext = context;
+        mServer = server;
         mNettyServerManager = manager;
 
         mDateTimeManager = new DateTimeManager(context, mNettyServerManager);
-        mGpsManager = new GpsManager(mContext, mNettyServerManager);
+        mGpsManager = new GpsManager(mContext, mNettyServerManager,mServer);
         mSmsPhoneManager = new SmsPhoneManager(context, mGpsManager, iOnSMSCallback);
 
         mTtUsbManager = new TtUsbManager(mContext, mNettyServerManager);

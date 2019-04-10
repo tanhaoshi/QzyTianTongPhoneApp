@@ -9,6 +9,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.provider.Settings;
 
@@ -16,6 +17,7 @@ import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.atcommand.AtCommandToolManager;
 import com.qzy.tiantong.service.atcommand.AtCommandTools;
 import com.qzy.tiantong.service.netty.NettyServerManager;
+import com.qzy.tiantong.service.service.ITianTongServer;
 import com.qzy.tiantong.service.utils.GpsUtils;
 import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.probuf.lib.data.PhoneCmd;
@@ -30,6 +32,7 @@ public class GpsManager {
     //服务端netty管理工具
     private NettyServerManager mNettyServerManager;
 
+    private ITianTongServer mServer;
 
     private LocationManager locationManager;
 
@@ -40,10 +43,10 @@ public class GpsManager {
     //at 指令管理
     private AtCommandToolManager mAtCommandToolManager;
 
-    public GpsManager(Context context, NettyServerManager manager) {
+    public GpsManager(Context context, NettyServerManager manager,ITianTongServer server) {
         mContext = context;
         mNettyServerManager = manager;
-
+        mServer = server;
 
         openGPS(true);
 
@@ -176,12 +179,36 @@ public class GpsManager {
     /**
      * 打开GPS
      */
+    private CountDownTimer downTimer;
     public void openGps() {
-        if (mAtCommandToolManager != null) {
-            mAtCommandToolManager.sendAtCommand(AtCommandTools.at_command_open_gps);
+
+        if(mServer != null){
+            mServer.getSystemSleepManager().wakeupTianTong();
         }
+
+        if(downTimer != null){
+            downTimer.cancel();
+        }
+
+        downTimer = new CountDownTimer(1000,1000) {
+            @Override
+            public void onTick(long l) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                if (mAtCommandToolManager != null) {
+                    mAtCommandToolManager.sendAtCommand(AtCommandTools.at_command_open_gps);
+                }
+                LogUtils.d("open gps .....");
+            }
+        };
+        downTimer.start();
+
         isGpsOpen = true;
-        LogUtils.d("open gps .....");
+
+
     }
 
 

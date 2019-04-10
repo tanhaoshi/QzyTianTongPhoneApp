@@ -75,9 +75,9 @@ public class TianTongHandler extends Handler {
                     break;
                 case PrototocalTools.IProtoServerIndex.request_gps_position:
                     TtPhonePositionProtos.TtPhonePosition ttPhonePosition = (TtPhonePositionProtos.TtPhonePosition) msg.obj;
-                    if (ttPhonePosition != null && ttPhonePosition.getIsOpen()) {
+                   /* if (ttPhonePosition != null && ttPhonePosition.getIsOpen()) {
                         mServer.getSystemSleepManager().wakeupTianTong();
-                    }
+                    }*/
                     mServer.getPhoneNettyManager().getmGpsManager().parseProtocalControl(ttPhonePosition);
                     break;
                 case PrototocalTools.IProtoServerIndex.request_open_beidou_usb:

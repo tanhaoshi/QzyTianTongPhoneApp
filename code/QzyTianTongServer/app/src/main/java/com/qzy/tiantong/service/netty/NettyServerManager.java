@@ -49,7 +49,6 @@ public class NettyServerManager implements NettyServer.IServerListener {
             iNettyServerListener.onConnected(ip);
         } else {
             //客户端退出
-            PhoneClientManager.getInstance().removePhoneClient(ip);
             iNettyServerListener.onDisconnected(ip);
         }
 

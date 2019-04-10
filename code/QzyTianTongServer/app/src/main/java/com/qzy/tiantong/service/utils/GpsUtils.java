@@ -2,6 +2,7 @@ package com.qzy.tiantong.service.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.UserHandle;
 import android.provider.Settings;
 
 public class GpsUtils {
@@ -15,21 +16,32 @@ public class GpsUtils {
      * 打开gps
      */
     public static void openGPS(Context context,int cureentMode,int newModeKey){
-        Intent intent = new Intent(MODE_CHANGING_ACTION);
-        intent.putExtra(CURRENT_MODE_KEY, cureentMode);
-        intent.putExtra(NEW_MODE_KEY, newModeKey);
-        context.sendBroadcast(intent, android.Manifest.permission.WRITE_SECURE_SETTINGS);
-        Settings.Secure.putInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE, Settings.Secure.LOCATION_MODE_HIGH_ACCURACY);
+        try {
+            Intent intent = new Intent(MODE_CHANGING_ACTION);
+            intent.putExtra(CURRENT_MODE_KEY, cureentMode);
+            intent.putExtra(NEW_MODE_KEY, newModeKey);
+            //context.sendBroadcast(intent, android.Manifest.permission.WRITE_SECURE_SETTINGS);
+            context.sendBroadcastAsUser(intent,  QzyUserHandler.getUserHandleALL(),android.Manifest.permission.WRITE_SECURE_SETTINGS);
+            Settings.Secure.putInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE, Settings.Secure.LOCATION_MODE_HIGH_ACCURACY);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
      * 关闭gps
      */
     public static void closeGPS(Context context,int cureentMode,int newModeKey){
-        Intent intent = new Intent(MODE_CHANGING_ACTION);
-        intent.putExtra(CURRENT_MODE_KEY, cureentMode);
-        intent.putExtra(NEW_MODE_KEY, newModeKey);
-        context.sendBroadcast(intent, android.Manifest.permission.WRITE_SECURE_SETTINGS);
-        Settings.Secure.putInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE, Settings.Secure.LOCATION_MODE_OFF);
+        try {
+            Intent intent = new Intent(MODE_CHANGING_ACTION);
+            intent.putExtra(CURRENT_MODE_KEY, cureentMode);
+            intent.putExtra(NEW_MODE_KEY, newModeKey);
+            //context.sendBroadcast(intent, android.Manifest.permission.WRITE_SECURE_SETTINGS);
+            context.sendBroadcastAsUser(intent, QzyUserHandler.getUserHandleALL(),android.Manifest.permission.WRITE_SECURE_SETTINGS);
+            Settings.Secure.putInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE, Settings.Secure.LOCATION_MODE_OFF);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 }

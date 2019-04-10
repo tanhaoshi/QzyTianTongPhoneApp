@@ -148,7 +148,11 @@ public class TianTongServiceManager implements ITianTongServer {
 
             @Override
             public void onDisconnected(String ip) {
-
+                //解决clien 主动 close 的问题
+                if (ip.equals(PhoneClientManager.getInstance().isCallingIp())) {
+                    mQzyPhoneManager.hangupPhone(ip);
+                }
+                PhoneClientManager.getInstance().removePhoneClient(ip);
             }
         });
         mNettyServerManager.startNettyServer(9999);
@@ -168,7 +172,7 @@ public class TianTongServiceManager implements ITianTongServer {
      * 初始化 Phone客户端管理工具
      */
     private void initPhoneNettyManager() {
-        mPhoneNettyManager = new PhoneNettyManager(mContext, mNettyServerManager);
+        mPhoneNettyManager = new PhoneNettyManager(mContext, this, mNettyServerManager);
     }
 
 

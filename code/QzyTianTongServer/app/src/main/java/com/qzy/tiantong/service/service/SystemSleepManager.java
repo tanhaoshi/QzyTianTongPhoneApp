@@ -135,6 +135,10 @@ public final class SystemSleepManager {
             boolean isGpsOpen = isGpsState();
             LogUtils.i("controlSleep isCalling = " + isCalling + "  isSosState " + isSos + " isGpsOpen = " + isGpsOpen);
             if (isCalling || isSos || isGpsOpen) {
+                isTtSleep = getTianTongModeSleep();
+                if(isTtSleep){
+                    wakeupTianTong();
+                }
                 controlSystemSleep();
                 return;
             }
@@ -157,14 +161,13 @@ public final class SystemSleepManager {
             sleepTianTong();
 
             //checkTiantongSleepState();
-            isTtSleep = getTianTongModeSleep();
-            LogUtils.i("control system go to sleep end  = " + isTtSleep);
+
 
             if (isTtSleep) {
                 duration = 20 * 1000;
                 gotoSleep();
             } else {
-                CountDownTimer timers = new CountDownTimer(1000, 1000) {
+                CountDownTimer timers = new CountDownTimer(3 * 1000, 1000) {
                     @Override
                     public void onTick(long l) {
 
@@ -172,6 +175,8 @@ public final class SystemSleepManager {
 
                     @Override
                     public void onFinish() {
+                        isTtSleep = getTianTongModeSleep();
+                        LogUtils.i("onFinish control system go to sleep end  = " + isTtSleep);
                         controlSleep();
                     }
                 };
@@ -359,7 +364,6 @@ public final class SystemSleepManager {
         // 入网
         if (gsmSignalStrength >= 0 && gsmSignalStrength < 97) {
             //从无到有
-            LogUtils.i("control model go to sleep");
             if (inPreNoSignal) {
                 inPreNoSignal = false;
                 inPreSignal = true;
@@ -367,9 +371,18 @@ public final class SystemSleepManager {
                 //1代表已经休眠 0代表正常可工作状态
                 //sleepTianTong();
                 if (isTest) {
+                    boolean isCalling = checkPhoneStateCalling();
+                    boolean isSos = isSosState();
+                    boolean isGpsOpen = isGpsState();
+                    LogUtils.i("controlSignalStrength isCalling = " + isCalling + "  isSosState " + isSos + " isGpsOpen = " + isGpsOpen);
+                    if (isCalling || isSos || isGpsOpen) {
+                        return;
+                    }
+                    LogUtils.i("controlSignalStrength control model go to sleep");
                     sleepTianTong();
 
                 } else {
+                    LogUtils.i("controlSignalStrength control model go to sleep");
                     controlSystemSleep();
                 }
             }//从有到有
