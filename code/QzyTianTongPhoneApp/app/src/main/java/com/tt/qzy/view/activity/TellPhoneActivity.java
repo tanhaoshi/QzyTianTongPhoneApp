@@ -1,5 +1,9 @@
 package com.tt.qzy.view.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +31,7 @@ import com.tt.qzy.view.R;
 import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.layout.dialpad.InputPwdViewCall;
 import com.tt.qzy.view.presenter.activity.TellPhoneActivityPresenter;
+import com.tt.qzy.view.receiver.OverallReceiver;
 import com.tt.qzy.view.utils.AnswerBellManager;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NToast;
@@ -70,8 +75,8 @@ public class TellPhoneActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav
                 | View.SYSTEM_UI_FLAG_IMMERSIVE);
         setContentView(R.layout.activity_tell_phone);
-
-        mQzySensorManager = new QzySensorManager(TtPhoneApplication.getInstance());
+        registerReceiver();
+        mQzySensorManager = new QzySensorManager(getApplicationContext());
         ButterKnife.bind(this);
         String number = getIntent().getStringExtra("diapadNumber");
         phoneNumber.setText(number);
@@ -107,10 +112,20 @@ public class TellPhoneActivity extends AppCompatActivity {
             text_state.setText("正在接听");
             onCallingState();
         } else {
-            mAnswerBellManager = new AnswerBellManager(TtPhoneApplication.getInstance());
+            mAnswerBellManager = new AnswerBellManager(getApplicationContext());
         }
 
         setTtPhoneCallState();
+    }
+
+    private void registerReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(OverallReceiver.CLEAR_TELL_PHONE_ACTIVITY);
+        registerReceiver(broadcastReceiver,intentFilter);
+    }
+
+    private void unregisterReceiver() {
+        unregisterReceiver(broadcastReceiver);
     }
 
    /* @Subscribe(threadMode = ThreadMode.MAIN)
@@ -329,5 +344,16 @@ public class TellPhoneActivity extends AppCompatActivity {
             mAnswerBellManager = null;
         }
         AndroidVoiceManager.setVoiceMusic(this);
+        unregisterReceiver();
     }
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if(action.equals(OverallReceiver.CLEAR_TELL_PHONE_ACTIVITY)){
+                finish();
+            }
+        }
+    };
 }

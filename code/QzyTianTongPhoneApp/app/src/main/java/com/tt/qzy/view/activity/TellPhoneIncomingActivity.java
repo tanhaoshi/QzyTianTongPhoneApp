@@ -1,6 +1,9 @@
 package com.tt.qzy.view.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -28,6 +31,7 @@ import com.tt.qzy.view.db.manager.CallRecordManager;
 import com.tt.qzy.view.db.manager.MailListManager;
 import com.tt.qzy.view.presenter.activity.TellPhoneActivityPresenter;
 import com.tt.qzy.view.presenter.manager.SyncManager;
+import com.tt.qzy.view.receiver.OverallReceiver;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.utils.SPUtils;
@@ -64,7 +68,8 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav
                 | View.SYSTEM_UI_FLAG_IMMERSIVE);
         setContentView(R.layout.activity_tell_phone_incoming);
-        RingManager.playDefaultCallMediaPlayer(TtPhoneApplication.getInstance());
+        registerReceiver();
+        RingManager.playDefaultCallMediaPlayer(getApplication());
         ButterKnife.bind(this);
         phoneNumber = getIntent().getStringExtra("diapadNumber");
         txtv_phoneNumber.setText(phoneNumber);
@@ -74,6 +79,16 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         //  EventBusUtils.register(this);
         setTtPhoneCallState();
         setTtPhoneCallStateBackListener();
+    }
+
+    private void registerReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(OverallReceiver.CLEAR_TELL_PHONE_ACTIVITY);
+        registerReceiver(broadcastReceiver,intentFilter);
+    }
+
+    private void unregisterReceiver() {
+        unregisterReceiver(broadcastReceiver);
     }
 
     @OnClick({R.id.btn_accept, R.id.btn_endcall})
@@ -192,7 +207,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         intent.putExtra("diapadNumber", phoneNumber);
         intent.putExtra("acceptCall", true);
         startActivity(intent);
-        RingManager.stopDefaultCallMediaPlayer(TtPhoneApplication.getInstance());
+        RingManager.stopDefaultCallMediaPlayer(getApplication());
         mTellPhoneActivityPresenter.acceptCall();
         finish();
     }
@@ -201,7 +216,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
      * 挂断状态
      */
     private void onEndCallState() {
-        RingManager.stopDefaultCallMediaPlayer(TtPhoneApplication.getInstance());
+        RingManager.stopDefaultCallMediaPlayer(getApplication());
         finish();
     }
 
@@ -273,8 +288,24 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        RingManager.stopDefaultCallMediaPlayer(TtPhoneApplication.getInstance());
+        RingManager.stopDefaultCallMediaPlayer(getApplicationContext());
         // EventBusUtils.unregister(this);
         isAlert = true;
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver();
+    }
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if(action.equals(OverallReceiver.CLEAR_TELL_PHONE_ACTIVITY)){
+                finish();
+            }
+        }
+    };
 }
