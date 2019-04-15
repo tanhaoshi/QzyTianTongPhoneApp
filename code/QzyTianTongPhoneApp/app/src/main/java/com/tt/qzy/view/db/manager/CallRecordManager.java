@@ -2,6 +2,7 @@ package com.tt.qzy.view.db.manager;
 
 import android.content.Context;
 
+import com.socks.library.KLog;
 import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.db.CallRecordDaoDao;
 import com.tt.qzy.view.db.DaoMaster;
@@ -55,6 +56,9 @@ public class CallRecordManager {
 
     public List<CallRecordDao> queryKeyOnPhoneNumber(String phone){
         CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
+        if(phone == null || "".equals(phone) || phone.length() == 0){
+            return null;
+        }
         QueryBuilder<CallRecordDao> qb = dao.queryBuilder().orderDesc().where(CallRecordDaoDao.Properties.PhoneNumber.eq(phone));
         List<CallRecordDao> list = qb.list();
         return list;
@@ -108,15 +112,18 @@ public class CallRecordManager {
         CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
         QueryBuilder<CallRecordDao> db = dao.queryBuilder().where(CallRecordDaoDao.Properties.Name.like("%"+value+"%"))
                 .where(new WhereCondition.StringCondition(
-                        " date in " + "(select max(date) from CALL_RECORD_DAO group by PHONE_NUMBER)"));
+                        " date in " + "(select max(date) from CALL_RECORD_DAO group by NAME)"));
         List<CallRecordDao> daoList = db.list();
+        KLog.i("look at list size = " + daoList.size());
         if(daoList.size() > 0){
             return daoList;
         }else{
             QueryBuilder<CallRecordDao> queryBuilder = dao.queryBuilder().where(CallRecordDaoDao.Properties.PhoneNumber.
-                    like("%"+value+"%")).where(new WhereCondition.StringCondition(
+                    like("%"+value+"%"))
+                    .where(new WhereCondition.StringCondition(
                     " date in " + "(select max(date) from CALL_RECORD_DAO group by PHONE_NUMBER)"));
             List<CallRecordDao> list = queryBuilder.list();
+            KLog.i("look at list size = " + list.size());
             return list;
         }
     }

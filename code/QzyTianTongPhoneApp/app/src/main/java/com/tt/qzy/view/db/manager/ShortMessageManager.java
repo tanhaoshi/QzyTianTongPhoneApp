@@ -3,9 +3,11 @@ package com.tt.qzy.view.db.manager;
 import android.content.Context;
 
 import com.tt.qzy.view.application.TtPhoneApplication;
+import com.tt.qzy.view.db.CallRecordDaoDao;
 import com.tt.qzy.view.db.DaoMaster;
 import com.tt.qzy.view.db.DaoSession;
 import com.tt.qzy.view.db.ShortMessageDaoDao;
+import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
 
 import org.greenrobot.greendao.query.QueryBuilder;
@@ -46,6 +48,9 @@ public class ShortMessageManager {
 
     public List<ShortMessageDao> queryPrimaryOfPhone(String phone){
        ShortMessageDaoDao dao = daoSession.getShortMessageDaoDao();
+       if(phone == null || "".equals(phone) || phone.length() == 0){
+           return null;
+       }
        QueryBuilder<ShortMessageDao> queryBuilder = dao.queryBuilder().orderDesc().where(ShortMessageDaoDao.Properties.NumberPhone.eq(phone));
        List<ShortMessageDao> shortMessageDaos = queryBuilder.list();
        return shortMessageDaos;
@@ -103,6 +108,24 @@ public class ShortMessageManager {
        List<ShortMessageDao> list = qb.list();
        return list;
     }
+
+    public List<ShortMessageDao> fuzzySearch(String value){
+        ShortMessageDaoDao dao = daoSession.getShortMessageDaoDao();
+        QueryBuilder<ShortMessageDao> db = dao.queryBuilder().where(ShortMessageDaoDao.Properties.Name.like("%"+value+"%"))
+                .where(new WhereCondition.StringCondition(
+                        " TIME in " + "(select max(TIME) from SHORT_MESSAGE_DAO group by NAME)"));
+        List<ShortMessageDao> daoList = db.list();
+        if(daoList.size() > 0){
+            return daoList;
+        }else{
+            QueryBuilder<ShortMessageDao> queryBuilder = dao.queryBuilder().where(ShortMessageDaoDao.Properties.NumberPhone.
+                    like("%"+value+"%")).where(new WhereCondition.StringCondition(
+                    " TIME in " + "(select max(TIME) from SHORT_MESSAGE_DAO group by NUMBER_PHONE)"));
+            List<ShortMessageDao> list = queryBuilder.list();
+            return list;
+        }
+    }
+
 
     public void deleteShortMessageOfPrimaryKey(Long id){
        ShortMessageDaoDao daoDao = daoSession.getShortMessageDaoDao();

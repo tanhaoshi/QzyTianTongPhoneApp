@@ -12,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.common.util.concurrent.AbstractScheduledService;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
@@ -27,15 +28,24 @@ import com.tt.qzy.view.layout.ClearEditText;
 import com.tt.qzy.view.layout.SideBar;
 import com.tt.qzy.view.presenter.activity.ImportMailPresenter;
 import com.tt.qzy.view.utils.NToast;
+import com.tt.qzy.view.utils.PinyinComparator;
 import com.tt.qzy.view.view.ImportMailView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Observable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class ImportMailActivity extends AppCompatActivity implements ImportMailView,ImportMailAdapter.OnItemClickListener{
 
@@ -54,7 +64,7 @@ public class ImportMailActivity extends AppCompatActivity implements ImportMailV
     @BindView(R.id.custom_input)
     ClearEditText mClearEditText;
 
-    private List<MallListModel> SourceDateList = new ArrayList<>();
+    private List<MallListModel> sourceDateList = new ArrayList<>();
 
     private ImportMailAdapter adapter;
     private KProgressHUD mHUD;
@@ -80,18 +90,33 @@ public class ImportMailActivity extends AppCompatActivity implements ImportMailV
     public void onClick(View view){
         switch (view.getId()){
             case R.id.base_iv_back:
-                finish();
+                selectAllMail();
                 break;
             case R.id.base_tv_toolbar_right:
-                saveContactsMailList(ImportMailActivity.this,mLongList,mIntegers,SourceDateList);
+                saveContactsMailList(ImportMailActivity.this,mLongList,mIntegers,sourceDateList);
                 break;
         }
+    }
+
+    private void selectAllMail(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<MallListModel> mallListModels = new ArrayList<>();
+                mallListModels.addAll(sourceDateList);
+                for(int i=0;i<mallListModels.size();i++){
+                    mLongList.add(sourceDateList.get(i).getId());
+                    mIntegers.add(i);
+                }
+                saveContactsMailList(ImportMailActivity.this,mLongList,mIntegers,sourceDateList);
+            }
+        }).start();
     }
 
     private void initView() {
         base_tv_toolbar_title.setText(getResources().getString(R.string.TMT_select_contacts));
         base_iv_back.setVisibility(View.VISIBLE);
-        base_iv_back.setText(getResources().getString(R.string.TMT_cannel));
+        base_iv_back.setText(getResources().getString(R.string.TMT_SELECT_ALL));
         base_tv_toolbar_right.setVisibility(View.VISIBLE);
         base_tv_toolbar_title.setText(getResources().getString(R.string.TMT_mall_list));
         base_tv_toolbar_right.setText(getResources().getString(R.string.TMT_yes));
@@ -100,7 +125,7 @@ public class ImportMailActivity extends AppCompatActivity implements ImportMailV
 
         final LinearLayoutManager manager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(manager);
-        adapter = new ImportMailAdapter(this, SourceDateList);
+        adapter = new ImportMailAdapter(this, sourceDateList);
         adapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(adapter);
 
@@ -113,10 +138,12 @@ public class ImportMailActivity extends AppCompatActivity implements ImportMailV
                 }
             }
         });
-
+        final PinyinComparator pinyinComparator = new PinyinComparator();
         mClearEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //模糊搜索完毕后会出现一个新的List 我应当把这个List保存下来。
+                mPresenter.filterData(sourceDateList,s.toString(),pinyinComparator,adapter);
             }
 
             @Override
@@ -131,7 +158,7 @@ public class ImportMailActivity extends AppCompatActivity implements ImportMailV
     }
 
     @Override
-    public void onItemClick(View view, int position,boolean isFlag,Long id) {
+    public void onItemClick(View view, int position,boolean isFlag,Long id,List<MallListModel> listModels) {
         if(isFlag){
             mLongList.add(id);
             mIntegers.add(position);
@@ -139,6 +166,7 @@ public class ImportMailActivity extends AppCompatActivity implements ImportMailV
             mLongList.remove(id);
             mIntegers.remove(Integer.valueOf(position));
         }
+        sourceDateList = listModels;
     }
 
     @Override
@@ -174,24 +202,24 @@ public class ImportMailActivity extends AppCompatActivity implements ImportMailV
 
     @Override
     public void getContactsMallList(List<MallListModel> listModels) {
-        this.SourceDateList = listModels;
-        Collections.sort(SourceDateList);
-        adapter.updateList(SourceDateList);
+        this.sourceDateList = listModels;
+        Collections.sort(sourceDateList);
+        adapter.updateList(sourceDateList);
     }
 
     private void saveContactsMailList(Activity context , List<Long> mLongList , List<Integer> mIntegers,List<MallListModel> listModels){
         if(null != mLongList && mLongList.size() > 0){
             for(int i=0;i<mLongList.size();i++){
                 MailListDao mailListDao = new MailListDao();
-                mailListDao.setPhone(SourceDateList.get(mIntegers.get(i)).getPhone());
-                mailListDao.setName(SourceDateList.get(mIntegers.get(i)).getName());
+                mailListDao.setPhone(sourceDateList.get(mIntegers.get(i)).getPhone());
+                mailListDao.setName(sourceDateList.get(mIntegers.get(i)).getName());
                 MailListManager.getInstance(context).insertMailListSignal(mailListDao,context);
             }
             importLocalLinkName();
-            NToast.shortToast(ImportMailActivity.this,"导入成功!");
+//            NToast.shortToast(ImportMailActivity.this,"导入成功!");
             finish();
         }else{
-            NToast.shortToast(ImportMailActivity.this,"请选中导入的联系人!");
+//            NToast.shortToast(ImportMailActivity.this,"请选中导入的联系人!");
         }
     }
 

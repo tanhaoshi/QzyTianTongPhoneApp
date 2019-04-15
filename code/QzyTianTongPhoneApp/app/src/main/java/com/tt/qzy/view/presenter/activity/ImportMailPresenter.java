@@ -2,9 +2,12 @@ package com.tt.qzy.view.presenter.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.socks.library.KLog;
 import com.tt.qzy.view.activity.ImportMailActivity;
+import com.tt.qzy.view.adapter.ImportMailAdapter;
+import com.tt.qzy.view.adapter.SortAdapter;
 import com.tt.qzy.view.bean.MallListModel;
 import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.MailListDao;
@@ -15,9 +18,12 @@ import com.tt.qzy.view.db.manager.ShortMessageManager;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
 import com.tt.qzy.view.utils.MallListUtils;
 import com.tt.qzy.view.utils.NToast;
+import com.tt.qzy.view.utils.PinyinComparator;
+import com.tt.qzy.view.utils.PinyinUtils;
 import com.tt.qzy.view.view.ImportMailView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -132,5 +138,27 @@ public class ImportMailPresenter extends BasePresenter<ImportMailView>{
         }else{
             NToast.shortToast(context,"请选中导入的联系人!");
         }
+    }
+
+    public void filterData(List<MallListModel> sourceDateList , String filterStr , PinyinComparator pinyinComparator, ImportMailAdapter sortAdapter) {
+        List<MallListModel> filterDateList = new ArrayList<>();
+        if (TextUtils.isEmpty(filterStr)) {
+            filterDateList = sourceDateList;
+        } else {
+            filterDateList.clear();
+            for (MallListModel sortModel : sourceDateList) {
+                String name = sortModel.getName();
+                if (name.indexOf(filterStr.toString()) != -1 ||
+                        PinyinUtils.getFirstSpell(name).startsWith(filterStr.toString())
+                        || PinyinUtils.getFirstSpell(name).toLowerCase().startsWith(filterStr.toString())
+                        || PinyinUtils.getFirstSpell(name).toUpperCase().startsWith(filterStr.toString())
+                        ) {
+                    filterDateList.add(sortModel);
+                }
+            }
+        }
+
+        Collections.sort(filterDateList, pinyinComparator);
+        sortAdapter.updateList(filterDateList);
     }
 }

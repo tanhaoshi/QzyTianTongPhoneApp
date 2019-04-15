@@ -76,7 +76,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         if (!TextUtils.isEmpty(phoneNumber) && phoneNumber.length() >= 3) {
         }
         mTellPhoneActivityPresenter = new TellPhoneActivityPresenter(this);
-        //  EventBusUtils.register(this);
+
         setTtPhoneCallState();
         setTtPhoneCallStateBackListener();
     }
@@ -95,7 +95,11 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_accept:
+
+                isAlert = false;
+
                 onCallingState();
+
                 String name = getPhoneKeyForName(phoneNumber);
 
                 if (null != name && name.length() > 0) {
@@ -110,7 +114,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.btn_endcall:
-
+                isAlert = true;
                 //挂断
                 mTellPhoneActivityPresenter.endCall();
 
@@ -143,19 +147,6 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         }
         return name;
     }
-
-   /* @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MessageEventBus event) {
-        switch (event.getType()) {
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_STATE:
-                updatePhoneState((PhoneCmd) event.getObject());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_CALL_STATE:
-                onTianTongCallStatus(event.getObject());
-                break;
-        }
-    }*/
-
 
     /**
      * 设置电话设备占用回调
@@ -229,11 +220,13 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         KLog.i("phone state = " + PhoneStateUtils.getTtPhoneState(cmd).ordinal());
         switch (PhoneStateUtils.getTtPhoneState(cmd)) {
             case NOCALL:
+                isAlert = false;
                 onEndCallState();
                 break;
             case RING:
                 break;
             case CALL:
+                isAlert = false;
                 if(!CommonData.getInstance().isCallingIp(PhoneStateUtils.getTtPhoneStateNowCallingIp(cmd))){
                     KLog.d("is not me calling  = ");
                     break;
@@ -241,7 +234,6 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
                 onCallingState();
                 break;
             case HUANGUP:
-
                 onEndCallState();
 
                 disposeAlert();
@@ -261,8 +253,10 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
                 }
                 break;
             case INCOMING:
+                isAlert = false;
                 break;
             case UNRECOGNIZED:
+                isAlert = false;
                 onEndCallState();
                 break;
         }
@@ -270,7 +264,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
 
     private boolean isAlert = true;
 
-    private synchronized void disposeAlert() {
+    private void disposeAlert() {
         if (isAlert) {
             Integer recordCount = (Integer) SPUtils.getShare(this, Constans.RECORD_ISREAD, 0);
             recordCount = recordCount + 1;
@@ -289,8 +283,6 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         RingManager.stopDefaultCallMediaPlayer(getApplicationContext());
-        // EventBusUtils.unregister(this);
-        isAlert = true;
     }
 
     @Override

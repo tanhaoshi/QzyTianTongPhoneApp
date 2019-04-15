@@ -221,6 +221,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
                     mPresneter.stopConnect();
                 }else{
                     mPresneter.startConnect();
+
                 }
                 break;
             case R.id.main_settings:

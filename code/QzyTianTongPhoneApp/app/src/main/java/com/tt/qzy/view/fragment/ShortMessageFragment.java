@@ -6,6 +6,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -28,8 +30,11 @@ import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.SendShortMessageActivity;
 import com.tt.qzy.view.adapter.ShortMessageAdapter;
 import com.tt.qzy.view.bean.MsgModel;
+import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
+import com.tt.qzy.view.db.manager.CallRecordManager;
 import com.tt.qzy.view.db.manager.ShortMessageManager;
+import com.tt.qzy.view.layout.ClearEditText;
 import com.tt.qzy.view.layout.PopShortMessageWindow;
 import com.tt.qzy.view.layout.PopWindow;
 import com.tt.qzy.view.presenter.fragment.ShortMessagePresenter;
@@ -64,6 +69,8 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
     FloatingActionButton mFloatingActionButton;
     @BindView(R.id.refreshLayout)
     RefreshLayout mRefreshLayout;
+    @BindView(R.id.custom_input)
+    ClearEditText mClearEditText;
 
     private PopShortMessageWindow mPopShortMessageWindow;
     private List<ShortMessageDao> models = new ArrayList<>();
@@ -119,6 +126,20 @@ public class ShortMessageFragment extends Fragment implements PopWindow.OnDismis
         shortMessageAdapter.setOnItemClickListener(this);
         todayRecyclerView.setAdapter(shortMessageAdapter);
         initListener();
+
+        mClearEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int i, int i1, int i2) {
+                List<ShortMessageDao> list = ShortMessageManager.getInstance(getActivity()).fuzzySearch(s.toString());
+                shortMessageAdapter.setData(list);
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
     }
 
     private void initListener() {

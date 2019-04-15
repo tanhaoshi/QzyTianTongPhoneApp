@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.bean.MallListModel;
 import com.tt.qzy.view.bean.SortModel;
@@ -65,11 +67,11 @@ public class ImportMailAdapter extends RecyclerView.Adapter<DeleteContactsAdapte
                 if(mData.get(position).isChoosed()){
                     holder.ck_chose.setChecked(false);
                     mData.get(position).setChoosed(((RadioButton)view).isChecked());
-                    mOnItemClickListener.onItemClick(view,position,false,mData.get(position).getId());
+                    mOnItemClickListener.onItemClick(view,position,false,mData.get(position).getId(),mData);
                 }else{
                     holder.ck_chose.setChecked(true);
                     mData.get(position).setChoosed(((RadioButton)view).isChecked());
-                    mOnItemClickListener.onItemClick(view,position,true,mData.get(position).getId());
+                    mOnItemClickListener.onItemClick(view,position,true,mData.get(position).getId(),mData);
                 }
             }
         });
@@ -89,7 +91,7 @@ public class ImportMailAdapter extends RecyclerView.Adapter<DeleteContactsAdapte
 
     //**********************itemClick************************
     public interface OnItemClickListener {
-        void onItemClick(View view, int position,boolean isFlag,Long id);
+        void onItemClick(View view, int position,boolean isFlag,Long id,List<MallListModel> listModels);
     }
 
     private OnItemClickListener mOnItemClickListener;

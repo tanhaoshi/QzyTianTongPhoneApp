@@ -99,7 +99,7 @@ public class SyncManager {
         }
         List<CallRecordDao> callRecordDaos = handlerCallRecordAgrementData(list);
 
-//        CallRecordManager.getInstance(mContext).insertCallRecordList(callRecordDaos, mContext);
+        CallRecordManager.getInstance(mContext).insertCallRecordList(callRecordDaos, mContext);
     }
 
     public List<CallRecordDao> handlerCallRecordAgrementData(List<TtCallRecordProtos.TtCallRecordProto.CallRecord> list) {
@@ -169,13 +169,13 @@ public class SyncManager {
 
     public void dateMerging(List<TtShortMessageProtos.TtShortMessage.ShortMessage> list) {
           mMessageList.add(list);
-//        if (isShortMessage) {
-//            ShortMessageManager.getInstance(mContext).deleteShortMessageList();
-//            isShortMessage = false;
-//        }
-//        List<ShortMessageDao> shortMessagList = handlerShortMessageAgrementData(list);
-//        ShortMessageManager.getInstance(mContext).insertShortMessageList(shortMessagList, mContext);
-         KLog.i("look over list size = " + mMessageList.size());
+        if (isShortMessage) {
+            ShortMessageManager.getInstance(mContext).deleteShortMessageList();
+            isShortMessage = false;
+        }
+        List<ShortMessageDao> shortMessagList = handlerShortMessageAgrementData(list);
+        ShortMessageManager.getInstance(mContext).insertShortMessageList(shortMessagList, mContext);
+        KLog.i("look over list size = " + mMessageList.size());
     }
 
     public List<ShortMessageDao> handlerShortMessageAgrementData(List<TtShortMessageProtos.TtShortMessage.ShortMessage> list) {
@@ -212,13 +212,11 @@ public class SyncManager {
     }
 
     private void handleShortMessageSignal(final int protoId, final GeneratedMessageV3 messageV3, final TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessage) {
-
         Observable.create(new ObservableOnSubscribe<ShortMessageDao>() {
             @Override
             public void subscribe(ObservableEmitter<ShortMessageDao> e) {
                 ShortMessageManager.getInstance(mContext).insertShortMessage(meragingShortMessage(ttShortMessage), mContext);
                 e.onNext(meragingShortMessage(ttShortMessage));
-                e.onComplete();
             }
         }).subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())

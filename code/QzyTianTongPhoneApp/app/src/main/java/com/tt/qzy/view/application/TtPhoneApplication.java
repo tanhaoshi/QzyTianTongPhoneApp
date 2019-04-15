@@ -111,12 +111,9 @@ public class TtPhoneApplication extends Application {
             public void uploadCrashMessage(ConcurrentHashMap<String, Object> info) {
             }
         };
+        //默認調用false false為我們自定義的捕捉異常
+        CrashHandler.getInstance().init(this, crashUploader, restartIntent,false);
 
-        if( BuildConfig.DEBUG) {
-            CrashHandler.getInstance().init(this, crashUploader, restartIntent,true);
-        }else{
-            CrashHandler.getInstance().init(this, crashUploader, restartIntent,false);
-        }
     }
 
     private void initDemonService(){

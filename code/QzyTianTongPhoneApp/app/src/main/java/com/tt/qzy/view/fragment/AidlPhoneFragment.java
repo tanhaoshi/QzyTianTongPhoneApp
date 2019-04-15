@@ -18,6 +18,7 @@ import com.kaopiz.kprogresshud.KProgressHUD;
 import com.qzy.phone.pcm.AllLocalPcmManager;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
+import com.socks.library.KLog;
 import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.TellPhoneActivity;
@@ -140,16 +141,20 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
         mClearEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                List<CallRecordDao> list = CallRecordManager.getInstance(getActivity()).fuzzySearch(s.toString());
-                mCallRecordAdapter.setData(list);
+               List<CallRecordDao> list = CallRecordManager.getInstance(getActivity()).fuzzySearch(s.toString());
+               mCallRecordAdapter.setData(list);
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                if(s.toString().equals("")){
+                    loadData(true);
+                }
             }
         });
     }
@@ -252,16 +257,12 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
 
     @Override
     public void loadRefresh(List<CallRecordDao> list) {
-        mModelList.clear();
-        mModelList = list;
-        mCallRecordAdapter.notifyData(mModelList);
+        mCallRecordAdapter.setData(list);
     }
 
     @Override
     public void loadMore(List<CallRecordDao> list) {
-        mModelList.clear();
-        mModelList = list;
-        mCallRecordAdapter.setData(mModelList);
+        mCallRecordAdapter.setData(list);
     }
 
     @Override

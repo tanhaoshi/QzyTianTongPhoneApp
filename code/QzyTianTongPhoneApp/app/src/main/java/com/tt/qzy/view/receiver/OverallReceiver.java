@@ -24,7 +24,6 @@ public class OverallReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        KLog.i("action = " + intent.getAction());
         switch (intent.getAction()){
             //wifi的处理
             case CLEAR_RECENTS:

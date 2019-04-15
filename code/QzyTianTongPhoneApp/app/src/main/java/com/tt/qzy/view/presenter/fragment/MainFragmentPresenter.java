@@ -1,6 +1,7 @@
 package com.tt.qzy.view.presenter.fragment;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -18,6 +19,7 @@ import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.impl.IMainFragment;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.utils.IPUtil;
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.activity.UserEditorsActivity;
@@ -29,6 +31,7 @@ import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.NetworkUtil;
+import com.tt.qzy.view.utils.SPUtils;
 import com.tt.qzy.view.view.MainFragmentView;
 
 import java.util.Date;
@@ -345,13 +348,25 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
             return;
         }
 
-        // EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL,phoneNumber));
         dialPhoneToServer(phoneNumber);
 
         Intent intent = new Intent(mContext, TellPhoneActivity.class);
         intent.putExtra("diapadNumber", phoneNumber);
         mContext.startActivity(intent);
     }
+
+//    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            String action = intent.getAction();
+//            KLog.i("action = " + action);
+//            if (action.equals("com.qzy.tt.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE")) {
+//                Intent intent1 = new Intent(mContext, TellPhoneActivity.class);
+//                intent1.putExtra("diapadNumber", (String)SPUtils.getShare(mContext,Constans.CRY_HELP_PHONE,""));
+//                mContext.startActivity(intent1);
+//            }
+//        }
+//    };
 
     /**
      * 底层打电话接口

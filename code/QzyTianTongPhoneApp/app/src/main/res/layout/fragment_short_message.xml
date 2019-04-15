@@ -26,7 +26,7 @@
                  android:layout_width="match_parent"
                  android:layout_height="match_parent">
 
-                 <EditText
+                 <com.tt.qzy.view.layout.ClearEditText
                      android:id="@+id/custom_input"
                      android:background="@drawable/custom_edittext_layout"
                      android:layout_marginTop="8dp"

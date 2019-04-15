@@ -28,6 +28,7 @@
     <string name="TMT_please_input_wifipassword">请输入WIFI热点密码</string>
     <string name="TMT_please_settings_tt_server_date">设置设备时间</string>
     <string name="TMT_cannel">取消</string>
+    <string name="TMT_SELECT_ALL">全选</string>
     <string name="TMT_yes">确认</string>
     <string name="TMT_date_sync_succeed">同步设备时间成功!</string>
     <string name="TMT_share">已保存</string>
@@ -114,6 +115,7 @@
     <string name="TMT_wifi_length_greatethan_eight">WIFI密码不能少于8位</string>
     <string name="TMT_the_change_content">更新内容如下:</string>
     <string name="TMT_the_update_dialog_title">APP新版本</string>
+    <string name="TMT_CONFIRM_DELETE_ALL_MAIL_LIST_CONTACTS">温馨提示:您是否确认删除全部?</string>
     <string name="TMT_confirm_exit">温馨提示:您确定是否退出吗?</string>
     <string name="TMT_hint">提示</string>
     <string name="TMT_start_again_connect">请重连WIFI!</string>

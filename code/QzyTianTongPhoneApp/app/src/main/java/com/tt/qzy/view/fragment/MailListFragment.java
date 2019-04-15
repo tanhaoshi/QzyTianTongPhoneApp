@@ -3,6 +3,7 @@ package com.tt.qzy.view.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.AddContactsActivity;
 import com.tt.qzy.view.adapter.SortAdapter;
@@ -56,8 +58,8 @@ public class MailListFragment extends Fragment implements PopWindow.OnDismissLis
     SideBar mSideBar;
     @BindView(R.id.custom_input)
     ClearEditText mClearEditText;
-//    @BindView(R.id.refreshLayout)
-//    RefreshLayout mRefreshLayout;
+    @BindView(R.id.refreshLayout)
+    RefreshLayout mRefreshLayout;
 
     private List<MallListModel> listModels = new ArrayList<>();
     private PinyinComparator pinyinComparator;
@@ -122,15 +124,6 @@ public class MailListFragment extends Fragment implements PopWindow.OnDismissLis
             public void afterTextChanged(Editable s) {
             }
         });
-
-        //下拉刷新控件
-//        mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-//            @Override
-//            public void onRefresh(RefreshLayout refreshlayout) {
-//                mPresenter.getMallList(getActivity());
-//                mRefreshLayout.finishRefresh(200);
-//            }
-//        });
 
         initProgress();
     }
@@ -240,9 +233,41 @@ public class MailListFragment extends Fragment implements PopWindow.OnDismissLis
 
     @Override
     public void deleteAllMailList() {
-        mHUD.show();
-        mPresenter.deleteAllMailList();
-        loadData(true);
+        alertDialog();
+    }
+
+    private void alertDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View v = inflater.inflate(R.layout.dialog_datetime_settings, null);
+        final TextView custom_input = (TextView) v.findViewById(R.id.custom_input);
+        final TextView custom_cannel = (TextView)v.findViewById(R.id.custom_cannel);
+        final TextView custom_yes = (TextView)v.findViewById(R.id.custom_yes);
+        final TextView title = (TextView)v.findViewById(R.id.title);
+        final AlertDialog dialog = builder.create();
+        dialog.setView(inflater.inflate(R.layout.customied_dialog_style, null));
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        dialog.show();
+        dialog.getWindow().setContentView(v);
+        dialog.getWindow().setGravity(Gravity.CENTER);
+        title.setText(getString(R.string.TMT_hint));
+        custom_input.setText(getString(R.string.TMT_CONFIRM_DELETE_ALL_MAIL_LIST_CONTACTS));
+        custom_cannel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        custom_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                mHUD.show();
+                mPresenter.deleteAllMailList();
+                loadData(true);
+            }
+        });
     }
 
     @Override

@@ -45,8 +45,8 @@ import butterknife.ButterKnife;
 
 public class TellPhoneActivity extends AppCompatActivity {
 
-    public static final int msg_calling_time = 1;
-    public static final int msg_calling_time_remove = 2;
+    public static final int MSG_CALLING_TIME = 1;
+    public static final int MSG_CALLING_TIME_REMOVE = 2;
 
     //根据是否拨通重复播,或当用户手动关闭当前activity
     private boolean isFinsh = true;
@@ -148,7 +148,6 @@ public class TellPhoneActivity extends AppCompatActivity {
                     updatePhoneState(phoneCmd);
             }
         });
-
     }
 
     /**
@@ -172,7 +171,7 @@ public class TellPhoneActivity extends AppCompatActivity {
         text_state.setText(getString(R.string.TMT_dial_endcall));
     }
 
-    private WorkHandler mHandler = new WorkHandler(this);
+    private final WorkHandler mHandler = new WorkHandler(this);
 
     static class WorkHandler extends Handler {
 
@@ -189,12 +188,12 @@ public class TellPhoneActivity extends AppCompatActivity {
             TellPhoneActivity activity = mWeakReference.get();
             if (null != activity) {
                 switch (msg.what) {
-                    case msg_calling_time:
+                    case MSG_CALLING_TIME:
                         time += 1000;
                         activity.showCallingTime(time);
                         sendEmptyMessageDelayed(1, 1000);
                         break;
-                    case msg_calling_time_remove:
+                    case MSG_CALLING_TIME_REMOVE:
                         if (hasMessages(1)) {
                             removeMessages(1);
                         }
@@ -217,7 +216,9 @@ public class TellPhoneActivity extends AppCompatActivity {
      * 通话状态
      */
     private void onCallingState() {
-        mHandler.sendEmptyMessage(msg_calling_time);
+        if(mHandler!=null){
+            mHandler.sendEmptyMessage(MSG_CALLING_TIME);
+        }
     }
 
     /**
@@ -225,7 +226,7 @@ public class TellPhoneActivity extends AppCompatActivity {
      */
     private void onEndCallState() {
         if(mHandler != null) {
-            mHandler.sendEmptyMessage(msg_calling_time_remove);
+            mHandler.sendEmptyMessage(MSG_CALLING_TIME_REMOVE);
         }
         isFinsh = false;
         finish();
@@ -338,7 +339,6 @@ public class TellPhoneActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mHandler = null;
         if(mAnswerBellManager != null){
             mAnswerBellManager.release();
             mAnswerBellManager = null;

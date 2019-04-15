@@ -282,10 +282,17 @@ public class SendShortMessageActivity extends AppCompatActivity implements ISend
     private void parseSmsState(Object object) {
         PhoneCmd cmd = (PhoneCmd) object;
         TtPhoneSmsProtos.TtPhoneSms ttPhoneSms = (TtPhoneSmsProtos.TtPhoneSms) cmd.getMessage();
-        if (ttPhoneSms.getIsSendSuccess()) {
-            NToast.shortToast(this, R.string.TMT_sendMessage_success);
-        } else {
-            NToast.shortToast(this, R.string.TMT_sendMessage_failed);
+        if(CommonData.getInstance().getLocalWifiIp() != null){
+            if(CommonData.getInstance().getLocalWifiIp().length() > 0){
+                if(ttPhoneSms.getIp() != null){
+                    if(CommonData.getInstance().getLocalWifiIp().equals(ttPhoneSms.getIp())){
+                        NToast.shortToast(this, R.string.TMT_sendMessage_success);
+                        if(!ttPhoneSms.getIsSend()){
+                            NToast.shortToast(this, R.string.TMT_sendMessage_failed);
+                        }
+                    }
+                }
+            }
         }
     }
 

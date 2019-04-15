@@ -25,6 +25,7 @@ import com.tt.qzy.view.layout.PopDeleteContactsWindow;
 import com.tt.qzy.view.layout.PopWindow;
 import com.tt.qzy.view.layout.SideBar;
 import com.tt.qzy.view.utils.NToast;
+import com.tt.qzy.view.utils.PinyinComparator;
 import com.tt.qzy.view.view.DeleteContactsView;
 
 import java.util.ArrayList;
@@ -86,7 +87,7 @@ public class DeleteContactsActivity extends AppCompatActivity implements DeleteC
                 break;
             case R.id.base_tv_toolbar_right:
                 if(!TextUtils.isEmpty(selectContacts.trim())){
-                    MailListManager.getInstance(TtPhoneApplication.getInstance())
+                    MailListManager.getInstance(getApplicationContext())
                             .deleteByPrimaryKey(id);
                     NToast.shortToast(DeleteContactsActivity.this,getResources().getString(R.string.TMT_delete_succeed));
                     finish();
@@ -123,12 +124,11 @@ public class DeleteContactsActivity extends AppCompatActivity implements DeleteC
                 }
             }
         });
-
+        final PinyinComparator pinyinComparator = new PinyinComparator();
         mClearEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //当输入框里面的值为空，更新为原来的列表，否则为过滤数据列表
-//                filterData(s.toString());
+                mContactsPresenter.filterData(SourceDateList,s.toString(),pinyinComparator,adapter);
             }
 
             @Override
