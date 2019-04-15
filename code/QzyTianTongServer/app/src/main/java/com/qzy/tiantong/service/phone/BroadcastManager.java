@@ -126,7 +126,7 @@ public class BroadcastManager {
                 LogUtils.i("The system process broad cast off");
             }else if(action.equals("android.os.OWNED.AWAKE")){
                 LogUtils.i("The system process broad cast android.os.OWNED.AWAKE");
-                mServer.getSystemSleepManager().controlSystemSleep();
+                //mServer.getSystemSleepManager().controlSystemSleep();
             }
         }
     };

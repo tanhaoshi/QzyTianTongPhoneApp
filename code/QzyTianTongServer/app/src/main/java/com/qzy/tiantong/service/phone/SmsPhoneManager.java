@@ -377,7 +377,6 @@ public class SmsPhoneManager {
     /**
      * 发送sos短信
      */
-    private Thread mThreadSendSos = null;
     public boolean isThread = true;
     private Runnable mRunnable = null;
 
@@ -389,8 +388,6 @@ public class SmsPhoneManager {
             if (sosMessage == null) {
                 LogUtils.e("sosMessage is null ....");
             }
-
-
 
             if (mGpsManager != null) {
                 mGpsManager.openGps();
@@ -426,13 +423,16 @@ public class SmsPhoneManager {
                             message = message + "纬度:" + "  " + "经度:" + "  ";
                         }
 
-                        String phone = sosMessage.getPhoneNumber();
+                        final String phone = sosMessage.getPhoneNumber();
 
                         if (!TextUtils.isEmpty(phone)) {
+
                             if(sosMessage != null) {
                                 LogUtils.e("send sos msg ...." + sosMessage.toString());
                             }
-                            sendSms("192.168.43.1", phone, message);
+
+//                            sendSms("192.168.43.1", phone, message);
+                            postDelayedSendMessage(phone,message);
                         }
                         final int delayTime = sosMessage.getDelayTime() * 1000;
                         mHandler.postDelayed(mRunnable, delayTime);
@@ -452,70 +452,15 @@ public class SmsPhoneManager {
 
     private Handler mHandler = new Handler();
 
-    public void startSendSosMsg() {
-        try {
-            final SosMessage sosMessage = TtPhoneSystemanager.getSosMessage();
-            if (sosMessage == null) {
-                LogUtils.e("sosMessage is null ....");
+
+    /** 延时发送短信 */
+    private void postDelayedSendMessage(final String phone,final String message){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                sendSms("192.168.43.1", phone, message);
             }
-
-            final int delayTime = sosMessage.getDelayTime();
-            mThreadSendSos = new Thread(new Runnable() {
-                @Override
-                public void run() {
-
-                    if (mGpsManager != null) {
-                        mGpsManager.openGps();
-                    }
-
-                    if (mCallback != null) {
-                        mCallback.onSosState(true);
-                    }
-
-                    while (true) {
-                        try {
-                            Location location = null;
-
-                            if (mGpsManager != null) {
-                                location = mGpsManager.getmCurrenLocation();
-                            }
-
-                            if (sosMessage != null) {
-
-                                String message = sosMessage.getMessage();
-
-                                if (TextUtils.isEmpty(message)) {
-                                    message = "help me!!!";
-                                }
-
-                                if (location != null) {
-                                    message = message + " lat:" + location.getLatitude() + " lng:" + location.getLongitude();
-                                }
-
-                                String phone = sosMessage.getPhoneNumber();
-
-                                if (!TextUtils.isEmpty(phone)) {
-                                    sendSms("192.168.43.1", phone, message);
-                                }
-                            }
-
-                            Thread.sleep(delayTime * 1000);
-
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
-
-            if (isThread) {
-                mThreadSendSos.start();
-                isThread = false;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        },30000);
     }
 
     /**
@@ -540,27 +485,6 @@ public class SmsPhoneManager {
             }
 
             isThread = true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 停止发送sos短信
-     */
-    public void stopSendSosMsg() {
-        try {
-            downEventCount = 0;
-            if (mThreadSendSos != null && mThreadSendSos.isAlive()) {
-                mThreadSendSos.interrupt();
-                isThread = true;
-            }
-            mThreadSendSos = null;
-
-            if (mCallback != null) {
-                mCallback.onSosState(false);
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

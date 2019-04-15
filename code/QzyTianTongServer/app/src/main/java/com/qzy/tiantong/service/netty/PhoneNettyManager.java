@@ -880,6 +880,7 @@ public class PhoneNettyManager implements IMobileDataManager {
         if (ttPhoneSosState == null) {
             return;
         }
+        mServer.getSystemSleepManager().wakeupTianTong();
         mSmsPhoneManager.switchServerSos(ttPhoneSosState.getIsSwitch());
     }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.RequiresApi;
@@ -82,7 +83,7 @@ public class QzyPhoneManager {
      *
      * @param phoneNum
      */
-    public void callPhone(String ip, String phoneNum) {
+    public void callPhone(String ip, final String phoneNum) {
 
         /** 打电话之前将模块进行唤醒 */
         if (mServer != null) {
@@ -97,12 +98,18 @@ public class QzyPhoneManager {
             return;
         }
 
-        Intent intent = new Intent(Intent.ACTION_CALL);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Uri data = Uri.parse("tel:" + phoneNum);
-        intent.setData(data);
-        mContext.startActivity(intent);
-        LogUtils.e("tel phone ..  " + phoneNum);
+        /** 等天通模塊喚醒 延時一秒進行打電話 */
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Uri data = Uri.parse("tel:" + phoneNum);
+                intent.setData(data);
+                mContext.startActivity(intent);
+                LogUtils.e("tel phone ..  " + phoneNum);
+            }
+        },1000);
     }
 
 
