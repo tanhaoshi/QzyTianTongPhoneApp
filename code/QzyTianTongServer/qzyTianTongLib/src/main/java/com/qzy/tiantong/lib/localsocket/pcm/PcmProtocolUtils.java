@@ -38,5 +38,17 @@ public class PcmProtocolUtils {
         return combinCommand(command);
     }
 
+    /**
+     * 控制灯
+     * @param data
+     * @return
+     */
+    public static byte[] sendLedState(byte[] data) {
+        byte[] command = new byte[data.length + 1];
+        command[0] = (byte) 0x07;
+        System.arraycopy(data, 0, command, 1, data.length);
+        return combinCommand(command);
+    }
+
 
 }

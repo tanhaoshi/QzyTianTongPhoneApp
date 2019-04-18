@@ -224,7 +224,9 @@ public class GpsManager {
         }
         isGpsOpen = false;
         LogUtils.d("close gps .....");
-
+        if(mServer != null){
+            mServer.getSystemSleepManager().sleepTianTong();
+        }
 
     }
 

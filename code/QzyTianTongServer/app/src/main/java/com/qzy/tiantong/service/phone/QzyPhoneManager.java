@@ -98,23 +98,26 @@ public class QzyPhoneManager {
             return;
         }
 
-        /** 等天通模塊喚醒 延時一秒進行打電話 */
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(Intent.ACTION_CALL);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                Uri data = Uri.parse("tel:" + phoneNum);
-                intent.setData(data);
-                mContext.startActivity(intent);
-                LogUtils.e("tel phone ..  " + phoneNum);
-            }
-        },1000);
+        try {
+            Thread.sleep(1000);
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Intent intent = new Intent(Intent.ACTION_CALL);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Uri data = Uri.parse("tel:" + phoneNum);
+        intent.setData(data);
+        mContext.startActivity(intent);
+        LogUtils.e("tel phone ..  " + phoneNum);
+
     }
 
 
     /**
      * 挂断电话
+     *
      *
      * @param
      */
@@ -281,33 +284,35 @@ public class QzyPhoneManager {
             //获取网络信号强度
             //获取0-4的5种信号级别，越大信号越好,但是api23开始才能用
             //            int level = signalStrength.getLevel();
-            int gsmSignalStrength = signalStrength.getGsmSignalStrength();
-            //获取网络类型
-            int netWorkType = PhoneUtils.getNetWorkType(mContext);
 
-            switch (netWorkType) {
-                case PhoneUtils.NETWORKTYPE_WIFI:
-                    LogUtils.e("network type wifi,signaleS = " + gsmSignalStrength);
-                    break;
-                case PhoneUtils.NETWORKTYPE_2G:
-                    LogUtils.e("network type 2G,signaleS = " + gsmSignalStrength);
-                    break;
-                case PhoneUtils.NETWORKTYPE_4G:
-                    LogUtils.e("network type 4G,signaleS = " + gsmSignalStrength);
-                    break;
-                case PhoneUtils.NETWORKTYPE_NONE:
-                    LogUtils.e("network type none,signaleS = " + gsmSignalStrength);
-                    mServer.onPhoneSignalStrengthChange(gsmSignalStrength);
-
-                    //先去掉模块休眠的功能
-                    if (mServer != null) {
-                        mServer.getSystemSleepManager().controlSignalStrength(gsmSignalStrength);
-                    }
-                    break;
-                case -1:
-                    LogUtils.e("network type -1,signaleS = " + gsmSignalStrength);
-                    break;
-            }
+//            LogUtils.e("onSignalStrengthsChanged = " + signalStrength.getGsmSignalStrength());
+//
+//            int gsmSignalStrength = signalStrength.getGsmSignalStrength();
+//            //获取网络类型
+//            int netWorkType = PhoneUtils.getNetWorkType(mContext);
+//
+//            switch (netWorkType) {
+//                case PhoneUtils.NETWORKTYPE_WIFI:
+//                    LogUtils.e("network type wifi,signaleS = " + gsmSignalStrength);
+//                    break;
+//                case PhoneUtils.NETWORKTYPE_2G:
+//                    LogUtils.e("network type 2G,signaleS = " + gsmSignalStrength);
+//                    break;
+//                case PhoneUtils.NETWORKTYPE_4G:
+//                    LogUtils.e("network type 4G,signaleS = " + gsmSignalStrength);
+//                    break;
+//                case PhoneUtils.NETWORKTYPE_NONE:
+//                    LogUtils.e("network type none,signaleS = " + gsmSignalStrength);
+//                    mServer.onPhoneSignalStrengthChange(gsmSignalStrength);
+//                    //先去掉模块休眠的功能
+//                    if (mServer != null) {
+//                        mServer.getSystemSleepManager().controlSignalStrength(gsmSignalStrength);
+//                    }
+//                    break;
+//                case -1:
+//                    LogUtils.e("network type -1,signaleS = " + gsmSignalStrength);
+//                    break;
+//            }
         }
 
         @Override
@@ -325,6 +330,35 @@ public class QzyPhoneManager {
         }
     }
 
+    public void controlSignalChange(SignalStrength signalStrength){
+        LogUtils.e("onSignalStrengthsChanged = " + signalStrength.getGsmSignalStrength());
+
+        int gsmSignalStrength = signalStrength.getGsmSignalStrength();
+        //获取网络类型
+        int netWorkType = PhoneUtils.getNetWorkType(mContext);
+        switch (netWorkType) {
+            case PhoneUtils.NETWORKTYPE_WIFI:
+                LogUtils.e("network type wifi,signaleS = " + gsmSignalStrength);
+                break;
+            case PhoneUtils.NETWORKTYPE_2G:
+                LogUtils.e("network type 2G,signaleS = " + gsmSignalStrength);
+                break;
+            case PhoneUtils.NETWORKTYPE_4G:
+                LogUtils.e("network type 4G,signaleS = " + gsmSignalStrength);
+                break;
+            case PhoneUtils.NETWORKTYPE_NONE:
+                LogUtils.e("network type none,signaleS = " + gsmSignalStrength);
+                mServer.onPhoneSignalStrengthChange(gsmSignalStrength);
+                //先去掉模块休眠的功能
+                if (mServer != null) {
+                    mServer.getSystemSleepManager().controlSignalStrength(gsmSignalStrength);
+                }
+                break;
+            case -1:
+                LogUtils.e("network type -1,signaleS = " + gsmSignalStrength);
+                break;
+        }
+    }
 
     public void release() {
 

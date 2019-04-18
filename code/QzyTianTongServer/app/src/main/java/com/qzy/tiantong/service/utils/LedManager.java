@@ -1,5 +1,7 @@
 package com.qzy.tiantong.service.utils;
+import com.qzy.tiantong.lib.localsocket.pcm.PcmProtocolUtils;
 import com.qzy.tiantong.lib.utils.LogUtils;
+import com.qzy.tiantong.service.service.ITianTongServer;
 
 public class LedManager {
     public static final int FLAG_BATTERY_LOW_RED_LED_SWITCH = 0x00000001;   //charing led switch flag;
@@ -42,14 +44,14 @@ public class LedManager {
         GlobalLedStatus &= ~flag;
     }
 
-    public static void setandCleanLedFlag(int setFlag, int cleanFlag){
+    public static void setandCleanLedFlag(ITianTongServer mserver, int setFlag, int cleanFlag){
         if(!mSosStatus) {
             setGlobalFlag(setFlag);
             cleanGlobalFlag(cleanFlag);
-            ControlLed();
+            ControlLed(mserver);
         }
     }
-    public static void setSosLedStatus(boolean status){
+    public static void setSosLedStatus(ITianTongServer mserver,boolean status){
         mSosStatus = status;
         if(status){
             SavedGlobalLedStatus = GlobalLedStatus;
@@ -58,10 +60,10 @@ public class LedManager {
         }else{
             GlobalLedStatus = SavedGlobalLedStatus;
         }
-        ControlLed();
+        ControlLed(mserver);
     }
 
-    public static void setRecoveryLedStatus(boolean status){
+    public static void setRecoveryLedStatus(ITianTongServer mserver,boolean status){
         mSosStatus = status;
         if(status){
             SavedGlobalLedStatus = GlobalLedStatus;
@@ -71,10 +73,94 @@ public class LedManager {
         }else{
             GlobalLedStatus = SavedGlobalLedStatus;
         }
-        ControlLed();
+        ControlLed(mserver);
     }
 
-    private static void ControlLed() {
+    private static void ControlLed(ITianTongServer server){
+        if(GlobalLedStatus == preGlobalLedStatus){
+            return;
+        }else{
+            preGlobalLedStatus = GlobalLedStatus;
+        }
+        //0xAA 0x55 0x03 0x07
+        if((FLAG_BATTERY_FULL_BLUE_LED_SWITCH & preGlobalLedStatus) > 0){
+            //write "none" to battery full led trigger file
+            if((FLAG_BATTERY_FULL_BLUE_LED_TIMER & preGlobalLedStatus) > 0){
+                // send 0x02 0x02
+
+                sendCommand(server,new byte[]{(byte)0x02,(byte)0x02});
+            }else{ //write "timer" to battery full led trigger file
+                //send 0x02 0x01
+                sendCommand(server,new byte[]{(byte)0x02,(byte)0x01});
+            }
+        }else{
+            //send 0x02 0x00
+            sendCommand(server,new byte[]{(byte)0x02,(byte)0x00});
+        }
+        if((FLAG_BATTERY_LOW_RED_LED_SWITCH & preGlobalLedStatus) > 0){
+
+            if((FLAG_BATTERY_LOW_LED_TIMER & preGlobalLedStatus) > 0){
+                //send 0x01 0x02
+                sendCommand(server,new byte[]{(byte)0x01,(byte)0x02});
+            }else{ //write "timer" to battery full led trigger file
+                //send 0x01 0x01
+                sendCommand(server,new byte[]{(byte)0x01,(byte)0x01});
+            }
+
+        }else{
+            // send 0x01 0x00
+            sendCommand(server,new byte[]{(byte)0x01,(byte)0x00});
+        }
+        //brightness 写0 或 1 代表关和开 trigger 写 timer 和 none 代表 闪和不闪
+        if((FLAG_NET_GREEN_LED_SWITCH & preGlobalLedStatus) > 0){
+            //write "none" to battery full led trigger file
+            if((FLAG_NET_GREEN_LED_TIMER & preGlobalLedStatus) > 0){
+                // send 0x03 0x02
+                sendCommand(server,new byte[]{(byte)0x03,(byte)0x02});
+            }else{ //write "timer" to battery full led trigger file
+                // send 0x03 0x01
+                sendCommand(server,new byte[]{(byte)0x03,(byte)0x01});
+            }
+        }else{
+            //write "0" to battery full led brightness file
+            //send 0x03 0x00
+            sendCommand(server,new byte[]{(byte)0x03,(byte)0x00});
+        }
+        if((FLAG_POWER_BLUE_LED_SWITCH & preGlobalLedStatus) > 0){
+            //write "none" to battery full led trigger file
+            if((FLAG_POWER_BLUE_LED_TIMER & preGlobalLedStatus) > 0){
+                //send 0x04 0x02
+                sendCommand(server,new byte[]{(byte)0x04,(byte)0x02});
+            }else{ //write "timer" to battery full led trigger file
+                //send 0x04 0x01
+                sendCommand(server,new byte[]{(byte)0x04,(byte)0x01});
+            }
+
+        }else{
+            //send 0x04 0x00
+            sendCommand(server,new byte[]{(byte)0x04,(byte)0x00});
+        }
+    }
+
+    /**
+     * 发送命令
+     * @param mServer
+     * @param data
+     */
+    private static void sendCommand(ITianTongServer mServer,byte[] data){
+        try{
+            if(mServer != null && mServer.getLocalSocketManager() != null){
+                mServer.getLocalSocketManager().sendCommand(PcmProtocolUtils.sendLedState(data));
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+
+    private static void ControlLedWriteNode() {
         if(GlobalLedStatus == preGlobalLedStatus){
             return;
         }else{

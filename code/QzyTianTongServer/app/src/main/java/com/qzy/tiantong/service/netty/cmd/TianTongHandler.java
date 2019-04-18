@@ -31,7 +31,7 @@ import com.qzy.voice.VoiceManager;
  * Created by yj.zhang on 2018/8/3/003.
  */
 
-public class TianTongHandler extends Handler {
+public class TianTongHandler {
 
     public static final int msg_init_localpcm = 0x01;
 
@@ -41,9 +41,7 @@ public class TianTongHandler extends Handler {
         mServer = server;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
-    @Override
-    public void handleMessage(Message msg) {
+    public void handleData(Message msg) {
 
         try {
             switch (msg.what) {

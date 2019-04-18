@@ -25,6 +25,7 @@ import com.qzy.tiantong.service.gps.GpsManager;
 import com.qzy.tiantong.service.phone.data.SmsInfo;
 import com.qzy.tiantong.service.phone.data.SosMessage;
 import com.qzy.tiantong.service.phone.obersever.SmsDatabaseChaneObserver;
+import com.qzy.tiantong.service.service.ITianTongServer;
 import com.qzy.tiantong.service.utils.AppUtils;
 import com.qzy.tiantong.service.utils.LedManager;
 import com.qzy.tiantong.service.utils.PhoneUtils;
@@ -55,11 +56,13 @@ public class SmsPhoneManager {
 
 
     private GpsManager mGpsManager;
+    private ITianTongServer mServer;
 
-    public SmsPhoneManager(Context context, GpsManager gpsManager, IOnSMSCallback callback) {
+    public SmsPhoneManager(Context context, ITianTongServer server,GpsManager gpsManager, IOnSMSCallback callback) {
         mContext = context;
         mGpsManager = gpsManager;
         mCallback = callback;
+        mServer = server;
         registerSms();
     }
 
@@ -185,7 +188,11 @@ public class SmsPhoneManager {
                         downEventCount = 0;
                     }
                 } else if ((event.getKeyCode() == KeyEvent.KEYCODE_F2)) {
-                    isKeyF2Incoming = true;
+                    if(KeyEvent.ACTION_DOWN == event.getAction()) {
+                        isKeyF2Incoming = true;
+                    }else if(KeyEvent.ACTION_UP == event.getAction()){
+                        isKeyF2Incoming = false;
+                    }
                 }
             }
         }
@@ -202,11 +209,11 @@ public class SmsPhoneManager {
         if(isOpen){
             startSendSosMsgAndGPS();
             mCallback.onSosState(true);
-            LedManager.setSosLedStatus(true);
+            LedManager.setSosLedStatus(mServer,true);
         }else{
             stopSendSosMsgAndGPS();
             mCallback.onSosState(false);
-            LedManager.setSosLedStatus(false);
+            LedManager.setSosLedStatus(mServer,false);
         }
 
     }

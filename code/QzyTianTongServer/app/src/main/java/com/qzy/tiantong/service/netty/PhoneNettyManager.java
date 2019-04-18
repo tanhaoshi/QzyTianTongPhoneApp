@@ -102,7 +102,8 @@ public class PhoneNettyManager implements IMobileDataManager {
 
     private TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery;
 
-    private boolean isG4Test = false;
+    /** 全局控制系统休眠 */
+    public boolean isGotoSleep = true;
 
     public PhoneNettyManager(Context context, ITianTongServer server,NettyServerManager manager) {
         mContext = context;
@@ -111,7 +112,7 @@ public class PhoneNettyManager implements IMobileDataManager {
 
         mDateTimeManager = new DateTimeManager(context, mNettyServerManager);
         mGpsManager = new GpsManager(mContext, mNettyServerManager,mServer);
-        mSmsPhoneManager = new SmsPhoneManager(context, mGpsManager, iOnSMSCallback);
+        mSmsPhoneManager = new SmsPhoneManager(context,mServer, mGpsManager, iOnSMSCallback);
 
         mTtUsbManager = new TtUsbManager(mContext, mNettyServerManager);
 
@@ -119,9 +120,7 @@ public class PhoneNettyManager implements IMobileDataManager {
 
         EventBus.getDefault().register(this);
 
-        if (!isG4Test) {
-            initSignal();
-        }
+        initSignal();
 
         initSendThread();
 
@@ -154,20 +153,13 @@ public class PhoneNettyManager implements IMobileDataManager {
     private CountDownTimer countDownTimer;
 
     private void initSendThread() {
-        /*mStateThread = new Runnable() {
-            @Override
-            public void run() {
-                try {
 
-                    mHandler.postDelayed(mStateThread, 3000);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        mHandler.post(mStateThread);*/
         setNewTimerSend(null);
-        countDownTimer = new CountDownTimer(3 * 1000, 1000) {
+
+        if(countDownTimer != null){
+            countDownTimer.cancel();
+        }
+        countDownTimer = new CountDownTimer(10 * 1000, 1000) {
             @Override
             public void onTick(long l) {
             // LogUtils.e("onTick = " + (l/1000));
@@ -179,6 +171,23 @@ public class PhoneNettyManager implements IMobileDataManager {
             }
         };
         countDownTimer.start();
+    }
+
+    /**
+     * 停止定时发送信息
+     */
+    public void stopTimer(){
+        if(countDownTimer != null){
+            countDownTimer.cancel();
+        }
+        countDownTimer = null;
+    }
+
+    /**
+     * 开启定时发送状态
+     */
+    public void startTimer(){
+        initSendThread();
     }
 
     /**
@@ -248,26 +257,26 @@ public class PhoneNettyManager implements IMobileDataManager {
         if (status == BatteryManager.BATTERY_STATUS_CHARGING) {
             //亮红灯
             //关蓝灯
-            LedManager.setandCleanLedFlag(LedManager.FLAG_BATTERY_LOW_RED_LED_SWITCH,
+            LedManager.setandCleanLedFlag(mServer,LedManager.FLAG_BATTERY_LOW_RED_LED_SWITCH,
                     LedManager.FLAG_BATTERY_FULL_BLUE_LED_SWITCH
                             | LedManager.FLAG_BATTERY_LOW_LED_TIMER);
             //当前处于充电状态，且电量充满
         } else if (status == BatteryManager.BATTERY_STATUS_FULL) {
             //亮蓝灯
             //关红灯
-            LedManager.setandCleanLedFlag(LedManager.FLAG_BATTERY_FULL_BLUE_LED_SWITCH,
+            LedManager.setandCleanLedFlag(mServer,LedManager.FLAG_BATTERY_FULL_BLUE_LED_SWITCH,
                     LedManager.FLAG_BATTERY_LOW_RED_LED_SWITCH
                             | LedManager.FLAG_BATTERY_FULL_BLUE_LED_TIMER);
             //当前处于不是充电
         } else if (level * 100 / scale < 21) {
             //闪红灯
             //关蓝灯
-            LedManager.setandCleanLedFlag(LedManager.FLAG_BATTERY_LOW_LED_TIMER
+            LedManager.setandCleanLedFlag(mServer,LedManager.FLAG_BATTERY_LOW_LED_TIMER
                             | LedManager.FLAG_BATTERY_LOW_RED_LED_SWITCH,
                     LedManager.FLAG_BATTERY_FULL_BLUE_LED_SWITCH);
         } else {
             //红灯蓝灯一起关闭
-            LedManager.setandCleanLedFlag(0, LedManager.FLAG_BATTERY_FULL_BLUE_LED_SWITCH
+            LedManager.setandCleanLedFlag(mServer,0, LedManager.FLAG_BATTERY_FULL_BLUE_LED_SWITCH
                     | LedManager.FLAG_BATTERY_LOW_RED_LED_SWITCH);
         }
     }
@@ -376,7 +385,7 @@ public class PhoneNettyManager implements IMobileDataManager {
             if (isSimIn) {
                 //Netled.setNetledState(true);
                 //Netled.setNetledFlash(true);
-                LedManager.setandCleanLedFlag(LedManager.FLAG_NET_GREEN_LED_TIMER
+                LedManager.setandCleanLedFlag(mServer,LedManager.FLAG_NET_GREEN_LED_TIMER
                         | LedManager.FLAG_NET_GREEN_LED_SWITCH, LedManager.FLAG_POWER_BLUE_LED_SWITCH);
             }
         } catch (Exception e) {
@@ -417,11 +426,15 @@ public class PhoneNettyManager implements IMobileDataManager {
             //处理同时接听电话,其他链接手机没有挂断Bug
 //            disposeCallPhone();
         } else if (state == TtPhoneState.HUANGUP) {
+
             phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.HUANGUP;
             if (currentPhoneState != phoneState) {
                 PhoneClientManager.getInstance().setEndCallUser();
                 sendTtCallPhoneBackToClientTimer();
             }
+
+            mSmsPhoneManager.isKeyF2Incoming = false;
+
         } else if (state == TtPhoneState.INCOMING) {
             phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.INCOMING;
         }
@@ -536,10 +549,11 @@ public class PhoneNettyManager implements IMobileDataManager {
      */
     public void sendTtCallPhoneSignalToClient(int value) {
         currentSignalValue = value;
-        if (!isG4Test) {
-            controlSignal(value);
-        }
-        sendSignalToPhoneClient(value);
+
+        controlSignal(value);
+
+        /**  监听信号强度 放到10秒发送一次*/
+        //sendSignalToPhoneClient(value);
     }
 
     /**
@@ -588,17 +602,17 @@ public class PhoneNettyManager implements IMobileDataManager {
     private void sendSimStateToPhoneClient() {
         if (checkNettManagerIsNull()) return;
         boolean hasSim = PhoneUtils.ishasSimCard(mContext);
-        if (!isG4Test) {
+
             if (hasSim) {
                 //Netled.setNetledState(true);
                 controlSignal(currentSignalValue); // 检测卡的状态来控制灯的闪烁
             } else {
                 //未检测到卡,下面应该常亮亮蓝灯
-                LedManager.setandCleanLedFlag(LedManager.FLAG_POWER_BLUE_LED_SWITCH,
+                LedManager.setandCleanLedFlag(mServer,LedManager.FLAG_POWER_BLUE_LED_SWITCH,
                         LedManager.FLAG_NET_GREEN_LED_SWITCH
                                 | LedManager.FLAG_POWER_BLUE_LED_TIMER);
             }
-        }
+
         TtPhoneSimCards.TtPhoneSimCard simCard = TtPhoneSimCards.TtPhoneSimCard.newBuilder()
                 .setIsSimCard(hasSim)
                 .build();
@@ -613,16 +627,14 @@ public class PhoneNettyManager implements IMobileDataManager {
     private TtPhoneSimCards.TtPhoneSimCard sendSimStateToPhoneClientNew() {
         if (checkNettManagerIsNull()) return null;
         boolean hasSim = PhoneUtils.ishasSimCard(mContext);
-        if (!isG4Test) {
-            if (hasSim) {
+        if (hasSim) {
                 //Netled.setNetledState(true);
-                controlSignal(currentSignalValue); // 检测卡的状态来控制灯的闪烁
-            } else {
+            controlSignal(currentSignalValue); // 检测卡的状态来控制灯的闪烁
+        } else {
                 //未检测到卡,下面应该常亮亮蓝灯
-                LedManager.setandCleanLedFlag(LedManager.FLAG_POWER_BLUE_LED_SWITCH,
-                        LedManager.FLAG_NET_GREEN_LED_SWITCH
-                                | LedManager.FLAG_POWER_BLUE_LED_TIMER);
-            }
+            LedManager.setandCleanLedFlag(mServer,LedManager.FLAG_POWER_BLUE_LED_SWITCH,
+                    LedManager.FLAG_NET_GREEN_LED_SWITCH
+                            | LedManager.FLAG_POWER_BLUE_LED_TIMER);
         }
         TtPhoneSimCards.TtPhoneSimCard simCard = TtPhoneSimCards.TtPhoneSimCard.newBuilder()
                 .setIsSimCard(hasSim)
@@ -660,7 +672,7 @@ public class PhoneNettyManager implements IMobileDataManager {
             TtPhoneSmsProtos.TtPhoneSms tt = TtPhoneSmsProtos.TtPhoneSms.newBuilder()
                     .setIp(ip)
                     .setPhoneNumber(phoneNumber)
-                    .setIsSend(false)
+                    .setIsSend(true)
                     .setIsSendSuccess(true)
                     .setIsReceiverSuccess(false)
                     .build();
@@ -752,12 +764,12 @@ public class PhoneNettyManager implements IMobileDataManager {
         //LogUtils.e("signal value = " + value);
         if (value == 99) {
             //Netled.setNetledFlash(true);
-            LedManager.setandCleanLedFlag(LedManager.FLAG_NET_GREEN_LED_TIMER
+            LedManager.setandCleanLedFlag(mServer,LedManager.FLAG_NET_GREEN_LED_TIMER
                     | LedManager.FLAG_NET_GREEN_LED_SWITCH, LedManager.FLAG_POWER_BLUE_LED_SWITCH);
         } else {
             //Netled.setNetledFlash(false);
             //LogUtils.i("set net_green timer flash and turnoff power led");
-            LedManager.setandCleanLedFlag(LedManager.FLAG_NET_GREEN_LED_SWITCH,
+            LedManager.setandCleanLedFlag(mServer,LedManager.FLAG_NET_GREEN_LED_SWITCH,
                     LedManager.FLAG_NET_GREEN_LED_TIMER
                             | LedManager.FLAG_POWER_BLUE_LED_SWITCH);
         }
@@ -880,7 +892,11 @@ public class PhoneNettyManager implements IMobileDataManager {
         if (ttPhoneSosState == null) {
             return;
         }
-        mServer.getSystemSleepManager().wakeupTianTong();
+        if(ttPhoneSosState.getIsSwitch()){
+            mServer.getSystemSleepManager().wakeupTianTong();
+        }else{
+            mServer.getSystemSleepManager().sleepTianTong();
+        }
         mSmsPhoneManager.switchServerSos(ttPhoneSosState.getIsSwitch());
     }
 

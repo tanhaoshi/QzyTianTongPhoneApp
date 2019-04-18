@@ -2,6 +2,7 @@ package com.qzy.tiantong.service.service;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.RemoteException;
 import android.text.TextUtils;
 
 
@@ -10,6 +11,7 @@ import com.qzy.audiosocket.SocketIntercomManager;
 import com.qzy.locallib.selfpcm.TtPcmIntercomManager;
 
 import com.qzy.tiantong.lib.localsocket.LocalPcmSocketManager;
+import com.qzy.tiantong.lib.power.PowerUtils;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.intercom.IntercomManager;
 import com.qzy.tiantong.service.intercom.util.Constants;
@@ -311,6 +313,11 @@ public class TianTongServiceManager implements ITianTongServer {
         LogUtils.e("initTtPcmDevice");
 
         if (mLocalPcmSocketManager != null) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             mLocalPcmSocketManager.setPhoneCalling();
             return;
         }

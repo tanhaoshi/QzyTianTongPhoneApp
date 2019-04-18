@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Keep;
+import android.telephony.SignalStrength;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -30,6 +31,8 @@ public class BroadcastManager {
     private String lastPhoneState = "0";
 
     public static final String ACTION_PRECISE_CALL_STATE_CHANGED="com.qzy.CallState.Intent";
+    /** 获取系统信号强度广播 */
+    public static final String COM_QZY_SIGNALSTRENGTH = "com.qzy.SignalStrength";
 
     public BroadcastManager(Context context, ITianTongServer server) {
         mContext = context;
@@ -52,6 +55,7 @@ public class BroadcastManager {
         intentFilter.addAction(Intent.ACTION_SCREEN_ON);
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
         intentFilter.addAction("android.os.OWNED.AWAKE");
+        intentFilter.addAction(COM_QZY_SIGNALSTRENGTH);
         mContext.registerReceiver(mReceiver, intentFilter);
     }
 
@@ -114,7 +118,7 @@ public class BroadcastManager {
             }else if(action.equals(PhoneUtils.actionstrDelCallback)){
 
             }else if(action.equals("com.qzy.tt.ACTION_RECOVERY_WIFI")){
-                LedManager.setRecoveryLedStatus(true);
+                LedManager.setRecoveryLedStatus(mServer,true);
                 setWifiPasswd(Constant.WIFI_PASSWD);
                 doMasterClear(context);
             }else if(action.equals(ACTION_PRECISE_CALL_STATE_CHANGED)){
@@ -126,7 +130,11 @@ public class BroadcastManager {
                 LogUtils.i("The system process broad cast off");
             }else if(action.equals("android.os.OWNED.AWAKE")){
                 LogUtils.i("The system process broad cast android.os.OWNED.AWAKE");
+                mServer.getPhoneNettyManager().isGotoSleep = true ;
+                mServer.getPhoneNettyManager().startTimer();
                 //mServer.getSystemSleepManager().controlSystemSleep();
+            }else if(action.equals(COM_QZY_SIGNALSTRENGTH)){
+                disposeSignal(intent);
             }
         }
     };
@@ -145,7 +153,16 @@ public class BroadcastManager {
            mServer.initTtPcmDevice();
            mServer.onPhoneStateChange(TtPhoneState.CALL);
        }
+    }
 
+    /** 分发系统信号强度 广播*/
+    private void disposeSignal(Intent intent){
+        SignalStrength signalStrength = intent.getParcelableExtra("SignalStrength");
+        if(signalStrength != null){
+            mServer.getQzyPhoneManager().controlSignalChange(signalStrength);
+        }else{
+            LogUtils.i("The SignalStrength is null");
+        }
     }
 
     /**

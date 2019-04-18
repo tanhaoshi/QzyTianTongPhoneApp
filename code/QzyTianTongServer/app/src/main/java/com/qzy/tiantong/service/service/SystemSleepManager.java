@@ -25,10 +25,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+
 //修改时间 4月13号 18：49
 public final class SystemSleepManager {
 
-    private static final String ACTION_GLOBAL_BUTTON = "android.intent.action.GLOBAL_BUTTON";
+    private static final String COM_QZY_SLEEP_RK = "com.qzy.sleepRK";
 
     private LocalPcmSocketManager mLocalPcmSocketManager;
 
@@ -43,6 +46,8 @@ public final class SystemSleepManager {
 
     private long duration = 10 * 1000;
 
+    private List<String> stringList = new ArrayList<>();
+
     public SystemSleepManager(Context context, ITianTongServer server) {
         this.mLocalPcmSocketManager = server.getLocalSocketManager();
         this.mPhoneNettyManager = server.getPhoneNettyManager();
@@ -53,7 +58,7 @@ public final class SystemSleepManager {
 
     private void registerF12(){
         IntentFilter intentFilter1 = new IntentFilter();
-        intentFilter1.addAction("android.intent.action.GLOBAL_BUTTON");
+        intentFilter1.addAction(COM_QZY_SLEEP_RK);
         mContext.registerReceiver(broadcastReceiver, intentFilter1);
     }
 
@@ -62,11 +67,9 @@ public final class SystemSleepManager {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             LogUtils.i("action value = " + action);
-            if(action.equals(ACTION_GLOBAL_BUTTON)) {
-                KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
-                if ((event.getKeyCode() == KeyEvent.KEYCODE_F12)) {
-                     doSleeep();
-                }
+            if(action.equals(COM_QZY_SLEEP_RK)) {
+                stringList.add(action);
+                doSleeep();
             }
         }
     };
@@ -167,41 +170,35 @@ public final class SystemSleepManager {
      * 先让模块休眠  再然系统休眠
      */
     private void doSleeep() {
+
+        LogUtils.i("broad cast receive list size = " + stringList.size());
+
         try {
 
-            sleepTianTong();
+//            sleepTianTong();
+
+            if (!checkAllState()) {
+                LogUtils.i("check all state can't sleep ...");
+                return;
+            }
 
             isTtSleep = getTianTongModeSleep();
-
-            if (isTtSleep) {
-
-//                duration = 20 * 1000;
-
-                LogUtils.i("tian tong model sleep state = " + getTianTongModeSleep());
+           if (isTtSleep) {
+                LogUtils.i("broad cast receive list size = " + stringList.size());
 
                 LogUtils.i("tian tong system go to sleep ");
 
-                gotoSleep();
+                if(mPhoneNettyManager.isGotoSleep){
+                    mPhoneNettyManager.isGotoSleep = false;
+                    mPhoneNettyManager.stopTimer();
+                    gotoSleep();
 
+                }
             } else {
-                //如果模块没有休眠的话 开启一个3秒的定时器 进行状态检测
-//                CountDownTimer timers = new CountDownTimer(3 * 1000, 1000) {
-//                    @Override
-//                    public void onTick(long l) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onFinish() {
-//                        controlSleep();
-//                    }
-//                };
-//                timers.start();
-                controlSleep();
+
             }
 
         } catch (Exception e) {
-
             e.printStackTrace();
         }
     }
@@ -213,8 +210,8 @@ public final class SystemSleepManager {
     private void gotoSleep() {
         PowerManager powerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
         try {
+            LogUtils.e("GGGGGG control system go to sleep successddd ....  = " + isTtSleep);
             powerManager.getClass().getMethod("goToSleep", new Class[]{long.class}).invoke(powerManager, SystemClock.uptimeMillis());
-            LogUtils.i("control system go to sleep successddd ....  = " + isTtSleep);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
@@ -272,6 +269,9 @@ public final class SystemSleepManager {
      * @return
      */
     private boolean checkPhoneStateImcoming() {
+        if(mPhoneNettyManager.getmSmsPhoneManager().isKeyF2Incoming){
+            wakeupTianTong();
+        }
         return mPhoneNettyManager.getmSmsPhoneManager().isKeyF2Incoming;
     }
 
@@ -299,11 +299,38 @@ public final class SystemSleepManager {
      */
     public void sleepTianTong() {
         try {
-            LogUtils.i("control model go to sleep start");
-            mLocalPcmSocketManager.sendCommand(PowerUtils.sleepCommand());
+
+            if(checkAllState()){
+                isTtSleep = getTianTongModeSleep();
+                if(isTtSleep){
+                    return;
+                }
+                LogUtils.i("control model go to sleep start");
+                mLocalPcmSocketManager.sendCommand(PowerUtils.sleepCommand());
+            }
+
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 检查所有状态是否满足休眠条件
+     * @return
+     */
+    private boolean checkAllState(){
+        boolean isCalling = checkPhoneStateCalling();
+        boolean isSos = isSosState();
+        boolean isGpsOpen = isGpsState();
+        boolean isComingPhone = checkPhoneStateImcoming();
+
+        LogUtils.i("controlSignalStrength isCalling = " + isCalling + "  isSosState " + isSos + " isGpsOpen = " + isGpsOpen + "isComingPhone = " + isComingPhone);
+        //如果存在 退出 不进行模块休眠
+        if (isCalling || isSos || isGpsOpen || isComingPhone) {
+            return false;
+        }
+
+        return true;
     }
 
 
@@ -344,7 +371,7 @@ public final class SystemSleepManager {
             File file = new File("/sys/bus/platform/drivers/tt-platdata/bp_mode");
             BufferedReader br = new BufferedReader(new FileReader(file));
             String value = br.readLine().trim();
-            //LogUtils.d("getTianTongModeSleep value = " + value);
+            LogUtils.d("getTianTongModeSleep value = " + value);
             if (value.equals("1")) {
                 return true;
             }
@@ -354,27 +381,16 @@ public final class SystemSleepManager {
         return false;
     }
 
-
     /**
      * 信号控制模块休眠
      */
-    @android.support.annotation.RequiresApi(api = Build.VERSION_CODES.O)
     public void controlSignalStrength(int gsmSignalStrength) {
         // 入网
         if (gsmSignalStrength >= 0 && gsmSignalStrength < 97) {
             //查看天通模塊是否休眠 如果沒有休眠的話
             if(!getTianTongModeSleep()){
                 //检查当前是否存在打出电话 检查SOS是否打开 检查GPS是否打开 检查是否有来电进来
-                boolean isCalling = checkPhoneStateCalling();
-                boolean isSos = isSosState();
-                boolean isGpsOpen = isGpsState();
-                boolean isComingPhone = checkPhoneStateImcoming();
 
-                LogUtils.i("controlSignalStrength isCalling = " + isCalling + "  isSosState " + isSos + " isGpsOpen = " + isGpsOpen + "isComingPhone = " + isComingPhone);
-                //如果存在 退出 不进行模块休眠
-                if (isCalling || isSos || isGpsOpen) {
-                    return;
-                }
 
                 LogUtils.i("controlSignalStrength control model go to sleep");
 
@@ -382,9 +398,7 @@ public final class SystemSleepManager {
             }
 
         } else {
-            //如果模块没有入网的话 继续调用计时器 循环检查当前状态
-//            LogUtils.i("controlSignalStrength control model go to sleep");
-//            controlSystemSleep();
+
         }
     }
 

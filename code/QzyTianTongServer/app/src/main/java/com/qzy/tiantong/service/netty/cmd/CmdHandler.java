@@ -170,7 +170,8 @@ public class CmdHandler implements ICmdHandler {
         Message msg = new Message();
         msg.what = what;
         msg.obj = obj;
-        mHandler.sendMessage(msg);
+        //mHandler.sendMessage(msg);
+        mHandler.handleData(msg);
     }
 
     private void senAudioData(int protoId, GeneratedMessageV3 messageV3) {
