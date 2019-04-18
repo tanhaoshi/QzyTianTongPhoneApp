@@ -23,7 +23,7 @@ import java.util.Locale;
 public class LogUtils {
 
     public static String customTagPrefix = "Qzy_tt_phone"; // 自定义Tag的前缀，可以是作者名
-    private static final boolean isSaveLog = false; // 是否把保存日志到SD卡中
+    private static final boolean isSaveLog = true; // 是否把保存日志到SD卡中
     public static final String ROOT = Environment.getExternalStorageDirectory()
             .getPath() + "/finddreams/"; // SD卡中的根目录
     private static final String PATH_LOG_INFO = ROOT + "info/";

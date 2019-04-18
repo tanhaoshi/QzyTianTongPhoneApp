@@ -286,8 +286,9 @@ public class SendShortMessageActivity extends AppCompatActivity implements ISend
             if(CommonData.getInstance().getLocalWifiIp().length() > 0){
                 if(ttPhoneSms.getIp() != null){
                     if(CommonData.getInstance().getLocalWifiIp().equals(ttPhoneSms.getIp())){
-                        NToast.shortToast(this, R.string.TMT_sendMessage_success);
-                        if(!ttPhoneSms.getIsSend()){
+                        if(ttPhoneSms.getIsSendSuccess()){
+                            NToast.shortToast(this, R.string.TMT_sendMessage_success);
+                        }else{
                             NToast.shortToast(this, R.string.TMT_sendMessage_failed);
                         }
                     }

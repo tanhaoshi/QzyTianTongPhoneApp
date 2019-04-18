@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 
+import com.example.nativeaudio.NativeAudio;
 import com.qzy.data.PhoneCmd;
 import com.qzy.data.PhoneStateUtils;
 import com.qzy.phone.pcm.AllLocalPcmManager;
@@ -11,9 +12,12 @@ import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.tt.phone.data.impl.ITtPhoneCallStateLisenter;
 import com.qzy.tt.phone.netty.PhoneNettyManager;
+import com.qzy.utils.LogUtils;
+import com.qzy.utils.ToastUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.SPUtils;
+import com.tt.qzy.view.utils.ToastUtil;
 
 
 /**
@@ -70,6 +74,7 @@ public class PhoneServiceManager {
         TtPhoneDataManager.getInstance().setTtPhoneCallStateLisenter("PhoneServiceManager", new ITtPhoneCallStateLisenter() {
             @Override
             public void onTtPhoneCallState(PhoneCmd phoneCmd) {
+                LogUtils.i("setTtPhoneCallState settings phone state");
                 updatePhoneState(phoneCmd);
             }
         });
@@ -82,10 +87,11 @@ public class PhoneServiceManager {
      * @param cmd
      */
     private boolean isRing = false;
+    private boolean isComing = false;
 
     private void updatePhoneState(PhoneCmd cmd) {
         String callingIp = PhoneStateUtils.getTtPhoneStateNowCallingIp(cmd);
-        KLog.i(" callingIp = " + callingIp + " phone state = " + PhoneStateUtils.getTtPhoneState(cmd).ordinal() + " localip = " + CommonData.getInstance().getLocalWifiIp());
+        LogUtils.i(" callingIp = " + callingIp + " phone state = " + PhoneStateUtils.getTtPhoneState(cmd).ordinal() + " localip = " + CommonData.getInstance().getLocalWifiIp());
         switch (PhoneStateUtils.getTtPhoneState(cmd)) {
             case NOCALL:
                 stopProtocal();
@@ -97,9 +103,10 @@ public class PhoneServiceManager {
                     startPlayerProtocal();
                 }
                 break;
+
             case CALL:
                 if (CommonData.getInstance().isCallingIp(callingIp)) {
-                    if (!isRing) {
+                    if (!isRing || isComing) {
                         startPlayerProtocal();
                     }
                     startProtocal();
@@ -108,17 +115,21 @@ public class PhoneServiceManager {
                 break;
             case HUANGUP:
                 isRing = false;
+                isComing = false;
                 stopProtocal();
                 break;
             case INCOMING:
                 isRing = false;
+                isComing = true;
                 break;
             case UNRECOGNIZED:
                 isRing = false;
+                isComing = false;
                 stopProtocal();
                 break;
             default:
                 isRing = false;
+                isComing = false;
                 break;
         }
     }

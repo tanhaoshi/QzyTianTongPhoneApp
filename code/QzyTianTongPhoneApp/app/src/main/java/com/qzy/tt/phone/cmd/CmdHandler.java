@@ -268,7 +268,7 @@ public class CmdHandler {
         CallPhoneStateProtos.CallPhoneState.PhoneState state = callPhoneState.getPhoneState();
 
         if (currentPhoneState != state) { // 与上次的状态不同才改变
-            KLog.i("currentPhoneState = " + currentPhoneState.ordinal() + "    state = " + state.ordinal());
+            LogUtils.i("currentPhoneState = " + currentPhoneState.ordinal() + "    state = " + state.ordinal());
             currentPhoneState = state;
             if (state == CallPhoneStateProtos.CallPhoneState.PhoneState.INCOMING) {
                 incommingState(callPhoneState.getPhoneNumber());
