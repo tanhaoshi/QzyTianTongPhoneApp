@@ -15,6 +15,9 @@ public final class PowerUtils {
 
     public static byte[] check_tt_mode_sleep = new byte[]{(byte)0xAA, (byte)0x55 ,(byte)0x01 ,(byte)0x06};
 
+    //重启rial库
+    public static byte[] recover_rial = new byte[]{(byte)0xAA,(byte)0x55,(byte)0x01,(byte)0x09};
+
 
     public static byte[] wakeupCommand() {
         return wakeup_command;
@@ -30,5 +33,9 @@ public final class PowerUtils {
 
     public static byte[] checkTtModeCommand(){
         return check_tt_mode_sleep;
+    }
+
+    public static byte[] recoverRial(){
+        return recover_rial;
     }
 }

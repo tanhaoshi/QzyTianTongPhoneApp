@@ -210,13 +210,19 @@ public final class SystemSleepManager {
     private void gotoSleep() {
         PowerManager powerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
         try {
-            LogUtils.e("GGGGGG control system go to sleep successddd ....  = " + isTtSleep);
-            powerManager.getClass().getMethod("goToSleep", new Class[]{long.class}).invoke(powerManager, SystemClock.uptimeMillis());
+            synchronized (SystemSleepManager.class){
+                LogUtils.e("GGGGGG control system go to sleep successddd ....  = " + isTtSleep);
+                powerManager.getClass().getMethod("goToSleep", new Class[]{long.class}).invoke(powerManager, SystemClock.uptimeMillis());
+                LogUtils.e("GGGGG control system go to sleep end ... = "+ isTtSleep );
+            }
         } catch (IllegalAccessException e) {
+            LogUtils.e("IllegalAccessException error :" + e.getMessage().toString());
             e.printStackTrace();
         } catch (InvocationTargetException e) {
+            LogUtils.e("InvocationTargetException error :" + e.getMessage().toString());
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
+            LogUtils.e("NoSuchMethodException error :" + e.getMessage().toString());
             e.printStackTrace();
         }
     }
@@ -258,7 +264,6 @@ public final class SystemSleepManager {
                 return true;
             }
         } else {
-
             return false;
         }
     }
@@ -385,12 +390,10 @@ public final class SystemSleepManager {
      * 信号控制模块休眠
      */
     public void controlSignalStrength(int gsmSignalStrength) {
-        // 入网
-        if (gsmSignalStrength >= 0 && gsmSignalStrength < 97) {
-            //查看天通模塊是否休眠 如果沒有休眠的話
-            if(!getTianTongModeSleep()){
-                //检查当前是否存在打出电话 检查SOS是否打开 检查GPS是否打开 检查是否有来电进来
 
+        if (gsmSignalStrength >= 0 && gsmSignalStrength < 97) {
+
+            if(!getTianTongModeSleep()){
 
                 LogUtils.i("controlSignalStrength control model go to sleep");
 

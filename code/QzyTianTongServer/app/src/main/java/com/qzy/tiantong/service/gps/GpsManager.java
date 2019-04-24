@@ -179,35 +179,19 @@ public class GpsManager {
     /**
      * 打开GPS
      */
-    private CountDownTimer downTimer;
     public void openGps() {
 
         if(mServer != null){
             mServer.getSystemSleepManager().wakeupTianTong();
         }
 
-        if(downTimer != null){
-            downTimer.cancel();
+        LogUtils.d("open gps .....");
+
+        if (mAtCommandToolManager != null) {
+            mAtCommandToolManager.sendAtCommand(AtCommandTools.at_command_open_gps);
         }
 
-        downTimer = new CountDownTimer(1000,1000) {
-            @Override
-            public void onTick(long l) {
-
-            }
-
-            @Override
-            public void onFinish() {
-                if (mAtCommandToolManager != null) {
-                    mAtCommandToolManager.sendAtCommand(AtCommandTools.at_command_open_gps);
-                }
-                LogUtils.d("open gps .....");
-            }
-        };
-        downTimer.start();
-
         isGpsOpen = true;
-
 
     }
 

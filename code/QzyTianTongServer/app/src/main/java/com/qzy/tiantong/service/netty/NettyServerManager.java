@@ -132,7 +132,6 @@ public class NettyServerManager implements NettyServer.IServerListener {
                     LogUtils.d("ProtoId :" + cmd.getProtoId());
                     stream.flush();
                     ctx.writeAndFlush(buff);
-
             }
         } catch (Exception e) {
             e.printStackTrace();

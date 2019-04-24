@@ -6,10 +6,12 @@ import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
+import android.os.RemoteException;
 import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 
 import com.qzy.tiantong.lib.eventbus.MessageEvent;
+import com.qzy.tiantong.lib.power.PowerUtils;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.lib.utils.QzySystemUtils;
 import com.qzy.tiantong.service.BuildConfig;
@@ -103,7 +105,10 @@ public class PhoneNettyManager implements IMobileDataManager {
     private TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery;
 
     /** 全局控制系统休眠 */
-    public boolean isGotoSleep = true;
+    public volatile boolean isGotoSleep = true;
+
+    /** 记录卡是不是掉卡 然后再入卡 */
+    public boolean isSimCard = true;
 
     public PhoneNettyManager(Context context, ITianTongServer server,NettyServerManager manager) {
         mContext = context;
@@ -217,27 +222,40 @@ public class PhoneNettyManager implements IMobileDataManager {
         if (timerSend != null) {
             mNettyServerManager.sendData(ip, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.response_server_timer_message, timerSend));
         }
+
+        checkRialRecover();
     }
 
-    /**
-     * old 定时状态发送
-     */
-    private void setOldTimerSend() {
+    boolean checkRecoverRial = true;
 
-        if (currentPhoneState != null) {
-            sendTtCallPhoneStateToClient(currentPhoneState, currentPhoneNumber);
+    /** 检查当前rial库是否需要重启 */
+    private void checkRialRecover(){
+        if(checkRecoverRial){
+            if(isSimCard && checkIsInternet()){
+                checkRecoverRial = false;
+            }
+        }else{
+            if(!isSimCard){
+                checkRecoverRial = true;
+                try {
+                    if(mServer.getLocalSocketManager() != null){
+                        mServer.getLocalSocketManager().sendCommand(PowerUtils.recoverRial());
+                    }else{
+                        LogUtils.i("The localSocketManager is null");
+                    }
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        int batteryLevel;
-        //发送手机电话状态
-        sendSignalToPhoneClient(currentSignalValue);
-        //发送电量
-        batteryLevel = sendTtPhoneBatteryToClient();
-        //sim 卡是否插入
-        sendSimStateToPhoneClient();
-        //定时跑当前灯的状态
-        checkCureentLampStatus(batteryLevel);
-        //发送gps状态
-        mGpsManager.sendGpsState();
+    }
+
+    private boolean checkIsInternet(){
+        if (currentSignalValue >= 0 && currentSignalValue < 97) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -551,9 +569,6 @@ public class PhoneNettyManager implements IMobileDataManager {
         currentSignalValue = value;
 
         controlSignal(value);
-
-        /**  监听信号强度 放到10秒发送一次*/
-        //sendSignalToPhoneClient(value);
     }
 
     /**
@@ -639,6 +654,9 @@ public class PhoneNettyManager implements IMobileDataManager {
         TtPhoneSimCards.TtPhoneSimCard simCard = TtPhoneSimCards.TtPhoneSimCard.newBuilder()
                 .setIsSimCard(hasSim)
                 .build();
+
+        isSimCard = hasSim;
+
         return simCard;
     }
 

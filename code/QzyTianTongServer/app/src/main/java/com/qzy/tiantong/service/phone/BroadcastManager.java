@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
+import android.os.RemoteException;
 import android.support.annotation.Keep;
 import android.telephony.SignalStrength;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.qzy.tiantong.lib.power.PowerUtils;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.service.ITianTongServer;
 import com.qzy.tiantong.service.utils.Constant;
@@ -56,6 +58,7 @@ public class BroadcastManager {
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
         intentFilter.addAction("android.os.OWNED.AWAKE");
         intentFilter.addAction(COM_QZY_SIGNALSTRENGTH);
+        intentFilter.addAction("android.test.recover.rial");
         mContext.registerReceiver(mReceiver, intentFilter);
     }
 
@@ -135,6 +138,14 @@ public class BroadcastManager {
                 //mServer.getSystemSleepManager().controlSystemSleep();
             }else if(action.equals(COM_QZY_SIGNALSTRENGTH)){
                 disposeSignal(intent);
+            }else if(action.equals("android.test.recover.rial")){
+                try {
+                    LogUtils.i("send recover rial start");
+                    mServer.getLocalSocketManager().sendCommand(PowerUtils.recoverRial());
+                    LogUtils.i("send recover rial end");
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         }
     };

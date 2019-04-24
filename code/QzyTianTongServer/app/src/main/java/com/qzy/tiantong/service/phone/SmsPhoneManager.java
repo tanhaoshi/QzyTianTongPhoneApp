@@ -438,8 +438,7 @@ public class SmsPhoneManager {
                                 LogUtils.e("send sos msg ...." + sosMessage.toString());
                             }
 
-//                            sendSms("192.168.43.1", phone, message);
-                            postDelayedSendMessage(phone,message);
+                            postDelayedSendMessage(phone,message,location);
                         }
                         final int delayTime = sosMessage.getDelayTime() * 1000;
                         mHandler.postDelayed(mRunnable, delayTime);
@@ -461,11 +460,26 @@ public class SmsPhoneManager {
 
 
     /** 延时发送短信 */
-    private void postDelayedSendMessage(final String phone,final String message){
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void postDelayedSendMessage(final String phone,final String message,final Location location){
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                sendSms("192.168.43.1", phone, message);
+                if (location != null) {
+                    sendSms("192.168.43.1", phone, message);
+                } else {
+                    Location cureenLocation = mGpsManager.getmCurrenLocation();
+                    if(cureenLocation == null){
+                        String cureenMessage = message;
+                        cureenMessage = cureenMessage + "纬度:" + "  " + "经度:" + "  ";
+                        sendSms("192.168.43.1", phone, cureenMessage);
+                    }else{
+                        String locationMessage = message;
+                        locationMessage = locationMessage + "纬度:" + AppUtils.decimalDouble(Double.valueOf(cureenLocation.getLatitude()))
+                                + "经度:" + AppUtils.decimalDouble(Double.valueOf(cureenLocation.getLongitude()));
+                        sendSms("192.168.43.1", phone, locationMessage);
+                    }
+                }
             }
         },30000);
     }

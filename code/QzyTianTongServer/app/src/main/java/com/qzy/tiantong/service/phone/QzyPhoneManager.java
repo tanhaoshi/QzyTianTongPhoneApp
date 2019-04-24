@@ -260,7 +260,7 @@ public class QzyPhoneManager {
                     //等待接听状态
                     String mIncomingNumber = incomingNumber;
                     LogUtils.e("=====RINGING :" + mIncomingNumber + "=========");
-                    mServer.initTtPcmDevice();
+                    //mServer.initTtPcmDevice();
                     mServer.onPhoneIncoming(TtPhoneState.INCOMING, mIncomingNumber);
                     break;
                 case TelephonyManager.CALL_STATE_OFFHOOK:
