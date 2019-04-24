@@ -231,7 +231,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
                     KLog.d("is not me calling  = ");
                     break;
                 }
-                onCallingState();
+                //onCallingState();
                 break;
             case HUANGUP:
                 onEndCallState();

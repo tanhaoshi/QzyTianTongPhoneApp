@@ -18,6 +18,7 @@ import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.AidlContactsActivity;
 import com.tt.qzy.view.activity.ContactsActivity;
+import com.tt.qzy.view.activity.DBMActivity;
 import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.bean.MallListModel;
@@ -27,6 +28,7 @@ import com.tt.qzy.view.db.dao.MailListDao;
 import com.tt.qzy.view.db.manager.CallRecordManager;
 import com.tt.qzy.view.db.manager.MailListManager;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
+import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.view.CallRecordView;
@@ -328,10 +330,25 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView> {
        /* EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.
                 EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_DELETE_SIGNAL_MESSAFGE
                 ,protobufMessageModel));*/
+        TtPhoneDataManager.getInstance().deleteDeviceCallRecord(protobufMessageModel);
 
         CallRecordManager.getInstance(mContext).deleteRecordList();
 
         NToast.shortToast(mContext, "删除成功!");
+    }
+
+    public void startDBMActivity(Context context){
+        Intent intent = new Intent(context, DBMActivity.class);
+        context.startActivity(intent);
+    }
+
+    public boolean checkShowSignal(Context context,String number){
+        if(number.equals(Constans.TIAN_TONG_6100)){
+            startDBMActivity(context);
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public void release() {

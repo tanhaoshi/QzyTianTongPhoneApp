@@ -209,6 +209,7 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
 
     @Override
     public void onClick(int position,final String diapadNumber) {
+        if(mPersenter.checkShowSignal(getActivity(),diapadNumber)) return;
         MainActivity mainActivity = (MainActivity) getActivity();
         if(!mainActivity.isCallStatus()){
             if(mainActivity.tt_isSignal){

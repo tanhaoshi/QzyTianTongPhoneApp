@@ -7,6 +7,7 @@
     <string name="TMT_energy">设备电量</string>
     <string name="TMT_quantity">设备信号</string>
     <string name="TMT_sos">SOS</string>
+    <string name="TMT_SHOW_TIANTONG_DB_VALUE">显示征服DB值</string>
     <string name="TMT_record_voice">录音开关</string>
     <string name="TMT_mobileData">数据</string>
     <string name="TMT_location">定位</string>

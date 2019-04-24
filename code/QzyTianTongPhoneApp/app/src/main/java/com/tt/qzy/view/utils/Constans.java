@@ -47,6 +47,10 @@ public interface Constans {
     //存在 exist 退出 exits
     String AUTO_EXITS = "auto_exits";
 
+    String TIAN_TONG_6100 = "*#*#6100#*#*";
+
+    String CHECK_DBM_OPEN = "dbm_flag";
+
     //SOS打电话状态值保存
     String SOS_FLAG = "sos_flag";
 }

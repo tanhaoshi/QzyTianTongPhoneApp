@@ -19,7 +19,7 @@ public class AllLocalPcmManager {
 
     private Context mContext;
 
-    private boolean isAudioDeviceInit = false;
+    private volatile boolean isAudioDeviceInit = false;
 
     private boolean isStart = false;
 
@@ -56,9 +56,11 @@ public class AllLocalPcmManager {
      */
     public void initAudioDevice(){
         try{
-            if(!isAudioDeviceInit) {
-                isAudioDeviceInit = true;
-                NativeAudio.createEngine(8000, 1, 1, 480);
+            synchronized (AllLocalPcmManager.class) {
+                if (!isAudioDeviceInit) {
+                    isAudioDeviceInit = true;
+                    NativeAudio.createEngine(8000, 1, 1, 480);
+                }
             }
         }catch (Exception e){
             e.printStackTrace();

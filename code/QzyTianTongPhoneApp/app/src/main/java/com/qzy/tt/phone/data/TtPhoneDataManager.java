@@ -316,6 +316,11 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
         mIMainAboutListener = null;
     }
 
+    @Override
+    public void deleteDeviceCallRecord(Object o) {
+        phoneNettyManager.requestServerDeleteMessage(o);
+    }
+
     /**
      * 注册MainFragment数据回调接口
      */

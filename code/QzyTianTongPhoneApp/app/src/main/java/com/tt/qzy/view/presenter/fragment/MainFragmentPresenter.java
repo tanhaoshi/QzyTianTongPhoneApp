@@ -58,11 +58,11 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
      * 连接天通
      */
     public void startConnect() {
-        if (CommonData.getInstance().isConnected()) {
-            Intent intent = new Intent(mContext, UserEditorsActivity.class);
-            ((Activity) mContext).startActivityForResult(intent, 99);
-            return;
-        }
+//        if (CommonData.getInstance().isConnected()) {
+//            Intent intent = new Intent(mContext, UserEditorsActivity.class);
+//            ((Activity) mContext).startActivityForResult(intent, 99);
+//            return;
+//        }
 
         if (!NetworkUtil.isWifiEnabled(mContext)) {
             WifiManager wfManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);

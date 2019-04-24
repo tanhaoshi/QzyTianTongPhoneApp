@@ -281,36 +281,45 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
      */
     private void onTiantongInfoReceiver(int intLevel) {
         signalValue = intLevel;
-        signal.setText(String.valueOf(signalValue));
         if (intLevel == 97) {
             tt_isSignal = false;
             stopTimerService();
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
+            signalValue = -141;
         } else if (intLevel == 98) {
             tt_isSignal = false;
             stopTimerService();
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
+            signalValue = -140;
         } else if (intLevel == 99) {
             tt_isSignal = false;
             stopTimerService();
+            signalValue = -142;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
         } else if (intLevel >= 0 && intLevel <= 1) {
             tt_isSignal = true;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_one));
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
+            signalValue = -127;
         } else if (intLevel >= 2 && intLevel <= 4) {
             tt_isSignal = true;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_two));
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
+            signalValue = -125;
         } else if (intLevel >= 5 && intLevel <= 7) {
             tt_isSignal = true;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_three));
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
+            signalValue = -122;
         } else if (intLevel >= 8) {
             tt_isSignal = true;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_four));
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
+            signalValue = -120;
+        }else if(intLevel <= 33 && intLevel >= 12){
+            signalValue = -95;
         }
+        signal.setText("- ("+String.valueOf(signalValue)+") dBm");
     }
 
     public void onTianTongCallStatus(Object o) {
@@ -319,7 +328,6 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         if (callPhoneBack.getIsCalling()) {
             if (callPhoneBack.getIp().equals(CommonData.getInstance().getLocalWifiIp())) {
                 tt_call_status = true;
-                // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE));
                 Intent intent = new Intent("com.qzy.tt.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE");
                 sendBroadcast(intent);
             } else {

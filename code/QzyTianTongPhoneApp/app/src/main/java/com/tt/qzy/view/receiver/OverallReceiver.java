@@ -39,7 +39,7 @@ public class OverallReceiver extends BroadcastReceiver {
     private void wifiState(Intent intent,Context context){
         NetworkInfo info = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
         if (info.getState().equals(NetworkInfo.State.DISCONNECTED)) {
-            TtPhoneDataManager.getInstance().disconnectTtPhoneServer();
+            KLog.i("receiver tell phone activity");
             Intent finshIntent = new Intent(CLEAR_TELL_PHONE_ACTIVITY);
             context.sendBroadcast(finshIntent);
         } else if (info.getState().equals(NetworkInfo.State.CONNECTED)) {

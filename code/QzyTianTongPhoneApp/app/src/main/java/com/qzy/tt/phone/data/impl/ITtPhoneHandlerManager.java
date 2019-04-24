@@ -93,4 +93,6 @@ public interface ITtPhoneHandlerManager {
     //设置关于服务端app 版本号
     void setIMainAboutListener(IMainAboutListener iMainAboutListener);
     void removeIMainAboutListener();
+
+    void deleteDeviceCallRecord(Object o);
 }

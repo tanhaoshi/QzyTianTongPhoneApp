@@ -248,6 +248,16 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
         remind(String.valueOf(recordCount),callBadgeView);
         Integer shortMessageCount = (Integer)SPUtils.getShare(MainActivity.this,Constans.SHORTMESSAGE_ISREAD,0);
         remind(String.valueOf(shortMessageCount),shortMessageBadgeView);
+        checkDBMIsOpen();
+    }
+
+    /**
+     *  check dbm value is open
+     */
+    private void checkDBMIsOpen(){
+        if((Boolean)SPUtils.getShare(MainActivity.this,Constans.CHECK_DBM_OPEN,false)){
+            signal.setVisibility(View.VISIBLE);
+        }
     }
 
     public void showRecordRead(){
