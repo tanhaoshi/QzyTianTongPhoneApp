@@ -44,6 +44,10 @@ public class LocalSocketClient {
         }
     }
 
+    public LocalSocket getClient() {
+        return client;
+    }
+
     /**
      * 启动socket连接
      */

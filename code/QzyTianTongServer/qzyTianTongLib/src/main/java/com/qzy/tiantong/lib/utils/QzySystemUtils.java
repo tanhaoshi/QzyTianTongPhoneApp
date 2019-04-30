@@ -41,4 +41,16 @@ public class QzySystemUtils {
         return serial;
     }
 
+    public static String getSystemProperties(String key) {
+        String value = "";
+        try{
+            Class<?>c = Class.forName("android.os.SystemProperties");
+            Method get = c.getMethod("get", String.class);
+            return (String)get.invoke(c,  key);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return value;
+    }
+
 }

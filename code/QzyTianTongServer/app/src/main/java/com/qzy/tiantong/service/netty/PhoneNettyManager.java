@@ -62,8 +62,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
+
+import io.netty.util.internal.SystemPropertyUtil;
 
 /**
  * Created by yj.zhang on 2018/8/9.
@@ -84,6 +87,7 @@ public class PhoneNettyManager implements IMobileDataManager {
     public CallPhoneStateProtos.CallPhoneState.PhoneState currentPhoneState;
     private String currentPhoneNumber = "";
     public int currentSignalValue = 99;
+    public int currentSignaldbm = -142;
 
     private Context mContext;
 
@@ -127,9 +131,8 @@ public class PhoneNettyManager implements IMobileDataManager {
 
         initSignal();
 
-        initSendThread();
-
-        LogUtils.e("getCallLog...11111..");
+        //initSendThread();
+        startTimer();
 
     }
 
@@ -164,7 +167,7 @@ public class PhoneNettyManager implements IMobileDataManager {
         if(countDownTimer != null){
             countDownTimer.cancel();
         }
-        countDownTimer = new CountDownTimer(10 * 1000, 1000) {
+        countDownTimer = new CountDownTimer(5 * 1000, 1000) {
             @Override
             public void onTick(long l) {
             // LogUtils.e("onTick = " + (l/1000));
@@ -195,6 +198,9 @@ public class PhoneNettyManager implements IMobileDataManager {
         initSendThread();
     }
 
+    /**  保存上次协议值 */
+    private TimerSendProtos.TimerSend timerSendOld = null;
+
     /**
      * 新定时发送
      */
@@ -207,6 +213,7 @@ public class PhoneNettyManager implements IMobileDataManager {
                 .setCallPhoneState(getTtCallPhoneStateToClient(currentPhoneState, currentPhoneNumber))
                 .setSigalStrength(TtPhoneSignalProtos.PhoneSignalStrength.newBuilder()
                         .setSignalStrength(currentSignalValue)
+                        .setSignalDbm(currentSignaldbm)
                         .build())
                 .setBatterValue(getTtPhoneBatteryToClient())
                 .setTtPhoneSimcard(sendSimStateToPhoneClientNew())
@@ -219,43 +226,39 @@ public class PhoneNettyManager implements IMobileDataManager {
             LogUtils.e("mNettyServerManager is null ...");
             return;
         }
+
         if (timerSend != null) {
+
+            if (timerSendOld != null && timerSendOld.toString().equals(timerSend.toString()) && TextUtils.isEmpty(ip)) {
+                LogUtils.e("data is same  now return...");
+                return;
+            }
+
+            if(!TextUtils.isEmpty(ip)){
+                LogUtils.e("mNettyServerManager  ip = " + ip);
+            }
             mNettyServerManager.sendData(ip, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.response_server_timer_message, timerSend));
+
+            timerSendOld = timerSend;
         }
 
         checkRialRecover();
     }
 
-    boolean checkRecoverRial = true;
-
-    /** 检查当前rial库是否需要重启 */
     private void checkRialRecover(){
-        if(checkRecoverRial){
-            if(isSimCard && checkIsInternet()){
-                checkRecoverRial = false;
-            }
-        }else{
-            if(!isSimCard){
-                checkRecoverRial = true;
-                try {
-                    if(mServer.getLocalSocketManager() != null){
-                        mServer.getLocalSocketManager().sendCommand(PowerUtils.recoverRial());
-                    }else{
-                        LogUtils.i("The localSocketManager is null");
-                    }
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+        String rild_hwa_state = QzySystemUtils.getSystemProperties("init.svc.rild1");
+        String radio_config_state = QzySystemUtils.getSystemProperties("init.svc.radio_config");
+        String mux_hwa_state = QzySystemUtils.getSystemProperties("init.svc.mux_hwa");
+        if(rild_hwa_state.equals("stopped") || radio_config_state.equals("stopped") || mux_hwa_state.equals("stopped")){
+            LogUtils.i("The rial is stop>>>>>>>> ready start rildC");
+            try {
+                mServer.getLocalSocketManager().sendCommand(PowerUtils.recoverRial());
+                LogUtils.i("The rial is start ");
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
         }
-    }
 
-    private boolean checkIsInternet(){
-        if (currentSignalValue >= 0 && currentSignalValue < 97) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     /**
@@ -397,12 +400,9 @@ public class PhoneNettyManager implements IMobileDataManager {
      */
     private void initSignal() {
         try {
-//            Netled.init();
             boolean isSimIn = PhoneUtils.ishasSimCard(mContext);
             LogUtils.d("isSimIn = " + isSimIn);
             if (isSimIn) {
-                //Netled.setNetledState(true);
-                //Netled.setNetledFlash(true);
                 LedManager.setandCleanLedFlag(mServer,LedManager.FLAG_NET_GREEN_LED_TIMER
                         | LedManager.FLAG_NET_GREEN_LED_SWITCH, LedManager.FLAG_POWER_BLUE_LED_SWITCH);
             }
@@ -565,8 +565,9 @@ public class PhoneNettyManager implements IMobileDataManager {
      *
      * @param value
      */
-    public void sendTtCallPhoneSignalToClient(int value) {
+    public void sendTtCallPhoneSignalToClient(int value,int dbm) {
         currentSignalValue = value;
+        currentSignaldbm = dbm;
 
         controlSignal(value);
     }
@@ -598,41 +599,6 @@ public class PhoneNettyManager implements IMobileDataManager {
         return ttPhoneBattery;
     }
 
-    /**
-     * 内部发送signal接口
-     *
-     * @param value
-     */
-    private void sendSignalToPhoneClient(int value) {
-        if (checkNettManagerIsNull()) return;
-        TtPhoneSignalProtos.PhoneSignalStrength signalStrength = TtPhoneSignalProtos.PhoneSignalStrength.newBuilder()
-                .setSignalStrength(value)
-                .build();
-        mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_phone_signal, signalStrength));
-    }
-
-    /**
-     * 发送sim状态
-     */
-    private void sendSimStateToPhoneClient() {
-        if (checkNettManagerIsNull()) return;
-        boolean hasSim = PhoneUtils.ishasSimCard(mContext);
-
-            if (hasSim) {
-                //Netled.setNetledState(true);
-                controlSignal(currentSignalValue); // 检测卡的状态来控制灯的闪烁
-            } else {
-                //未检测到卡,下面应该常亮亮蓝灯
-                LedManager.setandCleanLedFlag(mServer,LedManager.FLAG_POWER_BLUE_LED_SWITCH,
-                        LedManager.FLAG_NET_GREEN_LED_SWITCH
-                                | LedManager.FLAG_POWER_BLUE_LED_TIMER);
-            }
-
-        TtPhoneSimCards.TtPhoneSimCard simCard = TtPhoneSimCards.TtPhoneSimCard.newBuilder()
-                .setIsSimCard(hasSim)
-                .build();
-        mNettyServerManager.sendData(null, PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.tt_phone_simcard, simCard));
-    }
 
     /**
      * 新方式发送状态数据
@@ -642,6 +608,9 @@ public class PhoneNettyManager implements IMobileDataManager {
     private TtPhoneSimCards.TtPhoneSimCard sendSimStateToPhoneClientNew() {
         if (checkNettManagerIsNull()) return null;
         boolean hasSim = PhoneUtils.ishasSimCard(mContext);
+        if(currentSignalValue != 99){
+            hasSim = true;
+        }
         if (hasSim) {
                 //Netled.setNetledState(true);
             controlSignal(currentSignalValue); // 检测卡的状态来控制灯的闪烁

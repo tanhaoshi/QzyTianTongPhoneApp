@@ -24,6 +24,35 @@ import java.util.concurrent.ExecutorService;
 public class CallLogManager {
 
     /**
+     * 第一次连接发送server状态
+     * @param ip
+     * @param phoneNettyManager
+     */
+    public static void sendStatusServer(final String ip,final PhoneNettyManager phoneNettyManager){
+        ExecutorService executorService = ThreadUtils.getCachedPool();
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(500);
+                    phoneNettyManager.getSosMsgInfoip(ip);
+
+                    //主动发送当前状态信息
+                    phoneNettyManager.setNewTimerSend(ip);
+                    Thread.sleep(1000);
+                    phoneNettyManager.getSosMsgInfoip(ip);
+
+                    //主动发送当前状态信息
+                    phoneNettyManager.setNewTimerSend(ip);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+    }
+
+    /**
      * 同步信息
      *
      * @param context

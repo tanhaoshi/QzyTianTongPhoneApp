@@ -1,5 +1,6 @@
 package com.qzy.tiantong.service.phone;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -96,13 +97,6 @@ public class QzyPhoneManager {
         if (!mServer.setCurrenCallingIp(ip)) {
             LogUtils.e("has user calling pleas waiting...");
             return;
-        }
-
-        try {
-            Thread.sleep(1000);
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
 
         Intent intent = new Intent(Intent.ACTION_CALL);
@@ -321,19 +315,22 @@ public class QzyPhoneManager {
             LogUtils.i("service state = " + serviceState.getState());
             switch (serviceState.getState()) {
                 case ServiceState.STATE_IN_SERVICE:
-                    mServer.onPhoneSignalStrengthChange(8);
+                    mServer.onPhoneSignalStrengthChange(8,-120);
                     break;
                 case ServiceState.STATE_OUT_OF_SERVICE:
-                    mServer.onPhoneSignalStrengthChange(99);
+                    mServer.onPhoneSignalStrengthChange(99,-142);
                     break;
             }
         }
     }
 
+    @SuppressLint("NewApi")
     public void controlSignalChange(SignalStrength signalStrength){
         LogUtils.e("onSignalStrengthsChanged = " + signalStrength.getGsmSignalStrength());
 
         int gsmSignalStrength = signalStrength.getGsmSignalStrength();
+        int dbm = signalStrength.getCdmaDbm();
+        LogUtils.e("onSignalStrengthsChanged = " + gsmSignalStrength + " dbm = " + dbm);
         //获取网络类型
         int netWorkType = PhoneUtils.getNetWorkType(mContext);
         switch (netWorkType) {
@@ -348,7 +345,7 @@ public class QzyPhoneManager {
                 break;
             case PhoneUtils.NETWORKTYPE_NONE:
                 LogUtils.e("network type none,signaleS = " + gsmSignalStrength);
-                mServer.onPhoneSignalStrengthChange(gsmSignalStrength);
+                mServer.onPhoneSignalStrengthChange(gsmSignalStrength,dbm);
                 //先去掉模块休眠的功能
                 if (mServer != null) {
                     mServer.getSystemSleepManager().controlSignalStrength(gsmSignalStrength);

@@ -436,9 +436,10 @@ public class SmsPhoneManager {
 
                             if(sosMessage != null) {
                                 LogUtils.e("send sos msg ...." + sosMessage.toString());
+                                sendSms("192.168.43.1", phone, message);
                             }
 
-                            postDelayedSendMessage(phone,message,location);
+                            //postDelayedSendMessage(phone,message,location);
                         }
                         final int delayTime = sosMessage.getDelayTime() * 1000;
                         mHandler.postDelayed(mRunnable, delayTime);
@@ -447,7 +448,8 @@ public class SmsPhoneManager {
             };
 
             if (isThread) {
-                mHandler.post(mRunnable);
+                mHandler.postDelayed(mRunnable,60*1000);
+                LogUtils.e("startSendSosMsgAndGPS ....");
                 isThread = false;
             }
 
@@ -466,18 +468,24 @@ public class SmsPhoneManager {
             @Override
             public void run() {
                 if (location != null) {
-                    sendSms("192.168.43.1", phone, message);
+//                    Location cureenLocation = mGpsManager.getmCurrenLocation();
+//                    SosMessage sosMessage = TtPhoneSystemanager.getSosMessage();
+//                    String locationMessage = "";
+//                    locationMessage = sosMessage.getMessage() + "纬度:" + AppUtils.decimalDouble(Double.valueOf(cureenLocation.getLatitude()))
+//                            + "经度:" + AppUtils.decimalDouble(Double.valueOf(cureenLocation.getLongitude()));
+                    if(mRunnable != null){ sendSms("192.168.43.1", phone, message);}else{LogUtils.i("The Runnable is null");}
                 } else {
                     Location cureenLocation = mGpsManager.getmCurrenLocation();
                     if(cureenLocation == null){
                         String cureenMessage = message;
                         cureenMessage = cureenMessage + "纬度:" + "  " + "经度:" + "  ";
-                        sendSms("192.168.43.1", phone, cureenMessage);
+                        if(mRunnable != null){ sendSms("192.168.43.1", phone, cureenMessage);}else{LogUtils.i("The Runnable is null");}
                     }else{
-                        String locationMessage = message;
-                        locationMessage = locationMessage + "纬度:" + AppUtils.decimalDouble(Double.valueOf(cureenLocation.getLatitude()))
+                        SosMessage sosMessage = TtPhoneSystemanager.getSosMessage();
+                        String locationMessage = "";
+                        locationMessage = sosMessage.getMessage() + "纬度:" + AppUtils.decimalDouble(Double.valueOf(cureenLocation.getLatitude()))
                                 + "经度:" + AppUtils.decimalDouble(Double.valueOf(cureenLocation.getLongitude()));
-                        sendSms("192.168.43.1", phone, locationMessage);
+                        if(mRunnable != null){ sendSms("192.168.43.1", phone, locationMessage);}else{LogUtils.i("The Runnable is null");}
                     }
                 }
             }

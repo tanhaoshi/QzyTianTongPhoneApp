@@ -134,11 +134,9 @@ public class TianTongServiceManager implements ITianTongServer {
                 }
                 Global.IP = ip;
 
-                mPhoneNettyManager.getSosMsgInfoip(ip);
 
-                //主动发送当前状态信息
-                mPhoneNettyManager.setNewTimerSend(ip);
 
+                CallLogManager.sendStatusServer(ip,mPhoneNettyManager);
                 //发送通讯录
                 CallLogManager.syncCallLogInfo(ip, mContext, mPhoneNettyManager);
 
@@ -302,9 +300,9 @@ public class TianTongServiceManager implements ITianTongServer {
     }
 
     @Override
-    public void onPhoneSignalStrengthChange(int value) {
+    public void onPhoneSignalStrengthChange(int value,int dbm) {
         if (mPhoneNettyManager != null) {
-            mPhoneNettyManager.sendTtCallPhoneSignalToClient(value);
+            mPhoneNettyManager.sendTtCallPhoneSignalToClient(value,dbm);
         }
     }
 

@@ -135,6 +135,7 @@ public class BroadcastManager {
                 LogUtils.i("The system process broad cast android.os.OWNED.AWAKE");
                 mServer.getPhoneNettyManager().isGotoSleep = true ;
                 mServer.getPhoneNettyManager().startTimer();
+                mServer.getSystemSleepManager().callConnectAllClient();
                 //mServer.getSystemSleepManager().controlSystemSleep();
             }else if(action.equals(COM_QZY_SIGNALSTRENGTH)){
                 disposeSignal(intent);

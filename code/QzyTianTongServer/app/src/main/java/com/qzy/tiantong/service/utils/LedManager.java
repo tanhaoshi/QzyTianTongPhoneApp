@@ -48,7 +48,7 @@ public class LedManager {
         if(!mSosStatus) {
             setGlobalFlag(setFlag);
             cleanGlobalFlag(cleanFlag);
-            ControlLed(mserver);
+            controlLed(mserver);
         }
     }
     public static void setSosLedStatus(ITianTongServer mserver,boolean status){
@@ -60,7 +60,7 @@ public class LedManager {
         }else{
             GlobalLedStatus = SavedGlobalLedStatus;
         }
-        ControlLed(mserver);
+        controlLed(mserver);
     }
 
     public static void setRecoveryLedStatus(ITianTongServer mserver,boolean status){
@@ -73,14 +73,22 @@ public class LedManager {
         }else{
             GlobalLedStatus = SavedGlobalLedStatus;
         }
-        ControlLed(mserver);
+        controlLed(mserver);
     }
 
-    private static void ControlLed(ITianTongServer server){
+    private static void controlLed(ITianTongServer server){
         if(GlobalLedStatus == preGlobalLedStatus){
+            //LogUtils.d("Return preGlobalLedStatus = " + preGlobalLedStatus + " GlobalLedStatus = " + GlobalLedStatus);
             return;
         }else{
-            preGlobalLedStatus = GlobalLedStatus;
+            LogUtils.d("preGlobalLedStatus = " + preGlobalLedStatus + " GlobalLedStatus = " + GlobalLedStatus);
+            if(server.getLocalSocketManager() != null && server.getLocalSocketManager().getmLocalSocketClient()!= null && server.getLocalSocketManager().getmLocalSocketClient().getClient() != null&&
+            server.getLocalSocketManager().getmLocalSocketClient().getClient().isConnected()){
+               preGlobalLedStatus = GlobalLedStatus;
+           }else{
+                LogUtils.d("GYS mClient not connected\n");
+                return;
+            }
         }
         //0xAA 0x55 0x03 0x07
         if((FLAG_BATTERY_FULL_BLUE_LED_SWITCH & preGlobalLedStatus) > 0){
@@ -151,6 +159,10 @@ public class LedManager {
         try{
             if(mServer != null && mServer.getLocalSocketManager() != null){
                 mServer.getLocalSocketManager().sendCommand(PcmProtocolUtils.sendLedState(data));
+            }else if(mServer == null){
+                LogUtils.e("GYS mServer == null");
+            } else if (mServer.getLocalSocketManager()==null){
+                LogUtils.e("GYS mServer.getLocalSocketManager == null");
             }
 
         }catch (Exception e){

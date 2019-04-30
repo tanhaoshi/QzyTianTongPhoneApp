@@ -152,7 +152,7 @@ public class NettyServer {
                 } else {
                     dataBuf.writeBytes(buf.array());
                 }
-
+                ctx.flush();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -171,6 +171,7 @@ public class NettyServer {
         @Override
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
             super.exceptionCaught(ctx, cause);
+            LogUtils.d("exceptionCaught..." + cause.getMessage());
             Channel channel = ctx.channel();
             if(channel.isActive()) ctx.close();
         }

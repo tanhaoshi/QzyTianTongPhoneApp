@@ -18,7 +18,9 @@ import com.qzy.tiantong.lib.localsocket.LocalPcmSocketManager;
 import com.qzy.tiantong.lib.power.PowerUtils;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.netty.PhoneNettyManager;
+import com.qzy.tiantong.service.netudp.NetUdpThread;
 import com.qzy.tiantong.service.phone.PhoneClientManager;
+import com.qzy.tiantong.service.phone.data.ClientInfoBean;
 import com.qzy.tt.data.CallPhoneStateProtos;
 
 import java.io.BufferedReader;
@@ -26,7 +28,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 //修改时间 4月13号 18：49
 public final class SystemSleepManager {
@@ -56,7 +61,7 @@ public final class SystemSleepManager {
         init();
     }
 
-    private void registerF12(){
+    private void registerF12() {
         IntentFilter intentFilter1 = new IntentFilter();
         intentFilter1.addAction(COM_QZY_SLEEP_RK);
         mContext.registerReceiver(broadcastReceiver, intentFilter1);
@@ -67,7 +72,7 @@ public final class SystemSleepManager {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             LogUtils.i("action value = " + action);
-            if(action.equals(COM_QZY_SLEEP_RK)) {
+            if (action.equals(COM_QZY_SLEEP_RK)) {
                 stringList.add(action);
                 doSleeep();
             }
@@ -152,7 +157,7 @@ public final class SystemSleepManager {
             if (isCalling || isSos || isGpsOpen) {
                 //三者有一个存在 就将唤醒天通模块 然后继续跑定时器
                 isTtSleep = getTianTongModeSleep();
-                if(isTtSleep){
+                if (isTtSleep) {
                     wakeupTianTong();
                 }
                 controlSystemSleep();
@@ -183,14 +188,15 @@ public final class SystemSleepManager {
             }
 
             isTtSleep = getTianTongModeSleep();
-           if (isTtSleep) {
+            if (isTtSleep) {
                 LogUtils.i("broad cast receive list size = " + stringList.size());
 
                 LogUtils.i("tian tong system go to sleep ");
 
-                if(mPhoneNettyManager.isGotoSleep){
+                if (mPhoneNettyManager.isGotoSleep) {
                     mPhoneNettyManager.isGotoSleep = false;
                     mPhoneNettyManager.stopTimer();
+                    //disconnectAllClient(); //加入断开所有连接
                     gotoSleep();
 
                 }
@@ -210,10 +216,10 @@ public final class SystemSleepManager {
     private void gotoSleep() {
         PowerManager powerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
         try {
-            synchronized (SystemSleepManager.class){
+            synchronized (SystemSleepManager.class) {
                 LogUtils.e("GGGGGG control system go to sleep successddd ....  = " + isTtSleep);
                 powerManager.getClass().getMethod("goToSleep", new Class[]{long.class}).invoke(powerManager, SystemClock.uptimeMillis());
-                LogUtils.e("GGGGG control system go to sleep end ... = "+ isTtSleep );
+                LogUtils.e("GGGGG control system go to sleep end ... = " + isTtSleep);
             }
         } catch (IllegalAccessException e) {
             LogUtils.e("IllegalAccessException error :" + e.getMessage().toString());
@@ -274,7 +280,7 @@ public final class SystemSleepManager {
      * @return
      */
     private boolean checkPhoneStateImcoming() {
-        if(mPhoneNettyManager.getmSmsPhoneManager().isKeyF2Incoming){
+        if (mPhoneNettyManager.getmSmsPhoneManager().isKeyF2Incoming) {
             wakeupTianTong();
         }
         return mPhoneNettyManager.getmSmsPhoneManager().isKeyF2Incoming;
@@ -305,9 +311,9 @@ public final class SystemSleepManager {
     public void sleepTianTong() {
         try {
 
-            if(checkAllState()){
+            if (checkAllState()) {
                 isTtSleep = getTianTongModeSleep();
-                if(isTtSleep){
+                if (isTtSleep) {
                     return;
                 }
                 LogUtils.i("control model go to sleep start");
@@ -321,9 +327,10 @@ public final class SystemSleepManager {
 
     /**
      * 检查所有状态是否满足休眠条件
+     *
      * @return
      */
-    private boolean checkAllState(){
+    private boolean checkAllState() {
         boolean isCalling = checkPhoneStateCalling();
         boolean isSos = isSosState();
         boolean isGpsOpen = isGpsState();
@@ -366,6 +373,44 @@ public final class SystemSleepManager {
     }
 
     /**
+     * 休眠断掉所有的客户端
+     */
+    public void disconnectAllClient() {
+        ConcurrentHashMap<String, ClientInfoBean> clients = PhoneClientManager.getInstance().getmHaspMapPhoneClient();
+        for (Map.Entry<String, ClientInfoBean> entry : clients.entrySet()) {
+            if (entry.getValue() != null && entry.getValue().getCtx() != null) {
+                entry.getValue().getCtx().close();
+            }
+        }
+        clients.clear();
+    }
+
+    /**
+     * 唤醒广播通知所有客户端重新连接
+     */
+
+    public void callConnectAllClient() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                    new NetUdpThread(8991).send("all client connect me", 8991);
+                    Thread.sleep(2000);
+                    new NetUdpThread(8991).send("all client connect me", 8991);
+                    Thread.sleep(2000);
+                    new NetUdpThread(8991).send("all client connect me", 8991);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+
+
+    }
+
+    /**
      * 读取天通休眠模块
      *
      * @return
@@ -393,7 +438,7 @@ public final class SystemSleepManager {
 
         if (gsmSignalStrength >= 0 && gsmSignalStrength < 97) {
 
-            if(!getTianTongModeSleep()){
+            if (!getTianTongModeSleep()) {
 
                 LogUtils.i("controlSignalStrength control model go to sleep");
 

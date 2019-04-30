@@ -27,6 +27,9 @@ public class LocalPcmSocketManager {
         connectLocalSocket();
     }
 
+    public LocalSocketClient getmLocalSocketClient() {
+        return mLocalSocketClient;
+    }
 
     /**
      * 初始化 socket
@@ -96,7 +99,7 @@ public class LocalPcmSocketManager {
                 LogUtils.e("this protocal not a protocols");
             }
         } else {
-            LogUtils.e("mLocalSocketClient is null");
+            LogUtils.e("GYS mLocalSocketClient is null");
         }
 
         /*fixedThreadPool.execute(new Runnable() {

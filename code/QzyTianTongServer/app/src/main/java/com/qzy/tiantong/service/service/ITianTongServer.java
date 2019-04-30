@@ -33,7 +33,7 @@ public interface ITianTongServer {
     void onPhoneIncoming(TtPhoneState state,String phoneNumber);
 
     //更新天通模块信号强度
-    void onPhoneSignalStrengthChange(int value);
+    void onPhoneSignalStrengthChange(int value,int dbm);
 
     //打开底层pcm工具
     void initTtPcmDevice();
