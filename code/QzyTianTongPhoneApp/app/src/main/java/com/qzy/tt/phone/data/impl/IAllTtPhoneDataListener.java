@@ -15,7 +15,7 @@ public interface IAllTtPhoneDataListener {
     void isTtServerConnected(boolean connected);
 
     //信号强度
-    void isTtSignalStrength(int signalLevel);
+    void isTtSignalStrength(int signalLevel,int dbm);
 
     //simcard 的状态
     void isTtSimCard(boolean isIn);

@@ -1,10 +1,12 @@
 package com.tt.qzy.view;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 
 import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
 import com.qzy.tt.phone.service.TtPhoneService;
+import com.socks.library.KLog;
 import com.tt.qzy.view.activity.base.BaseActivity;
 import com.tt.qzy.view.bean.VersionCodeModel;
 import com.tt.qzy.view.db.dao.CallRecordDao;
@@ -83,14 +86,18 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(savedInstanceState != null){
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            mMainFragment         = (MainFragment)fragmentManager.findFragmentByTag("mMainFragment");
-            mAidlPhoneFragment    = (AidlPhoneFragment)fragmentManager.findFragmentByTag("mAidlPhoneFragment");
-            mShortMessageFragment = (ShortMessageFragment)fragmentManager.findFragmentByTag("mShortMessageFragment");
-            mMailListFragment     = (MailListFragment)fragmentManager.findFragmentByTag("mMailListFragment");
-        }
         startService();
+    }
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+//        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     @Override
@@ -257,6 +264,8 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     private void checkDBMIsOpen(){
         if((Boolean)SPUtils.getShare(MainActivity.this,Constans.CHECK_DBM_OPEN,false)){
             signal.setVisibility(View.VISIBLE);
+        }else{
+            signal.setVisibility(View.GONE);
         }
     }
 
@@ -335,7 +344,7 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
                 dateDialog.dismiss();
 //                TraceServiceImpl.stopService();
                 finishAffinity();
-                System.exit(0);
+//                System.exit(0);
             }
         });
     }
@@ -433,6 +442,20 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
             Integer integer = (Integer)SPUtils.getShare(MainActivity.this,Constans.SHORTMESSAGE_ISREAD,0);
             remind(String.valueOf(integer),shortMessageBadgeView);
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        showMainFragment();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        KLog.i("onDestroy");
+        SPUtils.putShare(MainActivity.this,Constans.CHECK_DBM_OPEN,false);
     }
 
     @Override

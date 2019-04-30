@@ -5,7 +5,7 @@ import com.tt.qzy.view.view.base.BaseView;
 public interface BaseMainView extends BaseView{
 
     //信号强度
-    void isTtSignalStrength(int signalLevel);
+    void isTtSignalStrength(int signalLevel,int signalDbm);
 
     //simcard 的状态
     void isTtSimCard(boolean isIn);

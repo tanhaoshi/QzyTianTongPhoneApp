@@ -1,6 +1,9 @@
 package com.qzy.tt.phone.service;
 
 import android.content.Context;
+import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 
@@ -12,6 +15,7 @@ import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.tt.phone.data.impl.ITtPhoneCallStateLisenter;
 import com.qzy.tt.phone.netty.PhoneNettyManager;
+import com.qzy.tt.phone.netudp.NetUdpThread;
 import com.qzy.utils.LogUtils;
 import com.qzy.utils.ToastUtils;
 import com.socks.library.KLog;
@@ -35,12 +39,12 @@ public class PhoneServiceManager {
 
     private AllLocalPcmManager mAllLocalPcmManager;
 
-
     /**
      * sensor
      *
      * @param context
      */
+
 
 //    private QzySensorManager mQzySensorManager;
     public PhoneServiceManager(Context context) {
@@ -50,6 +54,10 @@ public class PhoneServiceManager {
         setTtPhoneCallState();
         initProtocal();
     }
+
+
+
+
 
     /**
      * 初始化通讯协议
@@ -209,6 +217,7 @@ public class PhoneServiceManager {
         if (TtPhoneDataManager.getInstance() != null) {
             TtPhoneDataManager.getInstance().free();
         }
+
 
         releaseProtocal();
     }

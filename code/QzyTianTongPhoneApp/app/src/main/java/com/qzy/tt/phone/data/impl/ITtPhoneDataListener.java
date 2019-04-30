@@ -6,7 +6,7 @@ package com.qzy.tt.phone.data.impl;
 public interface ITtPhoneDataListener {
 
     //信号强度
-    void isTtSignalStrength(int signalLevel);
+    void isTtSignalStrength(int signalLevel,int signalDbm);
 
     //simcard 的状态
     void isTtSimCard(boolean isIn);

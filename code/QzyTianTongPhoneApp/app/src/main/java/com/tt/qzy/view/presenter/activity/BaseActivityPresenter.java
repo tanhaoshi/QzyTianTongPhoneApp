@@ -87,8 +87,8 @@ public class BaseActivityPresenter extends BasePresenter<BaseMainView> implement
     }
 
     @Override
-    public void isTtSignalStrength(int signalLevel) {
-        mView.get().isTtSignalStrength(signalLevel);
+    public void isTtSignalStrength(int signalLevel,int signalDbm) {
+        mView.get().isTtSignalStrength(signalLevel,signalDbm);
     }
 
     @Override

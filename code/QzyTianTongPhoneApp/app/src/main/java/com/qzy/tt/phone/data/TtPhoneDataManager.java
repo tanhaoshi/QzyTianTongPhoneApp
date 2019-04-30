@@ -163,9 +163,9 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
             }
 
             @Override
-            public void isTtSignalStrength(int signalLevel) {
+            public void isTtSignalStrength(int signalLevel,int signalDbm) {
                 if (iTtPhoneDataListener != null) {
-                    iTtPhoneDataListener.isTtSignalStrength(signalLevel);
+                    iTtPhoneDataListener.isTtSignalStrength(signalLevel,signalDbm);
                 }
 
             }
@@ -235,7 +235,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
             }
 
             @Override
-            public void onPhoneCallStateBack(PhoneCmd phoneCmd) {
+            public synchronized void onPhoneCallStateBack(PhoneCmd phoneCmd) {
                 Iterator iter = hashMapCallStateBack.entrySet().iterator();
                 while (iter.hasNext()) {
                     Map.Entry entry = (Map.Entry) iter.next();

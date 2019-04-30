@@ -195,6 +195,7 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
 
     @Override
     public void inputString(final String diapadNumber) {
+        if(mPersenter.checkShowSignal(getActivity(),diapadNumber)){ myInputPwdUtil.dismiss(); return;}
         MainActivity mainActivity = (MainActivity) getActivity();
         if(!mainActivity.isCallStatus()){
             if(mainActivity.tt_isSignal){
@@ -205,6 +206,7 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
         }else{
             NToast.shortToast(getActivity(),getString(R.string.TMT_be_occupied));
         }
+        myInputPwdUtil.dismiss();
     }
 
     @Override

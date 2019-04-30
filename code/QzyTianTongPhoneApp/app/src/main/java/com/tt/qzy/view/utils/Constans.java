@@ -26,6 +26,7 @@ public interface Constans {
     String LATITUDE_VALUE = "latitude_value";
 
     String TTM_STATUS = "ttm_status";
+    String TTM_SIGNAL = "ttm_signal";
 
     String BASE_URL = "http://47.106.33.137:9097/TinTong/web/";
 

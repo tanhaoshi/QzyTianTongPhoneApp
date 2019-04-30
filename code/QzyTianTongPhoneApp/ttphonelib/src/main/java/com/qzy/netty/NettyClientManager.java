@@ -10,14 +10,15 @@ import com.socks.library.KLog;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
+import io.netty.channel.ChannelHandlerContext;
 
 /**
  * Created by yj.zhang on 2018/7/31/031.
  */
 
-public class NettyClientManager implements NettyClient.IConnectedReadDataListener{
+public class NettyClientManager implements NettyClient.IConnectedReadDataListener {
 
-    private NettyClient mNettyClent;
+    //private NettyClient mNettyClent;
 
     private INettyListener iNettyListener;
 
@@ -27,56 +28,65 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
     private String ip;
     private int port;
 
-    public NettyClientManager(INettyListener listener){
+    public NettyClientManager(INettyListener listener) {
         iNettyListener = listener;
-        mNettyClent = new NettyClient(this);
+
     }
 
-    public void startConnect(int port , String ip){
+    public void startConnect(int port, String ip) {
+        NettyClient.initNettyClient(this);
         this.ip = ip;
         this.port = port;
-        mNettyClent.starConnect(port,ip);
+        NettyClient.getInstance().starConnect(port, ip);
     }
 
     @Override
     public void onReceiveData(ByteBufInputStream inputStream) {
-       if(iNettyListener != null){
-           iNettyListener.onReceiveData(inputStream);
-       }
+        if (iNettyListener != null) {
+            iNettyListener.onReceiveData(inputStream);
+        }
     }
 
     @Override
     public void onConnectedState(boolean state) {
         isConnected = state;
-        if(iNettyListener != null){
-            if(state) {
+        if (iNettyListener != null) {
+            if (state) {
                 iNettyListener.onConnected();
-            }else{
+            } else {
                 iNettyListener.onDisconnected();
             }
         }
 
-        if(isConnected){
+        if (isConnected) {
 //            stopReconnected();
-        }else {
+        } else {
 //            startReconnected(port,ip);
-            mNettyClent.stopConnected();
+            if (NettyClient.getInstance() != null) {
+                NettyClient.getInstance().stopConnected();
+            }
         }
 
     }
 
+    @Override
+    public void onException(ChannelHandlerContext ctx) {
 
-    private void startReconnected(final int port,final String ip){
+    }
+
+
+    public void startReconnected(final int port, final String ip) {
         isConnected = false;
-        if(mReconnectedThread == null) {
+        if (mReconnectedThread == null) {
             mReconnectedThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    while (!isConnected){
-                        try{
-                            startConnect(port,ip);
+                    while (!isConnected) {
+                        try {
                             Thread.sleep(2000);
-                        }catch (Exception e){
+                            startConnect(port, ip);
+
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -86,28 +96,28 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
         mReconnectedThread.start();
     }
 
-    private void stopReconnected(){
-        try{
+    private void stopReconnected() {
+        try {
             isConnected = true;
-            if(mReconnectedThread != null && mReconnectedThread.isAlive()) {
+            if (mReconnectedThread != null && mReconnectedThread.isAlive()) {
                 mReconnectedThread.interrupt();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             mReconnectedThread = null;
         }
     }
 
-    public void sendData(PhoneCmd cmd){
+    public void sendData(PhoneCmd cmd) {
         try {
-            if (mNettyClent != null && mNettyClent.getConnectHanlerCtx() != null) {
-                ByteBuf buff = mNettyClent.getConnectHanlerCtx().alloc().buffer(36);
+            if (NettyClient.getInstance() != null && NettyClient.getInstance().getConnectHanlerCtx() != null) {
+                ByteBuf buff = NettyClient.getInstance().getConnectHanlerCtx().alloc().buffer(36);
                 ByteBufOutputStream stream = new ByteBufOutputStream(buff);
                 stream.write(PrototocalTools.HEAD);  // 添加协议头
                 stream.writeInt(cmd.getProtoId());
                 Message msg = cmd.getMessage().toBuilder().build();
-                ByteBuf dataBuff = mNettyClent.getConnectHanlerCtx().alloc().buffer();
+                ByteBuf dataBuff = NettyClient.getInstance().getConnectHanlerCtx().alloc().buffer();
                 ByteBufOutputStream dataStream = new ByteBufOutputStream(dataBuff);
                 msg.writeDelimitedTo(dataStream);
                 dataStream.flush();
@@ -115,9 +125,9 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
                 stream.writeInt(len);
                 stream.write(dataBuff.array(), 0, len);
                 stream.flush();
-                mNettyClent.getConnectHanlerCtx().writeAndFlush(buff);
+                NettyClient.getInstance().getConnectHanlerCtx().writeAndFlush(buff);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -126,14 +136,15 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
     /**
      * 释放资源
      */
-    public void release(){
-        if(mNettyClent != null){
-            mNettyClent.stopConnected();
+    public void release() {
+        if (NettyClient.getInstance() != null) {
+            NettyClient.getInstance().stopConnected();
         }
     }
 
     /**
      * 是否连接
+     *
      * @return
      */
     public boolean isConnected() {
@@ -143,10 +154,14 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
     /**
      * 接口回调
      */
-    public interface INettyListener{
+    public interface INettyListener {
         void onReceiveData(ByteBufInputStream inputStream);
+
         void onConnected();
+
         void onDisconnected();
+
+        void onException(ChannelHandlerContext ctx);
     }
 
 }

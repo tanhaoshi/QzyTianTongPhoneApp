@@ -22,6 +22,11 @@ public final class TtPhoneSignalProtos {
      * <code>optional int32 signalStrength = 1;</code>
      */
     int getSignalStrength();
+
+    /**
+     * <code>optional int32 signalDbm = 2;</code>
+     */
+    int getSignalDbm();
   }
   /**
    * Protobuf type {@code phonedata.PhoneSignalStrength}
@@ -36,6 +41,7 @@ public final class TtPhoneSignalProtos {
     }
     private PhoneSignalStrength() {
       signalStrength_ = 0;
+      signalDbm_ = 0;
     }
 
     @Override
@@ -68,6 +74,11 @@ public final class TtPhoneSignalProtos {
               signalStrength_ = input.readInt32();
               break;
             }
+            case 16: {
+
+              signalDbm_ = input.readInt32();
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -81,14 +92,14 @@ public final class TtPhoneSignalProtos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.qzy.tt.data.TtPhoneSignalProtos.internal_static_phonedata_PhoneSignalStrength_descriptor;
+      return TtPhoneSignalProtos.internal_static_phonedata_PhoneSignalStrength_descriptor;
     }
 
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.qzy.tt.data.TtPhoneSignalProtos.internal_static_phonedata_PhoneSignalStrength_fieldAccessorTable
+      return TtPhoneSignalProtos.internal_static_phonedata_PhoneSignalStrength_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength.class, com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength.Builder.class);
+              PhoneSignalStrength.class, Builder.class);
     }
 
     public static final int SIGNALSTRENGTH_FIELD_NUMBER = 1;
@@ -98,6 +109,15 @@ public final class TtPhoneSignalProtos {
      */
     public int getSignalStrength() {
       return signalStrength_;
+    }
+
+    public static final int SIGNALDBM_FIELD_NUMBER = 2;
+    private int signalDbm_;
+    /**
+     * <code>optional int32 signalDbm = 2;</code>
+     */
+    public int getSignalDbm() {
+      return signalDbm_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -115,6 +135,9 @@ public final class TtPhoneSignalProtos {
       if (signalStrength_ != 0) {
         output.writeInt32(1, signalStrength_);
       }
+      if (signalDbm_ != 0) {
+        output.writeInt32(2, signalDbm_);
+      }
     }
 
     public int getSerializedSize() {
@@ -126,6 +149,10 @@ public final class TtPhoneSignalProtos {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(1, signalStrength_);
       }
+      if (signalDbm_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, signalDbm_);
+      }
       memoizedSize = size;
       return size;
     }
@@ -136,14 +163,16 @@ public final class TtPhoneSignalProtos {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength)) {
+      if (!(obj instanceof PhoneSignalStrength)) {
         return super.equals(obj);
       }
-      com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength other = (com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength) obj;
+      PhoneSignalStrength other = (PhoneSignalStrength) obj;
 
       boolean result = true;
       result = result && (getSignalStrength()
           == other.getSignalStrength());
+      result = result && (getSignalDbm()
+          == other.getSignalDbm());
       return result;
     }
 
@@ -156,63 +185,65 @@ public final class TtPhoneSignalProtos {
       hash = (19 * hash) + getDescriptorForType().hashCode();
       hash = (37 * hash) + SIGNALSTRENGTH_FIELD_NUMBER;
       hash = (53 * hash) + getSignalStrength();
+      hash = (37 * hash) + SIGNALDBM_FIELD_NUMBER;
+      hash = (53 * hash) + getSignalDbm();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
     }
 
-    public static com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength parseFrom(
+    public static PhoneSignalStrength parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength parseFrom(
+    public static PhoneSignalStrength parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength parseFrom(byte[] data)
+    public static PhoneSignalStrength parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength parseFrom(
+    public static PhoneSignalStrength parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength parseFrom(java.io.InputStream input)
+    public static PhoneSignalStrength parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength parseFrom(
+    public static PhoneSignalStrength parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength parseDelimitedFrom(java.io.InputStream input)
+    public static PhoneSignalStrength parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength parseDelimitedFrom(
+    public static PhoneSignalStrength parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength parseFrom(
+    public static PhoneSignalStrength parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength parseFrom(
+    public static PhoneSignalStrength parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -224,7 +255,7 @@ public final class TtPhoneSignalProtos {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength prototype) {
+    public static Builder newBuilder(PhoneSignalStrength prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -244,17 +275,17 @@ public final class TtPhoneSignalProtos {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:phonedata.PhoneSignalStrength)
-        com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrengthOrBuilder {
+        PhoneSignalStrengthOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.qzy.tt.data.TtPhoneSignalProtos.internal_static_phonedata_PhoneSignalStrength_descriptor;
+        return TtPhoneSignalProtos.internal_static_phonedata_PhoneSignalStrength_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.qzy.tt.data.TtPhoneSignalProtos.internal_static_phonedata_PhoneSignalStrength_fieldAccessorTable
+        return TtPhoneSignalProtos.internal_static_phonedata_PhoneSignalStrength_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength.class, com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength.Builder.class);
+                PhoneSignalStrength.class, Builder.class);
       }
 
       // Construct using com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength.newBuilder()
@@ -276,29 +307,32 @@ public final class TtPhoneSignalProtos {
         super.clear();
         signalStrength_ = 0;
 
+        signalDbm_ = 0;
+
         return this;
       }
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.qzy.tt.data.TtPhoneSignalProtos.internal_static_phonedata_PhoneSignalStrength_descriptor;
+        return TtPhoneSignalProtos.internal_static_phonedata_PhoneSignalStrength_descriptor;
       }
 
-      public com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength getDefaultInstanceForType() {
-        return com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength.getDefaultInstance();
+      public PhoneSignalStrength getDefaultInstanceForType() {
+        return PhoneSignalStrength.getDefaultInstance();
       }
 
-      public com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength build() {
-        com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength result = buildPartial();
+      public PhoneSignalStrength build() {
+        PhoneSignalStrength result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength buildPartial() {
-        com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength result = new com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength(this);
+      public PhoneSignalStrength buildPartial() {
+        PhoneSignalStrength result = new PhoneSignalStrength(this);
         result.signalStrength_ = signalStrength_;
+        result.signalDbm_ = signalDbm_;
         onBuilt();
         return result;
       }
@@ -330,18 +364,21 @@ public final class TtPhoneSignalProtos {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength) {
-          return mergeFrom((com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength)other);
+        if (other instanceof PhoneSignalStrength) {
+          return mergeFrom((PhoneSignalStrength)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength other) {
-        if (other == com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength.getDefaultInstance()) return this;
+      public Builder mergeFrom(PhoneSignalStrength other) {
+        if (other == PhoneSignalStrength.getDefaultInstance()) return this;
         if (other.getSignalStrength() != 0) {
           setSignalStrength(other.getSignalStrength());
+        }
+        if (other.getSignalDbm() != 0) {
+          setSignalDbm(other.getSignalDbm());
         }
         onChanged();
         return this;
@@ -355,11 +392,11 @@ public final class TtPhoneSignalProtos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength parsedMessage = null;
+        PhoneSignalStrength parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength) e.getUnfinishedMessage();
+          parsedMessage = (PhoneSignalStrength) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -380,7 +417,7 @@ public final class TtPhoneSignalProtos {
        * <code>optional int32 signalStrength = 1;</code>
        */
       public Builder setSignalStrength(int value) {
-
+        
         signalStrength_ = value;
         onChanged();
         return this;
@@ -389,8 +426,34 @@ public final class TtPhoneSignalProtos {
        * <code>optional int32 signalStrength = 1;</code>
        */
       public Builder clearSignalStrength() {
-
+        
         signalStrength_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int signalDbm_ ;
+      /**
+       * <code>optional int32 signalDbm = 2;</code>
+       */
+      public int getSignalDbm() {
+        return signalDbm_;
+      }
+      /**
+       * <code>optional int32 signalDbm = 2;</code>
+       */
+      public Builder setSignalDbm(int value) {
+        
+        signalDbm_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 signalDbm = 2;</code>
+       */
+      public Builder clearSignalDbm() {
+        
+        signalDbm_ = 0;
         onChanged();
         return this;
       }
@@ -409,12 +472,12 @@ public final class TtPhoneSignalProtos {
     }
 
     // @@protoc_insertion_point(class_scope:phonedata.PhoneSignalStrength)
-    private static final com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength DEFAULT_INSTANCE;
+    private static final PhoneSignalStrength DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength();
+      DEFAULT_INSTANCE = new PhoneSignalStrength();
     }
 
-    public static com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength getDefaultInstance() {
+    public static PhoneSignalStrength getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -437,7 +500,7 @@ public final class TtPhoneSignalProtos {
       return PARSER;
     }
 
-    public com.qzy.tt.data.TtPhoneSignalProtos.PhoneSignalStrength getDefaultInstanceForType() {
+    public PhoneSignalStrength getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -445,7 +508,7 @@ public final class TtPhoneSignalProtos {
 
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_phonedata_PhoneSignalStrength_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_phonedata_PhoneSignalStrength_fieldAccessorTable;
 
@@ -457,10 +520,10 @@ public final class TtPhoneSignalProtos {
       descriptor;
   static {
     String[] descriptorData = {
-      "\n\023TtPhoneSignal.proto\022\tphonedata\"-\n\023Phon" +
-      "eSignalStrength\022\026\n\016signalStrength\030\001 \001(\005B" +
-      "&\n\017com.qzy.tt.dataB\023TtPhoneSignalProtosb" +
-      "\006proto3"
+      "\n\023TtPhoneSignal.proto\022\tphonedata\"@\n\023Phon" +
+      "eSignalStrength\022\026\n\016signalStrength\030\001 \001(\005\022" +
+      "\021\n\tsignalDbm\030\002 \001(\005B&\n\017com.qzy.tt.dataB\023T" +
+      "tPhoneSignalProtosb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -479,7 +542,7 @@ public final class TtPhoneSignalProtos {
     internal_static_phonedata_PhoneSignalStrength_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_phonedata_PhoneSignalStrength_descriptor,
-        new String[] { "SignalStrength", });
+        new String[] { "SignalStrength", "SignalDbm", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

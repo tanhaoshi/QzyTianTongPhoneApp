@@ -317,7 +317,7 @@ public class CmdHandler {
     private void parseSiganStregth(int protoId, TtPhoneSignalProtos.PhoneSignalStrength phoneSignalStrength) {
         //sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SIGNAL,protoId,phoneSignalStrength);
         if (mAllDataListener != null) {
-            mAllDataListener.isTtSignalStrength(phoneSignalStrength.getSignalStrength());
+            mAllDataListener.isTtSignalStrength(phoneSignalStrength.getSignalStrength(),phoneSignalStrength.getSignalDbm());
         }
     }
 

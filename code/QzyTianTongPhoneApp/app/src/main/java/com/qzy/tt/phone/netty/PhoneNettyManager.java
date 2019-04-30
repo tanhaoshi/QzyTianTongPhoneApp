@@ -1,6 +1,8 @@
 package com.qzy.tt.phone.netty;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.google.protobuf.ByteString;
 import com.qzy.androidftp.FtpClienManager;
@@ -26,6 +28,7 @@ import com.qzy.tt.data.TtTimeProtos;
 import com.qzy.tt.phone.cmd.CmdHandler;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.SmsBean;
+import com.qzy.tt.phone.netudp.NetUdpThread;
 import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
 import com.tt.qzy.view.bean.AppInfoModel;
@@ -45,6 +48,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 
 import io.netty.buffer.ByteBufInputStream;
+import io.netty.channel.ChannelHandlerContext;
 import it.sauronsoftware.ftp4j.FTPDataTransferListener;
 
 /**
@@ -61,9 +65,23 @@ public class PhoneNettyManager {
     private String ip;
     private int port;
 
+    private NetUdpThread mNetUdpThread;
+
+    private Handler mhandler = new Handler(Looper.getMainLooper());
+
+    //用户点击连接
+    private boolean isUserHandlerConnect = false;
+
+    //由猫唤醒导致重连标志
+    private boolean isUdpHandlerConnect = false;
+
+    //netty通道异常 导致重连标志位
+    private boolean isNettyException = false;
+
     public PhoneNettyManager(Context context) {
         mContext = context;
         mNettyClientManager = new NettyClientManager(nettyListener);
+        initUdbConnect();
         mCmdHandler = new CmdHandler(context);
         KLog.i("TtPhoneService boolean flag value = " + (Boolean) SPUtils.getShare(mContext, Constans.SERVER_FLAG,false));
         if((Boolean) SPUtils.getShare(mContext, Constans.SERVER_FLAG,false)){
@@ -73,9 +91,51 @@ public class PhoneNettyManager {
     }
 
     /**
+     * 做udp重连消息
+     */
+    private  void initUdbConnect(){
+        mNetUdpThread = new NetUdpThread(8991);
+        mNetUdpThread.start();
+        mNetUdpThread.setmListener(udpListener);
+    }
+
+    private NetUdpThread.IUdpListener udpListener = new NetUdpThread.IUdpListener() {
+        @Override
+        public void onConnectStateMsg() {
+                LogUtils.d("server call client connect ");
+                if(!isUserHandlerConnect){
+                    LogUtils.d("user not connect so return ");
+                    return;
+                }
+                mNetUdpThread.setmListener(null);
+                isUdpHandlerConnect = true;
+                mNettyClientManager.release();
+                mNettyClientManager.startReconnected(Constans.PORT, Constans.IP);
+                mhandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mNetUdpThread.setmListener(udpListener);
+                    }
+                },6000);
+
+        }
+    };
+
+    /**
+     * 释放udp
+     */
+    private void releaseUdpConnect(){
+        if(mNetUdpThread != null && mNetUdpThread.isAlive()){
+            mNetUdpThread.interrupt();
+        }
+        mNetUdpThread = null;
+    }
+
+    /**
      * 开始连接
      */
     public void connect(int port,String ip) {
+        isUserHandlerConnect = true;
         this.ip = ip;
         this.port = port;
         mNettyClientManager.startConnect(port,ip);
@@ -85,6 +145,7 @@ public class PhoneNettyManager {
      * 断开连接
      */
     public void stop() {
+        isUserHandlerConnect = false;
         mNettyClientManager.release();
     }
 
@@ -502,13 +563,38 @@ public class PhoneNettyManager {
 
         @Override
         public void onConnected() {
-            KLog.i("netty connected ...");
+            LogUtils.i("netty connected ...");
+
+          /*  if(isUserHandlerConnect && isUdpHandlerConnect ){
+                isUdpHandlerConnect = false;
+                KLog.i("netty connected is wakeup ");
+                return;
+            }*/
+            if(isUdpHandlerConnect ){
+                isUdpHandlerConnect = false;
+            }
+
+            if(isNettyException){
+                isNettyException = false;
+            }
+
             setConnectedState();
+
         }
 
         @Override
         public void onDisconnected() {
-            KLog.i("netty disconnected ...");
+            LogUtils.i("netty disconnected ...");
+            if(isUserHandlerConnect && isUdpHandlerConnect ){
+                LogUtils.i("netty disconnected is wakeup ");
+                return;
+            }
+
+            if(isUserHandlerConnect && isNettyException){
+                LogUtils.i("netty disconnected is exception ");
+                return;
+            }
+
             //EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_NONCONNECT));
             sendConnectedState(false);
             if(mCmdHandler != null){
@@ -516,6 +602,15 @@ public class PhoneNettyManager {
             }
             setConnectedState();
         }
+
+        @Override
+        public void onException(ChannelHandlerContext ctx) {
+            LogUtils.i("netty onException...");
+            isNettyException = true;
+            mNettyClientManager.release();
+            mNettyClientManager.startReconnected(Constans.PORT, Constans.IP);
+        }
+
     };
 
    /* @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -623,6 +718,7 @@ public class PhoneNettyManager {
         }
         CommonData.getInstance().free();
         mCmdHandler.release();
+        releaseUdpConnect();
     }
 
 

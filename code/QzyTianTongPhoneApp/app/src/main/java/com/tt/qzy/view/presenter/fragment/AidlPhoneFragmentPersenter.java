@@ -153,9 +153,13 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView> {
             String action = intent.getAction();
             KLog.i("action = " + action);
             if (action.equals("com.qzy.tt.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE")) {
-                Intent intent1 = new Intent(mContext, TellPhoneActivity.class);
-                intent1.putExtra("diapadNumber", phone);
-                mContext.startActivity(intent1);
+                if("call".equals(intent.getStringExtra("callPhone"))){
+                    Intent intent1 = new Intent(mContext, TellPhoneActivity.class);
+                    intent1.putExtra("diapadNumber", phone);
+                    mContext.startActivity(intent1);
+                }else{
+                    //NToast.shortToast(context,"设备正在电话中!");
+                }
             }
         }
     };

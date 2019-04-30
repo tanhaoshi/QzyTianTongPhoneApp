@@ -24,7 +24,6 @@ import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.tt.phone.data.impl.ISendShortMessage;
 import com.socks.library.KLog;
 import com.tt.qzy.view.R;
-import com.tt.qzy.view.activity.base.BaseActivity;
 import com.tt.qzy.view.adapter.MsgAdapter;
 import com.tt.qzy.view.bean.MsgModel;
 import com.tt.qzy.view.bean.SMAgrementModel;
@@ -47,7 +46,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SendShortMessageActivity extends BaseActivity implements ISendShortMessage {
+public class SendShortMessageActivity extends AppCompatActivity implements ISendShortMessage {
 
     @BindView(R.id.sms_base_tv_toolbar_right)
     ImageView mImageView;
@@ -69,17 +68,20 @@ public class SendShortMessageActivity extends BaseActivity implements ISendShort
     private String name = "";
 
     @Override
-    public int getContentView() {
-        return R.layout.activity_send_short_message;
-    }
-
-    @Override
-    public void initView() {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_send_short_message);
+        ButterKnife.bind(this);
+        // EventBusUtils.register(this);
         initView();
         initAdapter();
         initMsgs();
+
         setShortMsgSyncListener();
         setSendShortMsgStateListener();
+    }
+
+    private void initView() {
         //sms_main_quantity.setText(getResources().getString(R.string.TMT_short_message));
         mImageView.setVisibility(View.VISIBLE);
         sms_et_name.addTextChangedListener(new TextWatcher() {
@@ -98,11 +100,6 @@ public class SendShortMessageActivity extends BaseActivity implements ISendShort
 
             }
         });
-    }
-
-    @Override
-    public void initData() {
-
     }
 
     private void initMsgs() {
@@ -199,7 +196,7 @@ public class SendShortMessageActivity extends BaseActivity implements ISendShort
                 finish();
                 break;
             case R.id.send:
-                if(tt_isSignal){
+                if((Boolean)SPUtils.getShare(SendShortMessageActivity.this,Constans.TTM_STATUS,false)){
                     sendMessage(MsgModel.TYPE_RECEIVE);
                 }else{
                     NToast.shortToast(SendShortMessageActivity.this,"设备未入网,请先入网!");
@@ -343,25 +340,5 @@ public class SendShortMessageActivity extends BaseActivity implements ISendShort
     @Override
     public void isSendShotMessageStatus(Object o) {
         parseSmsState(o);
-    }
-
-    @Override
-    public void showProgress(boolean isTrue) {
-
-    }
-
-    @Override
-    public void hideProgress() {
-
-    }
-
-    @Override
-    public void showError(String msg, boolean pullToRefresh) {
-
-    }
-
-    @Override
-    public void loadData(boolean pullToRefresh) {
-
     }
 }

@@ -13,6 +13,7 @@ import com.qzy.data.PhoneCmd;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhoneMobileDataProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
+import com.qzy.tt.data.TtPhoneSosMessageProtos;
 import com.qzy.tt.data.TtPhoneSosStateProtos;
 import com.qzy.tt.data.TtPhoneUpdateResponseProtos;
 import com.qzy.tt.phone.common.CommonData;
@@ -84,6 +85,10 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
             mContext.startActivity(intent);
             return;
         }
+
+        SPUtils.removeShare(mContext, Constans.CRY_HELP_TIMETIMER);
+        SPUtils.removeShare(mContext, Constans.CRY_HELP_PHONE);
+        SPUtils.removeShare(mContext, Constans.CRY_HELP_SHORTMESSAGE);
 
         startConnectMain();
     }

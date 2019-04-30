@@ -182,21 +182,6 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
 
 
     /**
-     * 解析定时发送
-     */
-    private void responseTimerSend(Object o) {
-        PhoneCmd cmd = (PhoneCmd) o;
-        TimerSendProtos.TimerSend timerSend = (TimerSendProtos.TimerSend) cmd.getMessage();
-        TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery = timerSend.getBatterValue();
-        TtPhoneSignalProtos.PhoneSignalStrength phoneSignalStrength = timerSend.getSigalStrength();
-        TtPhonePositionProtos.TtPhonePosition ttPhonePosition = timerSend.getTtPhoneGpsPosition();
-        TtPhoneSimCards.TtPhoneSimCard ttPhoneSimCard = timerSend.getTtPhoneSimcard();
-        onTiantongInfoReceiver(phoneSignalStrength.getSignalStrength());
-        onBatteryInfoReceiver(ttPhoneBattery.getLevel(), ttPhoneBattery.getScale());
-
-    }
-
-    /**
      * 主动断开时将view进行改变
      */
     private void recoverView() {
@@ -264,62 +249,102 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
         tt_baterly = percent;
     }
 
+    private void diposeSignal(int signalDbm){
+        if(signalDbm == 33){
+            signalValue = -95;
+        }else if(signalDbm >= 14 && signalDbm < 97){
+            signalValue = -114;
+        }else if(signalDbm == 11){
+            signalValue = -117;
+        }else if(signalDbm == 12){
+            signalValue = -116;
+        }else if(signalDbm == 13){
+            signalValue = -116;
+        }else if(signalDbm == 8){
+            signalValue = -120;
+        }else if(signalDbm == 9){
+            signalValue = -119;
+        }else if(signalDbm == 10){
+            signalValue = -118;
+        }else if(signalDbm == 5){
+            signalValue = -123;
+        }else if(signalDbm == 6){
+            signalValue = -122;
+        }else if(signalDbm == 7){
+            signalValue = -121;
+        }else if(signalDbm == 2){
+            signalValue = -126;
+        }else if(signalDbm == 3){
+            signalValue = -125;
+        }else if(signalDbm == 4){
+            signalValue = -124;
+        }else if(signalDbm == 0){
+            signalValue = -128;
+        }else if(signalDbm == 1){
+            signalValue = -127;
+        }else if(signalDbm == 97){
+            signalValue = -141;
+        }else if(signalDbm == 98){
+            signalValue = -140;
+        }else if(signalDbm == 99){
+            signalValue = -142;
+        }
+        signal.setText("-"+String.valueOf(signalValue)+" DB");
+    }
+
+
     /**
      * 更新设备信号强度
      * AP 信号格数（共 4 档）和 rssi 对应关系建议方案：
      * RSSI  格数  dBm
      * 33     3    -95
-     * ≥8    3    ≥-120
-     * 5-7    2    -123~-121
-     * 2-4    1    -126~-124
-     * 0-1    0    -128~-127
+     * ≥14    3    ≥-114
+     * 11-13    2    -117~-115
+     * 8-10    1    -120~-118
+     * 5-7     0    -123~-121
+     * 2-4     1    -126~-124
+     * 0-1     0    -128~-127
      * 97 限制服务 -141，格数建议显示特殊符号或汉字，如显示不了显示 0 格
      * 98 告警服务 -140，格数建议显示感叹号或汉字，如显示不了显示 0 格
      * 99  无服务  -142，格数建议显示特殊符号或汉字，如显示不了显示 0 格
      *
      * @param intLevel
      */
-    private void onTiantongInfoReceiver(int intLevel) {
+    private void onTiantongInfoReceiver(int intLevel,int signalDbm) {
         signalValue = intLevel;
         if (intLevel == 97) {
             tt_isSignal = false;
             stopTimerService();
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
-            signalValue = -141;
         } else if (intLevel == 98) {
             tt_isSignal = false;
             stopTimerService();
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
-            signalValue = -140;
         } else if (intLevel == 99) {
             tt_isSignal = false;
             stopTimerService();
-            signalValue = -142;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_noconnect));
         } else if (intLevel >= 0 && intLevel <= 1) {
             tt_isSignal = true;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_one));
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
-            signalValue = -127;
         } else if (intLevel >= 2 && intLevel <= 4) {
             tt_isSignal = true;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_two));
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
-            signalValue = -125;
         } else if (intLevel >= 5 && intLevel <= 7) {
             tt_isSignal = true;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_three));
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
-            signalValue = -122;
         } else if (intLevel >= 8) {
             tt_isSignal = true;
             img3.setImageDrawable(getResources().getDrawable(R.drawable.signal_four));
             img2.setImageDrawable(getResources().getDrawable(R.drawable.sim_connect));
-            signalValue = -120;
         }else if(intLevel <= 33 && intLevel >= 12){
-            signalValue = -95;
+
         }
-        signal.setText("- ("+String.valueOf(signalValue)+") dBm");
+        diposeSignal(intLevel);
+        SPUtils.putShare(BaseActivity.this, Constans.TTM_STATUS, tt_isSignal);
     }
 
     public void onTianTongCallStatus(Object o) {
@@ -329,9 +354,13 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
             if (callPhoneBack.getIp().equals(CommonData.getInstance().getLocalWifiIp())) {
                 tt_call_status = true;
                 Intent intent = new Intent("com.qzy.tt.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE");
+                intent.putExtra("callPhone","call");
                 sendBroadcast(intent);
             } else {
                 tt_call_status = true;
+//                Intent intent = new Intent("com.qzy.tt.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE");
+//                intent.putExtra("callPhone","no_call");
+//                sendBroadcast(intent);
             }
         } else {
             tt_call_status = false;
@@ -361,8 +390,8 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
     }
 
     @Override
-    public void isTtSignalStrength(int signalLevel) {
-        onTiantongInfoReceiver(signalLevel);
+    public void isTtSignalStrength(int signalLevel,int signalDbm) {
+        onTiantongInfoReceiver(signalLevel,signalDbm);
     }
 
 }
