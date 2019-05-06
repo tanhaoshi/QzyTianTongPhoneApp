@@ -119,7 +119,6 @@ public class PhoneServiceManager {
                     }
                     startProtocal();
                 }
-
                 break;
             case HUANGUP:
                 isRing = false;

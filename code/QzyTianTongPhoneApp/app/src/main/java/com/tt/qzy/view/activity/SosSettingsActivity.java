@@ -82,7 +82,7 @@ public class SosSettingsActivity extends BaseActivity {
         }
         percentBaterly.setText(baterly + "%");
         img1.setPower(baterly);
-        signal.setText(String.valueOf(signalValue));
+        signal.setText("- ("+String.valueOf(signalValue)+") dBm");
     }
 
     @OnClick({R.id.base_iv_back, R.id.btn_yes})

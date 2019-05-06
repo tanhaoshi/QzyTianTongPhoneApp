@@ -103,7 +103,7 @@ public class SettingsActivity extends BaseActivity<SettingsView> implements Sett
         }
         percentBaterly.setText(baterly + "%");
         img1.setPower(baterly);
-        signal.setText(String.valueOf(signalValue));
+        signal.setText("- ("+String.valueOf(signalValue)+") dBm");
     }
 
     @Override

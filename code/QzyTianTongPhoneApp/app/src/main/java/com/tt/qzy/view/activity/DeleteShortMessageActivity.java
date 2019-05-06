@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
-import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.DeleteShortMessageAdapter;
 import com.tt.qzy.view.bean.ProtobufMessageModel;

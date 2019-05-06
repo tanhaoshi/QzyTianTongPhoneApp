@@ -88,7 +88,7 @@ public class MainAboutActivity extends BaseActivity<MainAboutView> implements Ma
         }
         percentBaterly.setText(baterly + "%");
         img1.setPower(baterly);
-        signal.setText(String.valueOf(signalValue));
+        signal.setText("- ("+String.valueOf(signalValue)+") dBm");
     }
 
     @Override

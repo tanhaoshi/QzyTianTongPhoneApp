@@ -14,15 +14,9 @@ import android.widget.TextView;
 
 import com.qzy.data.PhoneCmd;
 import com.qzy.tt.data.CallPhoneBackProtos;
-import com.qzy.tt.data.TimerSendProtos;
-import com.qzy.tt.data.TtPhoneBatteryProtos;
-import com.qzy.tt.data.TtPhonePositionProtos;
-import com.qzy.tt.data.TtPhoneSignalProtos;
-import com.qzy.tt.data.TtPhoneSimCards;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.tt.phone.data.impl.ITtPhoneCallStateBackListener;
-import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.layout.BatteryView;
@@ -37,12 +31,6 @@ import com.tt.qzy.view.view.base.BaseView;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 
 public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity implements BaseMainView {
 

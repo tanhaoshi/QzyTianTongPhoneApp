@@ -164,11 +164,11 @@ public class CmdHandler {
                     }
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_short_message: // 已完成
-//                    TtShortMessageProtos.TtShortMessage ttShortMessage = TtShortMessageProtos.TtShortMessage.parseDelimitedFrom(inputStream);
+                    TtShortMessageProtos.TtShortMessage ttShortMessage = TtShortMessageProtos.TtShortMessage.parseDelimitedFrom(inputStream);
 //                    //mSyncManager.syncShortMessage(ttShortMessage);
-//                    if (mAllDataListener != null) {
-//                        mAllDataListener.syncShortMessage(ttShortMessage);
-//                    }
+                    if (mAllDataListener != null) {
+                        mAllDataListener.syncShortMessage(ttShortMessage);
+                    }
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_receiver_short_message: // 已完成
                     TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessageSignal = TtShortMessageProtos.TtShortMessage.ShortMessage.parseDelimitedFrom(inputStream);

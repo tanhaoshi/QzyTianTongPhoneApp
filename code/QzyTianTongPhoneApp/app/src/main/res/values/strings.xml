@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">征服卫星</string>
+    <!-- 天地互联 -->
+    <string name="app_name">天地互联</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
@@ -41,8 +42,8 @@
     <string name="TMT_finshLoad">已下载城市</string>
     <string name="TMT_notify">当前为WI-FI网络,切换至运营商流量会自动暂停下载</string>
     <string name="TMT_net_notify">当前为运营商网络,建议切换至WI-FI网络下载</string>
-    <string name="TMT_version">征服卫星APP版本</string>
-    <string name="TMT_soft_version">征服卫星服务版本</string>
+    <string name="TMT_version">天地互联APP版本</string>
+    <string name="TMT_soft_version">天地互联服务版本</string>
     <string name="TMT_fixed_version">固件版本</string>
     <string name="TMT_number">序列号</string>
     <string name="TMT_hantInput">拨号或使用拼音搜索</string>
