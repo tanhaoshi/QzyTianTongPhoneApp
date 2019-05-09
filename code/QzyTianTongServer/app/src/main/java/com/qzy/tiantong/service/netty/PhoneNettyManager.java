@@ -15,6 +15,7 @@ import com.qzy.tiantong.lib.power.PowerUtils;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.lib.utils.QzySystemUtils;
 import com.qzy.tiantong.service.BuildConfig;
+import com.qzy.tiantong.service.atcommand.AtCommandTools;
 import com.qzy.tiantong.service.gps.GpsManager;
 import com.qzy.tiantong.service.mobiledata.IMobileDataManager;
 import com.qzy.tiantong.service.mobiledata.MobileDataManager;
@@ -31,6 +32,7 @@ import com.qzy.tiantong.service.phone.data.SosMessage;
 import com.qzy.tiantong.service.service.ITianTongServer;
 import com.qzy.tiantong.service.time.DateTimeManager;
 import com.qzy.tiantong.service.usb.TtUsbManager;
+import com.qzy.tiantong.service.utils.AppUtils;
 import com.qzy.tiantong.service.utils.Constant;
 import com.qzy.tiantong.service.utils.LedManager;
 import com.qzy.tiantong.service.utils.ModuleDormancyUtil;
@@ -315,15 +317,22 @@ public class PhoneNettyManager implements IMobileDataManager {
         return false;
     }
 
+    public TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion mTtPhoneGetServerVersion;
+
     /**
      * 返回版本号信息给app
      *
      * @param ttPhoneGetServerVersion
      */
     public void getServerVerion(TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion ttPhoneGetServerVersion) {
+        AppUtils.requireNonNull(mServer.getQzyPhoneManager().mAtCommandToolManager);
+        mServer.getQzyPhoneManager().mAtCommandToolManager.sendAtCommand(AtCommandTools.AT_COMMAND_VERSION);
+        this.mTtPhoneGetServerVersion = ttPhoneGetServerVersion;
+    }
+
+    public void sendServerVersion(TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion ttPhoneGetServerVersion){
         LogUtils.d("getServerVerion versionName ");
         try {
-
             if (checkNettManagerIsNull()) {
                 return;
             }
@@ -336,8 +345,8 @@ public class PhoneNettyManager implements IMobileDataManager {
                     .setServerApkVersionName(versionName)
                     .setServerSieralNo(sieralNo)
                     .build();
-            mNettyServerManager.sendData(ttPhoneGetServerVersion.getIp(), PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.response_server_version_info, ttPhoneGetServerVersion1));
-
+            mNettyServerManager.sendData(ttPhoneGetServerVersion.getIp(),
+                    PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.response_server_version_info, ttPhoneGetServerVersion1));
         } catch (Exception e) {
             e.printStackTrace();
         }

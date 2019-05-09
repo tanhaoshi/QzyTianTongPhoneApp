@@ -36,11 +36,12 @@ void protobuf_AssignDesc_TtPhoneGetServerVersion_2eproto() {
       "TtPhoneGetServerVersion.proto");
   GOOGLE_CHECK(file != NULL);
   TtPhoneGetServerVersion_descriptor_ = file->message_type(0);
-  static const int TtPhoneGetServerVersion_offsets_[4] = {
+  static const int TtPhoneGetServerVersion_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtPhoneGetServerVersion, ip_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtPhoneGetServerVersion, isrequest_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtPhoneGetServerVersion, serverapkversionname_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtPhoneGetServerVersion, serversieralno_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TtPhoneGetServerVersion, tiantongmodelversion_),
   };
   TtPhoneGetServerVersion_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -95,11 +96,12 @@ void protobuf_AddDesc_TtPhoneGetServerVersion_2eproto_impl() {
   protobuf_InitDefaults_TtPhoneGetServerVersion_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\035TtPhoneGetServerVersion.proto\022\tphoneda"
-    "ta\"n\n\027TtPhoneGetServerVersion\022\n\n\002ip\030\001 \001("
-    "\t\022\021\n\tisRequest\030\002 \001(\010\022\034\n\024serverApkVersion"
-    "Name\030\003 \001(\t\022\026\n\016serverSieralNo\030\004 \001(\tB0\n\017co"
-    "m.qzy.tt.dataB\035TtPhoneGetServerVersionPr"
-    "otosb\006proto3", 212);
+    "ta\"\214\001\n\027TtPhoneGetServerVersion\022\n\n\002ip\030\001 \001"
+    "(\t\022\021\n\tisRequest\030\002 \001(\010\022\034\n\024serverApkVersio"
+    "nName\030\003 \001(\t\022\026\n\016serverSieralNo\030\004 \001(\t\022\034\n\024t"
+    "iantongModelVersion\030\005 \001(\tB0\n\017com.qzy.tt."
+    "dataB\035TtPhoneGetServerVersionProtosb\006pro"
+    "to3", 243);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "TtPhoneGetServerVersion.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_TtPhoneGetServerVersion_2eproto);
@@ -134,6 +136,7 @@ const int TtPhoneGetServerVersion::kIpFieldNumber;
 const int TtPhoneGetServerVersion::kIsRequestFieldNumber;
 const int TtPhoneGetServerVersion::kServerApkVersionNameFieldNumber;
 const int TtPhoneGetServerVersion::kServerSieralNoFieldNumber;
+const int TtPhoneGetServerVersion::kTiantongModelVersionFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 TtPhoneGetServerVersion::TtPhoneGetServerVersion()
@@ -158,6 +161,7 @@ void TtPhoneGetServerVersion::SharedCtor() {
   ip_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   serverapkversionname_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   serversieralno_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  tiantongmodelversion_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   isrequest_ = false;
   _cached_size_ = 0;
 }
@@ -171,6 +175,7 @@ void TtPhoneGetServerVersion::SharedDtor() {
   ip_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   serverapkversionname_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   serversieralno_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  tiantongmodelversion_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 void TtPhoneGetServerVersion::SetCachedSize(int size) const {
@@ -204,6 +209,7 @@ void TtPhoneGetServerVersion::Clear() {
   isrequest_ = false;
   serverapkversionname_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   serversieralno_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  tiantongmodelversion_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 bool TtPhoneGetServerVersion::MergePartialFromCodedStream(
@@ -277,6 +283,23 @@ bool TtPhoneGetServerVersion::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(42)) goto parse_tiantongModelVersion;
+        break;
+      }
+
+      // optional string tiantongModelVersion = 5;
+      case 5: {
+        if (tag == 42) {
+         parse_tiantongModelVersion:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_tiantongmodelversion()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->tiantongmodelversion().data(), this->tiantongmodelversion().length(),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "phonedata.TtPhoneGetServerVersion.tiantongModelVersion"));
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -340,6 +363,16 @@ void TtPhoneGetServerVersion::SerializeWithCachedSizes(
       4, this->serversieralno(), output);
   }
 
+  // optional string tiantongModelVersion = 5;
+  if (this->tiantongmodelversion().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->tiantongmodelversion().data(), this->tiantongmodelversion().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "phonedata.TtPhoneGetServerVersion.tiantongModelVersion");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      5, this->tiantongmodelversion(), output);
+  }
+
   // @@protoc_insertion_point(serialize_end:phonedata.TtPhoneGetServerVersion)
 }
 
@@ -385,6 +418,17 @@ void TtPhoneGetServerVersion::SerializeWithCachedSizes(
         4, this->serversieralno(), target);
   }
 
+  // optional string tiantongModelVersion = 5;
+  if (this->tiantongmodelversion().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->tiantongmodelversion().data(), this->tiantongmodelversion().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "phonedata.TtPhoneGetServerVersion.tiantongModelVersion");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        5, this->tiantongmodelversion(), target);
+  }
+
   // @@protoc_insertion_point(serialize_to_array_end:phonedata.TtPhoneGetServerVersion)
   return target;
 }
@@ -417,6 +461,13 @@ size_t TtPhoneGetServerVersion::ByteSizeLong() const {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::StringSize(
         this->serversieralno());
+  }
+
+  // optional string tiantongModelVersion = 5;
+  if (this->tiantongmodelversion().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->tiantongmodelversion());
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -467,6 +518,10 @@ void TtPhoneGetServerVersion::UnsafeMergeFrom(const TtPhoneGetServerVersion& fro
 
     serversieralno_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.serversieralno_);
   }
+  if (from.tiantongmodelversion().size() > 0) {
+
+    tiantongmodelversion_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.tiantongmodelversion_);
+  }
 }
 
 void TtPhoneGetServerVersion::CopyFrom(const ::google::protobuf::Message& from) {
@@ -497,6 +552,7 @@ void TtPhoneGetServerVersion::InternalSwap(TtPhoneGetServerVersion* other) {
   std::swap(isrequest_, other->isrequest_);
   serverapkversionname_.Swap(&other->serverapkversionname_);
   serversieralno_.Swap(&other->serversieralno_);
+  tiantongmodelversion_.Swap(&other->tiantongmodelversion_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
@@ -656,6 +712,50 @@ void TtPhoneGetServerVersion::set_allocated_serversieralno(::std::string* server
   }
   serversieralno_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), serversieralno);
   // @@protoc_insertion_point(field_set_allocated:phonedata.TtPhoneGetServerVersion.serverSieralNo)
+}
+
+// optional string tiantongModelVersion = 5;
+void TtPhoneGetServerVersion::clear_tiantongmodelversion() {
+  tiantongmodelversion_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+const ::std::string& TtPhoneGetServerVersion::tiantongmodelversion() const {
+  // @@protoc_insertion_point(field_get:phonedata.TtPhoneGetServerVersion.tiantongModelVersion)
+  return tiantongmodelversion_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+void TtPhoneGetServerVersion::set_tiantongmodelversion(const ::std::string& value) {
+  
+  tiantongmodelversion_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:phonedata.TtPhoneGetServerVersion.tiantongModelVersion)
+}
+void TtPhoneGetServerVersion::set_tiantongmodelversion(const char* value) {
+  
+  tiantongmodelversion_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:phonedata.TtPhoneGetServerVersion.tiantongModelVersion)
+}
+void TtPhoneGetServerVersion::set_tiantongmodelversion(const char* value, size_t size) {
+  
+  tiantongmodelversion_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:phonedata.TtPhoneGetServerVersion.tiantongModelVersion)
+}
+::std::string* TtPhoneGetServerVersion::mutable_tiantongmodelversion() {
+  
+  // @@protoc_insertion_point(field_mutable:phonedata.TtPhoneGetServerVersion.tiantongModelVersion)
+  return tiantongmodelversion_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+::std::string* TtPhoneGetServerVersion::release_tiantongmodelversion() {
+  // @@protoc_insertion_point(field_release:phonedata.TtPhoneGetServerVersion.tiantongModelVersion)
+  
+  return tiantongmodelversion_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+void TtPhoneGetServerVersion::set_allocated_tiantongmodelversion(::std::string* tiantongmodelversion) {
+  if (tiantongmodelversion != NULL) {
+    
+  } else {
+    
+  }
+  tiantongmodelversion_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), tiantongmodelversion);
+  // @@protoc_insertion_point(field_set_allocated:phonedata.TtPhoneGetServerVersion.tiantongModelVersion)
 }
 
 inline const TtPhoneGetServerVersion* TtPhoneGetServerVersion::internal_default_instance() {

@@ -23,6 +23,7 @@ import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.atcommand.AtCommandToolManager;
 import com.qzy.tiantong.service.atcommand.AtCommandTools;
 import com.qzy.tiantong.service.service.ITianTongServer;
+import com.qzy.tiantong.service.utils.AppUtils;
 import com.qzy.tiantong.service.utils.Constant;
 import com.qzy.tiantong.service.utils.ModuleDormancyUtil;
 import com.qzy.tiantong.service.utils.PhoneUtils;
@@ -41,7 +42,7 @@ public class QzyPhoneManager {
     private ITianTongServer mServer;
     private int mstate;
 
-    private AtCommandToolManager mAtCommandToolManager;
+    public AtCommandToolManager mAtCommandToolManager;
 
 
     public QzyPhoneManager(Context context, ITianTongServer server) {
@@ -53,7 +54,11 @@ public class QzyPhoneManager {
         mAtCommandToolManager = new AtCommandToolManager(context, new AtCommandToolManager.IAtResultListener() {
             @Override
             public void onResult(String cmd, String result) {
-
+                if(cmd.equals(AtCommandTools.AT_COMMAND_VERSION)){
+                    AppUtils.requireNonNull(mServer.getPhoneNettyManager());
+                    mServer.getPhoneNettyManager().sendServerVersion(
+                            mServer.getPhoneNettyManager().mTtPhoneGetServerVersion);
+                }
             }
         });
     }

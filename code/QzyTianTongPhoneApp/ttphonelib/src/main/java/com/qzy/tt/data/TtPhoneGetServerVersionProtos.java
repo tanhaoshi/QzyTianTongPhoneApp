@@ -68,6 +68,24 @@ public final class TtPhoneGetServerVersionProtos {
      */
     com.google.protobuf.ByteString
         getServerSieralNoBytes();
+
+    /**
+     * <pre>
+     *天通模块版本号
+     * </pre>
+     *
+     * <code>optional string tiantongModelVersion = 5;</code>
+     */
+    String getTiantongModelVersion();
+    /**
+     * <pre>
+     *天通模块版本号
+     * </pre>
+     *
+     * <code>optional string tiantongModelVersion = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getTiantongModelVersionBytes();
   }
   /**
    * Protobuf type {@code phonedata.TtPhoneGetServerVersion}
@@ -85,6 +103,7 @@ public final class TtPhoneGetServerVersionProtos {
       isRequest_ = false;
       serverApkVersionName_ = "";
       serverSieralNo_ = "";
+      tiantongModelVersion_ = "";
     }
 
     @Override
@@ -133,6 +152,12 @@ public final class TtPhoneGetServerVersionProtos {
               String s = input.readStringRequireUtf8();
 
               serverSieralNo_ = s;
+              break;
+            }
+            case 42: {
+              String s = input.readStringRequireUtf8();
+
+              tiantongModelVersion_ = s;
               break;
             }
           }
@@ -285,6 +310,48 @@ public final class TtPhoneGetServerVersionProtos {
       }
     }
 
+    public static final int TIANTONGMODELVERSION_FIELD_NUMBER = 5;
+    private volatile Object tiantongModelVersion_;
+    /**
+     * <pre>
+     *天通模块版本号
+     * </pre>
+     *
+     * <code>optional string tiantongModelVersion = 5;</code>
+     */
+    public String getTiantongModelVersion() {
+      Object ref = tiantongModelVersion_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        tiantongModelVersion_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     *天通模块版本号
+     * </pre>
+     *
+     * <code>optional string tiantongModelVersion = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTiantongModelVersionBytes() {
+      Object ref = tiantongModelVersion_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        tiantongModelVersion_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -309,6 +376,9 @@ public final class TtPhoneGetServerVersionProtos {
       if (!getServerSieralNoBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 4, serverSieralNo_);
       }
+      if (!getTiantongModelVersionBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, tiantongModelVersion_);
+      }
     }
 
     public int getSerializedSize() {
@@ -328,6 +398,9 @@ public final class TtPhoneGetServerVersionProtos {
       }
       if (!getServerSieralNoBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, serverSieralNo_);
+      }
+      if (!getTiantongModelVersionBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, tiantongModelVersion_);
       }
       memoizedSize = size;
       return size;
@@ -353,6 +426,8 @@ public final class TtPhoneGetServerVersionProtos {
           .equals(other.getServerApkVersionName());
       result = result && getServerSieralNo()
           .equals(other.getServerSieralNo());
+      result = result && getTiantongModelVersion()
+          .equals(other.getTiantongModelVersion());
       return result;
     }
 
@@ -372,6 +447,8 @@ public final class TtPhoneGetServerVersionProtos {
       hash = (53 * hash) + getServerApkVersionName().hashCode();
       hash = (37 * hash) + SERVERSIERALNO_FIELD_NUMBER;
       hash = (53 * hash) + getServerSieralNo().hashCode();
+      hash = (37 * hash) + TIANTONGMODELVERSION_FIELD_NUMBER;
+      hash = (53 * hash) + getTiantongModelVersion().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -498,6 +575,8 @@ public final class TtPhoneGetServerVersionProtos {
 
         serverSieralNo_ = "";
 
+        tiantongModelVersion_ = "";
+
         return this;
       }
 
@@ -524,6 +603,7 @@ public final class TtPhoneGetServerVersionProtos {
         result.isRequest_ = isRequest_;
         result.serverApkVersionName_ = serverApkVersionName_;
         result.serverSieralNo_ = serverSieralNo_;
+        result.tiantongModelVersion_ = tiantongModelVersion_;
         onBuilt();
         return result;
       }
@@ -578,6 +658,10 @@ public final class TtPhoneGetServerVersionProtos {
         }
         if (!other.getServerSieralNo().isEmpty()) {
           serverSieralNo_ = other.serverSieralNo_;
+          onChanged();
+        }
+        if (!other.getTiantongModelVersion().isEmpty()) {
+          tiantongModelVersion_ = other.tiantongModelVersion_;
           onChanged();
         }
         onChanged();
@@ -878,6 +962,95 @@ public final class TtPhoneGetServerVersionProtos {
         onChanged();
         return this;
       }
+
+      private Object tiantongModelVersion_ = "";
+      /**
+       * <pre>
+       *天通模块版本号
+       * </pre>
+       *
+       * <code>optional string tiantongModelVersion = 5;</code>
+       */
+      public String getTiantongModelVersion() {
+        Object ref = tiantongModelVersion_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          tiantongModelVersion_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      /**
+       * <pre>
+       *天通模块版本号
+       * </pre>
+       *
+       * <code>optional string tiantongModelVersion = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTiantongModelVersionBytes() {
+        Object ref = tiantongModelVersion_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (String) ref);
+          tiantongModelVersion_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       *天通模块版本号
+       * </pre>
+       *
+       * <code>optional string tiantongModelVersion = 5;</code>
+       */
+      public Builder setTiantongModelVersion(
+          String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+
+        tiantongModelVersion_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *天通模块版本号
+       * </pre>
+       *
+       * <code>optional string tiantongModelVersion = 5;</code>
+       */
+      public Builder clearTiantongModelVersion() {
+
+        tiantongModelVersion_ = getDefaultInstance().getTiantongModelVersion();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *天通模块版本号
+       * </pre>
+       *
+       * <code>optional string tiantongModelVersion = 5;</code>
+       */
+      public Builder setTiantongModelVersionBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+
+        tiantongModelVersion_ = value;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return this;
@@ -942,11 +1115,12 @@ public final class TtPhoneGetServerVersionProtos {
   static {
     String[] descriptorData = {
       "\n\035TtPhoneGetServerVersion.proto\022\tphoneda" +
-      "ta\"n\n\027TtPhoneGetServerVersion\022\n\n\002ip\030\001 \001(" +
-      "\t\022\021\n\tisRequest\030\002 \001(\010\022\034\n\024serverApkVersion" +
-      "Name\030\003 \001(\t\022\026\n\016serverSieralNo\030\004 \001(\tB0\n\017co" +
-      "m.qzy.tt.dataB\035TtPhoneGetServerVersionPr" +
-      "otosb\006proto3"
+      "ta\"\214\001\n\027TtPhoneGetServerVersion\022\n\n\002ip\030\001 \001" +
+      "(\t\022\021\n\tisRequest\030\002 \001(\010\022\034\n\024serverApkVersio" +
+      "nName\030\003 \001(\t\022\026\n\016serverSieralNo\030\004 \001(\t\022\034\n\024t" +
+      "iantongModelVersion\030\005 \001(\tB0\n\017com.qzy.tt." +
+      "dataB\035TtPhoneGetServerVersionProtosb\006pro" +
+      "to3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -965,7 +1139,7 @@ public final class TtPhoneGetServerVersionProtos {
     internal_static_phonedata_TtPhoneGetServerVersion_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_phonedata_TtPhoneGetServerVersion_descriptor,
-        new String[] { "Ip", "IsRequest", "ServerApkVersionName", "ServerSieralNo", });
+        new String[] { "Ip", "IsRequest", "ServerApkVersionName", "ServerSieralNo", "TiantongModelVersion", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -144,4 +144,38 @@
 
     </LinearLayout>
 
+    <TextView
+        android:layout_marginLeft="15dp"
+        android:background="@color/line_bg"
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"/>
+
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="48dp">
+
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:text="@string/TMT_MODULE_VERSION"
+            android:textSize="14sp"
+            android:layout_weight="1"
+            android:textColor="#ff666666"
+            android:layout_marginLeft="16dp"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/module_version"
+            android:layout_gravity="center_vertical"
+            android:textSize="10sp"
+            android:text="未知"
+            android:layout_marginRight="18dp"
+            android:textColor="#ff666666"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
 </LinearLayout>

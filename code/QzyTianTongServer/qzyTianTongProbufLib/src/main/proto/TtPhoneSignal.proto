@@ -7,5 +7,6 @@ option java_outer_classname = "TtPhoneSignalProtos"; //生成的类名
 
 message PhoneSignalStrength {
     int32 signalStrength = 1;
+    int32 signalDbm = 2;
 }
 

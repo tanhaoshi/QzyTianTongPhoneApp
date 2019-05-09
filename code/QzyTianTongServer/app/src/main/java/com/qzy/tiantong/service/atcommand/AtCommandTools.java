@@ -10,4 +10,7 @@ public class AtCommandTools {
     //挂断电话
     public static final String at_command_hungup = "AT+CHUP";
 
+    //获取天通模块版本号
+    public static final String AT_COMMAND_VERSION = "AT+CGMR";
+
 }

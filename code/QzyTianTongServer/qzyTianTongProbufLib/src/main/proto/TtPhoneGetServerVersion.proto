@@ -10,6 +10,6 @@ message TtPhoneGetServerVersion {
     bool isRequest = 2;
     string serverApkVersionName = 3;  //服务版本号
     string serverSieralNo = 4; // 串号
-
+    string tiantongModelVersion = 5; //天通模块版本号
 }
 

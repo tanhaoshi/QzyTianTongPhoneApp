@@ -1,11 +1,7 @@
 package com.tt.qzy.view.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.qzy.data.PhoneCmd;
@@ -13,11 +9,8 @@ import com.qzy.tt.data.TtPhoneGetServerVersionProtos;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.base.BaseActivity;
-import com.tt.qzy.view.bean.DatetimeModel;
 import com.tt.qzy.view.presenter.activity.MainAboutPresenter;
 import com.tt.qzy.view.utils.APKVersionCodeUtils;
-import com.tt.qzy.view.utils.Constans;
-import com.tt.qzy.view.utils.DateUtil;
 import com.tt.qzy.view.view.MainAboutView;
 
 
@@ -37,6 +30,8 @@ public class MainAboutActivity extends BaseActivity<MainAboutView> implements Ma
     TextView about_fixed_version;
     @BindView(R.id.about_number)
     TextView about_number;
+    @BindView(R.id.module_version)
+    TextView module_version;
 
     private boolean isConnect;
     private boolean isSim;
@@ -112,6 +107,7 @@ public class MainAboutActivity extends BaseActivity<MainAboutView> implements Ma
                 cmd.getMessage();
         about_soft_version.setText(getServerVersion.getServerApkVersionName());
         about_number.setText(getServerVersion.getServerSieralNo());
+        module_version.setText(getServerVersion.getTiantongModelVersion());
     }
 
     @Override

@@ -36,8 +36,9 @@ void protobuf_AssignDesc_TtPhoneSignal_2eproto() {
       "TtPhoneSignal.proto");
   GOOGLE_CHECK(file != NULL);
   PhoneSignalStrength_descriptor_ = file->message_type(0);
-  static const int PhoneSignalStrength_offsets_[1] = {
+  static const int PhoneSignalStrength_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PhoneSignalStrength, signalstrength_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PhoneSignalStrength, signaldbm_),
   };
   PhoneSignalStrength_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -90,10 +91,10 @@ void protobuf_AddDesc_TtPhoneSignal_2eproto_impl() {
 
   protobuf_InitDefaults_TtPhoneSignal_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\023TtPhoneSignal.proto\022\tphonedata\"-\n\023Phon"
-    "eSignalStrength\022\026\n\016signalStrength\030\001 \001(\005B"
-    "&\n\017com.qzy.tt.dataB\023TtPhoneSignalProtosb"
-    "\006proto3", 127);
+    "\n\023TtPhoneSignal.proto\022\tphonedata\"@\n\023Phon"
+    "eSignalStrength\022\026\n\016signalStrength\030\001 \001(\005\022"
+    "\021\n\tsignalDbm\030\002 \001(\005B&\n\017com.qzy.tt.dataB\023T"
+    "tPhoneSignalProtosb\006proto3", 146);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "TtPhoneSignal.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_TtPhoneSignal_2eproto);
@@ -125,6 +126,7 @@ static void MergeFromFail(int line) {
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int PhoneSignalStrength::kSignalStrengthFieldNumber;
+const int PhoneSignalStrength::kSignalDbmFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 PhoneSignalStrength::PhoneSignalStrength()
@@ -146,7 +148,8 @@ PhoneSignalStrength::PhoneSignalStrength(const PhoneSignalStrength& from)
 }
 
 void PhoneSignalStrength::SharedCtor() {
-  signalstrength_ = 0;
+  ::memset(&signalstrength_, 0, reinterpret_cast<char*>(&signaldbm_) -
+    reinterpret_cast<char*>(&signalstrength_) + sizeof(signaldbm_));
   _cached_size_ = 0;
 }
 
@@ -185,7 +188,27 @@ PhoneSignalStrength* PhoneSignalStrength::New(::google::protobuf::Arena* arena) 
 
 void PhoneSignalStrength::Clear() {
 // @@protoc_insertion_point(message_clear_start:phonedata.PhoneSignalStrength)
-  signalstrength_ = 0;
+#if defined(__clang__)
+#define ZR_HELPER_(f) \
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(PhoneSignalStrength, f) \
+  _Pragma("clang diagnostic pop")
+#else
+#define ZR_HELPER_(f) reinterpret_cast<char*>(\
+  &reinterpret_cast<PhoneSignalStrength*>(16)->f)
+#endif
+
+#define ZR_(first, last) do {\
+  ::memset(&(first), 0,\
+           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
+} while (0)
+
+  ZR_(signalstrength_, signaldbm_);
+
+#undef ZR_HELPER_
+#undef ZR_
+
 }
 
 bool PhoneSignalStrength::MergePartialFromCodedStream(
@@ -205,6 +228,21 @@ bool PhoneSignalStrength::MergePartialFromCodedStream(
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &signalstrength_)));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_signalDbm;
+        break;
+      }
+
+      // optional int32 signalDbm = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_signalDbm:
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &signaldbm_)));
         } else {
           goto handle_unusual;
         }
@@ -241,6 +279,11 @@ void PhoneSignalStrength::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->signalstrength(), output);
   }
 
+  // optional int32 signalDbm = 2;
+  if (this->signaldbm() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->signaldbm(), output);
+  }
+
   // @@protoc_insertion_point(serialize_end:phonedata.PhoneSignalStrength)
 }
 
@@ -251,6 +294,11 @@ void PhoneSignalStrength::SerializeWithCachedSizes(
   // optional int32 signalStrength = 1;
   if (this->signalstrength() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->signalstrength(), target);
+  }
+
+  // optional int32 signalDbm = 2;
+  if (this->signaldbm() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->signaldbm(), target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:phonedata.PhoneSignalStrength)
@@ -266,6 +314,13 @@ size_t PhoneSignalStrength::ByteSizeLong() const {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->signalstrength());
+  }
+
+  // optional int32 signalDbm = 2;
+  if (this->signaldbm() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->signaldbm());
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -304,6 +359,9 @@ void PhoneSignalStrength::UnsafeMergeFrom(const PhoneSignalStrength& from) {
   if (from.signalstrength() != 0) {
     set_signalstrength(from.signalstrength());
   }
+  if (from.signaldbm() != 0) {
+    set_signaldbm(from.signaldbm());
+  }
 }
 
 void PhoneSignalStrength::CopyFrom(const ::google::protobuf::Message& from) {
@@ -331,6 +389,7 @@ void PhoneSignalStrength::Swap(PhoneSignalStrength* other) {
 }
 void PhoneSignalStrength::InternalSwap(PhoneSignalStrength* other) {
   std::swap(signalstrength_, other->signalstrength_);
+  std::swap(signaldbm_, other->signaldbm_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
@@ -358,6 +417,20 @@ void PhoneSignalStrength::set_signalstrength(::google::protobuf::int32 value) {
   
   signalstrength_ = value;
   // @@protoc_insertion_point(field_set:phonedata.PhoneSignalStrength.signalStrength)
+}
+
+// optional int32 signalDbm = 2;
+void PhoneSignalStrength::clear_signaldbm() {
+  signaldbm_ = 0;
+}
+::google::protobuf::int32 PhoneSignalStrength::signaldbm() const {
+  // @@protoc_insertion_point(field_get:phonedata.PhoneSignalStrength.signalDbm)
+  return signaldbm_;
+}
+void PhoneSignalStrength::set_signaldbm(::google::protobuf::int32 value) {
+  
+  signaldbm_ = value;
+  // @@protoc_insertion_point(field_set:phonedata.PhoneSignalStrength.signalDbm)
 }
 
 inline const PhoneSignalStrength* PhoneSignalStrength::internal_default_instance() {

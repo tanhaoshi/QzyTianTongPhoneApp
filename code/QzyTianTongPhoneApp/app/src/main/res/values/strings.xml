@@ -8,7 +8,7 @@
     <string name="TMT_energy">设备电量</string>
     <string name="TMT_quantity">设备信号</string>
     <string name="TMT_sos">SOS</string>
-    <string name="TMT_SHOW_TIANTONG_DB_VALUE">显示征服DB值</string>
+    <string name="TMT_SHOW_TIANTONG_DB_VALUE">显示天通DB值</string>
     <string name="TMT_record_voice">录音开关</string>
     <string name="TMT_mobileData">数据</string>
     <string name="TMT_location">定位</string>
@@ -46,6 +46,7 @@
     <string name="TMT_soft_version">天地互联服务版本</string>
     <string name="TMT_fixed_version">固件版本</string>
     <string name="TMT_number">序列号</string>
+    <string name="TMT_MODULE_VERSION">天通模块版本号</string>
     <string name="TMT_hantInput">拨号或使用拼音搜索</string>
     <string name="TMT_jilu">拼音搜索或字母搜索</string>
     <string name="TMT_phone_histroy">通话记录</string>

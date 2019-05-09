@@ -110,11 +110,18 @@ class PhoneSignalStrength : public ::google::protobuf::Message /* @@protoc_inser
   ::google::protobuf::int32 signalstrength() const;
   void set_signalstrength(::google::protobuf::int32 value);
 
+  // optional int32 signalDbm = 2;
+  void clear_signaldbm();
+  static const int kSignalDbmFieldNumber = 2;
+  ::google::protobuf::int32 signaldbm() const;
+  void set_signaldbm(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:phonedata.PhoneSignalStrength)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::int32 signalstrength_;
+  ::google::protobuf::int32 signaldbm_;
   mutable int _cached_size_;
   friend void  protobuf_InitDefaults_TtPhoneSignal_2eproto_impl();
   friend void  protobuf_AddDesc_TtPhoneSignal_2eproto_impl();
@@ -145,6 +152,20 @@ inline void PhoneSignalStrength::set_signalstrength(::google::protobuf::int32 va
   
   signalstrength_ = value;
   // @@protoc_insertion_point(field_set:phonedata.PhoneSignalStrength.signalStrength)
+}
+
+// optional int32 signalDbm = 2;
+inline void PhoneSignalStrength::clear_signaldbm() {
+  signaldbm_ = 0;
+}
+inline ::google::protobuf::int32 PhoneSignalStrength::signaldbm() const {
+  // @@protoc_insertion_point(field_get:phonedata.PhoneSignalStrength.signalDbm)
+  return signaldbm_;
+}
+inline void PhoneSignalStrength::set_signaldbm(::google::protobuf::int32 value) {
+  
+  signaldbm_ = value;
+  // @@protoc_insertion_point(field_set:phonedata.PhoneSignalStrength.signalDbm)
 }
 
 inline const PhoneSignalStrength* PhoneSignalStrength::internal_default_instance() {
