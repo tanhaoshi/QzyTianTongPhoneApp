@@ -10,6 +10,15 @@ public interface IMainFragment {
     //服务连接成功
     void isTtServerConnected(boolean connected);
 
+    //服务是否需要更新
+    void isUpdateServer(Object o);
+
+    //服务升级出现异常
+    void serverUpdateError(Object o);
+
+    //服务升级成功
+    void updateServerSucceed(Object o);
+
     //服务连接失败
     void disConnectServer();
 

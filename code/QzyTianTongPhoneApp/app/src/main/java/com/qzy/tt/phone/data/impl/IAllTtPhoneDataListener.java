@@ -14,6 +14,15 @@ public interface IAllTtPhoneDataListener {
     //服务连接状态
     void isTtServerConnected(boolean connected);
 
+    //检测服务是否需要更新
+    void IsServerUpdate(Object o);
+
+    //更新时出现异常
+    void updateError(Object o);
+
+    //更新服务成功
+    void updateServerSucceed(Object o);
+
     //信号强度
     void isTtSignalStrength(int signalLevel,int dbm);
 

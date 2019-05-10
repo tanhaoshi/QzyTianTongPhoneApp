@@ -121,7 +121,6 @@ public class NettyClient {
             }
         });
         mThread.start();
-
     }
 
 
@@ -132,12 +131,6 @@ public class NettyClient {
 
         @Override
         protected void initChannel(SocketChannel ch) throws Exception {
-            LogUtils.d("initChannel ch=" + ch.localAddress());
-           /* ch.pipeline().addLast(new ProtobufVarint32FrameDecoder());
-            ch.pipeline().addLast(new ProtobufVarint32LengthFieldPrepender());
-            ch.pipeline().addLast(new ProtobufEncoder());*/
-            //处理空闲状态事件的处理器
-            //ch.pipeline().addLast(new IdleStateHandler(5,7,10, TimeUnit.SECONDS));
             ch.pipeline().addLast(connectedChannelHandler);
             ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE,4,4,-8,0));
         }
@@ -160,7 +153,6 @@ public class NettyClient {
             LogUtils.e("channelUnregistered" );
             connectHanlerCtx = ctx;
             Channel channel = ctx.channel();
-
         }
 
         @Override
@@ -237,7 +229,6 @@ public class NettyClient {
             }
 
            LogUtils.d(ctx.channel().remoteAddress() + "超时事件：" +eventType);
-
         }
 
         @Override
@@ -250,7 +241,6 @@ public class NettyClient {
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable throwable) throws Exception {
             LogUtils.e("exceptionCaught ",throwable);
             connectHanlerCtx = ctx;
-         //   ctx.close();
         }
 
         @Override
@@ -278,10 +268,6 @@ public class NettyClient {
      */
     public void stopConnected(){
         try {
-           /* if(groupConnected != null){
-                groupConnected.shutdownGracefully();
-            }*/
-
             if(channel != null){
                 channel.close().sync();
             }
@@ -289,16 +275,9 @@ public class NettyClient {
             if(mThread != null && mThread.isAlive()){
                     mThread.interrupt();
             }
-           // groupConnected = null;
             mThread = null;
-//            if(connectedReadDataListener != null){
-//                connectedReadDataListener.onConnectedState(false);
-//            }
             client = null;
         }catch (Exception e){
-//            if(connectedReadDataListener != null){
-//                connectedReadDataListener.onConnectedState(false);
-//            }
             KLog.i("error value ="+e.getMessage().toString());
             e.printStackTrace();
         }

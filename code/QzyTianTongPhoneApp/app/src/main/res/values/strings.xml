@@ -132,4 +132,5 @@
     <string name="TMT_ALERT_OF_DIALOG_CONTENT">温馨提示:是否要将设备进行恢复出厂设置?</string>
     <string name="TMT_DEVICE_IS_RECOVER_SUCCEED"></string>
     <string name="TMT_PLEASE_CLOSE_DATA_MOBILE_AND_ENABLE_WIFI">请关闭数据流量开关,并连接指定WIFI!</string>
+    <string name="TMT_CHECK_FILE_FAILED">服务验证文件失败,请联系开发者!</string>
 </resources>

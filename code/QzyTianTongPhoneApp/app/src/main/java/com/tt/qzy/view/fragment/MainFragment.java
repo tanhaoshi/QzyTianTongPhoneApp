@@ -153,12 +153,6 @@ public class MainFragment extends Fragment implements MainFragmentView{
                 if(!SPUtils.containsShare(getActivity(), Constans.CRY_HELP_PHONE)){
                     sc_settin_testxinlv.setChecked(false);
                     NToast.shortToast(getActivity(),getString(R.string.TMT_remind));
-//                    if(sc_settin_testxinlv.isChecked()){
-//                        if(AppUtils.isServiceRunning("com.tt.qzy.view.service.TimerService",getActivity())){
-//                            Intent intent = new Intent(getActivity(), TimerService.class);
-//                            getActivity().stopService(intent);
-//                        }
-//                    }
                     return;
                 }
 
@@ -168,29 +162,14 @@ public class MainFragment extends Fragment implements MainFragmentView{
                            // main_location.setChecked(true);
                             mPresneter.dialPhone(SPUtils.getShare(getActivity(),Constans.CRY_HELP_PHONE,"").toString());
                             mPresneter.switchServerSos(true);
-                           /* new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mIntent = new Intent(getActivity(),TimerService.class);
-                                    getActivity().startService(mIntent);
-                                }
-                            },30000);*/
-//                            mPresneter.requestGpsPosition(true);
 
                         }else{
                             mPresneter.switchServerSos(false);
-
-                            //main_location.setChecked(false);
-                           // getActivity().stopService(mIntent);
-//                            mPresneter.requestGpsPosition(false);
                         }
                     }else{
                         NToast.shortToast(getActivity(), getString(R.string.TMT_THE_DEVICE_NOT_INTERNET_NOW));
                         sc_settin_testxinlv.setChecked(false);
                     }
-//                }else{
-//                    NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
-//                    sc_settin_testxinlv.setChecked(false);
                 }
             }
         });
@@ -201,9 +180,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
                 if(mainActivity.isConnectStatus()){
                     if(isChecked){
                           mainActivity.stopService();
-//                        mPresneter.requestEnableData(true);
                     }else{
-//                        mPresneter.requestEnableData(false);
                     }
                 }else{
                     NToast.shortToast(getActivity(), getString(R.string.TMT_connect_tiantong_please));
@@ -262,7 +239,6 @@ public class MainFragment extends Fragment implements MainFragmentView{
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mPresneter.release();
     }
 
     @TargetApi(Build.VERSION_CODES.N)

@@ -68,9 +68,6 @@ public class UpdateServiceManager implements IUpdateManager {
 
             @Override
             public void onConnect(boolean state) {
-                if (state) {
-                    checkUpdateIniFile();
-                }
 
             }
 
@@ -88,7 +85,7 @@ public class UpdateServiceManager implements IUpdateManager {
             @Override
             public void onBackupFailed() {
                 LogUtils.d("onBackupFailed");
-                 mLocalUpdateSocketManager.startLocalBackup();
+                mLocalUpdateSocketManager.startLocalBackup();
             }
 
             @Override

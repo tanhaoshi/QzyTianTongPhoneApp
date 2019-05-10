@@ -187,22 +187,22 @@ public class CmdHandler {
                     break;
                 case PrototocalTools.IProtoClientIndex.response_update_phone_aapinfo: //升级
                     TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = TtPhoneUpdateResponseProtos.UpdateResponse.parseDelimitedFrom(inputStream);
-                    // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__RESPONSE_SERVER_APP_VERSION,protoId,updateResponse);
+                    mAllDataListener.IsServerUpdate(updateResponse);
                     break;
                 case PrototocalTools.IProtoClientIndex.response_update_send_zip: //升级
                     TtPhoneUpdateResponseProtos.UpdateResponse updateResponse1 = TtPhoneUpdateResponseProtos.UpdateResponse.parseDelimitedFrom(inputStream);
-                    // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__RESPONSE_SERVER_UPLOAD_FINSH,protoId,updateResponse1);
+                    mAllDataListener.updateServerSucceed(updateResponse1);
                     break;
                 case PrototocalTools.IProtoClientIndex.response_tt_time:
                     TtTimeProtos.TtTime ttTime = TtTimeProtos.TtTime.parseDelimitedFrom(inputStream);
                     break;
                 case PrototocalTools.IProtoClientIndex.response_phone_data_status: //升级
                     TtPhoneMobileDataProtos.TtPhoneMobileData mobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.parseDelimitedFrom(inputStream);
-                    //  sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_ENABLE_DATA,protoId,mobileData);
                     break;
                 case PrototocalTools.IProtoClientIndex.response_update_send_failed: //升级
-                    TtPhoneUpdateResponseProtos.UpdateResponse updateResponse2 = TtPhoneUpdateResponseProtos.UpdateResponse.parseDelimitedFrom(inputStream);
-                    // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_UPGRADLE,protoId,updateResponse2);
+                    TtPhoneUpdateResponseProtos.UpdateResponse updateResponse2 =
+                    TtPhoneUpdateResponseProtos.UpdateResponse.parseDelimitedFrom(inputStream);
+                    mAllDataListener.updateError(updateResponse2);
                     break;
                 case PrototocalTools.IProtoClientIndex.response_server_version_info: // 已完成
                     TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion ttPhoneGetServerVersion = TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion

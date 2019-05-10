@@ -1,7 +1,5 @@
 package com.tt.qzy.view.presenter.fragment;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -13,28 +11,28 @@ import com.qzy.data.PhoneCmd;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhoneMobileDataProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
-import com.qzy.tt.data.TtPhoneSosMessageProtos;
 import com.qzy.tt.data.TtPhoneSosStateProtos;
 import com.qzy.tt.data.TtPhoneUpdateResponseProtos;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.impl.IMainFragment;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.utils.IPUtil;
-import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.TellPhoneActivity;
-import com.tt.qzy.view.activity.UserEditorsActivity;
+import com.tt.qzy.view.bean.AppInfoModel;
 import com.tt.qzy.view.bean.DatetimeModel;
 import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
 import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.DateUtil;
+import com.tt.qzy.view.utils.MD5Utils;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.NetworkUtil;
 import com.tt.qzy.view.utils.SPUtils;
 import com.tt.qzy.view.view.MainFragmentView;
 
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -96,7 +94,7 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     private void startConnectMain() {
         setMainFragmentListener();
         if (TtPhoneDataManager.getInstance() != null) {
-            TtPhoneDataManager.getInstance().connectTtPhoneServer(Constans.IP, Constans.PORT);
+            TtPhoneDataManager.getInstance().connectTtPhoneServer(Constans.IP, Constans.UPLOAD_PORT);
         }
     }
 
@@ -124,28 +122,6 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     }
 
     /**
-     * 检查设备服务端APP版本是否更新
-     */
-    public void requestServerVersion() {
-        AssetManager assetManager = mContext.getAssets();
-        try {
-           /* EventBus.getDefault().post(new MessageEventBus((IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_APP_VERSION),
-                    new AppInfoModel(IPUtil.getLocalIPAddress(mContext), String.valueOf(AppUtils.getVersionCode(mContext)),Constans.SERVER_APP_VERSION,
-                            MD5Utils.getFileMD5(assetManager.open("tiantong_update.zip")))));*/
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 发送当前时间至服务器
-     */
-    public void requestServerDatetime() {
-      /*  EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_TIME_DATE,
-                new DatetimeModel(DateUtil.backTimeFomat(new Date()))));*/
-    }
-
-    /**
      * 打开设备移动数据
      */
     public void requestEnableData(boolean isSwitch) {
@@ -160,68 +136,11 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     }
 
     /**
-     * 查询设备sos初始状态
-     */
-    public void requestServerSosStatus() {
-        //EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_STATUS));
-    }
-
-    /**
      * 关闭设备SOS
      */
     public void switchServerSos(boolean isOpen) {
-        //EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_CLOSE));
         TtPhoneDataManager.getInstance().requestTtPhoneSos(isOpen);
     }
-
-    /*@Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MessageEventBus event) {
-        switch (event.getType()) {
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_ACCURACY_POSITION:
-                parseGpsPostion(event.getObject());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_BEIDOU_SWITCH:
-                parseBeiDouSwitch(event.getObject());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SUCCESS:
-                saveLocalWIFIIP();
-                requestServerVersion();
-                mView.get().updateConnectedState(true);
-                requestServerDatetime();
-                *//** 屏蔽了数据初始化状态 *//*
-                //requestServerMobileStatus();
-                requestServerSosStatus();
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_FAILED:
-                mView.get().updateConnectedState(false);
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__RESPONSE_SERVER_APP_VERSION:
-                parseServerAppVersion(event.getObject());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__RESPONSE_SERVER_UPLOAD_FINSH:
-                parseAppUploadFinsh(event.getObject());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_ENABLE_DATA:
-                parseServerDataEnable(event.getObject());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_PERCENT:
-                parseServerPercent(event.getObject());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_NONCONNECT:
-                upgradleBreakoff();
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_UPGRADLE:
-                parseServerUpgradleFailed(event.getObject());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_MOBILE_STATUS:
-                parseServerMobileDataInit(event.getObject());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_SOS_STATUS:
-                getServerSosStatus(event.getObject());
-                break;
-        }
-    }
-*/
 
     /**
      * 解析设备初始化状态
@@ -257,25 +176,8 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
         PhoneCmd cmd = (PhoneCmd) o;
         TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse) cmd.getMessage();
         if (!updateResponse.getIsSendFileFinish()) {
-//              NToast.shortToast(mContext,mContext.getResources().getString(R.string.TMT_WIFI_DISCONNECT_OF_UPDATE_PLEASE_OUT));
-//            EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_UPLOAD_APP
-//                    ,new ServerPortIp(Constans.IP,Constans.UPLOAD_PORT)));
+            NToast.shortToast(mContext,mContext.getString(R.string.TMT_CHECK_FILE_FAILED));
         }
-    }
-
-    /**
-     * 服务端升级出现链接中断
-     */
-    private void upgradleBreakoff() {
-        mView.get().upgradleNonconnect();
-    }
-
-    /**
-     * 解析服务端升级的进度条
-     */
-    private void parseServerPercent(Object o) {
-        Integer i = (Integer) o;
-        mView.get().serverAppUpgradlePercent(i);
     }
 
     /**
@@ -299,8 +201,8 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
         TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse) cmd.getMessage();
         if (updateResponse.getIsUpdateFinish()) {
             mView.get().isServerUpdate(true);
-            // EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_DISCONNECT_TIANTONG));
-            // EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.PORT)));
+            TtPhoneDataManager.getInstance().disconnectTtPhoneServer();
+            TtPhoneDataManager.getInstance().connectTtPhoneServer(Constans.IP, Constans.PORT);
         }
     }
 
@@ -313,7 +215,7 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
         if (updateResponse.getIsUpdate()) {
             mView.get().upgradleServerApp();
         } else {
-            //  EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG,new ServerPortIp(Constans.IP,Constans.PORT)));
+            TtPhoneDataManager.getInstance().connectTtPhoneServer(Constans.IP, Constans.PORT);
         }
     }
 
@@ -360,19 +262,6 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
         mContext.startActivity(intent);
     }
 
-//    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            String action = intent.getAction();
-//            KLog.i("action = " + action);
-//            if (action.equals("com.qzy.tt.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE")) {
-//                Intent intent1 = new Intent(mContext, TellPhoneActivity.class);
-//                intent1.putExtra("diapadNumber", (String)SPUtils.getShare(mContext,Constans.CRY_HELP_PHONE,""));
-//                mContext.startActivity(intent1);
-//            }
-//        }
-//    };
-
     /**
      * 底层打电话接口
      *
@@ -382,24 +271,53 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
         TtPhoneDataManager.getInstance().dialTtPhone(phoneMumber);
     }
 
-    public void release() {
-        // EventBus.getDefault().unregister(this);
+    @Override
+    public void isTtServerConnected(boolean connected) {
+
+        mView.get().connectedState(connected);
+
+        if(connected) {
+
+            saveLocalWIFIIP();
+
+            requireServerUpdate();
+
+            //请求sos状态
+            TtPhoneDataManager.getInstance().getTtPhoneSosState();
+
+            //发送手机时间到服务器端
+            if (TtPhoneDataManager.getInstance() != null) {
+                DatetimeModel datetimeModel = new DatetimeModel(DateUtil.backTimeFomat(new Date()));
+                TtPhoneDataManager.getInstance().setDateAndTime(datetimeModel);
+            }
+        }else{
+            mView.get().upgradleNonconnect();
+        }
     }
 
     @Override
-    public void isTtServerConnected(boolean connected) {
-        saveLocalWIFIIP();
-        mView.get().connectedState(connected);
+    public void isUpdateServer(Object o) {
+        parseServerAppVersion(o);
+    }
 
-        //请求sos状态
-        TtPhoneDataManager.getInstance().getTtPhoneSosState();
+    @Override
+    public void serverUpdateError(Object o) {
+        parseServerUpgradleFailed(o);
+    }
 
-        //发送手机时间到服务器端
-        if (TtPhoneDataManager.getInstance() != null) {
-            DatetimeModel datetimeModel = new DatetimeModel(DateUtil.backTimeFomat(new Date()));
-            TtPhoneDataManager.getInstance().setDateAndTime(datetimeModel);
+    @Override
+    public void updateServerSucceed(Object o) {
+        parseAppUploadFinsh(o);
+    }
+
+    private void requireServerUpdate(){
+        AssetManager assetManager = mContext.getAssets();
+        try {
+            TtPhoneDataManager.getInstance().checkServerIsUpdate(new AppInfoModel(IPUtil.getLocalIPAddress(mContext), String.valueOf(AppUtils.getVersionCode(mContext)),Constans.SERVER_APP_VERSION,
+                    MD5Utils.getFileMD5(assetManager.open("tiantong_update.zip"))));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
     }
 
     @Override

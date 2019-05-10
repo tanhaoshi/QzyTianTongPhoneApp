@@ -1,6 +1,5 @@
 package com.qzy.tt.phone.data.impl;
 
-import com.qzy.data.PhoneCmd;
 import com.qzy.tt.phone.data.SmsBean;
 import com.tt.qzy.view.bean.DatetimeModel;
 import com.tt.qzy.view.bean.SMAgrementModel;
@@ -12,6 +11,12 @@ public interface ITtPhoneHandlerManager {
 
     //连接服务
     void connectTtPhoneServer(String ip,int port);
+
+    //检查服务是否需要升级
+    void checkServerIsUpdate(Object updateResponse);
+
+    //开始向服务发送升级包
+    void startSendPackage();
 
     //断开服务连接
     void disconnectTtPhoneServer();

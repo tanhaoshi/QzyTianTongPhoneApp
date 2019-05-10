@@ -5,6 +5,7 @@ import android.content.Context;
 import com.google.protobuf.GeneratedMessageV3;
 import com.qzy.data.PhoneCmd;
 import com.qzy.tt.data.TtCallRecordProtos;
+import com.qzy.tt.data.TtPhoneUpdateResponseProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.phone.data.impl.IAllTtPhoneDataListener;
 import com.qzy.tt.phone.data.impl.IMainAboutListener;
@@ -230,8 +231,6 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
                         val.onTtPhoneCallState(phoneCmd);
                     }
                 }
-
-
             }
 
             @Override
@@ -253,18 +252,29 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
                 if (iMainFragment != null) {
                     iMainFragment.isServerSosStatus(phoneCmd);
                 }
-
             }
 
             @Override
             public void onServerTtPhoneSmsSendState(PhoneCmd phoneCmd) {
-
                 if (iSendShortMessage != null) {
                     iSendShortMessage.isSendShotMessageStatus(phoneCmd);
                 }
-
             }
 
+            @Override
+            public void IsServerUpdate(Object o) {
+               iMainFragment.isUpdateServer(o);
+            }
+
+            @Override
+            public void updateError(Object o) {
+                iMainFragment.serverUpdateError(o);
+            }
+
+            @Override
+            public void updateServerSucceed(Object o) {
+                iMainFragment.updateServerSucceed(o);
+            }
         });
     }
 
@@ -343,6 +353,16 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
     @Override
     public void connectTtPhoneServer(String ip, int port) {
         phoneNettyManager.connect(port, ip);
+    }
+
+    @Override
+    public void checkServerIsUpdate(Object updateResponse) {
+        phoneNettyManager.requestServerVersion(updateResponse);
+    }
+
+    @Override
+    public void startSendPackage() {
+        phoneNettyManager.startUpload();
     }
 
     @Override
