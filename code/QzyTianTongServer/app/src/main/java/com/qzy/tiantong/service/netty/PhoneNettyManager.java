@@ -330,7 +330,9 @@ public class PhoneNettyManager implements IMobileDataManager {
         this.mTtPhoneGetServerVersion = ttPhoneGetServerVersion;
     }
 
-    public void sendServerVersion(TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion ttPhoneGetServerVersion){
+    public void sendServerVersion(TtPhoneGetServerVersionProtos
+                                          .TtPhoneGetServerVersion ttPhoneGetServerVersion
+                                 ,String moduleServer){
         LogUtils.d("getServerVerion versionName ");
         try {
             if (checkNettManagerIsNull()) {
@@ -344,6 +346,7 @@ public class PhoneNettyManager implements IMobileDataManager {
                     .setIp(ttPhoneGetServerVersion.getIp())
                     .setServerApkVersionName(versionName)
                     .setServerSieralNo(sieralNo)
+                    .setTiantongModelVersion(moduleServer)
                     .build();
             mNettyServerManager.sendData(ttPhoneGetServerVersion.getIp(),
                     PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.response_server_version_info, ttPhoneGetServerVersion1));

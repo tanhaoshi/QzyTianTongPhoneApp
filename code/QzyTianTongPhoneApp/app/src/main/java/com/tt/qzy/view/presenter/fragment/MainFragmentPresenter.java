@@ -210,8 +210,7 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
      * 返回设备服务端APP是否需要更新
      */
     private void parseServerAppVersion(Object o) {
-        PhoneCmd cmd = (PhoneCmd) o;
-        TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse) cmd.getMessage();
+        TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse) o;
         if (updateResponse.getIsUpdate()) {
             mView.get().upgradleServerApp();
         } else {

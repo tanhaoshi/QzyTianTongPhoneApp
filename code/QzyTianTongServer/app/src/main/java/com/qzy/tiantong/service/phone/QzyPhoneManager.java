@@ -57,7 +57,8 @@ public class QzyPhoneManager {
                 if(cmd.equals(AtCommandTools.AT_COMMAND_VERSION)){
                     AppUtils.requireNonNull(mServer.getPhoneNettyManager());
                     mServer.getPhoneNettyManager().sendServerVersion(
-                            mServer.getPhoneNettyManager().mTtPhoneGetServerVersion);
+                            mServer.getPhoneNettyManager().mTtPhoneGetServerVersion
+                    ,result);
                 }
             }
         });
