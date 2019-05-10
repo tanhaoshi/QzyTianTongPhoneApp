@@ -173,8 +173,7 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
      * 服务器验证MD5文件失败
      */
     private void parseServerUpgradleFailed(Object o) {
-        PhoneCmd cmd = (PhoneCmd) o;
-        TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse) cmd.getMessage();
+        TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse) o;
         if (!updateResponse.getIsSendFileFinish()) {
             NToast.shortToast(mContext,mContext.getString(R.string.TMT_CHECK_FILE_FAILED));
         }
@@ -297,6 +296,10 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     @Override
     public void isUpdateServer(Object o) {
         parseServerAppVersion(o);
+    }
+
+    public void startUpdate(){
+        TtPhoneDataManager.getInstance().startSendPackage();
     }
 
     @Override

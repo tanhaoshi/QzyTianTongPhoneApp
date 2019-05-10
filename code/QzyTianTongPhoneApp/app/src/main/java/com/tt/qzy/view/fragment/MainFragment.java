@@ -287,6 +287,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
                     @Override
                     public void onClick(View v) {
                         viewTransition(true);
+                        mPresneter.startUpdate();
                         dialogBuilder.niftyDismiss();
 
                     }

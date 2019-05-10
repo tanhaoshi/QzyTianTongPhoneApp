@@ -4,10 +4,10 @@ import android.content.Context;
 
 import com.qzy.ftpserver.FtpServerManager;
 import com.qzy.tiantong.lib.utils.LogUtils;
-import com.qzy.tiantong.lib.utils.MD5Utils;
 import com.qzy.tiantong.service.netty.NettyServerManager;
 import com.qzy.tiantong.service.netty.cmd.CmdHandlerUpdate;
 import com.qzy.tiantong.service.netty.cmd.TianTongHandlerUpdate;
+import com.qzy.tiantong.service.utils.TtUpdateUtils;
 import com.qzy.tt.data.TtPhoneUpdateAppInfoProtos;
 import com.qzy.tt.data.TtPhoneUpdateResponseProtos;
 import com.qzy.tt.data.TtPhoneUpdateSendFileProtos;
@@ -15,7 +15,6 @@ import com.qzy.tt.probuf.lib.data.PhoneCmd;
 import com.qzy.tt.probuf.lib.data.PrototocalTools;
 
 import java.io.File;
-import java.security.Key;
 
 import io.netty.buffer.ByteBufInputStream;
 
@@ -29,8 +28,6 @@ public class UpdateServiceManager implements IUpdateManager {
     private CmdHandlerUpdate mCmdHandlerUpdate;
     private TianTongHandlerUpdate mTianTongHandler;
 
-    private IniFile mIniFile;
-
     //创建ftp上传文件
     private FtpServerManager mFtpServerManager;
 
@@ -43,8 +40,6 @@ public class UpdateServiceManager implements IUpdateManager {
     public UpdateServiceManager(Context context) {
         mContext = context;
         mTiantongWifiManager = new TiantongWifiManager(context);
-
-        mIniFile = new IniFile();
 
         initNettyManager();
 
@@ -74,34 +69,19 @@ public class UpdateServiceManager implements IUpdateManager {
             @Override
             public void onBackupSuccess() {
                 LogUtils.d("onBackupSuccess");
-                if (UpdateFileManager.checkUpdateFileMD5("/mnt/sdcard/update/backup")) {  //升级成功
-                    UpdateLocalConfigBean localConfigBean = mIniFile.getUpdateLocalConfigBean(true);
-                    localConfigBean.setBackup("1");
-                    mIniFile.setUpdateLocalConfigBean(localConfigBean);
-                    mLocalUpdateSocketManager.startLocalUpdte();
-                }
+                mLocalUpdateSocketManager.startLocalUpdte();
             }
 
             @Override
             public void onBackupFailed() {
                 LogUtils.d("onBackupFailed");
-                mLocalUpdateSocketManager.startLocalBackup();
+                sendNeedUpdate("", false);
             }
 
             @Override
             public void onUpdateSuccess() {
                 LogUtils.d("onUpdateSuccess");
-                if (UpdateFileManager.checkUpdateFileMD5("/mnt/sdcard/update")) {  //升级成功
-
-                    //升级成功将新的版本号和md5写到原始配置文件
-                    UpdateConfigBean updateConfigBean = mIniFile.getUpdateConfigBeanNew(true);
-                    mIniFile.setUpdateConfigBean(updateConfigBean);
-
-                    //设置升级成功标志位
-                    UpdateLocalConfigBean localConfigBean = mIniFile.getUpdateLocalConfigBean(true);
-                    localConfigBean.setUpdate("1");
-                    localConfigBean.setUpdateStart(false);
-                    mIniFile.setUpdateLocalConfigBean(localConfigBean);
+//                if (UpdateFileManager.checkUpdateFileMD5("/mnt/sdcard/update")) {  //升级成功
 
                     //发送手机端升级成功
                     sendUpdateSuccess();
@@ -118,43 +98,36 @@ public class UpdateServiceManager implements IUpdateManager {
                             }
                         }
                     }).start();
-
-                }
+//                }
             }
 
             @Override
             public void onUpdateFailed() {
                 LogUtils.d("onUpdateFailed");
-                mLocalUpdateSocketManager.startLocalUpdte();
+//                sendNeedUpdate("", false);
             }
 
             @Override
             public void onRecoverSuccess() {
                 LogUtils.d("onRecoverSuccess");
-                UpdateLocalConfigBean localConfigBean = mIniFile.getUpdateLocalConfigBean(true);
-                localConfigBean.setRecover("1");
-                mIniFile.setUpdateLocalConfigBean(localConfigBean);
                 mLocalUpdateSocketManager.startLocalReboot();
             }
 
             @Override
             public void onRecoverFailed() {
                 LogUtils.d("onRecoverFailed");
-                mLocalUpdateSocketManager.startLocalRecover();
+                sendNeedUpdate("", false);
             }
 
             @Override
             public void onRebootSuccess() {
                 LogUtils.d("onRebootSuccess");
-                UpdateLocalConfigBean localConfigBean = mIniFile.getUpdateLocalConfigBean(true);
-                localConfigBean.setReboot("1");
-                mIniFile.setUpdateLocalConfigBean(localConfigBean);
             }
 
             @Override
             public void onRebootFailed() {
                 LogUtils.d("onRebootFailed");
-                mLocalUpdateSocketManager.startLocalReboot();
+                sendNeedUpdate("", false);
             }
 
         });
@@ -207,33 +180,22 @@ public class UpdateServiceManager implements IUpdateManager {
             int serverAppVersion = Integer.parseInt(serverVer.replace(".", ""));
             String zipMd5 = updateAppInfo.getTiantongUpdateMd();
             LogUtils.d(" phoneAppVersion = " + phoneAppVersion + " serverAppVersion = " + serverAppVersion + " zipMd5 = " + zipMd5);
-            UpdateConfigBean updateConfigBean = mIniFile.getUpdateConfigBean(true);
-            if(null == updateConfigBean.getServer_version()){
-                updateConfigBean.setServer_version("1");
-            }
-            LogUtils.d("server Version = "+updateConfigBean.getServer_version());
-            int nowServerVersion = Integer.parseInt(updateConfigBean.getServer_version().replace(".", ""));
+
+
+            int nowServerVersion = TtUpdateUtils.getVersionCode(mContext);
+
             LogUtils.d(" nowServerVersion = " + nowServerVersion);
+
             if (serverAppVersion > nowServerVersion) {
-                //更新配置信息
-                updateConfigBean.setApp_version(appVer);
-                updateConfigBean.setServer_version(serverVer);
-                updateConfigBean.setZip_md(zipMd5);
-                mIniFile.setUpdateConfigBeanNew(updateConfigBean);
-
-
-                //如果需要升级就把所有的升级流程设置为0
-                UpdateLocalConfigBean localConfigBean = new UpdateLocalConfigBean();
-                localConfigBean.setUpdateStart(true);
-                mIniFile.setUpdateLocalConfigBean(localConfigBean);
 
                 sendNeedUpdate(updateAppInfo.getIp(), true);
+
             } else {
+
                 sendNeedUpdate(updateAppInfo.getIp(), false);
             }
 
             //处理动作
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -251,29 +213,24 @@ public class UpdateServiceManager implements IUpdateManager {
             File file = new File("/mnt/sdcard/tiantong_update/tiantong_update/" + fileName);
 
             boolean isFinish = updateSendFile.getIsSendFileFinish();
-            LogUtils.d("isFinish = " + isFinish + " fileName = " + fileName);
-            if (isFinish) {
-                String md = mIniFile.getUpdateConfigBeanNew(true).getZip_md();
-                String fileMd = MD5Utils.getFileMD5(file);
-                LogUtils.d("md5 = " + md + " fileMd5 = " + fileMd);
-                if (fileMd.equals(md)) {
-                    sendReceiveZipFileFinish(updateSendFile.getIp(), true);
-                    //开始与底层进行通讯
-                    ///
-                    ///
-                    ///
-                    if (!UpdateFileManager.unzipUpdteZip(file.getAbsolutePath())) {
-                        return;
-                    }
-                    if (!UpdateFileManager.copyShFile()) {
-                        return;
-                    }
-                    //开始底层升级流程
-                    mLocalUpdateSocketManager.startLocalBackup();
 
-                } else {
-                    sendReceiveZipFileFinish(updateSendFile.getIp(), false);
+            LogUtils.d("isFinish = " + isFinish + " fileName = " + fileName);
+
+            if (isFinish) {
+
+                sendReceiveZipFileFinish(updateSendFile.getIp(), true);
+
+                if (!UpdateFileManager.unzipUpdteZip(file.getAbsolutePath())) {
+                    return;
                 }
+                if (!UpdateFileManager.copyShFile()) {
+                    return;
+                }
+                //开始底层升级流程
+                mLocalUpdateSocketManager.startLocalBackup();
+
+            } else {
+                sendReceiveZipFileFinish(updateSendFile.getIp(), false);
             }
 
         } catch (Exception e) {
@@ -283,31 +240,6 @@ public class UpdateServiceManager implements IUpdateManager {
 
     }
 
-    /**
-     * 检查是否有升级异常发生
-     */
-    private void checkUpdateIniFile() {
-        try {
-            UpdateLocalConfigBean localConfigBean = mIniFile.getUpdateLocalConfigBean(true);
-            if (!localConfigBean.isUpdateStart()) {
-                LogUtils.e("no update error ....");
-                return;
-            }
-            if (localConfigBean.getBackup().equals("0")) {
-                mLocalUpdateSocketManager.startLocalBackup();
-                return;
-            }
-
-            if (localConfigBean.getUpdate().equals("0")) {
-                mLocalUpdateSocketManager.startLocalUpdte();
-                return;
-            }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * 发送升级成功
