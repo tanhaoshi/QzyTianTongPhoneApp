@@ -262,6 +262,11 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
             }
 
             @Override
+            public void onUpdatePercent(Integer percent) {
+                iMainFragment.updatePercent(percent);
+            }
+
+            @Override
             public void IsServerUpdate(Object o) {
                iMainFragment.isUpdateServer(o);
             }

@@ -121,7 +121,7 @@
     <string name="TMT_CONFIRM_DELETE_ALL_MAIL_LIST_CONTACTS">温馨提示:您是否确认删除全部?</string>
     <string name="TMT_confirm_exit">温馨提示:您确定是否退出吗?</string>
     <string name="TMT_hint">提示</string>
-    <string name="TMT_start_again_connect">请重连WIFI!</string>
+    <string name="TMT_start_again_connect">升级成功,请重连WIFI!</string>
     <string name="TMT_update_failure_alert">更新失败,请重新更新!</string>
     <string name="TMT_WIFI_DISCONNECT_OF_UPDATE">WIFI连接中断,请重新连接!</string>
     <string name="TMT_UPDATE_SUCCEED_FOR_WAIT">请等待5~10秒猫端更新!</string>

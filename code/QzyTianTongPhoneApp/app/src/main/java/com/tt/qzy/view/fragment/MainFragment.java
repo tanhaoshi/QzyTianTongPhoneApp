@@ -109,7 +109,6 @@ public class MainFragment extends Fragment implements MainFragmentView{
             connect.setText(getActivity().getResources().getString(R.string.TMT_click_connect));
         } else {
 
-//            mPresneter.checkConnectedSate();
         }
 
         mainActivity = (MainActivity)getActivity();

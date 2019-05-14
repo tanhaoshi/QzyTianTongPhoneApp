@@ -201,7 +201,6 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
         if (updateResponse.getIsUpdateFinish()) {
             mView.get().isServerUpdate(true);
             TtPhoneDataManager.getInstance().disconnectTtPhoneServer();
-            TtPhoneDataManager.getInstance().connectTtPhoneServer(Constans.IP, Constans.PORT);
         }
     }
 
@@ -297,6 +296,20 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     public void isUpdateServer(Object o) {
         parseServerAppVersion(o);
     }
+
+    @Override
+    public void updatePercent(Integer percent) {
+        parseServerPercent(percent);
+    }
+
+    /**
+     * 解析服务端升级的进度条
+     */
+    private void parseServerPercent(Object o){
+        Integer i = (Integer) o;
+        mView.get().serverAppUpgradlePercent(i);
+    }
+
 
     public void startUpdate(){
         TtPhoneDataManager.getInstance().startSendPackage();

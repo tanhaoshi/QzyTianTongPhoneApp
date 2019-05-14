@@ -13,6 +13,8 @@ public interface IMainFragment {
     //服务是否需要更新
     void isUpdateServer(Object o);
 
+    void updatePercent(Integer percent);
+
     //服务升级出现异常
     void serverUpdateError(Object o);
 

@@ -319,7 +319,6 @@ public class PhoneNettyManager {
      * 开始链接下载
      */
     public void startUpload(){
-        //开始下载
         try{
             InputStream inputStream = mContext.getAssets().open("tiantong_update.zip");
             File file = new File("/mnt/sdcard/tiantong_update.zip");
@@ -338,23 +337,10 @@ public class PhoneNettyManager {
             outputStream.flush();
             inputStream.close();
             outputStream.close();
-            // AssetFileUtils.CopyAssets(mContext,"tiantong_update.zip",file.getAbsolutePath());
-            // FileInputStream in = new FileInputStream(file);
-
-//            byte[] read = new byte[512];
-//            int len = 0;
-//            while ((len = inputStream.read(read)) != -1){
-//                KLog.i("len = " + len);
-//                sendZipFile(false,Arrays.copyOf(read,len));
-//            }
-//
-//            sendZipFile(true,new byte[1]);
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        //发送命令告诉服务端开始上传文件
-//        sendZipFile(false,new byte[1]);
         final FtpClienManager mFtpClienManager = new FtpClienManager();
         mFtpClienManager.ftpConnet(new FtpClienManager.IConnectListener() {
             @Override
@@ -371,7 +357,7 @@ public class PhoneNettyManager {
             @Override
             public void started() {
                 LogUtils.e("-----------------started");
-                //EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_PERCENT,Integer.valueOf(0)));
+                mCmdHandler.getmAllDataListener();
             }
 
             @Override
@@ -612,91 +598,6 @@ public class PhoneNettyManager {
 
     };
 
-   /* @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onMessageEvent(MessageEventBus event) {
-        switch (event.getType()) {
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG:
-                ServerPortIp serverPortIp = (ServerPortIp) event.getObject();
-                connect(serverPortIp.getPort(),serverPortIp.getIp());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_DISCONNECT_TIANTONG:
-                stop();
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SELECTED:
-                setConnectedState();
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_DIAL:
-                dialPhone((String) event.getObject());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_HUNGUP:
-                endCall();
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_ACCEPTCALL:
-                acceptCall();
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS:
-                sendSms(event.getObject());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_ACCURACY_POSITION:
-                requestGpsPosition(event.getObject());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_BEIDOU_SWITCH:
-                openBeidou(event.getObject());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_CALL_RECORD:
-                requestCallRecord();
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SHORT_MESSGAE:
-                requestShortMessage();
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_APP_VERSION:
-                requestServerVersion(event.getObject());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_UPLOAD_APP:
-                startUpload();
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG__REQUEST_SERVER_TIME_DATE:
-                requestServerDatetime(event.getObject());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SHORT_MESSAGE:
-                requestServerShortMessageStatus(event.getObject());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_WIFI_PASSWORD:
-                requestServerWifipassword(event.getObject());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_ENABLE_DATA:
-                requestEnableData(event.getObject());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_VERSION:
-                requestServerVersion();
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_RECOVER_SYSTEM:
-                requestServerRecoverSystem();
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_SENDMESSAGE:
-                requestSosSendMessage(event.getObject());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_MOBILE_STATUS:
-                reuqestServerMobileStatus();
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_STATUS:
-                requestServerSosStatus();
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_SOS_CLOSE:
-                requestServerSosClose();
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_DELETE_SIGNAL_MESSAFGE:
-                requestServerDeleteMessage(event.getObject());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_DELETE_SIGNAL_SHORT_MESSAGE:
-                requestServerShortMessageDelete(event.getObject());
-                break;
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_RECORD_CALL_STATUS:
-                requestServerPhoneStatus(event.getObject());
-                break;
-        }
-    }
-*/
     /**
      * 发送命令到设备
      *

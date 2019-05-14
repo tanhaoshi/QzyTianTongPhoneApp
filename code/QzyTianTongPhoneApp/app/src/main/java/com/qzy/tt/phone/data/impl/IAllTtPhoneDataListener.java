@@ -61,4 +61,6 @@ public interface IAllTtPhoneDataListener {
     //短信发送状态回调
     void onServerTtPhoneSmsSendState(PhoneCmd phoneCmd);
 
+    void onUpdatePercent(Integer percent);
+
 }
