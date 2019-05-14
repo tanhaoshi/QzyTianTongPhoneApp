@@ -77,7 +77,8 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
             NToast.shortToast(mContext, mContext.getString(R.string.TMT_PLEASE_CLOSE_DATA_MOBILE_AND_ENABLE_WIFI));
         }
 
-        if (TextUtils.isEmpty(ssid) || ssid.length() < 6 || !ssid.contains(Constans.STANDARD_WIFI_NAME)) {
+        //!ssid.contains(Constans.STANDARD_WIFI_NAME)
+        if (TextUtils.isEmpty(ssid) || ssid.length() < 6 || containsWifiSSID(ssid)) {
             NToast.shortToast(mContext, mContext.getString(R.string.TMT_connect_tiantong_please));
             Intent intent = new Intent("android.settings.WIFI_SETTINGS");
             mContext.startActivity(intent);
@@ -89,6 +90,15 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
         SPUtils.removeShare(mContext, Constans.CRY_HELP_SHORTMESSAGE);
 
         startConnectMain();
+    }
+
+    private boolean containsWifiSSID(String ssid){
+        if(ssid.contains(Constans.STANDARD_WIFI_NAME) || ssid.contains(Constans.DAXIE_STANDARD_WIFI_NAME)
+                || ssid.contains(Constans.TIAN_TONG_WIFI_NAME)){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     private void startConnectMain() {
