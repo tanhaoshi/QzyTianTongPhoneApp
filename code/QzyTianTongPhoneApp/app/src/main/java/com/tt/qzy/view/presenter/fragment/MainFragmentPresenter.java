@@ -78,7 +78,7 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
         }
 
         //!ssid.contains(Constans.STANDARD_WIFI_NAME)
-        if (TextUtils.isEmpty(ssid) || ssid.length() < 6 || containsWifiSSID(ssid)) {
+        if (TextUtils.isEmpty(ssid) || ssid.length() < 6 || !containsWifiSSID(ssid)) {
             NToast.shortToast(mContext, mContext.getString(R.string.TMT_connect_tiantong_please));
             Intent intent = new Intent("android.settings.WIFI_SETTINGS");
             mContext.startActivity(intent);
@@ -96,6 +96,7 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
         if(ssid.contains(Constans.STANDARD_WIFI_NAME) || ssid.contains(Constans.DAXIE_STANDARD_WIFI_NAME)
                 || ssid.contains(Constans.TIAN_TONG_WIFI_NAME)){
             return true;
+
         }else{
             return false;
         }

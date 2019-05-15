@@ -1,9 +1,11 @@
 package com.qzy.tiantong.service.phone;
 
 import com.qzy.tiantong.service.phone.data.ClientInfoBean;
+import com.qzy.tiantong.service.utils.AppUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import io.netty.channel.ChannelHandlerContext;
 
@@ -24,11 +26,11 @@ public class PhoneClientManager {
     }
 
 
-    private HashMap<String, ClientInfoBean> mHaspMapPhoneClient;
+    private ConcurrentHashMap<String, ClientInfoBean> mHaspMapPhoneClient;
 
 
     public PhoneClientManager() {
-        mHaspMapPhoneClient = new HashMap<>();
+        mHaspMapPhoneClient = new ConcurrentHashMap<>();
     }
 
 
@@ -38,16 +40,19 @@ public class PhoneClientManager {
      * @param ip
      * @param ctx
      */
-    public boolean addPhoneClient(String ip, ChannelHandlerContext ctx) {
-        ClientInfoBean infoBean = mHaspMapPhoneClient.get(ip);
-        if (infoBean == null) {
-            mHaspMapPhoneClient.put(ip, new ClientInfoBean(ip, ctx, false));
-            return true;
+    public void addPhoneClient(String ip, ChannelHandlerContext ctx) {
+
+        AppUtils.requireNonNull(mHaspMapPhoneClient);
+
+        if(mHaspMapPhoneClient.containsKey(ip)){
+            return;
         }
+
+        ClientInfoBean infoBean = new ClientInfoBean();
+        infoBean.setCalling(false);
         infoBean.setCtx(ctx);
         infoBean.setIp(ip);
-        mHaspMapPhoneClient.put(ip, infoBean);
-        return true;
+        mHaspMapPhoneClient.put(ip,infoBean);
     }
 
     /**
@@ -55,13 +60,11 @@ public class PhoneClientManager {
      *
      * @param ip
      */
-    public boolean removePhoneClient(String ip) {
-        ClientInfoBean infoBean = mHaspMapPhoneClient.get(ip);
-        if (infoBean != null) {
+    public void removePhoneClient(String ip) {
+        AppUtils.requireNonNull(mHaspMapPhoneClient);
+        if(mHaspMapPhoneClient.containsKey(ip)){
             mHaspMapPhoneClient.remove(ip);
-            return true;
         }
-        return false;
     }
 
 
@@ -79,7 +82,7 @@ public class PhoneClientManager {
         return null;
     }
 
-    public HashMap<String, ClientInfoBean> getmHaspMapPhoneClient() {
+    public ConcurrentHashMap<String, ClientInfoBean> getmHaspMapPhoneClient() {
         return mHaspMapPhoneClient;
     }
 
@@ -113,7 +116,7 @@ public class PhoneClientManager {
      * 挂断状态设置通话状态为挂断
      */
     public void setEndCallUser() {
-        HashMap<String, ClientInfoBean> hashMap = PhoneClientManager.getInstance().getmHaspMapPhoneClient();
+        ConcurrentHashMap<String, ClientInfoBean> hashMap = PhoneClientManager.getInstance().getmHaspMapPhoneClient();
         for (Map.Entry<String, ClientInfoBean> entry : hashMap.entrySet()) {
             if (entry.getValue() != null && entry.getValue().isCalling()) {
                 entry.getValue().setCalling(false);
@@ -128,7 +131,7 @@ public class PhoneClientManager {
      */
     public String isCallingIp() {
 
-        HashMap<String, ClientInfoBean> hashMap = PhoneClientManager.getInstance().getmHaspMapPhoneClient();
+        ConcurrentHashMap<String, ClientInfoBean> hashMap = PhoneClientManager.getInstance().getmHaspMapPhoneClient();
 
         if (hashMap == null) {
             return null;

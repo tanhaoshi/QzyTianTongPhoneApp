@@ -1,6 +1,7 @@
 package com.qzy.tiantong.service.phone;
 
 import com.qzy.tiantong.service.phone.data.ClientInfoBean;
+import com.qzy.tiantong.service.utils.AppUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,16 +40,18 @@ public class PhoneClientManager {
      * @param ip
      * @param ctx
      */
-    public boolean addPhoneClient(String ip, ChannelHandlerContext ctx) {
-        ClientInfoBean infoBean = mHaspMapPhoneClient.get(ip);
-        if (infoBean == null) {
-            mHaspMapPhoneClient.put(ip, new ClientInfoBean(ip, ctx, false));
-            return true;
+    public void addPhoneClient(String ip, ChannelHandlerContext ctx) {
+        AppUtils.requireNonNull(mHaspMapPhoneClient);
+
+        if(mHaspMapPhoneClient.containsKey(ip)){
+            return;
         }
+
+        ClientInfoBean infoBean = new ClientInfoBean();
+        infoBean.setCalling(false);
         infoBean.setCtx(ctx);
         infoBean.setIp(ip);
-        mHaspMapPhoneClient.put(ip, infoBean);
-        return true;
+        mHaspMapPhoneClient.put(ip,infoBean);
     }
 
     /**
@@ -56,13 +59,11 @@ public class PhoneClientManager {
      *
      * @param ip
      */
-    public boolean removePhoneClient(String ip) {
-        ClientInfoBean infoBean = mHaspMapPhoneClient.get(ip);
-        if (infoBean != null) {
+    public void removePhoneClient(String ip) {
+        AppUtils.requireNonNull(mHaspMapPhoneClient);
+        if(mHaspMapPhoneClient.containsKey(ip)){
             mHaspMapPhoneClient.remove(ip);
-            return true;
         }
-        return false;
     }
 
 

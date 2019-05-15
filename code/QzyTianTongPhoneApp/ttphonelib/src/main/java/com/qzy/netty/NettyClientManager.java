@@ -140,6 +140,11 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
         if (NettyClient.getInstance() != null) {
             NettyClient.getInstance().stopConnected();
         }
+
+        if(mReconnectedThread.isAlive()){
+            mReconnectedThread.interrupt();
+        }
+        mReconnectedThread = null;
     }
 
     /**

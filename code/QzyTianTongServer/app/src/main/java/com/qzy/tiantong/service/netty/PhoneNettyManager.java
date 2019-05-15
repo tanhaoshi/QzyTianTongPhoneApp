@@ -44,6 +44,7 @@ import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtDeleCallLogProtos;
 import com.qzy.tt.data.TtDeleSmsProtos;
 import com.qzy.tt.data.TtPhoneBatteryProtos;
+import com.qzy.tt.data.TtPhoneConnectBeatProtos;
 import com.qzy.tt.data.TtPhoneGetServerVersionProtos;
 import com.qzy.tt.data.TtPhoneMobileDataProtos;
 import com.qzy.tt.data.TtPhoneRecoverSystemProtos;
@@ -976,6 +977,21 @@ public class PhoneNettyManager implements IMobileDataManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void checkBeat(TtPhoneConnectBeatProtos.TtPhoneConnectBeat ttPhoneConnectBeat){
+        LogUtils.i("server check beat ");
+        AppUtils.requireNonNull(ttPhoneConnectBeat);
+        if(ttPhoneConnectBeat.getIsConnect() && ttPhoneConnectBeat.getRequest()){
+            TtPhoneConnectBeatProtos.TtPhoneConnectBeat connectBeat =
+                    TtPhoneConnectBeatProtos.TtPhoneConnectBeat.newBuilder()
+                    .setResponse(true)
+                    .setIsConnect(true)
+                    .build();
+            mNettyServerManager.sendData(null,PhoneCmd.getPhoneCmd
+                    (PrototocalTools.IProtoClientIndex.RESPONSE_CONNECT_BEAT,connectBeat));
+            LogUtils.i("server send beat ");
         }
     }
 

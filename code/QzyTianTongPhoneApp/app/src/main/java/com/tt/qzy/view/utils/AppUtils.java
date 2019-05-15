@@ -191,4 +191,16 @@ public final class AppUtils {
         }
         return "127.0.0.1";
     }
+
+    /**
+     *  require the object are not null
+     *
+     * @param objects
+     */
+    public static void requireNonNull(Object... objects){
+        if(objects == null) throw new NullPointerException();
+        for (Object o : objects){
+            if(o == null) throw new NullPointerException();
+        }
+    }
 }

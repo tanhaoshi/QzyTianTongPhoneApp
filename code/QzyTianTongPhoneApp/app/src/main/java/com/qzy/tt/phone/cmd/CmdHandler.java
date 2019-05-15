@@ -15,6 +15,7 @@ import com.qzy.tt.data.TtBeiDouStatuss;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhoneBatteryProtos;
+import com.qzy.tt.data.TtPhoneConnectBeatProtos;
 import com.qzy.tt.data.TtPhoneGetServerVersionProtos;
 import com.qzy.tt.data.TtPhoneMobileDataProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
@@ -231,11 +232,27 @@ public class CmdHandler {
                     TtPhoneSosMessageProtos.TtPhoneSosMessage ttPhoneSosMessage = TtPhoneSosMessageProtos.TtPhoneSosMessage.parseDelimitedFrom(inputStream);
                     parseServerSosInfo(ttPhoneSosMessage);
                     break;
+                case PrototocalTools.IProtoClientIndex.RESPONSE_CONNECT_BEAT:
+                    TtPhoneConnectBeatProtos.TtPhoneConnectBeat ttPhoneConnectBeat =
+                            TtPhoneConnectBeatProtos.TtPhoneConnectBeat.parseDelimitedFrom(inputStream);
+                    checkChannelBeat(ttPhoneConnectBeat);
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    public void checkChannelBeat(TtPhoneConnectBeatProtos.TtPhoneConnectBeat ttPhoneConnectBeat ){
+        KLog.i("check Channel beat ");
+        if(ttPhoneConnectBeat.getIsConnect() && ttPhoneConnectBeat.getResponse()){
+            //返回了心跳,我需要告诉multisocket 不用重连;
+            KLog.i(" call back phone netty ");
+            mCheckBeatListener.checkBeatState(true);
+        }
+    }
+
+
 
     /**
      * 解析所有定时发送状态
@@ -392,6 +409,16 @@ public class CmdHandler {
                 SPUtils.putShare(context, Constans.CRY_HELP_SHORTMESSAGE, ttPhoneSosMessage.getMessageContent());
             }
         }
+    }
+
+    public interface CheckBeatListener{
+        void checkBeatState(boolean isBeat);
+    }
+
+    private CheckBeatListener mCheckBeatListener;
+
+    public void setOnCheckListener(CheckBeatListener checkListener){
+        this.mCheckBeatListener = checkListener;
     }
 
 }

@@ -14,6 +14,7 @@ import com.qzy.tt.probuf.lib.data.PrototocalTools;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
@@ -89,7 +90,7 @@ public class NettyServerManager implements NettyServer.IServerListener {
     public void sendData(String ip, PhoneCmd cmd) {
         try {
             if (TextUtils.isEmpty(ip)) { //发送所有终端
-                HashMap<String, ClientInfoBean> hashMap = PhoneClientManager.getInstance().getmHaspMapPhoneClient();
+                ConcurrentHashMap<String, ClientInfoBean> hashMap = PhoneClientManager.getInstance().getmHaspMapPhoneClient();
                 for (Map.Entry<String, ClientInfoBean> entry : hashMap.entrySet()) {
                     if (entry.getValue() != null && entry.getValue().getCtx() != null) {
                         sendData(entry.getValue().getCtx(), cmd);
@@ -99,6 +100,7 @@ public class NettyServerManager implements NettyServer.IServerListener {
             }
 
             ChannelHandlerContext ctx = PhoneClientManager.getInstance().getChannelHandlerContext(ip);
+
             if (ctx != null) {
                 sendData(ctx, cmd);
             }
@@ -199,7 +201,6 @@ public class NettyServerManager implements NettyServer.IServerListener {
             PhoneClientManager.getInstance().free();
         }
     }
-
 
     /**
      * 接口回调

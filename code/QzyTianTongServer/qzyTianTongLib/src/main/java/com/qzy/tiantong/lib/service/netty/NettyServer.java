@@ -106,14 +106,14 @@ public class NettyServer {
         @Override
         public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
             LogUtils.d("channelUnregistered...");
-            Channel channel = ctx.channel();
-            // connectHanlerCtx = null;
-            InetSocketAddress insocket = (InetSocketAddress) channel.remoteAddress();
-            String ip = insocket.getAddress().getHostAddress();
-            LogUtils.d("New client has disconnected:" + ip);
-            if (iServerListener != null) {
-                iServerListener.onConnected(ctx, ip, false);
-            }
+//            Channel channel = ctx.channel();
+//            // connectHanlerCtx = null;
+//            InetSocketAddress insocket = (InetSocketAddress) channel.remoteAddress();
+//            String ip = insocket.getAddress().getHostAddress();
+//            LogUtils.d("New client has disconnected:" + ip);
+//            if (iServerListener != null) {
+//                iServerListener.onConnected(ctx, ip, false);
+//            }
         }
 
         @Override

@@ -53,7 +53,15 @@ public final class ThreadUtils {
         return Looper.myLooper() == Looper.getMainLooper();
     }
 
-    private static ExecutorService getPoolByTypeAndPrioity(final int type, final int priority){
+    public static ExecutorService getCachedPool(){
+        return getPoolByTypeAndPriority(TYPE_CACHED);
+    }
+
+    private static ExecutorService getPoolByTypeAndPriority(final int type) {
+        return getPoolByTypeAndPriority(type, Thread.NORM_PRIORITY);
+    }
+
+    private static ExecutorService getPoolByTypeAndPriority(final int type, final int priority){
         ExecutorService pool;
         Map<Integer,ExecutorService> priorityPools = TYPE_PRIORITY_POOLS.get(type);
         if(priorityPools == null){

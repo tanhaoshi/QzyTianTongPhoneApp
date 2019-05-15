@@ -2,6 +2,7 @@ package com.qzy.tt.phone.netudp;
 
 
 import com.qzy.utils.LogUtils;
+import com.socks.library.KLog;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -17,8 +18,6 @@ public class NetUdpThread extends Thread {
 
      private IUdpListener mListener;
 
-     public boolean isReconnected =false;
-
     public NetUdpThread(int port) {
         this.port = port;
     }
@@ -33,7 +32,7 @@ public class NetUdpThread extends Thread {
     }
 
     private void receive() throws Exception {
-        byte[] buffer = new byte[65507];
+        byte[] buffer = new byte[1024];
         @SuppressWarnings("resource")
         DatagramSocket ds = new DatagramSocket(port);
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length);

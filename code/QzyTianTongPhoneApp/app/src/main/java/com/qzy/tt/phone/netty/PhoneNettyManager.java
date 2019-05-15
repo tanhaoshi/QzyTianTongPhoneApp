@@ -1,6 +1,7 @@
 package com.qzy.tt.phone.netty;
 
 import android.content.Context;
+import android.database.Observable;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -8,11 +9,13 @@ import com.google.protobuf.ByteString;
 import com.qzy.androidftp.FtpClienManager;
 import com.qzy.data.PhoneCmd;
 import com.qzy.data.PrototocalTools;
+import com.qzy.netty.NettyClient;
 import com.qzy.netty.NettyClientManager;
 import com.qzy.tt.data.CallPhoneProtos;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtDeleCallLogProtos;
 import com.qzy.tt.data.TtOpenBeiDouProtos;
+import com.qzy.tt.data.TtPhoneConnectBeatProtos;
 import com.qzy.tt.data.TtPhoneGetServerVersionProtos;
 import com.qzy.tt.data.TtPhoneMobileDataProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
@@ -28,6 +31,7 @@ import com.qzy.tt.data.TtTimeProtos;
 import com.qzy.tt.phone.cmd.CmdHandler;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.SmsBean;
+import com.qzy.tt.phone.netudp.MultiSocket;
 import com.qzy.tt.phone.netudp.NetUdpThread;
 import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
@@ -39,6 +43,7 @@ import com.tt.qzy.view.bean.SMAgrementModel;
 import com.tt.qzy.view.bean.SosSendMessageModel;
 import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.bean.WifiSettingModel;
+import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.SPUtils;
 
@@ -49,6 +54,12 @@ import java.io.InputStream;
 
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.ChannelHandlerContext;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import it.sauronsoftware.ftp4j.FTPDataTransferListener;
 
 /**
@@ -65,7 +76,8 @@ public class PhoneNettyManager {
     private String ip;
     private int port;
 
-    private NetUdpThread mNetUdpThread;
+//    private NetUdpThread mNetUdpThread;
+    private MultiSocket mMultiSocket;
 
     private Handler mhandler = new Handler(Looper.getMainLooper());
 
@@ -94,9 +106,99 @@ public class PhoneNettyManager {
      * 做udp重连消息
      */
     private  void initUdbConnect(){
-        mNetUdpThread = new NetUdpThread(8991);
-        mNetUdpThread.start();
-        mNetUdpThread.setmListener(udpListener);
+        mMultiSocket = MultiSocket.init();
+        mMultiSocket.setReceiveListener(new MultiSocket.CallBack() {
+            @Override
+            public void receiveData(String data) {
+                KLog.i("receive data : " + data);
+                checkConnectBeat();
+            }
+        });
+//        mNetUdpThread = new NetUdpThread(8991);
+//        mNetUdpThread.start();
+//        mNetUdpThread.setmListener(udpListener);
+        mCmdHandler.setOnCheckListener(new CmdHandler.CheckBeatListener() {
+            @Override
+            public void checkBeatState(boolean isBeat) {
+                KLog.i("look check state = " + isBeat);
+                isBeatState = isBeat;
+            }
+        });
+    }
+
+    public void checkConnectBeat(){
+        if(NettyClient.getInstance().getConnectHanlerCtx() != null){
+            KLog.i("send beat");
+            blockTaskCheckState();
+        }else{
+            //为空 释放重连
+            KLog.i("disconnect then connect");
+            mNettyClientManager.release();
+            mNettyClientManager = null;
+            mNettyClientManager = new NettyClientManager(nettyListener);
+            mNettyClientManager.startReconnected(Constans.PORT, Constans.IP);
+        }
+    }
+
+    private void blockTaskCheckState(){
+        io.reactivex.Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> observableEmitter) {
+                sendBeat();
+                try {
+                    Thread.sleep(1000);
+                    observableEmitter.onNext(true);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
+
+                    }
+
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        if(!isBeatState){
+                            return;
+                        }else{
+                            //没收到
+                            //开始做重连
+                            mNettyClientManager.release();
+                            mNettyClientManager = null;
+                            mNettyClientManager = new NettyClientManager(nettyListener);
+                            mNettyClientManager.startReconnected(Constans.PORT, Constans.IP);
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    public volatile boolean isBeatState = false;
+
+    public void sendBeat(){
+        TtPhoneConnectBeatProtos.TtPhoneConnectBeat ttPhoneConnectBeat =
+                TtPhoneConnectBeatProtos.TtPhoneConnectBeat
+                .newBuilder()
+                .setIsConnect(true)
+                .setRequest(true)
+                .build();
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.REQUEST_CONNECT_BEAT, ttPhoneConnectBeat));
     }
 
     private NetUdpThread.IUdpListener udpListener = new NetUdpThread.IUdpListener() {
@@ -107,17 +209,16 @@ public class PhoneNettyManager {
                     LogUtils.d("user not connect so return ");
                     return;
                 }
-                mNetUdpThread.setmListener(null);
+//                mNetUdpThread.setmListener(null);
                 isUdpHandlerConnect = true;
                 mNettyClientManager.release();
                 mNettyClientManager.startReconnected(Constans.PORT, Constans.IP);
                 mhandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        mNetUdpThread.setmListener(udpListener);
+//                        mNetUdpThread.setmListener(udpListener);
                     }
                 },6000);
-
         }
     };
 
@@ -125,10 +226,12 @@ public class PhoneNettyManager {
      * 释放udp
      */
     private void releaseUdpConnect(){
-        if(mNetUdpThread != null && mNetUdpThread.isAlive()){
-            mNetUdpThread.interrupt();
-        }
-        mNetUdpThread = null;
+//        if(mNetUdpThread != null && mNetUdpThread.isAlive()){
+//            mNetUdpThread.interrupt();
+//        }
+//        mNetUdpThread = null;
+        AppUtils.requireNonNull(mMultiSocket);
+        mMultiSocket.recycle();
     }
 
     /**

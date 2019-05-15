@@ -12,4 +12,6 @@ public interface Constant {
 
    String WIFI_PASSWD = "12345678";
 
+   String CONNECT_COUNT = "CONNECT_FLAG";
+
 }

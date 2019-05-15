@@ -18,9 +18,13 @@ import com.qzy.tiantong.lib.localsocket.LocalPcmSocketManager;
 import com.qzy.tiantong.lib.power.PowerUtils;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.netty.PhoneNettyManager;
+import com.qzy.tiantong.service.netudp.MultiServerSocket;
 import com.qzy.tiantong.service.netudp.NetUdpThread;
 import com.qzy.tiantong.service.phone.PhoneClientManager;
 import com.qzy.tiantong.service.phone.data.ClientInfoBean;
+import com.qzy.tiantong.service.utils.AppUtils;
+import com.qzy.tiantong.service.utils.Constant;
+import com.qzy.tiantong.service.utils.SPUtils;
 import com.qzy.tt.data.CallPhoneStateProtos;
 
 import java.io.BufferedReader;
@@ -58,7 +62,6 @@ public final class SystemSleepManager {
         this.mPhoneNettyManager = server.getPhoneNettyManager();
         mContext = context;
         registerF12();
-        init();
     }
 
     private void registerF12() {
@@ -78,37 +81,6 @@ public final class SystemSleepManager {
             }
         }
     };
-
-    /**
-     * 初始化
-     */
-    private void init() {
-
-        //controlSystemSleep();
-
-//        mLocalPcmSocketManager.setSocketCallback(new LocalPcmSocketManager.ISocketCallback() {
-//            @Override
-//            public void connected() {
-//
-//            }
-//
-//            @Override
-//            public void disconneted() {
-//
-//            }
-//
-//            @Override
-//            public void onData(byte[] data) {
-//                if (data[0] == (byte) 0x55 && data[1] == (byte) 0xaa && data[2] == (byte) 0x02 && data[3] == (byte) 0x06) {
-//                    isTtSleep = false;
-//                    if (data[4] == (byte) 0x01) {
-//                        isTtSleep = true;
-//                    }
-//
-//                }
-//            }
-//        });
-    }
 
     /**
      * 控制系统休眠
@@ -188,7 +160,9 @@ public final class SystemSleepManager {
             }
 
             isTtSleep = getTianTongModeSleep();
+
             if (isTtSleep) {
+
                 LogUtils.i("broad cast receive list size = " + stringList.size());
 
                 LogUtils.i("tian tong system go to sleep ");
@@ -196,10 +170,18 @@ public final class SystemSleepManager {
                 if (mPhoneNettyManager.isGotoSleep) {
                     mPhoneNettyManager.isGotoSleep = false;
                     mPhoneNettyManager.stopTimer();
-                    //disconnectAllClient(); //加入断开所有连接
-                    gotoSleep();
 
+                    ConcurrentHashMap concurrentHashMap =
+                            PhoneClientManager.getInstance().getmHaspMapPhoneClient();
+                    AppUtils.requireNonNull(concurrentHashMap);
+                    LogUtils.i("before sleep system to look at connect size = " +
+                    concurrentHashMap.size());
+
+                    SPUtils.putShare(mContext, Constant.CONNECT_COUNT,concurrentHashMap.size());
+
+                    gotoSleep();
                 }
+
             } else {
 
             }
@@ -209,14 +191,13 @@ public final class SystemSleepManager {
         }
     }
 
-
     /**
      * 系统休眠接口
      */
     private void gotoSleep() {
         PowerManager powerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
         try {
-            synchronized (SystemSleepManager.class) {
+            synchronized (this) {
                 LogUtils.e("GGGGGG control system go to sleep successddd ....  = " + isTtSleep);
                 powerManager.getClass().getMethod("goToSleep", new Class[]{long.class}).invoke(powerManager, SystemClock.uptimeMillis());
                 LogUtils.e("GGGGG control system go to sleep end ... = " + isTtSleep);
@@ -233,7 +214,6 @@ public final class SystemSleepManager {
         }
     }
 
-
     /**
      * 检查信号强度判断是否入网
      *
@@ -246,7 +226,6 @@ public final class SystemSleepManager {
             return false;
         }
     }
-
 
     /**
      * 检查电话状态
@@ -390,24 +369,31 @@ public final class SystemSleepManager {
      */
 
     public void callConnectAllClient() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(1000);
-                    new NetUdpThread(8991).send("all client connect me", 8991);
-                    Thread.sleep(2000);
-                    new NetUdpThread(8991).send("all client connect me", 8991);
-                    Thread.sleep(2000);
-                    new NetUdpThread(8991).send("all client connect me", 8991);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-
-
-
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    Thread.sleep(1000);
+//                    new NetUdpThread(8991).send("all client connect me", 8991);
+//                    Thread.sleep(2000);
+//                    new NetUdpThread(8991).send("all client connect me", 8991);
+//                    Thread.sleep(2000);
+//                    new NetUdpThread(8991).send("all client connect me", 8991);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
+        Integer count = (Integer) SPUtils.getShare
+                (mContext,Constant.CONNECT_COUNT,0);
+        LogUtils.i("wake up system connect count = " + count);
+        ConcurrentHashMap concurrentHashMap =
+                PhoneClientManager.getInstance().getmHaspMapPhoneClient();
+        LogUtils.i("wake up the map save connect size = " + concurrentHashMap.size());
+//
+        MultiServerSocket multiServerSocket = MultiServerSocket.getInstance();
+        multiServerSocket.init();
+        multiServerSocket.sendData();
     }
 
     /**
@@ -455,6 +441,7 @@ public final class SystemSleepManager {
      */
     public void free() {
         mContext.unregisterReceiver(broadcastReceiver);
+        MultiServerSocket.getInstance().recycle();
     }
 
 }
