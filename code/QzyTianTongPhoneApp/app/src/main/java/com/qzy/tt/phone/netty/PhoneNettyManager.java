@@ -31,7 +31,6 @@ import com.qzy.tt.data.TtTimeProtos;
 import com.qzy.tt.phone.cmd.CmdHandler;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.SmsBean;
-import com.qzy.tt.phone.netudp.MultiSocket;
 import com.qzy.tt.phone.netudp.NetUdpThread;
 import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
@@ -76,8 +75,7 @@ public class PhoneNettyManager {
     private String ip;
     private int port;
 
-//    private NetUdpThread mNetUdpThread;
-    private MultiSocket mMultiSocket;
+    private NetUdpThread mNetUdpThread;
 
     private Handler mhandler = new Handler(Looper.getMainLooper());
 
@@ -93,30 +91,22 @@ public class PhoneNettyManager {
     public PhoneNettyManager(Context context) {
         mContext = context;
         mNettyClientManager = new NettyClientManager(nettyListener);
-        initUdbConnect();
         mCmdHandler = new CmdHandler(context);
-        KLog.i("TtPhoneService boolean flag value = " + (Boolean) SPUtils.getShare(mContext, Constans.SERVER_FLAG,false));
-        if((Boolean) SPUtils.getShare(mContext, Constans.SERVER_FLAG,false)){
-            connect(Constans.PORT,Constans.IP);
-            SPUtils.putShare(mContext,Constans.SERVER_FLAG,false);
+        initUdbConnect();
+        KLog.i("TtPhoneService boolean flag value = " + (Boolean) SPUtils.getShare(mContext, Constans.SERVER_FLAG, false));
+        if ((Boolean) SPUtils.getShare(mContext, Constans.SERVER_FLAG, false)) {
+            connect(Constans.PORT, Constans.IP);
+            SPUtils.putShare(mContext, Constans.SERVER_FLAG, false);
         }
     }
 
     /**
      * 做udp重连消息
      */
-    private  void initUdbConnect(){
-        mMultiSocket = MultiSocket.init();
-        mMultiSocket.setReceiveListener(new MultiSocket.CallBack() {
-            @Override
-            public void receiveData(String data) {
-                KLog.i("receive data : " + data);
-                checkConnectBeat();
-            }
-        });
-//        mNetUdpThread = new NetUdpThread(8991);
-//        mNetUdpThread.start();
-//        mNetUdpThread.setmListener(udpListener);
+    private void initUdbConnect() {
+        mNetUdpThread = new NetUdpThread(8991);
+        mNetUdpThread.start();
+        mNetUdpThread.setmListener(udpListener);
         mCmdHandler.setOnCheckListener(new CmdHandler.CheckBeatListener() {
             @Override
             public void checkBeatState(boolean isBeat) {
@@ -126,11 +116,11 @@ public class PhoneNettyManager {
         });
     }
 
-    public void checkConnectBeat(){
-        if(NettyClient.getInstance().getConnectHanlerCtx() != null){
+    public void checkConnectBeat() {
+        if (NettyClient.getInstance().getConnectHanlerCtx() != null) {
             KLog.i("send beat");
             blockTaskCheckState();
-        }else{
+        } else {
             //为空 释放重连
             KLog.i("disconnect then connect");
             mNettyClientManager.release();
@@ -140,13 +130,13 @@ public class PhoneNettyManager {
         }
     }
 
-    private void blockTaskCheckState(){
+    private void blockTaskCheckState() {
         io.reactivex.Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(ObservableEmitter<Boolean> observableEmitter) {
                 sendBeat();
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(2000);
                     observableEmitter.onNext(true);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -164,11 +154,13 @@ public class PhoneNettyManager {
 
                     @Override
                     public void onNext(Boolean aBoolean) {
-                        if(!isBeatState){
+                        if (isBeatState) {
+                            isBeatState = false;
+                            KLog.i("return");
                             return;
-                        }else{
-                            //没收到
-                            //开始做重连
+                        } else {
+                            isBeatState = false;
+                            KLog.i("reconnect");
                             mNettyClientManager.release();
                             mNettyClientManager = null;
                             mNettyClientManager = new NettyClientManager(nettyListener);
@@ -191,57 +183,53 @@ public class PhoneNettyManager {
 
     public volatile boolean isBeatState = false;
 
-    public void sendBeat(){
+    public void sendBeat() {
         TtPhoneConnectBeatProtos.TtPhoneConnectBeat ttPhoneConnectBeat =
                 TtPhoneConnectBeatProtos.TtPhoneConnectBeat
-                .newBuilder()
-                .setIsConnect(true)
-                .setRequest(true)
-                .build();
+                        .newBuilder()
+                        .setIsConnect(true)
+                        .setRequest(true)
+                        .build();
         sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.REQUEST_CONNECT_BEAT, ttPhoneConnectBeat));
     }
 
     private NetUdpThread.IUdpListener udpListener = new NetUdpThread.IUdpListener() {
         @Override
         public void onConnectStateMsg() {
-                LogUtils.d("server call client connect ");
-                if(!isUserHandlerConnect){
-                    LogUtils.d("user not connect so return ");
-                    return;
+            LogUtils.d("server call client connect ");
+            if (!isUserHandlerConnect) {
+                LogUtils.d("user not connect so return ");
+                return;
+            }
+            isUdpHandlerConnect = true;
+            checkConnectBeat();
+            mhandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mNetUdpThread.setReconnected(false);
                 }
-//                mNetUdpThread.setmListener(null);
-                isUdpHandlerConnect = true;
-                mNettyClientManager.release();
-                mNettyClientManager.startReconnected(Constans.PORT, Constans.IP);
-                mhandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-//                        mNetUdpThread.setmListener(udpListener);
-                    }
-                },6000);
+            }, 6000);
         }
     };
 
     /**
      * 释放udp
      */
-    private void releaseUdpConnect(){
-//        if(mNetUdpThread != null && mNetUdpThread.isAlive()){
-//            mNetUdpThread.interrupt();
-//        }
-//        mNetUdpThread = null;
-        AppUtils.requireNonNull(mMultiSocket);
-        mMultiSocket.recycle();
+    private void releaseUdpConnect() {
+        if (mNetUdpThread != null && mNetUdpThread.isAlive()) {
+            mNetUdpThread.interrupt();
+        }
+        mNetUdpThread = null;
     }
 
     /**
      * 开始连接
      */
-    public void connect(int port,String ip) {
+    public void connect(int port, String ip) {
         isUserHandlerConnect = true;
         this.ip = ip;
         this.port = port;
-        mNettyClientManager.startConnect(port,ip);
+        mNettyClientManager.startConnect(port, ip);
     }
 
     /**
@@ -294,7 +282,6 @@ public class PhoneNettyManager {
      */
     private void setConnectedState() {
         boolean isconnected = mNettyClientManager.isConnected();
-        //设置全局状态
         CommonData.getInstance().setConnected(isconnected);
         sendConnectedState(isconnected);
     }
@@ -302,19 +289,20 @@ public class PhoneNettyManager {
 
     /**
      * 返回连接状态到应用层
+     *
      * @param isconnected
      */
-    private void sendConnectedState(boolean isconnected){
-        if( mCmdHandler.getmAllDataListener() != null){
+    private void sendConnectedState(boolean isconnected) {
+        if (mCmdHandler.getmAllDataListener() != null) {
             mCmdHandler.getmAllDataListener().isTtServerConnected(isconnected);
         }
     }
 
     /**
-     * 发送短信
+     * 发送短
      * @param object
      */
-    public void sendSms(Object object){
+    public void sendSms(Object object) {
         SmsBean smsBean = (SmsBean) object;
         TtPhoneSmsProtos.TtPhoneSms ttPhoneSms = TtPhoneSmsProtos.TtPhoneSms.newBuilder()
                 .setIp(CommonData.getInstance().getLocalWifiIp())
@@ -330,117 +318,117 @@ public class PhoneNettyManager {
     /**
      * 请求gps准确位置
      */
-    public void requestGpsPosition(Object o){
-        TtBeidouOpenBean ttBeidouOpenBean = (TtBeidouOpenBean)o;
+    public void requestGpsPosition(Object o) {
+        TtBeidouOpenBean ttBeidouOpenBean = (TtBeidouOpenBean) o;
         TtPhonePositionProtos.TtPhonePosition ttPhonePosition = TtPhonePositionProtos.TtPhonePosition.newBuilder()
                 .setIsOpen(ttBeidouOpenBean.isSwitch())
                 .build();
-        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_gps_position,ttPhonePosition));
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_gps_position, ttPhonePosition));
     }
 
     /**
      * 打开usb升级
      */
-    public void openBeidou(Object o){
-        TtBeidouOpenBean ttBeidouOpenBean = (TtBeidouOpenBean)o;
+    public void openBeidou(Object o) {
+        TtBeidouOpenBean ttBeidouOpenBean = (TtBeidouOpenBean) o;
         TtOpenBeiDouProtos.TtOpenBeiDou ttOpenBeiDou = TtOpenBeiDouProtos.TtOpenBeiDou.newBuilder()
                 .setIsOpen(ttBeidouOpenBean.isSwitch())
                 .build();
-        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_open_beidou_usb,ttOpenBeiDou));
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_open_beidou_usb, ttOpenBeiDou));
     }
 
     /**
      * 请求设备通话记录
      */
-    public void requestCallRecord(){
+    public void requestCallRecord() {
         TtCallRecordProtos.TtCallRecordProto ttCallRecordProto = TtCallRecordProtos.TtCallRecordProto.newBuilder()
                 .setRequest(true)
                 .build();
-        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_call_record,ttCallRecordProto));
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_call_record, ttCallRecordProto));
     }
 
     /**
      * 请求设备短信记录
      */
-    public void requestShortMessage(){
+    public void requestShortMessage() {
         TtShortMessageProtos.TtShortMessage ttShortMessage = TtShortMessageProtos.TtShortMessage.newBuilder()
                 .setRequest(true)
                 .build();
-        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_short_message,ttShortMessage));
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_short_message, ttShortMessage));
     }
 
     /**
      * 请求设备服务APP是否需要更新
      */
-    public void requestServerVersion(Object o){
-        AppInfoModel appInfoModel = (AppInfoModel)o;
+    public void requestServerVersion(Object o) {
+        AppInfoModel appInfoModel = (AppInfoModel) o;
         TtPhoneUpdateAppInfoProtos.UpdateAppInfo updateAppInfo = TtPhoneUpdateAppInfoProtos.UpdateAppInfo.newBuilder()
                 .setPhoneAppVersion(appInfoModel.getPhoneAppVersion())
                 .setServerAppVersion(appInfoModel.getServerAppVersion())
                 .setIp(appInfoModel.getIp())
                 .setTiantongUpdateMd(appInfoModel.getTiantongUpdateMd())
                 .build();
-        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_update_phone_aapinfo,updateAppInfo));
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_update_phone_aapinfo, updateAppInfo));
     }
 
     /**
      * 发送当前时间至服务器
      */
-    public void requestServerDatetime(Object o){
-        DatetimeModel datetimeModel = (DatetimeModel)o;
+    public void requestServerDatetime(Object o) {
+        DatetimeModel datetimeModel = (DatetimeModel) o;
         TtTimeProtos.TtTime ttTime = TtTimeProtos.TtTime.newBuilder()
                 .setDateTime(datetimeModel.getDateTime())
                 .setIsSync(true)
                 .build();
-        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_tt_time,ttTime));
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_tt_time, ttTime));
     }
 
     /**
      * 发送至服务器修改短信读的状态
      */
-    public void requestServerShortMessageStatus(Object o){
-        SMAgrementModel smAgrementModel = (SMAgrementModel)o;
+    public void requestServerShortMessageStatus(Object o) {
+        SMAgrementModel smAgrementModel = (SMAgrementModel) o;
         TtShortMessageProtos.TtShortMessage.ShortMessage shortMessage = TtShortMessageProtos.TtShortMessage.ShortMessage.newBuilder()
                 .setIsRead(true)
                 .setId(smAgrementModel.getId())
                 .build();
-        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_phone_send_sms_read,shortMessage));
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_phone_send_sms_read, shortMessage));
     }
 
     /**
      * 发送至服务器修改wifi密码
      */
-    public void requestServerWifipassword(Object o){
-        WifiSettingModel wifiSettingModel = (WifiSettingModel)o;
+    public void requestServerWifipassword(Object o) {
+        WifiSettingModel wifiSettingModel = (WifiSettingModel) o;
         TtPhoneWifiProtos.TtWifi ttWifi = TtPhoneWifiProtos.TtWifi.newBuilder()
                 .setPasswd(wifiSettingModel.getWifiPassword())
                 .build();
-        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_phone_set_wifi_passwd,ttWifi));
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_phone_set_wifi_passwd, ttWifi));
     }
 
     /**
      * 开始链接下载
      */
-    public void startUpload(){
-        try{
+    public void startUpload() {
+        try {
             InputStream inputStream = mContext.getAssets().open("tiantong_update.zip");
             File file = new File("/mnt/sdcard/tiantong_update.zip");
-            if(!file.exists()){
+            if (!file.exists()) {
                 file.createNewFile();
-            }else{
+            } else {
                 file.delete();
                 file.createNewFile();
             }
             FileOutputStream outputStream = new FileOutputStream(file);
             byte[] read = new byte[1024 * 1024];
             int len = 0;
-            while ((len = inputStream.read(read)) != -1){
-                outputStream.write(read,0,len);
+            while ((len = inputStream.read(read)) != -1) {
+                outputStream.write(read, 0, len);
             }
             outputStream.flush();
             inputStream.close();
             outputStream.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -473,7 +461,7 @@ public class PhoneNettyManager {
             public void completed() {
                 LogUtils.e("-----------------completed");
                 //发送命令告诉服务端开始上传文件完成
-                sendZipFile(true,new byte[1]);
+                sendZipFile(true, new byte[1]);
             }
 
             @Override
@@ -488,8 +476,7 @@ public class PhoneNettyManager {
         });
     }
 
-
-    public void sendZipFile(boolean isFinish,byte[] data){
+    public void sendZipFile(boolean isFinish, byte[] data) {
         TtPhoneUpdateSendFileProtos.UpdateSendFile.PFile pFile = TtPhoneUpdateSendFileProtos.UpdateSendFile.PFile.newBuilder()
                 .setFilename("tiantong_update.zip")
                 .setData(ByteString.copyFrom(data))
@@ -499,146 +486,149 @@ public class PhoneNettyManager {
                 .setIsSendFileFinish(isFinish)
                 .setFileData(pFile)
                 .build();
-        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_update_send_zip,updateSendFile));
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_update_send_zip, updateSendFile));
     }
 
     /**
      * 请求服务端打开设备移动数据
      */
-    public void requestEnableData(Object o){
-        EnableDataModel dataModel = (EnableDataModel)o;
+    public void requestEnableData(Object o) {
+        EnableDataModel dataModel = (EnableDataModel) o;
         TtPhoneMobileDataProtos.TtPhoneMobileData mobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.newBuilder()
                 .setIsEnableData(dataModel.isEnableData())
                 .build();
-        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_phone_server_enable_data,mobileData));
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_phone_server_enable_data, mobileData));
     }
 
     /**
      * 请求服务端版本号
      */
-    public void requestServerVersion(){
-        if(!(CommonData.getInstance().getLocalWifiIp() == null)){
+    public void requestServerVersion() {
+        if (!(CommonData.getInstance().getLocalWifiIp() == null)) {
             TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion ttPhoneGetServerVersion = TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion.newBuilder()
                     .setIsRequest(true)
                     .setIp(CommonData.getInstance().getLocalWifiIp())
                     .build();
-            sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_version_info,ttPhoneGetServerVersion));
+            sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_version_info, ttPhoneGetServerVersion));
         }
     }
 
     /**
      * 设备服务端sos设置保存
      */
-    public void requestSosSendMessage(Object o){
-        SosSendMessageModel sosSendMessageModel = (SosSendMessageModel)o;
+    public void requestSosSendMessage(Object o) {
+        SosSendMessageModel sosSendMessageModel = (SosSendMessageModel) o;
         TtPhoneSosMessageProtos.TtPhoneSosMessage ttPhoneSosMessage = TtPhoneSosMessageProtos.TtPhoneSosMessage.newBuilder()
                 .setMessageContent(sosSendMessageModel.getMessageContent())
                 .setPhoneNumber(sosSendMessageModel.getPhoneNumber())
                 .setDelaytime(sosSendMessageModel.getDelaytime())
                 .setIp(CommonData.getInstance().getLocalWifiIp())
                 .build();
-        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_sos_message_send,ttPhoneSosMessage));
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_sos_message_send, ttPhoneSosMessage));
     }
 
-    /** 获取SOS信息值 */
-    public void requesSosMessageValue(){
+    /**
+     * 获取SOS信息值
+     */
+    public void requesSosMessageValue() {
         TtPhoneSosMessageProtos.TtPhoneSosMessage ttPhoneSosMessage = TtPhoneSosMessageProtos.TtPhoneSosMessage.newBuilder()
                 .setIp(CommonData.getInstance().getLocalWifiIp())
                 .build();
-        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_sos_info_msg,ttPhoneSosMessage));
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_sos_info_msg, ttPhoneSosMessage));
     }
 
     /**
      * 恢复设备出厂设置
      */
-    public void requestServerRecoverSystem(){
+    public void requestServerRecoverSystem() {
         TtPhoneRecoverSystemProtos.TtPhoneRecoverSystem recoverSystem = TtPhoneRecoverSystemProtos.TtPhoneRecoverSystem.newBuilder()
                 .setIsRecover(true)
                 .setIp(CommonData.getInstance().getLocalWifiIp())
                 .build();
-        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_recover_system,recoverSystem));
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_recover_system, recoverSystem));
     }
 
     /**
      * 获取设备移动数据状态
      */
-    public void reuqestServerMobileStatus(){
+    public void reuqestServerMobileStatus() {
         TtPhoneMobileDataProtos.TtPhoneMobileData mobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.newBuilder()
                 .build();
-        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_phone_server_mobile_init,mobileData));
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_phone_server_mobile_init, mobileData));
     }
 
     /**
      * 获取设备SOS初始状态
      */
-    public void requestServerSosStatus(){
+    public void requestServerSosStatus() {
         TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState = TtPhoneSosStateProtos.TtPhoneSosState.newBuilder()
                 .setIsRequest(true)
                 .build();
-        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_sos_status,ttPhoneSosState));
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_sos_status, ttPhoneSosState));
     }
 
     /**
      * 关闭服务设备SOS
      */
-    public void requestServerSosSwitch(boolean isOpen){
+    public void requestServerSosSwitch(boolean isOpen) {
         TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState = TtPhoneSosStateProtos.TtPhoneSosState.newBuilder()
                 .setIsRequest(true)
                 .setIsSwitch(isOpen)
                 .build();
-        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_sos_close,ttPhoneSosState));
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_sos_close, ttPhoneSosState));
     }
 
     /**
      * 请求服务删除该号码下通话记录
      */
-    public void requestServerDeleteMessage(Object o){
-        ProtobufMessageModel messageModel = (ProtobufMessageModel)o;
-        if(messageModel.isDelete()){
+    public void requestServerDeleteMessage(Object o) {
+        ProtobufMessageModel messageModel = (ProtobufMessageModel) o;
+        if (messageModel.isDelete()) {
             TtDeleCallLogProtos.TtDeleCallLog ttDeleCallLog = TtDeleCallLogProtos.TtDeleCallLog.newBuilder()
                     .setIsDeleAll(messageModel.isDelete())
                     .setIp(CommonData.getInstance().getLocalWifiIp())
                     .build();
-            sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_del_calllog,ttDeleCallLog));
-        }else{
+            sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_del_calllog, ttDeleCallLog));
+        } else {
             TtDeleCallLogProtos.TtDeleCallLog ttDeleCallLog = TtDeleCallLogProtos.TtDeleCallLog.newBuilder()
                     .setIsDeleAll(messageModel.isDelete())
                     .setIp(CommonData.getInstance().getLocalWifiIp())
                     .setPhonenumber(messageModel.getPhoneNumber())
                     .setServerDataId(messageModel.getServerId())
                     .build();
-            sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_del_calllog,ttDeleCallLog));
+            sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_del_calllog, ttDeleCallLog));
         }
     }
 
     /**
      * 请求服务删除该短信息下的记录
      */
-    public void requestServerShortMessageDelete(Object o){
-        ProtobufMessageModel messageModel = (ProtobufMessageModel)o;
-        if(messageModel.isDelete()){
+    public void requestServerShortMessageDelete(Object o) {
+        ProtobufMessageModel messageModel = (ProtobufMessageModel) o;
+        if (messageModel.isDelete()) {
             TtDeleCallLogProtos.TtDeleCallLog ttDeleCallLog = TtDeleCallLogProtos.TtDeleCallLog.newBuilder()
                     .setIp(CommonData.getInstance().getLocalWifiIp())
                     .setIsDeleAll(messageModel.isDelete())
                     .build();
-            sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_del_sms,ttDeleCallLog));
-        }else{
+            sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_del_sms, ttDeleCallLog));
+        } else {
             TtDeleCallLogProtos.TtDeleCallLog ttDeleCallLog = TtDeleCallLogProtos.TtDeleCallLog.newBuilder()
                     .setIp(CommonData.getInstance().getLocalWifiIp())
                     .setIsDeleAll(messageModel.isDelete())
                     .setPhonenumber(messageModel.getPhoneNumber())
                     .build();
-            sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_del_sms,ttDeleCallLog));
+            sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_del_sms, ttDeleCallLog));
         }
     }
 
     /**
      * 将服务端的系统数据库修改未接状态
+     *
      * @param o
      */
-    public void requestServerPhoneStatus(Object o){
-        TtCallRecordProtos.TtCallRecordProto ttCallRecordProto = (TtCallRecordProtos.TtCallRecordProto)o;
-        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_call_status,ttCallRecordProto));
+    public void requestServerPhoneStatus(Object o) {
+        TtCallRecordProtos.TtCallRecordProto ttCallRecordProto = (TtCallRecordProtos.TtCallRecordProto) o;
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.request_server_call_status, ttCallRecordProto));
     }
 
     private NettyClientManager.INettyListener nettyListener = new NettyClientManager.INettyListener() {
@@ -653,39 +643,32 @@ public class PhoneNettyManager {
         public void onConnected() {
             LogUtils.i("netty connected ...");
 
-          /*  if(isUserHandlerConnect && isUdpHandlerConnect ){
-                isUdpHandlerConnect = false;
-                KLog.i("netty connected is wakeup ");
-                return;
-            }*/
-            if(isUdpHandlerConnect ){
+            if (isUdpHandlerConnect) {
                 isUdpHandlerConnect = false;
             }
 
-            if(isNettyException){
+            if (isNettyException) {
                 isNettyException = false;
             }
 
             setConnectedState();
-
         }
 
         @Override
         public void onDisconnected() {
             LogUtils.i("netty disconnected ...");
-            if(isUserHandlerConnect && isUdpHandlerConnect ){
+            if (isUserHandlerConnect && isUdpHandlerConnect) {
                 LogUtils.i("netty disconnected is wakeup ");
                 return;
             }
 
-            if(isUserHandlerConnect && isNettyException){
+            if (isUserHandlerConnect && isNettyException) {
                 LogUtils.i("netty disconnected is exception ");
                 return;
             }
 
-            //EventBusUtils.post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_NONCONNECT));
             sendConnectedState(false);
-            if(mCmdHandler != null){
+            if (mCmdHandler != null) {
                 mCmdHandler.resetPhoneState();
             }
             setConnectedState();
@@ -694,9 +677,15 @@ public class PhoneNettyManager {
         @Override
         public void onException(ChannelHandlerContext ctx) {
             LogUtils.i("netty onException...");
-            isNettyException = true;
-            mNettyClientManager.release();
-            mNettyClientManager.startReconnected(Constans.PORT, Constans.IP);
+            if(isUserHandlerConnect || isUdpHandlerConnect){
+                LogUtils.i("netty onException..isUserHandlerConnect or isUdpHandlerConnect.");
+                return;
+            }
+           if(!isNettyException){
+               isNettyException = true;
+                mNettyClientManager.release();
+                mNettyClientManager.startReconnected(Constans.PORT, Constans.IP);
+           }
         }
 
     };

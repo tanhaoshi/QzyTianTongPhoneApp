@@ -1,16 +1,12 @@
 package com.qzy.tiantong.service.netudp;
 
 
-import android.content.Context;
-import android.net.DhcpInfo;
-import android.net.wifi.WifiManager;
 
 import com.qzy.tiantong.lib.utils.LogUtils;
 
 import java.net.DatagramSocket;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 /**
  * Created by yj.zhang on 2018/8/9.

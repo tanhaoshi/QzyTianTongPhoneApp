@@ -4,7 +4,7 @@ public interface Constant {
 
    String WAKE_PATH = "/sys/bus/platform/drivers/tt-platdata/bp_mode";
 
-   String BATTERY_PATH = "/sys/bus/platform/drivers/rk818-battery/level";
+   String BATTERY_PATH = "/sys/class/power_supply/BATTERY/dsoc";
 
    String LAMP_PATH = "/sys/bus/platform/drivers/rk818-battery/charing";
 

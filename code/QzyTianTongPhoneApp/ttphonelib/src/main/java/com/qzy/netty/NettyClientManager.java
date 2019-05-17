@@ -71,6 +71,15 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
 
     @Override
     public void onException(ChannelHandlerContext ctx) {
+        try{
+
+            if (iNettyListener != null) {
+               iNettyListener.onException(ctx);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 
@@ -141,7 +150,7 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
             NettyClient.getInstance().stopConnected();
         }
 
-        if(mReconnectedThread.isAlive()){
+        if(mReconnectedThread != null && mReconnectedThread.isAlive()){
             mReconnectedThread.interrupt();
         }
         mReconnectedThread = null;

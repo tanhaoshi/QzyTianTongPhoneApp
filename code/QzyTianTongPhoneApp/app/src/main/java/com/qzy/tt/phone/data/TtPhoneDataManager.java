@@ -357,120 +357,185 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void connectTtPhoneServer(String ip, int port) {
-        phoneNettyManager.connect(port, ip);
+        if(phoneNettyManager != null) {
+            phoneNettyManager.connect(port, ip);
+        }
     }
 
     @Override
     public void checkServerIsUpdate(Object updateResponse) {
-        phoneNettyManager.requestServerVersion(updateResponse);
+        if(phoneNettyManager != null) {
+            phoneNettyManager.requestServerVersion(updateResponse);
+        }
+
     }
 
     @Override
     public void startSendPackage() {
-        phoneNettyManager.startUpload();
+        if(phoneNettyManager != null) {
+            phoneNettyManager.startUpload();
+        }
+
     }
 
     @Override
     public void disconnectTtPhoneServer() {
-        phoneNettyManager.stop();
+        if(phoneNettyManager != null) {
+            phoneNettyManager.stop();
+        }
+
     }
 
     @Override
     public void getTtPhoneSosState() {
-        phoneNettyManager.requestServerSosStatus();
+        if(phoneNettyManager != null) {
+            phoneNettyManager.requestServerSosStatus();
+        }
+
+
     }
 
 
     @Override
     public void requestTtPhoneSos(boolean isOpen) {
-        phoneNettyManager.requestServerSosSwitch(isOpen);
+        if(phoneNettyManager != null) {
+            phoneNettyManager.requestServerSosSwitch(isOpen);
+        }
+
     }
 
     @Override
     public void openTtPhoneGps(TtBeidouOpenBean ttBeidouOpenBean) {
-        phoneNettyManager.requestGpsPosition(ttBeidouOpenBean);
+        if(phoneNettyManager != null) {
+            phoneNettyManager.requestGpsPosition(ttBeidouOpenBean);
+        }
+
     }
 
     @Override
     public void closeTtPhoneGps(TtBeidouOpenBean ttBeidouOpenBean) {
-        phoneNettyManager.requestGpsPosition(ttBeidouOpenBean);
+        if(phoneNettyManager != null) {
+            phoneNettyManager.requestGpsPosition(ttBeidouOpenBean);
+        }
+
     }
 
     @Override
     public void setTtPhoneSosValue(SosSendMessageModel sosSendMessageModel) {
-        phoneNettyManager.requestSosSendMessage(sosSendMessageModel);
+        if(phoneNettyManager != null) {
+            phoneNettyManager.requestSosSendMessage(sosSendMessageModel);
+        }
+
     }
 
     @Override
     public void requestTtPhoneSosValue() {
-        phoneNettyManager.requesSosMessageValue();
+        if(phoneNettyManager != null) {
+            phoneNettyManager.requesSosMessageValue();
+        }
+
     }
 
     @Override
     public void setWifiPasswd(WifiSettingModel wifiSettingModel) {
+        if(phoneNettyManager != null) {
+            phoneNettyManager.requestServerWifipassword(wifiSettingModel);
+        }
 
-        phoneNettyManager.requestServerWifipassword(wifiSettingModel);
     }
 
     @Override
     public void setDateAndTime(DatetimeModel datetimeModel) {
-        phoneNettyManager.requestServerDatetime(datetimeModel);
+        if(phoneNettyManager != null) {
+            phoneNettyManager.requestServerDatetime(datetimeModel);
+        }
+
     }
 
     @Override
     public void setResetFactorySettings() {
+        if(phoneNettyManager != null) {
+            phoneNettyManager.requestServerRecoverSystem();
+        }
 
-        phoneNettyManager.requestServerRecoverSystem();
     }
 
     @Override
     public void openUsbMode(TtBeidouOpenBean ttBeidouOpenBean) {
-        phoneNettyManager.openBeidou(ttBeidouOpenBean);
+        if(phoneNettyManager != null) {
+            phoneNettyManager.openBeidou(ttBeidouOpenBean);
+        }
+
     }
 
     @Override
     public void closeUsbMode(TtBeidouOpenBean ttBeidouOpenBean) {
-        phoneNettyManager.openBeidou(ttBeidouOpenBean);
+        if(phoneNettyManager != null) {
+            phoneNettyManager.openBeidou(ttBeidouOpenBean);
+        }
+
     }
 
     @Override
     public void dialTtPhone(String phoneNumber) {
-        phoneNettyManager.dialPhone(phoneNumber);
+        if(phoneNettyManager != null) {
+            phoneNettyManager.dialPhone(phoneNumber);
+        }
+
     }
 
     @Override
     public void hangupTtPhone() {
-        phoneNettyManager.endCall();
+        if(phoneNettyManager != null) {
+            phoneNettyManager.endCall();
+        }
     }
 
     @Override
     public void answerTtPhone() {
-        phoneNettyManager.acceptCall();
+        if(phoneNettyManager != null) {
+            phoneNettyManager.acceptCall();
+        }
     }
 
     @Override
     public void sendSmsTtPhone(SmsBean smsBean) {
-        phoneNettyManager.sendSms(smsBean);
+        if(phoneNettyManager != null) {
+            phoneNettyManager.sendSms(smsBean);
+        }
+
     }
 
     @Override
     public void requestCallRecord() {
-        phoneNettyManager.requestCallRecord();
+        if(phoneNettyManager != null) {
+            phoneNettyManager.requestCallRecord();
+        }
+
     }
 
     @Override
     public void requestShortMessage() {
-        phoneNettyManager.requestShortMessage();
+        if(phoneNettyManager != null) {
+            phoneNettyManager.requestShortMessage();
+        }
+
     }
 
     @Override
     public void requestServerShortMessageStatus(SMAgrementModel smAgrementModel) {
-        phoneNettyManager.requestServerShortMessageStatus(smAgrementModel);
+        if(phoneNettyManager != null) {
+            phoneNettyManager.requestServerShortMessageStatus(smAgrementModel);
+        }
+
     }
 
     @Override
     public void requestServerTtPhoneVersion() {
-        phoneNettyManager.requestServerVersion();
+        if(phoneNettyManager != null) {
+            phoneNettyManager.requestServerVersion();
+        }
+
     }
 
 

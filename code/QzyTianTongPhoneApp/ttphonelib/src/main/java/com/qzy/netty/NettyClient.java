@@ -12,8 +12,10 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandler;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoop;
@@ -109,8 +111,6 @@ public class NettyClient {
                     channel = cf.sync().channel();
                     channel.closeFuture().sync();
 
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }finally {
@@ -131,41 +131,37 @@ public class NettyClient {
 
         @Override
         protected void initChannel(SocketChannel ch) throws Exception {
-            ch.pipeline().addLast(connectedChannelHandler);
+            ch.pipeline().addLast(new NettyChannelHandle());
             ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE,4,4,-8,0));
         }
     };
-    private int loss_connect_time = 0;
-    private ChannelInboundHandler connectedChannelHandler = new ChannelInboundHandler() {
+
+    @ChannelHandler.Sharable
+    public class NettyChannelHandle extends ChannelInboundHandlerAdapter{
+
         private ByteBuf dataBuf;
 
-
         @Override
-        public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-            LogUtils.e("channelRegistered" );
-            connectHanlerCtx = ctx;
-            Channel channel = ctx.channel();
-
+        public void channelRegistered(ChannelHandlerContext channelHandlerContext) throws Exception {
+            connectHanlerCtx = channelHandlerContext;
         }
 
         @Override
-        public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-            LogUtils.e("channelUnregistered" );
-            connectHanlerCtx = ctx;
-            Channel channel = ctx.channel();
+        public void channelUnregistered(ChannelHandlerContext channelHandlerContext) throws Exception {
+            connectHanlerCtx = null;
         }
 
         @Override
-        public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        public void channelActive(ChannelHandlerContext channelHandlerContext) throws Exception {
             LogUtils.e("channelActive" );
-            connectHanlerCtx = ctx;
+            connectHanlerCtx = channelHandlerContext;
             if(connectedReadDataListener != null){
                 connectedReadDataListener.onConnectedState(true);
             }
         }
 
         @Override
-        public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        public void channelInactive(ChannelHandlerContext channelHandlerContext) throws Exception {
             LogUtils.e("channelInactive" );
             KLog.i(" no connect client netty ");
             connectHanlerCtx = null;
@@ -175,19 +171,19 @@ public class NettyClient {
         }
 
         @Override
-        public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        public void channelRead(ChannelHandlerContext channelHandlerContext, Object o) throws Exception {
             LogUtils.e("channelRead ");
-            connectHanlerCtx = ctx;
             try {
-                ByteBuf buf = ((ByteBuf) msg);
-               // LogUtils.e("receve data = " + buf.array().length);
+                ByteBuf buf = ((ByteBuf) o);
+                // LogUtils.e("receve data = " + buf.array().length);
                 if (dataBuf == null) {
                     dataBuf = buf;
                 } else {
                     dataBuf.writeBytes(buf.array());
                 }
+                connectHanlerCtx = channelHandlerContext;
 
-                ctx.flush();
+                connectHanlerCtx.flush();
 
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -195,9 +191,8 @@ public class NettyClient {
         }
 
         @Override
-        public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+        public void channelReadComplete(ChannelHandlerContext channelHandlerContext) throws Exception {
             LogUtils.e("channelReadComplete ");
-            connectHanlerCtx = ctx;
 
             if (connectedReadDataListener != null && dataBuf != null) {
                 ByteBufInputStream inputStream = new ByteBufInputStream(dataBuf);
@@ -205,59 +200,32 @@ public class NettyClient {
                 dataBuf = null;
             }
 
-            ctx.flush();
+            connectHanlerCtx.flush();
         }
 
         @Override
-        public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-            LogUtils.d("userEventTriggered ");
-            connectHanlerCtx = ctx;
-            IdleStateEvent event =(IdleStateEvent)evt;
-
-            String eventType = null;
-
-            switch (event.state()){
-                case READER_IDLE:
-                    eventType = "读空闲";
-                    break;
-                case WRITER_IDLE:
-                    eventType = "写空闲";
-                    break;
-                case ALL_IDLE:
-                    eventType ="读写空闲";
-                    break;
-            }
-
-           LogUtils.d(ctx.channel().remoteAddress() + "超时事件：" +eventType);
-        }
-
-        @Override
-        public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
-            LogUtils.d("channelWritabilityChanged ");
-            connectHanlerCtx = ctx;
-        }
-
-        @Override
-        public void exceptionCaught(ChannelHandlerContext ctx, Throwable throwable) throws Exception {
-            LogUtils.e("exceptionCaught ",throwable);
-            connectHanlerCtx = ctx;
-        }
-
-        @Override
-        public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-            LogUtils.d("handlerAdded ");
-            connectHanlerCtx = ctx;
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+            super.exceptionCaught(ctx, cause);
             if(connectedReadDataListener != null){
                 connectedReadDataListener.onException(ctx);
             }
         }
 
         @Override
-        public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-            LogUtils.d("handlerRemoved ");
-            connectHanlerCtx = ctx;
+        public void channelWritabilityChanged(ChannelHandlerContext channelHandlerContext) throws Exception {
+
         }
-    };
+
+        @Override
+        public void handlerAdded(ChannelHandlerContext channelHandlerContext) throws Exception {
+
+        }
+
+        @Override
+        public void handlerRemoved(ChannelHandlerContext channelHandlerContext) throws Exception {
+
+        }
+    }
 
     public ChannelHandlerContext getConnectHanlerCtx() {
         return connectHanlerCtx;

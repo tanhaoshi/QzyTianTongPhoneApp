@@ -15,7 +15,6 @@ import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.tt.phone.data.impl.ITtPhoneCallStateLisenter;
 import com.qzy.tt.phone.netty.PhoneNettyManager;
-import com.qzy.tt.phone.netudp.NetUdpThread;
 import com.qzy.utils.LogUtils;
 import com.qzy.utils.ToastUtils;
 import com.socks.library.KLog;

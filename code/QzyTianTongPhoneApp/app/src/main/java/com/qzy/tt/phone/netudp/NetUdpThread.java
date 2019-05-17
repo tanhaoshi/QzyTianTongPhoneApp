@@ -18,6 +18,8 @@ public class NetUdpThread extends Thread {
 
      private IUdpListener mListener;
 
+     private boolean isReconnected = false;
+
     public NetUdpThread(int port) {
         this.port = port;
     }
@@ -39,8 +41,10 @@ public class NetUdpThread extends Thread {
         while (true) {
             ds.receive(packet);
             String s = new String(packet.getData(), 0, packet.getLength());
+            ///192.168.43.1:45860    →    all client connect me
             LogUtils.e(packet.getAddress() + ":" + packet.getPort() + "    →    " + s);
-            if("all client connect me".equals(s) && mListener != null){
+            if("all client connect me".equals(s) && mListener != null && !isReconnected){
+                isReconnected = true;
                 mListener.onConnectStateMsg();
             }
         }
@@ -59,6 +63,14 @@ public class NetUdpThread extends Thread {
 
     public void setmListener(IUdpListener mListener) {
         this.mListener = mListener;
+    }
+
+    public boolean isReconnected() {
+        return isReconnected;
+    }
+
+    public void setReconnected(boolean reconnected) {
+        isReconnected = reconnected;
     }
 
     public interface IUdpListener{

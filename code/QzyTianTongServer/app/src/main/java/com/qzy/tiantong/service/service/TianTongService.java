@@ -2,6 +2,7 @@ package com.qzy.tiantong.service.service;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,9 @@ import android.os.PowerManager;
 import com.qzy.tiantong.lib.service.CancelNoticeService;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.R;
+import com.qzy.tiantong.service.utils.CrashHandler;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public class TianTongService extends Service {
@@ -47,11 +51,20 @@ public class TianTongService extends Service {
             startForeground(CancelNoticeService.NOTICE_ID, new Notification());
         }
     }
-
+    private PendingIntent restartIntent;
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // 如果Service被终止
         // 当资源允许情况下，重启service
+        CrashHandler.CrashUploader crashUploader = new CrashHandler.CrashUploader() {
+
+            @Override
+            public void uploadCrashMessage(ConcurrentHashMap<String, Object> info) {
+            }
+        };
+        //默認調用false false為我們自定義的捕捉異常
+        CrashHandler.getInstance().init(this, crashUploader, restartIntent,false);
+
         return START_STICKY;
     }
 

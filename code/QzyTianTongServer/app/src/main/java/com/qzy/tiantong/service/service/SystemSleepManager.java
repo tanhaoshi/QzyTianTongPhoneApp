@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.os.RemoteException;
 import android.os.SystemClock;
@@ -23,6 +25,7 @@ import com.qzy.tiantong.service.netudp.NetUdpThread;
 import com.qzy.tiantong.service.phone.PhoneClientManager;
 import com.qzy.tiantong.service.phone.data.ClientInfoBean;
 import com.qzy.tiantong.service.utils.AppUtils;
+import com.qzy.tiantong.service.utils.ComUtil;
 import com.qzy.tiantong.service.utils.Constant;
 import com.qzy.tiantong.service.utils.SPUtils;
 import com.qzy.tt.data.CallPhoneStateProtos;
@@ -38,7 +41,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 //修改时间 4月13号 18：49
-public final class SystemSleepManager {
+public class SystemSleepManager {
 
     private static final String COM_QZY_SLEEP_RK = "com.qzy.sleepRK";
 
@@ -369,31 +372,37 @@ public final class SystemSleepManager {
      */
 
     public void callConnectAllClient() {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    Thread.sleep(1000);
-//                    new NetUdpThread(8991).send("all client connect me", 8991);
-//                    Thread.sleep(2000);
-//                    new NetUdpThread(8991).send("all client connect me", 8991);
-//                    Thread.sleep(2000);
-//                    new NetUdpThread(8991).send("all client connect me", 8991);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
-        Integer count = (Integer) SPUtils.getShare
-                (mContext,Constant.CONNECT_COUNT,0);
-        LogUtils.i("wake up system connect count = " + count);
-        ConcurrentHashMap concurrentHashMap =
-                PhoneClientManager.getInstance().getmHaspMapPhoneClient();
-        LogUtils.i("wake up the map save connect size = " + concurrentHashMap.size());
-//
-        MultiServerSocket multiServerSocket = MultiServerSocket.getInstance();
-        multiServerSocket.init();
-        multiServerSocket.sendData();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                    new NetUdpThread(8991).send("all client connect me", 8991);
+                    Thread.sleep(2000);
+                    new NetUdpThread(8991).send("all client connect me", 8991);
+                    Thread.sleep(2000);
+                    new NetUdpThread(8991).send("all client connect me", 8991);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+//        Integer count = (Integer) SPUtils.getShare
+//                (mContext,Constant.CONNECT_COUNT,0);
+//        LogUtils.i("wake up system connect count = " + count);
+//        ConcurrentHashMap concurrentHashMap =
+//                PhoneClientManager.getInstance().getmHaspMapPhoneClient();
+//        LogUtils.i("wake up the map save connect size = " + concurrentHashMap.size());
+////
+//        MultiServerSocket multiServerSocket = MultiServerSocket.getInstance();
+//        multiServerSocket.init();
+//        multiServerSocket.sendData();
+//        try {
+//            byte[] buf = MultiServerSocket.WAKE_UP_FLAG.getBytes();
+//            new ComUtil(new Handler(Looper.getMainLooper())).broadCast(buf);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**
