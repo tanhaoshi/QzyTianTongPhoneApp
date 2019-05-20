@@ -96,7 +96,7 @@ public class CmdHandler {
      * @param protoId
      * @param inputStream
      */
-    private CallPhoneStateProtos.CallPhoneState.PhoneState currentPhoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL;
+    private volatile CallPhoneStateProtos.CallPhoneState.PhoneState currentPhoneState;
 
     private void handProcessCmd(int protoId, ByteBufInputStream inputStream) {
         final PhoneDataBean phoneDataBean = new PhoneDataBean(protoId, inputStream);
@@ -246,7 +246,6 @@ public class CmdHandler {
     public void checkChannelBeat(TtPhoneConnectBeatProtos.TtPhoneConnectBeat ttPhoneConnectBeat ){
         KLog.i("check Channel beat ");
         if(ttPhoneConnectBeat.getIsConnect() && ttPhoneConnectBeat.getResponse()){
-            //返回了心跳,我需要告诉multisocket 不用重连;
             KLog.i(" call back phone netty ");
             mCheckBeatListener.checkBeatState(true);
         }
@@ -281,18 +280,25 @@ public class CmdHandler {
      * @param protoId
      * @param callPhoneState
      */
-    private void pasreCallPhoneState(int protoId, CallPhoneStateProtos.CallPhoneState callPhoneState) {
-        CallPhoneStateProtos.CallPhoneState.PhoneState state = callPhoneState.getPhoneState();
+    private Object object = new Object();
 
-        if (currentPhoneState != state) { // 与上次的状态不同才改变
-            LogUtils.i("currentPhoneState = " + currentPhoneState.ordinal() + "    state = " + state.ordinal());
-            currentPhoneState = state;
-            if (state == CallPhoneStateProtos.CallPhoneState.PhoneState.INCOMING) {
-                incommingState(callPhoneState.getPhoneNumber());
-            } else {
-                // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_STATE,protoId, callPhoneState);
-                if (mAllDataListener != null) {
-                    mAllDataListener.onTtPhoneCallState(PhoneCmd.getPhoneCmd(protoId, callPhoneState));
+    private void pasreCallPhoneState(int protoId, CallPhoneStateProtos.CallPhoneState callPhoneState) {
+        synchronized (object){
+            CallPhoneStateProtos.CallPhoneState.PhoneState state = callPhoneState.getPhoneState();
+
+            if (currentPhoneState != state) { // 与上次的状态不同才改变
+                LogUtils.i("currentPhoneState = " + currentPhoneState.ordinal() + "    state = " + state.ordinal());
+                currentPhoneState = state;
+                if (state == CallPhoneStateProtos.CallPhoneState.PhoneState.INCOMING) {
+                    incommingState(callPhoneState.getPhoneNumber());
+                } else if(state == CallPhoneStateProtos.CallPhoneState.PhoneState.UNRECOGNIZED){
+                    if(mAllDataListener != null){
+                        mAllDataListener.selectCureenPhoneState(callPhoneState.getPhoneState());
+                    }
+                }else{
+                    if (mAllDataListener != null) {
+                        mAllDataListener.onTtPhoneCallState(PhoneCmd.getPhoneCmd(protoId, callPhoneState));
+                    }
                 }
             }
         }

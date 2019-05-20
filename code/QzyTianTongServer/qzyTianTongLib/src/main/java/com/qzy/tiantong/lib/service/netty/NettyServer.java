@@ -87,7 +87,7 @@ public class NettyServer {
            /* ch.pipeline().addLast(new ProtobufVarint32FrameDecoder());
             ch.pipeline().addLast(new ProtobufVarint32LengthFieldPrepender());
             ch.pipeline().addLast(new ProtobufEncoder());*/
-            ch.pipeline().addLast(new IdleStateHandler(5, 5, 5, TimeUnit.SECONDS));
+            //ch.pipeline().addLast(new IdleStateHandler(5, 5, 5, TimeUnit.SECONDS));
             ch.pipeline().addLast(new ChannelHander());
             ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE,4,4,-8,0));
         }
@@ -176,8 +176,8 @@ public class NettyServer {
             if(channel.isActive()) ctx.close();
         }
 
-        @Override
-        public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+//        @Override
+//        public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
 //            if (IdleStateEvent.class.isAssignableFrom(evt.getClass())) {
 //                IdleStateEvent event = (IdleStateEvent) evt;
 //                if (event.state() == IdleState.READER_IDLE) {
@@ -190,7 +190,7 @@ public class NettyServer {
 //                }else{
 //                    LogUtils.i("ths writer and read is idle ");
 //                }
-        }
+//        }
     }
 
     public void stopServer() {

@@ -51,7 +51,7 @@ public abstract class BaseActivity<M extends BaseView> extends AppCompatActivity
 
     public boolean tt_status = false;
     public boolean tt_beidou_status = false;
-    public boolean tt_call_status = false;
+    public volatile boolean tt_call_status = false;
     public boolean tt_isSim = false;
     public boolean tt_isSignal = false;
     public int tt_baterly = 0;

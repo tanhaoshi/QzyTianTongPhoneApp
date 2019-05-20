@@ -2,6 +2,7 @@ package com.qzy.tt.phone.data.impl;
 
 import com.google.protobuf.GeneratedMessageV3;
 import com.qzy.data.PhoneCmd;
+import com.qzy.tt.data.CallPhoneStateProtos;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
@@ -63,4 +64,6 @@ public interface IAllTtPhoneDataListener {
 
     void onUpdatePercent(Integer percent);
 
+    //查询电话状态
+    void selectCureenPhoneState(CallPhoneStateProtos.CallPhoneState.PhoneState phoneState);
 }

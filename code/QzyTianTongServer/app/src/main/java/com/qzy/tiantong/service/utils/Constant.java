@@ -14,4 +14,6 @@ public interface Constant {
 
    String CONNECT_COUNT = "CONNECT_FLAG";
 
+   String TIANTONG_MODULE_VERSION = "MODULE_VERSION";
+
 }

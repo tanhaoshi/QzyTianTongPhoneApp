@@ -177,8 +177,8 @@ public class SystemSleepManager {
                     ConcurrentHashMap concurrentHashMap =
                             PhoneClientManager.getInstance().getmHaspMapPhoneClient();
                     AppUtils.requireNonNull(concurrentHashMap);
-                    LogUtils.i("before sleep system to look at connect size = " +
-                    concurrentHashMap.size());
+                    callConnectAllClientDisconnected();
+                    LogUtils.i("before sleep system to look at connect size = " + concurrentHashMap.size());
 
                     SPUtils.putShare(mContext, Constant.CONNECT_COUNT,concurrentHashMap.size());
 
@@ -376,12 +376,12 @@ public class SystemSleepManager {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(3000);
+                    new NetUdpThread(8991).send("all client connect me", 8991);
+                  /*  Thread.sleep(2000);
                     new NetUdpThread(8991).send("all client connect me", 8991);
                     Thread.sleep(2000);
-                    new NetUdpThread(8991).send("all client connect me", 8991);
-                    Thread.sleep(2000);
-                    new NetUdpThread(8991).send("all client connect me", 8991);
+                    new NetUdpThread(8991).send("all client connect me", 8991);*/
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -403,6 +403,27 @@ public class SystemSleepManager {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
+    }
+
+
+    /**
+     * 休眠前消息
+     */
+    public void callConnectAllClientDisconnected() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    new NetUdpThread(8991).send("all client connect sleep", 8991);
+                  /*  Thread.sleep(2000);
+                    new NetUdpThread(8991).send("all client connect me", 8991);
+                    Thread.sleep(2000);
+                    new NetUdpThread(8991).send("all client connect me", 8991);*/
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     /**

@@ -46,7 +46,7 @@ public class NetUdpThread extends Thread {
         DatagramPacket dp = new DatagramPacket(msg.getBytes(), msg.getBytes().length,InetAddress.getByName("192.168.43.255"), port);
         ds.send(dp);
         ds.close();
-        LogUtils.d("all client connect me");
+        LogUtils.d(msg);
     }
 
 

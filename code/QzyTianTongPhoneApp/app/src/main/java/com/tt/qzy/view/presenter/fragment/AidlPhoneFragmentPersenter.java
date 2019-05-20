@@ -10,9 +10,11 @@ import com.alibaba.fastjson.JSON;
 import com.qzy.data.PhoneCmd;
 
 import com.qzy.tt.data.CallPhoneBackProtos;
+import com.qzy.tt.data.CallPhoneStateProtos;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
+import com.qzy.tt.phone.data.impl.IPhoneStateListener;
 import com.socks.library.KLog;
 import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
@@ -54,7 +56,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by yj.zhang on 2018/9/17.
  */
 
-public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView> {
+public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView> implements IPhoneStateListener{
 
     private Context mContext;
 
@@ -68,7 +70,6 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView> {
 
     public AidlPhoneFragmentPersenter(Context context) {
         mContext = context;
-        //EventBus.getDefault().register(this);
         registerReceiver();
     }
 
@@ -113,6 +114,13 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView> {
      */
     private void dialPhoneToServer(String phoneMumber) {
         TtPhoneDataManager.getInstance().dialTtPhone(phoneMumber);
+    }
+
+    /**
+     *获取当前 电话状态
+     */
+    public void getCureentPhoneStateImpl(){
+        TtPhoneDataManager.getInstance().selectCureentPhoneState();
     }
 
     public String getPhoneKeyForName(String phone) {
@@ -331,9 +339,6 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView> {
 
         protobufMessageModel.setDelete(true);
 
-       /* EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.
-                EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_DELETE_SIGNAL_MESSAFGE
-                ,protobufMessageModel));*/
         TtPhoneDataManager.getInstance().deleteDeviceCallRecord(protobufMessageModel);
 
         CallRecordManager.getInstance(mContext).deleteRecordList();
@@ -358,7 +363,10 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView> {
     public void release() {
 
         unregisterReceiver();
-        //EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    public void selectPhoneState(CallPhoneStateProtos.CallPhoneState.PhoneState phoneState) {
+        mView.get().getCureentPhoneState(phoneState);
+    }
 }

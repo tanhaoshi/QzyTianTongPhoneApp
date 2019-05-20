@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.qzy.phone.pcm.AllLocalPcmManager;
+import com.qzy.tt.data.CallPhoneStateProtos;
+import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
 import com.socks.library.KLog;
@@ -196,6 +198,7 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
 
     @Override
     public void inputString(final String diapadNumber) {
+        phoneNumber = diapadNumber;
         if(mPersenter.checkShowSignal(getActivity(),diapadNumber)){ myInputPwdUtil.dismiss(); return;}
         MainActivity mainActivity = (MainActivity) getActivity();
         if(!mainActivity.isCallStatus()){
@@ -205,13 +208,15 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
                 NToast.shortToast(getActivity(),"设备未入网,请先入网!");
             }
         }else{
-            NToast.shortToast(getActivity(),getString(R.string.TMT_be_occupied));
+            mPersenter.getCureentPhoneStateImpl();
         }
         myInputPwdUtil.dismiss();
     }
 
+    private String phoneNumber = "";
     @Override
     public void onClick(int position,final String diapadNumber) {
+        phoneNumber = diapadNumber;
         if(mPersenter.checkShowSignal(getActivity(),diapadNumber)) return;
         MainActivity mainActivity = (MainActivity) getActivity();
         if(!mainActivity.isCallStatus()){
@@ -221,7 +226,7 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
                 NToast.shortToast(getActivity(),"设备未入网,请先入网!");
             }
         }else{
-            NToast.shortToast(getActivity(),getString(R.string.TMT_be_occupied));
+            mPersenter.getCureentPhoneStateImpl();
         }
     }
 
@@ -269,6 +274,22 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     public void loadMore(List<CallRecordDao> list) {
         this.mModelList = list;
         mCallRecordAdapter.setData(list);
+    }
+
+    @Override
+    public void getCureentPhoneState(CallPhoneStateProtos.CallPhoneState.PhoneState phoneState) {
+        if (phoneState != CallPhoneStateProtos.CallPhoneState.PhoneState.CALL &&
+                phoneState != CallPhoneStateProtos.CallPhoneState.PhoneState.INCOMING &&
+                phoneState != CallPhoneStateProtos.CallPhoneState.PhoneState.RING) {
+            MainActivity mainActivity = (MainActivity) getActivity();
+                if (mainActivity.tt_isSignal) {
+                    mPersenter.dialPhone(phoneNumber);
+                } else {
+                    NToast.shortToast(getActivity(), "设备未入网,请先入网!");
+                }
+            } else {
+                NToast.shortToast(getActivity(), getString(R.string.TMT_be_occupied));
+            }
     }
 
     @Override

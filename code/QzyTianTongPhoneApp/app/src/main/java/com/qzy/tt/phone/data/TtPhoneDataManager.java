@@ -4,12 +4,14 @@ import android.content.Context;
 
 import com.google.protobuf.GeneratedMessageV3;
 import com.qzy.data.PhoneCmd;
+import com.qzy.tt.data.CallPhoneStateProtos;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtPhoneUpdateResponseProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.phone.data.impl.IAllTtPhoneDataListener;
 import com.qzy.tt.phone.data.impl.IMainAboutListener;
 import com.qzy.tt.phone.data.impl.IMainFragment;
+import com.qzy.tt.phone.data.impl.IPhoneStateListener;
 import com.qzy.tt.phone.data.impl.ISendShortMessage;
 import com.qzy.tt.phone.data.impl.ITtPhoneCallStateBackListener;
 import com.qzy.tt.phone.data.impl.ITtPhoneCallStateLisenter;
@@ -76,6 +78,9 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     //短信发送状态回调
     private ISendShortMessage iSendShortMessage;
+
+    //查询当前电话状态回调
+    private IPhoneStateListener mIPhoneStateListener;
 
     public static TtPhoneDataManager getInstance() {
         if (instance == null) {
@@ -264,6 +269,13 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
             @Override
             public void onUpdatePercent(Integer percent) {
                 iMainFragment.updatePercent(percent);
+            }
+
+            @Override
+            public void selectCureenPhoneState(CallPhoneStateProtos.CallPhoneState.PhoneState phoneState) {
+                if(mIPhoneStateListener != null){
+                    mIPhoneStateListener.selectPhoneState(phoneState);
+                }
             }
 
             @Override
@@ -482,6 +494,13 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
             phoneNettyManager.dialPhone(phoneNumber);
         }
 
+    }
+
+    @Override
+    public void selectCureentPhoneState() {
+        if(phoneNettyManager != null){
+            phoneNettyManager.selectPhoneState();
+        }
     }
 
     @Override

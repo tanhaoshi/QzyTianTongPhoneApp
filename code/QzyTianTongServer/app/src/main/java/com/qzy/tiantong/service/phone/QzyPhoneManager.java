@@ -42,6 +42,8 @@ public class QzyPhoneManager {
     private ITianTongServer mServer;
     private int mstate;
 
+    //存储天通模块版本
+
     public AtCommandToolManager mAtCommandToolManager;
 
 
@@ -56,9 +58,7 @@ public class QzyPhoneManager {
             public void onResult(String cmd, String result) {
                 if(cmd.equals(AtCommandTools.AT_COMMAND_VERSION)){
                     AppUtils.requireNonNull(mServer.getPhoneNettyManager());
-                    mServer.getPhoneNettyManager().sendServerVersion(
-                            mServer.getPhoneNettyManager().mTtPhoneGetServerVersion
-                    ,result);
+                    mServer.getPhoneNettyManager().saveServerVersion(result);
                 }
             }
         });
@@ -246,6 +246,11 @@ public class QzyPhoneManager {
         }
     }
 
+    private volatile TtPhoneState ttPhoneState;
+
+    public void getCureentPhoneState(){
+        mServer.getPhoneNettyManager().updateTtCallPhoneState(ttPhoneState,"");
+    }
 
     //电话状态监听
     public class MyTelephoneListener extends PhoneStateListener {
@@ -262,18 +267,25 @@ public class QzyPhoneManager {
                     LogUtils.e("=====RINGING :" + mIncomingNumber + "=========");
                     //mServer.initTtPcmDevice();
                     mServer.onPhoneIncoming(TtPhoneState.INCOMING, mIncomingNumber);
+                    ttPhoneState = TtPhoneState.INCOMING;
                     break;
                 case TelephonyManager.CALL_STATE_OFFHOOK:
                     LogUtils.e("======get call 1111  RING ======== ");
 //                    mServer.onPhoneStateChange(TtPhoneState.RING);
+                    ttPhoneState = TtPhoneState.RING;
                     break;
                 case TelephonyManager.CALL_STATE_IDLE:
                     LogUtils.e("========hung up=======");
                     //mServer.closeRecorderAndPlayer();
                     mServer.freeTtPcmDevice();
                     mServer.onPhoneStateChange(TtPhoneState.HUANGUP);
+                    ttPhoneState = TtPhoneState.HUANGUP;
                     //挂断状态
                     break;
+                    default:
+                        LogUtils.i("phone state default ");
+                        ttPhoneState = TtPhoneState.NOCALL;
+                        break;
             }
         }
 
@@ -281,38 +293,6 @@ public class QzyPhoneManager {
         @Override
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
             super.onSignalStrengthsChanged(signalStrength);
-            //获取网络信号强度
-            //获取0-4的5种信号级别，越大信号越好,但是api23开始才能用
-            //            int level = signalStrength.getLevel();
-
-//            LogUtils.e("onSignalStrengthsChanged = " + signalStrength.getGsmSignalStrength());
-//
-//            int gsmSignalStrength = signalStrength.getGsmSignalStrength();
-//            //获取网络类型
-//            int netWorkType = PhoneUtils.getNetWorkType(mContext);
-//
-//            switch (netWorkType) {
-//                case PhoneUtils.NETWORKTYPE_WIFI:
-//                    LogUtils.e("network type wifi,signaleS = " + gsmSignalStrength);
-//                    break;
-//                case PhoneUtils.NETWORKTYPE_2G:
-//                    LogUtils.e("network type 2G,signaleS = " + gsmSignalStrength);
-//                    break;
-//                case PhoneUtils.NETWORKTYPE_4G:
-//                    LogUtils.e("network type 4G,signaleS = " + gsmSignalStrength);
-//                    break;
-//                case PhoneUtils.NETWORKTYPE_NONE:
-//                    LogUtils.e("network type none,signaleS = " + gsmSignalStrength);
-//                    mServer.onPhoneSignalStrengthChange(gsmSignalStrength);
-//                    //先去掉模块休眠的功能
-//                    if (mServer != null) {
-//                        mServer.getSystemSleepManager().controlSignalStrength(gsmSignalStrength);
-//                    }
-//                    break;
-//                case -1:
-//                    LogUtils.e("network type -1,signaleS = " + gsmSignalStrength);
-//                    break;
-//            }
         }
 
         @Override

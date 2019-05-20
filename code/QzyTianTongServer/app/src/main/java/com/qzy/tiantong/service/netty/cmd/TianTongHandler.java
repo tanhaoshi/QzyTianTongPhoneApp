@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
 
+import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.phone.TtPhoneSystemanager;
 import com.qzy.tiantong.service.service.ITianTongServer;
 import com.qzy.tt.data.CallPhoneProtos;
@@ -61,6 +62,9 @@ public class TianTongHandler {
                             mServer.getQzyPhoneManager().hangupPhone(callPhone.getIp());
                         } else if (callPhone.getPhonecommand() == CallPhoneProtos.CallPhone.PhoneCommand.ACCEPTCALL) {
                             mServer.getQzyPhoneManager().acceptCalling(callPhone.getIp());
+                        }else if(callPhone.getPhonecommand() == CallPhoneProtos.CallPhone.PhoneCommand.UNRECOGNIZED){
+                            LogUtils.i("The device was used ");
+                            mServer.getQzyPhoneManager().getCureentPhoneState();
                         }
                     }
                     break;

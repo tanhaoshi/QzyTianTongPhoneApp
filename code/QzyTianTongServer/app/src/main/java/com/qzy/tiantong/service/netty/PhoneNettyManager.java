@@ -37,6 +37,7 @@ import com.qzy.tiantong.service.utils.Constant;
 import com.qzy.tiantong.service.utils.LedManager;
 import com.qzy.tiantong.service.utils.ModuleDormancyUtil;
 import com.qzy.tiantong.service.utils.PhoneUtils;
+import com.qzy.tiantong.service.utils.SPUtils;
 import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.CallPhoneStateProtos;
 import com.qzy.tt.data.TimerSendProtos;
@@ -156,9 +157,7 @@ public class PhoneNettyManager implements IMobileDataManager {
                     initCallingTimer();
                     break;
             }
-
         }
-
     };
 
     private CountDownTimer countDownTimer;
@@ -261,7 +260,6 @@ public class PhoneNettyManager implements IMobileDataManager {
                 e.printStackTrace();
             }
         }
-
     }
 
     /**
@@ -320,40 +318,47 @@ public class PhoneNettyManager implements IMobileDataManager {
 
     public TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion mTtPhoneGetServerVersion;
 
+
+
     /**
-     * 返回版本号信息给app
+     * 返回版本号信息给appFF
      *
      * @param ttPhoneGetServerVersion
      */
     public void getServerVerion(TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion ttPhoneGetServerVersion) {
         AppUtils.requireNonNull(mServer.getQzyPhoneManager().mAtCommandToolManager);
-        mServer.getQzyPhoneManager().mAtCommandToolManager.sendAtCommand(AtCommandTools.AT_COMMAND_VERSION);
-        this.mTtPhoneGetServerVersion = ttPhoneGetServerVersion;
-    }
-
-    public void sendServerVersion(TtPhoneGetServerVersionProtos
-                                          .TtPhoneGetServerVersion ttPhoneGetServerVersion
-                                 ,String moduleServer){
-        LogUtils.d("getServerVerion versionName ");
         try {
             if (checkNettManagerIsNull()) {
                 return;
             }
-            LogUtils.d("getServerVerion versionName ");
-            String versionName = BuildConfig.VERSION_NAME;
-            String sieralNo = QzySystemUtils.getSerialNumberCustom();
-            LogUtils.d(" ip = " + ttPhoneGetServerVersion.getIp() + " versionName = " + versionName + " sieralNo = " + sieralNo);
-            TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion ttPhoneGetServerVersion1 = TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion.newBuilder()
-                    .setIp(ttPhoneGetServerVersion.getIp())
-                    .setServerApkVersionName(versionName)
-                    .setServerSieralNo(sieralNo)
-                    .setTiantongModelVersion(moduleServer)
-                    .build();
+
+            if(mTtPhoneGetServerVersion == null || TextUtils.isEmpty(mTtPhoneGetServerVersion.getTiantongModelVersion())){
+                return;
+            }
+            LogUtils.d(" ip = " + mTtPhoneGetServerVersion.getIp() + " versionName = " + mTtPhoneGetServerVersion.getServerApkVersionName() + " sieralNo = " + mTtPhoneGetServerVersion.getServerSieralNo());
             mNettyServerManager.sendData(ttPhoneGetServerVersion.getIp(),
-                    PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.response_server_version_info, ttPhoneGetServerVersion1));
+                    PhoneCmd.getPhoneCmd(PrototocalTools.IProtoClientIndex.response_server_version_info, mTtPhoneGetServerVersion));
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 存储版本信息
+     * @param moduleServer
+     */
+    public void saveServerVersion(String moduleServer){
+        String versionName = BuildConfig.VERSION_NAME;
+        String sieralNo = QzySystemUtils.getSerialNumberCustom();
+
+
+        mTtPhoneGetServerVersion = TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion.newBuilder()
+                .setIp("192.168.43.1")
+                .setServerApkVersionName(versionName)
+                .setServerSieralNo(sieralNo)
+                .setTiantongModelVersion(moduleServer.trim())
+                .build();
+        LogUtils.d(" saveServerVersion ip = " + mTtPhoneGetServerVersion.getIp() + " versionName = " + mTtPhoneGetServerVersion.getServerApkVersionName() + " sieralNo = " + mTtPhoneGetServerVersion.getServerSieralNo());
     }
 
     /**
@@ -435,43 +440,46 @@ public class PhoneNettyManager implements IMobileDataManager {
         }
     }
 
+    private Object objects = new Object();
     /**
      * 更新电话状态
      *
      * @param state
      */
     public void updateTtCallPhoneState(TtPhoneState state, String phoneNumber) {
-        LogUtils.e("updateTtCallPhoneState " + state.ordinal());
-        CallPhoneStateProtos.CallPhoneState.PhoneState phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL;
+        synchronized (objects){
+            LogUtils.e("updateTtCallPhoneState " + state.ordinal());
+            CallPhoneStateProtos.CallPhoneState.PhoneState phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL;
 
-        if (state == TtPhoneState.NOCALL) {
-            phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL;
-            if (currentPhoneState != phoneState) {
-                PhoneClientManager.getInstance().setEndCallUser();
-                sendTtCallPhoneBackToClientTimer();
-            }
-        } else if (state == TtPhoneState.RING) {
-            phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.RING;
-        } else if (state == TtPhoneState.CALL) {
-            phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.CALL;
-            //处理同时接听电话,其他链接手机没有挂断Bug
+            if (state == TtPhoneState.NOCALL) {
+                phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.NOCALL;
+                if (currentPhoneState != phoneState) {
+                    PhoneClientManager.getInstance().setEndCallUser();
+                    sendTtCallPhoneBackToClientTimer();
+                }
+            } else if (state == TtPhoneState.RING) {
+                phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.RING;
+            } else if (state == TtPhoneState.CALL) {
+                phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.CALL;
+                //处理同时接听电话,其他链接手机没有挂断Bug
 //            disposeCallPhone();
-        } else if (state == TtPhoneState.HUANGUP) {
+            } else if (state == TtPhoneState.HUANGUP) {
 
-            phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.HUANGUP;
-            if (currentPhoneState != phoneState) {
-                PhoneClientManager.getInstance().setEndCallUser();
-                sendTtCallPhoneBackToClientTimer();
+                phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.HUANGUP;
+                if (currentPhoneState != phoneState) {
+                    PhoneClientManager.getInstance().setEndCallUser();
+                    sendTtCallPhoneBackToClientTimer();
+                }
+
+                mSmsPhoneManager.isKeyF2Incoming = false;
+
+            } else if (state == TtPhoneState.INCOMING) {
+                phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.INCOMING;
             }
-
-            mSmsPhoneManager.isKeyF2Incoming = false;
-
-        } else if (state == TtPhoneState.INCOMING) {
-            phoneState = CallPhoneStateProtos.CallPhoneState.PhoneState.INCOMING;
+            currentPhoneState = phoneState;
+            currentPhoneNumber = phoneNumber;
+            sendTtCallPhoneStateToClient(phoneState, phoneNumber);
         }
-        currentPhoneState = phoneState;
-        currentPhoneNumber = phoneNumber;
-        sendTtCallPhoneStateToClient(phoneState, phoneNumber);
     }
 
     /**
@@ -479,7 +487,7 @@ public class PhoneNettyManager implements IMobileDataManager {
      *
      * @param phoneState
      */
-    private synchronized void sendTtCallPhoneStateToClient(CallPhoneStateProtos.CallPhoneState.PhoneState phoneState, String phoneNumber) {
+    private void sendTtCallPhoneStateToClient(CallPhoneStateProtos.CallPhoneState.PhoneState phoneState, String phoneNumber) {
         if (checkNettManagerIsNull()) return;
         if (phoneNumber == null) {
             phoneNumber = "13352528585";
@@ -600,7 +608,7 @@ public class PhoneNettyManager implements IMobileDataManager {
         if(dsoc<13){
             real_soc = dsoc/4;
         }else {
-            real_soc = 3 + (dsoc-12)*97/86;
+            real_soc = 3 + (dsoc-12)*97/83;
         }
 
         if(real_soc > 100){
@@ -629,6 +637,9 @@ public class PhoneNettyManager implements IMobileDataManager {
         }
         if (hasSim) {
                 //Netled.setNetledState(true);
+            if(mTtPhoneGetServerVersion == null || TextUtils.isEmpty(mTtPhoneGetServerVersion.getTiantongModelVersion())) {
+                mServer.getQzyPhoneManager().mAtCommandToolManager.sendAtCommand(AtCommandTools.AT_COMMAND_VERSION);
+            }
             controlSignal(currentSignalValue); // 检测卡的状态来控制灯的闪烁
         } else {
                 //未检测到卡,下面应该常亮亮蓝灯

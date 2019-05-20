@@ -44,7 +44,9 @@ import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.bean.WifiSettingModel;
 import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.Constans;
+import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.SPUtils;
+import com.tt.qzy.view.utils.ToastUtil;
 
 
 import java.io.File;
@@ -156,6 +158,7 @@ public class PhoneNettyManager {
                     public void onNext(Boolean aBoolean) {
                         if (isBeatState) {
                             isBeatState = false;
+                            isUdpHandlerConnect = false;
                             KLog.i("return");
                             return;
                         } else {
@@ -210,6 +213,21 @@ public class PhoneNettyManager {
                 }
             }, 6000);
         }
+
+        @Override
+        public void onConnectSleep() {
+
+        }
+
+        @Override
+        public void onMsg(final String msg) {
+           /* mhandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    NToast.longToast(mContext.getApplicationContext(),"udp =======" + msg);
+                }
+            });*/
+        }
     };
 
     /**
@@ -251,6 +269,17 @@ public class PhoneNettyManager {
                 .setIp(CommonData.getInstance().getLocalWifiIp())
                 .setPhoneNumber(phoneNumber)
                 .setPhonecommand(CallPhoneProtos.CallPhone.PhoneCommand.CALL)
+                .build();
+        sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.call_phone, callPhone));
+    }
+
+    /**
+     * 查询当前电话状态
+     */
+    public void selectPhoneState(){
+        CallPhoneProtos.CallPhone callPhone = CallPhoneProtos.CallPhone.newBuilder()
+                .setIp(CommonData.getInstance().getLocalWifiIp())
+                .setPhonecommand(CallPhoneProtos.CallPhone.PhoneCommand.UNRECOGNIZED)
                 .build();
         sendPhoneCmd(PhoneCmd.getPhoneCmd(PrototocalTools.IProtoServerIndex.call_phone, callPhone));
     }

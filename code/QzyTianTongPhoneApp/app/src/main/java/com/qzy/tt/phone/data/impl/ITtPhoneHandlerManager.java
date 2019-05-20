@@ -54,6 +54,8 @@ public interface ITtPhoneHandlerManager {
 
     //拨打电话
     void dialTtPhone(String phoneNumber);
+    //查询当前电话状态
+    void selectCureentPhoneState();
 
     //挂断电话
     void hangupTtPhone();
