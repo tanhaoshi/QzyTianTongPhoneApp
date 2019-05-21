@@ -43,6 +43,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 public class TellPhoneIncomingActivity extends AppCompatActivity {
 
@@ -273,7 +276,14 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
           /*  EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_RECORD_CALL_HISTROY
                     ,Integer.valueOf(recordCount)));*/
 
-          TtPhoneDataManager.getInstance().getISyncDataListener("MainActivityPresenter").onCallingLogSyncFinish(Integer.valueOf(recordCount));
+            Flowable.just(recordCount)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<Integer>() {
+                        @Override
+                        public void accept(Integer integer) throws Exception {
+                            TtPhoneDataManager.getInstance().getISyncDataListener("MainActivityPresenter").onCallingLogSyncFinish(Integer.valueOf(integer.intValue()));
+                        }
+                    });
 
             isAlert = false;
         }

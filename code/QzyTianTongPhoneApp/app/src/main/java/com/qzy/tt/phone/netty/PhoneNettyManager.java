@@ -682,7 +682,7 @@ public class PhoneNettyManager {
         @Override
         public void onReceiveData(final ByteBufInputStream inputStream) {
             if (mCmdHandler != null) {
-                Flowable.create(new FlowableOnSubscribe<ByteBufInputStream>() {
+               /* Flowable.create(new FlowableOnSubscribe<ByteBufInputStream>() {
                     @Override
                     public void subscribe(FlowableEmitter<ByteBufInputStream> flowableEmitter) throws Exception {
                         flowableEmitter.onNext(inputStream);
@@ -693,9 +693,10 @@ public class PhoneNettyManager {
                         .subscribe(new Consumer<ByteBufInputStream>() {
                             @Override
                             public void accept(ByteBufInputStream byteBufInputStream) throws Exception {
-                                mCmdHandler.handlerCmd(byteBufInputStream);
+
                             }
-                        });
+                        });*/
+                mCmdHandler.handlerCmd(inputStream);
             }
         }
 

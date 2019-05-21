@@ -31,12 +31,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * 数据管理类
@@ -131,35 +133,14 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
         phoneNettyManager.getmCmdHandler().setmAllDataListener(new IAllTtPhoneDataListener() {
             @Override
             public void isTtServerConnected(final boolean connected) {
-                Observable.create(new ObservableOnSubscribe<Boolean>() {
-                    @Override
-                    public void subscribe(ObservableEmitter<Boolean> observableEmitter) throws Exception {
-                        observableEmitter.onNext(connected);
-                    }
-                })
+                Flowable.just(connected)
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<Boolean>() {
+                        .subscribe(new Consumer<Boolean>() {
                             @Override
-                            public void onSubscribe(Disposable disposable) {
-
-                            }
-
-                            @Override
-                            public void onNext(Boolean aBoolean) {
+                            public void accept(Boolean aBoolean) throws Exception {
                                 if (iMainFragment != null) {
                                     iMainFragment.isTtServerConnected(aBoolean);
                                 }
-
-                            }
-
-                            @Override
-                            public void onError(Throwable throwable) {
-
-                            }
-
-                            @Override
-                            public void onComplete() {
-
                             }
                         });
                 if (mSyncManager != null && !connected) {
@@ -169,9 +150,20 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
             }
 
             @Override
-            public void isTtSignalStrength(int signalLevel,int signalDbm) {
+            public void isTtSignalStrength(int signalLevel, int signalDbm) {
                 if (iTtPhoneDataListener != null) {
-                    iTtPhoneDataListener.isTtSignalStrength(signalLevel,signalDbm);
+                    int[] array = new int[2];
+                    array[0] = signalLevel;
+                    array[1] = signalDbm;
+                    Flowable.just(array)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Consumer<int[]>() {
+                                @Override
+                                public void accept(int[] ints) throws Exception {
+                                    iTtPhoneDataListener.isTtSignalStrength(ints[0], ints[1]);
+                                }
+                            });
+
                 }
 
             }
@@ -179,28 +171,60 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
             @Override
             public void isTtSimCard(boolean isIn) {
                 if (iTtPhoneDataListener != null) {
-                    iTtPhoneDataListener.isTtSimCard(isIn);
+                    Flowable.just(isIn)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Consumer<Boolean>() {
+                                @Override
+                                public void accept(Boolean aBoolean) throws Exception {
+                                    iTtPhoneDataListener.isTtSimCard(aBoolean);
+                                }
+                            });
                 }
             }
 
             @Override
             public void isTtPhoneBattery(int level, int scal) {
                 if (iTtPhoneDataListener != null) {
-                    iTtPhoneDataListener.isTtPhoneBattery(level, scal);
+                    int[] array = new int[2];
+                    array[0] = level;
+                    array[1] = scal;
+                    Flowable.just(array)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Consumer<int[]>() {
+                                @Override
+                                public void accept(int[] ints) throws Exception {
+                                    iTtPhoneDataListener.isTtPhoneBattery(ints[0], ints[1]);
+                                }
+                            });
                 }
             }
 
             @Override
             public void isTtPhoneGpsPositon(PhoneCmd phoneCmd) {
                 if (iMainFragment != null) {
-                    iMainFragment.isTtPhoneGpsPosition(phoneCmd);
+                    Flowable.just(phoneCmd)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Consumer<PhoneCmd>() {
+                                @Override
+                                public void accept(PhoneCmd phoneCmd) throws Exception {
+                                    iMainFragment.isTtPhoneGpsPosition(phoneCmd);
+                                }
+                            });
                 }
             }
 
             @Override
             public void isTtPhoneServerVersion(PhoneCmd phoneCmd) {
                 if (mIMainAboutListener != null) {
-                    mIMainAboutListener.getServerVersion(phoneCmd);
+                    Flowable.just(phoneCmd)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Consumer<PhoneCmd>() {
+                                @Override
+                                public void accept(PhoneCmd phoneCmd) throws Exception {
+                                    mIMainAboutListener.getServerVersion(phoneCmd);
+                                }
+                            });
+
                 }
             }
 
@@ -255,42 +279,109 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
             @Override
             public void onServerTtPhoneSosState(PhoneCmd phoneCmd) {
                 if (iMainFragment != null) {
-                    iMainFragment.isServerSosStatus(phoneCmd);
+                    Flowable.just(phoneCmd)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Consumer<PhoneCmd>() {
+                                @Override
+                                public void accept(PhoneCmd phoneCmd) throws Exception {
+                                    iMainFragment.isServerSosStatus(phoneCmd);
+                                }
+                            });
+
                 }
             }
 
             @Override
             public void onServerTtPhoneSmsSendState(PhoneCmd phoneCmd) {
                 if (iSendShortMessage != null) {
-                    iSendShortMessage.isSendShotMessageStatus(phoneCmd);
+                    Flowable.just(phoneCmd)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Consumer<PhoneCmd>() {
+                                @Override
+                                public void accept(PhoneCmd phoneCmd) throws Exception {
+                                    iSendShortMessage.isSendShotMessageStatus(phoneCmd);
+                                }
+                            });
+
                 }
             }
 
             @Override
             public void onUpdatePercent(Integer percent) {
-                iMainFragment.updatePercent(percent);
+                if(iMainFragment != null){
+                    Flowable.just(percent)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Consumer<Integer>() {
+                                @Override
+                                public void accept(Integer integer) throws Exception {
+                                    iMainFragment.updatePercent(integer);
+                                }
+                            });
+                }
+
             }
 
             @Override
             public void selectCureenPhoneState(CallPhoneStateProtos.CallPhoneState.PhoneState phoneState) {
-                if(mIPhoneStateListener != null){
-                    mIPhoneStateListener.selectPhoneState(phoneState);
+                if (mIPhoneStateListener != null) {
+                    Flowable.just(phoneState)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Consumer<CallPhoneStateProtos.CallPhoneState.PhoneState>() {
+                                @Override
+                                public void accept(CallPhoneStateProtos.CallPhoneState.PhoneState phoneState) throws Exception {
+                                    mIPhoneStateListener.selectPhoneState(phoneState);
+                                }
+                            });
+
                 }
             }
 
             @Override
             public void IsServerUpdate(Object o) {
-               iMainFragment.isUpdateServer(o);
+                if(iMainFragment != null){
+                    Flowable.just(o)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Consumer<Object>() {
+                                @Override
+                                public void accept(Object o) throws Exception {
+                                    iMainFragment.isUpdateServer(o);
+                                }
+                            });
+
+                }
+
             }
 
             @Override
             public void updateError(Object o) {
-                iMainFragment.serverUpdateError(o);
+                if(iMainFragment != null){
+                    Flowable.just(o)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Consumer<Object>() {
+                                @Override
+                                public void accept(Object o) throws Exception {
+                                    iMainFragment.serverUpdateError(o);
+                                }
+                            });
+
+                }
+
             }
 
             @Override
             public void updateServerSucceed(Object o) {
-                iMainFragment.updateServerSucceed(o);
+                if(iMainFragment != null){
+                    Flowable.just(o)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Consumer<Object>() {
+                                @Override
+                                public void accept(Object o) throws Exception {
+                                    iMainFragment.updateServerSucceed(o);
+                                }
+                            });
+
+                }
+
             }
         });
     }
@@ -369,14 +460,14 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void connectTtPhoneServer(String ip, int port) {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.connect(port, ip);
         }
     }
 
     @Override
     public void checkServerIsUpdate(Object updateResponse) {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.requestServerVersion(updateResponse);
         }
 
@@ -384,7 +475,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void startSendPackage() {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.startUpload();
         }
 
@@ -392,7 +483,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void disconnectTtPhoneServer() {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.stop();
         }
 
@@ -400,7 +491,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void getTtPhoneSosState() {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.requestServerSosStatus();
         }
 
@@ -410,7 +501,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void requestTtPhoneSos(boolean isOpen) {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.requestServerSosSwitch(isOpen);
         }
 
@@ -418,7 +509,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void openTtPhoneGps(TtBeidouOpenBean ttBeidouOpenBean) {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.requestGpsPosition(ttBeidouOpenBean);
         }
 
@@ -426,7 +517,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void closeTtPhoneGps(TtBeidouOpenBean ttBeidouOpenBean) {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.requestGpsPosition(ttBeidouOpenBean);
         }
 
@@ -434,7 +525,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void setTtPhoneSosValue(SosSendMessageModel sosSendMessageModel) {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.requestSosSendMessage(sosSendMessageModel);
         }
 
@@ -442,7 +533,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void requestTtPhoneSosValue() {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.requesSosMessageValue();
         }
 
@@ -450,7 +541,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void setWifiPasswd(WifiSettingModel wifiSettingModel) {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.requestServerWifipassword(wifiSettingModel);
         }
 
@@ -458,7 +549,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void setDateAndTime(DatetimeModel datetimeModel) {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.requestServerDatetime(datetimeModel);
         }
 
@@ -466,7 +557,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void setResetFactorySettings() {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.requestServerRecoverSystem();
         }
 
@@ -474,7 +565,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void openUsbMode(TtBeidouOpenBean ttBeidouOpenBean) {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.openBeidou(ttBeidouOpenBean);
         }
 
@@ -482,7 +573,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void closeUsbMode(TtBeidouOpenBean ttBeidouOpenBean) {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.openBeidou(ttBeidouOpenBean);
         }
 
@@ -490,7 +581,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void dialTtPhone(String phoneNumber) {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.dialPhone(phoneNumber);
         }
 
@@ -498,28 +589,28 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void selectCureentPhoneState() {
-        if(phoneNettyManager != null){
+        if (phoneNettyManager != null) {
             phoneNettyManager.selectPhoneState();
         }
     }
 
     @Override
     public void hangupTtPhone() {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.endCall();
         }
     }
 
     @Override
     public void answerTtPhone() {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.acceptCall();
         }
     }
 
     @Override
     public void sendSmsTtPhone(SmsBean smsBean) {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.sendSms(smsBean);
         }
 
@@ -527,7 +618,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void requestCallRecord() {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.requestCallRecord();
         }
 
@@ -535,7 +626,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void requestShortMessage() {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.requestShortMessage();
         }
 
@@ -543,7 +634,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void requestServerShortMessageStatus(SMAgrementModel smAgrementModel) {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.requestServerShortMessageStatus(smAgrementModel);
         }
 
@@ -551,7 +642,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
 
     @Override
     public void requestServerTtPhoneVersion() {
-        if(phoneNettyManager != null) {
+        if (phoneNettyManager != null) {
             phoneNettyManager.requestServerVersion();
         }
 
