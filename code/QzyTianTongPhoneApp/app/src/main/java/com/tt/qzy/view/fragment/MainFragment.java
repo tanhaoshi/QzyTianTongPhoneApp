@@ -189,16 +189,20 @@ public class MainFragment extends Fragment implements MainFragmentView{
         });
     }
 
+    private long lastTime;
+
     @OnClick({R.id.main_editors, R.id.main_settings, R.id.tmt_noEntry})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.main_editors:
-                if(mainActivity.isConnectStatus()){
-                    mPresneter.stopConnect();
-                }else{
-                    mPresneter.startConnect();
-
+                if(controlOnClick()){
+                    if(mainActivity.isConnectStatus()){
+                        mPresneter.stopConnect();
+                    }else{
+                        mPresneter.startConnect();
+                    }
                 }
+                lastTime = System.currentTimeMillis();
                 break;
             case R.id.main_settings:
                 Intent settings_intent = new Intent(getActivity(), SettingsActivity.class);
@@ -211,6 +215,15 @@ public class MainFragment extends Fragment implements MainFragmentView{
                 break;
             case R.id.tmt_noEntry:
                 break;
+        }
+    }
+
+    private boolean controlOnClick(){
+        long calculate = System.currentTimeMillis() - lastTime - 1000;
+        if(calculate > 0){
+            return true;
+        }else{
+            return false;
         }
     }
 

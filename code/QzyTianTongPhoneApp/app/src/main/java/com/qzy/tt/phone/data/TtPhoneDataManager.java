@@ -39,6 +39,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 数据管理类
@@ -486,7 +487,6 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
         if (phoneNettyManager != null) {
             phoneNettyManager.stop();
         }
-
     }
 
     @Override
@@ -645,9 +645,7 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
         if (phoneNettyManager != null) {
             phoneNettyManager.requestServerVersion();
         }
-
     }
-
 
     @Override
     public SyncManager getSyncManager() {

@@ -133,4 +133,5 @@
     <string name="TMT_DEVICE_IS_RECOVER_SUCCEED"></string>
     <string name="TMT_PLEASE_CLOSE_DATA_MOBILE_AND_ENABLE_WIFI">请关闭数据流量开关,并连接指定WIFI!</string>
     <string name="TMT_CHECK_FILE_FAILED">服务验证文件失败,请联系开发者!</string>
+    <string name="OPERATE_OFTEN">不可操作太过于频繁,请稍后2秒!</string>
 </resources>
