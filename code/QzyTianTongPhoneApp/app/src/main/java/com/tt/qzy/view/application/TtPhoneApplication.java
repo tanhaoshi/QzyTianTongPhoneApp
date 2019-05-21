@@ -60,7 +60,7 @@ public class TtPhoneApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sApp = this;
-        catchCrashExeption();
+      //  catchCrashExeption();
         initAppRefresh();
         initPRDownloader();
         initGreenDao();

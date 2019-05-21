@@ -1,5 +1,6 @@
 package com.qzy.tt.phone.netty;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Observable;
 import android.os.Handler;
@@ -49,17 +50,25 @@ import com.tt.qzy.view.utils.SPUtils;
 import com.tt.qzy.view.utils.ToastUtil;
 
 
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.ChannelHandlerContext;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import it.sauronsoftware.ftp4j.FTPDataTransferListener;
 
@@ -89,6 +98,9 @@ public class PhoneNettyManager {
 
     //netty通道异常 导致重连标志位
     private boolean isNettyException = false;
+
+    //休眠前断开连接
+    private boolean isSleepDisconnect = false;
 
     public PhoneNettyManager(Context context) {
         mContext = context;
@@ -125,7 +137,7 @@ public class PhoneNettyManager {
         } else {
             //为空 释放重连
             KLog.i("disconnect then connect");
-            mNettyClientManager.release();
+            mNettyClientManager.stop();
             mNettyClientManager = null;
             mNettyClientManager = new NettyClientManager(nettyListener);
             mNettyClientManager.startReconnected(Constans.PORT, Constans.IP);
@@ -164,7 +176,7 @@ public class PhoneNettyManager {
                         } else {
                             isBeatState = false;
                             KLog.i("reconnect");
-                            mNettyClientManager.release();
+                            mNettyClientManager.stop();
                             mNettyClientManager = null;
                             mNettyClientManager = new NettyClientManager(nettyListener);
                             mNettyClientManager.startReconnected(Constans.PORT, Constans.IP);
@@ -205,7 +217,9 @@ public class PhoneNettyManager {
                 return;
             }
             isUdpHandlerConnect = true;
-            checkConnectBeat();
+            //checkConnectBeat();
+            isSleepDisconnect = false;
+            mNettyClientManager.startReconnected(Constans.PORT, Constans.IP);
             mhandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -216,12 +230,15 @@ public class PhoneNettyManager {
 
         @Override
         public void onConnectSleep() {
-
+         //   isSleepDisconnect = true;
+            /*if(mNettyClientManager != null){
+                mNettyClientManager.stop();
+            }*/
         }
 
         @Override
         public void onMsg(final String msg) {
-           /* mhandler.post(new Runnable() {
+            /*mhandler.post(new Runnable() {
                 @Override
                 public void run() {
                     NToast.longToast(mContext.getApplicationContext(),"udp =======" + msg);
@@ -255,7 +272,7 @@ public class PhoneNettyManager {
      */
     public void stop() {
         isUserHandlerConnect = false;
-        mNettyClientManager.release();
+        mNettyClientManager.stop();
     }
 
     /*
@@ -661,10 +678,24 @@ public class PhoneNettyManager {
     }
 
     private NettyClientManager.INettyListener nettyListener = new NettyClientManager.INettyListener() {
+        @SuppressLint("CheckResult")
         @Override
-        public void onReceiveData(ByteBufInputStream inputStream) {
+        public void onReceiveData(final ByteBufInputStream inputStream) {
             if (mCmdHandler != null) {
-                mCmdHandler.handlerCmd(inputStream);
+                Flowable.create(new FlowableOnSubscribe<ByteBufInputStream>() {
+                    @Override
+                    public void subscribe(FlowableEmitter<ByteBufInputStream> flowableEmitter) throws Exception {
+                        flowableEmitter.onNext(inputStream);
+                    }
+                }, BackpressureStrategy.ERROR)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(Schedulers.newThread())
+                        .subscribe(new Consumer<ByteBufInputStream>() {
+                            @Override
+                            public void accept(ByteBufInputStream byteBufInputStream) throws Exception {
+                                mCmdHandler.handlerCmd(byteBufInputStream);
+                            }
+                        });
             }
         }
 
@@ -680,6 +711,10 @@ public class PhoneNettyManager {
                 isNettyException = false;
             }
 
+            if(isSleepDisconnect){
+                isSleepDisconnect = false;
+            }
+
             setConnectedState();
         }
 
@@ -688,6 +723,12 @@ public class PhoneNettyManager {
             LogUtils.i("netty disconnected ...");
             if (isUserHandlerConnect && isUdpHandlerConnect) {
                 LogUtils.i("netty disconnected is wakeup ");
+                return;
+            }
+
+            if(isUserHandlerConnect && isSleepDisconnect){
+                LogUtils.i("netty disconnected is sleep ");
+                isSleepDisconnect = false;
                 return;
             }
 
@@ -712,7 +753,7 @@ public class PhoneNettyManager {
             }
            if(!isNettyException){
                isNettyException = true;
-                mNettyClientManager.release();
+                mNettyClientManager.stop();
                 mNettyClientManager.startReconnected(Constans.PORT, Constans.IP);
            }
         }
@@ -735,7 +776,7 @@ public class PhoneNettyManager {
      */
     public void free() {
         if (mNettyClientManager != null) {
-            mNettyClientManager.release();
+            mNettyClientManager.free();
         }
         CommonData.getInstance().free();
         mCmdHandler.release();

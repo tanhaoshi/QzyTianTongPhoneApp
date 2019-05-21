@@ -285,9 +285,11 @@ public class CmdHandler {
     private void pasreCallPhoneState(int protoId, CallPhoneStateProtos.CallPhoneState callPhoneState) {
         synchronized (object){
             CallPhoneStateProtos.CallPhoneState.PhoneState state = callPhoneState.getPhoneState();
+            if(currentPhoneState != null && state != null){
+                LogUtils.i("currentPhoneState = " + currentPhoneState.ordinal() + "    state = " + state.ordinal());
+            }
 
             if (currentPhoneState != state) { // 与上次的状态不同才改变
-                LogUtils.i("currentPhoneState = " + currentPhoneState.ordinal() + "    state = " + state.ordinal());
                 currentPhoneState = state;
                 if (state == CallPhoneStateProtos.CallPhoneState.PhoneState.INCOMING) {
                     incommingState(callPhoneState.getPhoneNumber());

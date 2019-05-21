@@ -27,8 +27,9 @@ public class OverallReceiver extends BroadcastReceiver {
         switch (intent.getAction()){
             //wifi的处理
             case CLEAR_RECENTS:
-                Intent intent1 = new Intent(context, TtPhoneService.class);
-                context.startService(intent1);
+                //Intent intent1 = new Intent(context, TtPhoneService.class);
+                //context.startService(intent1);
+                 TtPhoneService.startPhoneService(context);
                 break;
             case WifiManager.NETWORK_STATE_CHANGED_ACTION:
                 wifiState(intent,context);

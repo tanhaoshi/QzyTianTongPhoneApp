@@ -4,6 +4,9 @@ import com.qzy.utils.LogUtils;
 import com.socks.library.KLog;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import io.netty.bootstrap.Bootstrap;
@@ -36,7 +39,8 @@ public class NettyClient {
     public static final int Port = 9999;
     public static final String IP = "192.168.43.1";
 
-   // private NioEventLoopGroup groupConnected;
+    private NioEventLoopGroup groupConnected = null;
+    private Bootstrap bootstrap;
 
     private static NettyClient client;
 
@@ -45,7 +49,8 @@ public class NettyClient {
 
     //连接线程
     private Thread mThread;
-
+    private ExecutorService fixedThreadPool = Executors.newFixedThreadPool(1);
+    private boolean isUseThread = true;
     //发送数据句柄
     public ChannelHandlerContext connectHanlerCtx;
 
@@ -57,70 +62,108 @@ public class NettyClient {
     }
 
     public static void initNettyClient(IConnectedReadDataListener listener){
-        client = new NettyClient(listener);
+        if(client == null) {
+            client = new NettyClient(listener);
+        }
     }
 
 
     private NettyClient(IConnectedReadDataListener listener){
 
         connectedReadDataListener = listener;
+        initNettyClient();
     }
 
     /**
      * 连接服务
      */
     public void starConnect(final int port, final String ip){
-        mThread =  new Thread(new Runnable() {
-            @Override
-            public void run() {
-                NioEventLoopGroup groupConnected = new NioEventLoopGroup();
-                try {
-                    // Client服务启动器 3.x的ClientBootstrap
-                    // 改为Bootstrap，且构造函数变化很大，这里用无参构造。
+          if(isUseThread){
+              startByThread(port,ip);
+          }else{
+              fixedThreadPool.execute(new Runnable() {
+                  @Override
+                  public void run() {
+                      startNettyclient(port,ip);
+                  }
+              });
+          }
+    }
 
-                    Bootstrap bootstrap = new Bootstrap();
-                    // 指定channel类型
-                    bootstrap.channel(NioSocketChannel.class);
-                    // 指定Handler
-                    bootstrap.handler(connectedChannelInitializer);
-                    bootstrap.option(ChannelOption.SO_KEEPALIVE,true);
-                    // 指定EventLoopGroup
-                    bootstrap.group(groupConnected);
-                    // 连接到目标IP的8000端口的服务端
-                    ChannelFuture cf = bootstrap.connect(new InetSocketAddress(ip, port));
-                    cf.addListener(new ChannelFutureListener(){
 
-                        @Override
-                        public void operationComplete(ChannelFuture channelFuture) throws Exception {
-                            if (!channelFuture.isSuccess()) {
-                                final EventLoop loop = channelFuture.channel().eventLoop();
-                                loop.schedule(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        LogUtils.d("服务端链接不上，开始重连操作...");
-                                        //start();
-                                    }
-                                }, 1L, TimeUnit.SECONDS);
-                            } else {
-                                channel = channelFuture.channel();
-                                LogUtils.d("服务端链接成功...");
+    private void startByThread(final int port, final String ip){
+       try {
+           if(mThread != null) {
+               mThread.interrupt();
+           }
+           mThread = new Thread(new Runnable() {
+               @Override
+               public void run() {
+                   startNettyclient(port, ip);
+               }
+           });
+           mThread.start();
+       }catch (Exception e){
+           e.printStackTrace();
+       }
+    }
+
+    private void initNettyClient(){
+        groupConnected = new NioEventLoopGroup();
+        // Client服务启动器 3.x的ClientBootstrap
+        // 改为Bootstrap，且构造函数变化很大，这里用无参构造。
+
+        //Bootstrap bootstrap = new Bootstrap();
+         bootstrap = new Bootstrap();
+        // 指定channel类型
+        bootstrap.channel(NioSocketChannel.class);
+        // 指定Handler
+        bootstrap.handler(connectedChannelInitializer);
+        bootstrap.option(ChannelOption.SO_KEEPALIVE,true);
+        // 指定EventLoopGroup
+        bootstrap.group(groupConnected);
+    }
+
+
+    private void startNettyclient(final int port, final String ip){
+
+        try {
+
+            // 连接到目标IP的8000端口的服务端
+            ChannelFuture cf = bootstrap.connect(new InetSocketAddress(ip, port));
+            cf.addListener(new ChannelFutureListener(){
+
+                @Override
+                public void operationComplete(ChannelFuture channelFuture) throws Exception {
+                    if (!channelFuture.isSuccess()) {
+                        final EventLoop loop = channelFuture.channel().eventLoop();
+                        loop.schedule(new Runnable() {
+                            @Override
+                            public void run() {
+                                LogUtils.d("服务端链接不上，开始重连操作...");
+                                //start();
                             }
-
-                        }
-                    });
-                    channel = cf.sync().channel();
-                    channel.closeFuture().sync();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }finally {
-                    if(groupConnected != null){
-                        groupConnected.shutdownGracefully();
+                        }, 1L, TimeUnit.SECONDS);
+                    } else {
+                        channel = channelFuture.channel();
+                        LogUtils.d("服务端链接成功...");
                     }
+
                 }
-            }
-        });
-        mThread.start();
+            });
+            channel = cf.sync().channel();
+            channel.closeFuture().sync();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            /*if(groupConnected != null){
+                groupConnected.shutdownGracefully();
+            }*/
+        }finally {
+           /* if(groupConnected != null){
+                groupConnected.shutdownGracefully();
+            }*/
+        }
     }
 
 
@@ -237,20 +280,51 @@ public class NettyClient {
     public void stopConnected(){
         try {
             if(channel != null){
-                channel.close().sync();
+                try {
+                    channel.close().sync();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
-            if(mThread != null && mThread.isAlive()){
+
+
+            if(isUseThread) {
+               /* if (mThread != null && mThread.isAlive()) {
                     mThread.interrupt();
+                }
+                mThread = null;*/
+
+            }else{
+                if(fixedThreadPool != null){
+                    //fixedThreadPool.shutdownNow();
+                }
             }
-            mThread = null;
-            client = null;
+            //client = null;
         }catch (Exception e){
             KLog.i("error value ="+e.getMessage().toString());
             e.printStackTrace();
         }
     }
 
+    public void free(){
+        try{
+           /* if(channel != null){
+                try {
+                    channel.close().sync();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+*/
+            if(groupConnected != null){
+                groupConnected.shutdownGracefully();
+            }
+            client = null;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
     public interface IConnectedReadDataListener{
         void onReceiveData(ByteBufInputStream data);

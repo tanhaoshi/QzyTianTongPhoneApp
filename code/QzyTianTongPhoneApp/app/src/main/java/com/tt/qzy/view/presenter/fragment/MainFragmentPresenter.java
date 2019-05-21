@@ -43,6 +43,8 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
 
     private Context mContext;
 
+    private String fileMd5 = null;
+
     public MainFragmentPresenter(Context context) {
         mContext = context;
     }
@@ -337,10 +339,14 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     }
 
     private void requireServerUpdate(){
-        AssetManager assetManager = mContext.getAssets();
+
         try {
+            if(TextUtils.isEmpty(fileMd5)){
+                AssetManager assetManager = mContext.getAssets();
+                fileMd5 = MD5Utils.getFileMD5(assetManager.open("tiantong_update.zip"));
+            }
             TtPhoneDataManager.getInstance().checkServerIsUpdate(new AppInfoModel(IPUtil.getLocalIPAddress(mContext), String.valueOf(AppUtils.getVersionCode(mContext)),Constans.SERVER_APP_VERSION,
-                    MD5Utils.getFileMD5(assetManager.open("tiantong_update.zip"))));
+                    fileMd5));
         } catch (IOException e) {
             e.printStackTrace();
         }

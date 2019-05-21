@@ -145,7 +145,7 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
     /**
      * 释放资源
      */
-    public void release() {
+    public void stop() {
         if (NettyClient.getInstance() != null) {
             NettyClient.getInstance().stopConnected();
         }
@@ -154,6 +154,14 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
             mReconnectedThread.interrupt();
         }
         mReconnectedThread = null;
+    }
+
+    public void free(){
+        stop();
+        if (NettyClient.getInstance() != null) {
+            NettyClient.getInstance().free();
+        }
+
     }
 
     /**

@@ -289,11 +289,13 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     private void startService() {
         if(mPresenter.checkPermissionExist()){
             if(!AppUtils.isServiceRunning("com.qzy.tt.phone.service.TtPhoneService",MainActivity.this)){
-                startService(new Intent(this, TtPhoneService.class));
+                //startService(new Intent(this, TtPhoneService.class));
+                TtPhoneService.startPhoneService(this);
             }
         }else{
             mPresenter.requestPermission(Build.BRAND,this, Manifest.permission.RECORD_AUDIO);
-            startService(new Intent(this, TtPhoneService.class));
+           // startService(new Intent(this, TtPhoneService.class));
+            TtPhoneService.startPhoneService(this);
         }
     }
 
