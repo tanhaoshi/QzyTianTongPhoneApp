@@ -230,11 +230,22 @@ public class MainFragment extends Fragment implements MainFragmentView{
     /** 设置连接天通状态显示 */
     private void setConnectStateView(boolean isConnected) {
         if (isConnected) {
-            mCircleImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.yilianjie));
-            connect.setText(getResources().getString(R.string.TMT_connect_succeed));
+            if(mCircleImageView != null) {
+                mCircleImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.yilianjie));
+            }
+
+            if(connect != null) {
+                connect.setText(getResources().getString(R.string.TMT_connect_succeed));
+            }
+
         } else {
-            mCircleImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.weilianjie));
-            connect.setText(getResources().getString(R.string.TMT_click_connect));
+            if(mCircleImageView != null) {
+                mCircleImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.weilianjie));
+            }
+
+            if(connect != null) {
+                connect.setText(getResources().getString(R.string.TMT_click_connect));
+            }
         }
         mainActivity.connectTianTongControl(isConnected);
     }
