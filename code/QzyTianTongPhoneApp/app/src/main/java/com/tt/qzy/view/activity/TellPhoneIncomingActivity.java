@@ -237,6 +237,9 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
                 //onCallingState();
                 break;
             case HUANGUP:
+
+                isAlert = true;
+
                 onEndCallState();
 
                 disposeAlert();
