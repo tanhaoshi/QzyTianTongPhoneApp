@@ -66,6 +66,7 @@ import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
+import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -682,21 +683,14 @@ public class PhoneNettyManager {
         @Override
         public void onReceiveData(final ByteBufInputStream inputStream) {
             if (mCmdHandler != null) {
-               /* Flowable.create(new FlowableOnSubscribe<ByteBufInputStream>() {
-                    @Override
-                    public void subscribe(FlowableEmitter<ByteBufInputStream> flowableEmitter) throws Exception {
-                        flowableEmitter.onNext(inputStream);
-                    }
-                }, BackpressureStrategy.ERROR)
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(Schedulers.newThread())
-                        .subscribe(new Consumer<ByteBufInputStream>() {
-                            @Override
-                            public void accept(ByteBufInputStream byteBufInputStream) throws Exception {
-
-                            }
-                        });*/
-                mCmdHandler.handlerCmd(inputStream);
+                 Flowable.just(inputStream)
+                         .observeOn(Schedulers.io())
+                         .subscribe(new Consumer<ByteBufInputStream>() {
+                             @Override
+                             public void accept(ByteBufInputStream inputStream) throws Exception {
+                                 mCmdHandler.handlerCmd(inputStream);
+                             }
+                         });
             }
         }
 
