@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
-import com.socks.library.KLog;
+import com.qzy.utils.LogUtils;
 import com.tt.qzy.view.R;
 
 public final class NiftyExpandDialog {
@@ -233,7 +233,7 @@ public final class NiftyExpandDialog {
        if(mNiftyDialogBuilder != null){
            mNiftyDialogBuilder.dismiss();
        }else{
-           KLog.i("the NiftyDialogBuilder is empty ");
+           LogUtils.i("the NiftyDialogBuilder is empty ");
        }
     }
 
@@ -244,7 +244,7 @@ public final class NiftyExpandDialog {
         if(mNiftyDialogBuilder != null){
             mNiftyDialogBuilder.show();
         }else{
-            KLog.i("the NiftyDialogBuilder is empty ");
+            LogUtils.i("the NiftyDialogBuilder is empty ");
         }
     }
 

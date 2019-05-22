@@ -1,6 +1,5 @@
 package com.tt.qzy.view.utils;
 
-import com.socks.library.KLog;
 
 import java.text.ParseException;
 import java.text.ParsePosition;

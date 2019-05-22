@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
-import com.google.protobuf.GeneratedMessageV3;
 import com.qzy.data.PhoneCmd;
 import com.qzy.data.PrototocalTools;
 import com.qzy.tt.data.CallPhoneBackProtos;
@@ -29,14 +28,9 @@ import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.data.TtTimeProtos;
 import com.qzy.tt.phone.bean.PhoneDataBean;
 import com.qzy.tt.phone.data.impl.IAllTtPhoneDataListener;
-import com.qzy.tt.phone.data.impl.IMainFragment;
-import com.qzy.tt.phone.data.impl.ITtPhoneDataListener;
 import com.qzy.utils.LogUtils;
-import com.socks.library.KLog;
-import com.tt.qzy.view.activity.SosSettingsActivity;
 import com.tt.qzy.view.activity.TellPhoneIncomingActivity;
 import com.tt.qzy.view.application.TtPhoneApplication;
-import com.tt.qzy.view.presenter.manager.SyncManager;
 import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.RingToneUtils;
@@ -48,7 +42,6 @@ import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -127,11 +120,9 @@ public class CmdHandler {
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_phone_signal:
                     TtPhoneSignalProtos.PhoneSignalStrength phoneSignalStrength = TtPhoneSignalProtos.PhoneSignalStrength.parseDelimitedFrom(inputStream);
-                    // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SIGNAL,protoId, phoneSignalStrength);
                     break;
                 case PrototocalTools.IProtoClientIndex.phone_send_sms_callback: // 已完成
                     TtPhoneSmsProtos.TtPhoneSms ttPhoneSms = TtPhoneSmsProtos.TtPhoneSms.parseDelimitedFrom(inputStream);
-                    // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_SMS_STATE,protoId, ttPhoneSms);
                     if(mAllDataListener != null){
                         mAllDataListener.onServerTtPhoneSmsSendState(PhoneCmd.getPhoneCmd(protoId,ttPhoneSms));
                     }
@@ -146,27 +137,22 @@ public class CmdHandler {
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_phone_beidoustatus_usb:
                     TtBeiDouStatuss.TtBeiDouStatus ttBeiDouStatus = TtBeiDouStatuss.TtBeiDouStatus.parseDelimitedFrom(inputStream);
-                    //sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_BEIDOU,protoId,ttBeiDouStatus);
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_gps_position:// 已完成
                     TtPhonePositionProtos.TtPhonePosition ttPhonePosition = TtPhonePositionProtos.TtPhonePosition.parseDelimitedFrom(inputStream);
-                    //sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_ACCURACY_POSITION,protoId,ttPhonePosition);
                     parseGpsPosition(protoId, ttPhonePosition);
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_beidou_switch: // 无效
                     TtOpenBeiDouProtos.TtOpenBeiDou ttOpenBeiDou = TtOpenBeiDouProtos.TtOpenBeiDou.parseDelimitedFrom(inputStream);
-                    //sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_BEIDOU_SWITCH,protoId,ttOpenBeiDou);
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_call_record: // 已完成
                     TtCallRecordProtos.TtCallRecordProto ttCallRecordProto = TtCallRecordProtos.TtCallRecordProto.parseDelimitedFrom(inputStream);
-                    //mSyncManager.syncCallRecord(ttCallRecordProto);
                     if (mAllDataListener != null) {
                         mAllDataListener.syncCallRecord(ttCallRecordProto);
                     }
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_short_message: // 已完成
                     TtShortMessageProtos.TtShortMessage ttShortMessage = TtShortMessageProtos.TtShortMessage.parseDelimitedFrom(inputStream);
-//                    //mSyncManager.syncShortMessage(ttShortMessage);
                     if (mAllDataListener != null) {
                         mAllDataListener.syncShortMessage(ttShortMessage);
                     }
@@ -174,14 +160,12 @@ public class CmdHandler {
                 case PrototocalTools.IProtoClientIndex.tt_receiver_short_message: // 已完成
                     TtShortMessageProtos.TtShortMessage.ShortMessage ttShortMessageSignal = TtShortMessageProtos.TtShortMessage.ShortMessage.parseDelimitedFrom(inputStream);
                     startSystemRingTone();
-                    //mSyncManager.syncShortMessageSignal(protoId,ttShortMessageSignal,ttShortMessageSignal);
                     if (mAllDataListener != null) {
                         mAllDataListener.syncShortMessageSignal(protoId, ttShortMessageSignal, ttShortMessageSignal);
                     }
                     break;
                 case PrototocalTools.IProtoClientIndex.tt_call_phone_back: // 已完成
                     CallPhoneBackProtos.CallPhoneBack callPhoneBack = CallPhoneBackProtos.CallPhoneBack.parseDelimitedFrom(inputStream);
-                    // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_CALL_STATE,protoId,callPhoneBack);
                     if (mAllDataListener != null) {
                         mAllDataListener.onPhoneCallStateBack(PhoneCmd.getPhoneCmd(protoId, callPhoneBack));
                     }
@@ -208,18 +192,15 @@ public class CmdHandler {
                 case PrototocalTools.IProtoClientIndex.response_server_version_info: // 已完成
                     TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion ttPhoneGetServerVersion = TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion
                             .parseDelimitedFrom(inputStream);
-                    //sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_VERSION,protoId,ttPhoneGetServerVersion);
                     if (mAllDataListener != null) {
                         mAllDataListener.isTtPhoneServerVersion(PhoneCmd.getPhoneCmd(protoId, ttPhoneGetServerVersion));
                     }
                     break;
                 case PrototocalTools.IProtoClientIndex.response_server_mobile_data_init: //移动数据
                     TtPhoneMobileDataProtos.TtPhoneMobileData ttPhoneMobileData = TtPhoneMobileDataProtos.TtPhoneMobileData.parseDelimitedFrom(inputStream);
-                    // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_MOBILE_STATUS,protoId,ttPhoneMobileData);
                     break;
                 case PrototocalTools.IProtoClientIndex.response_server_sos_init_status:   // 已完成 返回服务端 sos状态
                     TtPhoneSosStateProtos.TtPhoneSosState ttPhoneSosState = TtPhoneSosStateProtos.TtPhoneSosState.parseDelimitedFrom(inputStream);
-                    // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SERVER_SOS_STATUS,protoId,ttPhoneSosState);
                     if (mAllDataListener != null) {
                         mAllDataListener.onServerTtPhoneSosState(PhoneCmd.getPhoneCmd(protoId, ttPhoneSosState));
                     }
@@ -244,9 +225,9 @@ public class CmdHandler {
     }
 
     public void checkChannelBeat(TtPhoneConnectBeatProtos.TtPhoneConnectBeat ttPhoneConnectBeat ){
-        KLog.i("check Channel beat ");
+        LogUtils.i("check Channel beat ");
         if(ttPhoneConnectBeat.getIsConnect() && ttPhoneConnectBeat.getResponse()){
-            KLog.i(" call back phone netty ");
+            LogUtils.i(" call back phone netty ");
             mCheckBeatListener.checkBeatState(true);
         }
     }
@@ -315,7 +296,6 @@ public class CmdHandler {
      * @param ttPhoneBattery
      */
     private void pasreCallPhoneBattery(int protoId, TtPhoneBatteryProtos.TtPhoneBattery ttPhoneBattery) {
-        // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SEND_BATTERY,protoId, ttPhoneBattery);
         if (mAllDataListener != null) {
             mAllDataListener.isTtPhoneBattery(ttPhoneBattery.getLevel(), ttPhoneBattery.getScale());
         }
@@ -328,7 +308,6 @@ public class CmdHandler {
      * @param ttPhoneSimCard
      */
     private void parseSimCard(int protoId, TtPhoneSimCards.TtPhoneSimCard ttPhoneSimCard) {
-        // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SIM_CARD,protoId,ttPhoneSimCard);
         if (mAllDataListener != null) {
             mAllDataListener.isTtSimCard(ttPhoneSimCard.getIsSimCard());
         }
@@ -341,7 +320,6 @@ public class CmdHandler {
      * @param phoneSignalStrength
      */
     private void parseSiganStregth(int protoId, TtPhoneSignalProtos.PhoneSignalStrength phoneSignalStrength) {
-        //sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_SIGNAL,protoId,phoneSignalStrength);
         if (mAllDataListener != null) {
             mAllDataListener.isTtSignalStrength(phoneSignalStrength.getSignalStrength(),phoneSignalStrength.getSignalDbm());
         }
@@ -354,25 +332,14 @@ public class CmdHandler {
      * @param ttPhonePosition
      */
     private void parseGpsPosition(int protoId, TtPhonePositionProtos.TtPhonePosition ttPhonePosition) {
-        // sendCmdToView(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_ACCURACY_POSITION,protoId,ttPhonePosition);
-        /*if(mAllDataListener != null){
-            mAllDataListener.isTtSignalStrength(phoneSignalStrength.getSignalStrength());
-        }*/
         if (mAllDataListener != null) {
             mAllDataListener.isTtPhoneGpsPositon(PhoneCmd.getPhoneCmd(protoId, ttPhonePosition));
         }
     }
 
 
-    private void sendCmdToView(String messageType, int protoId, GeneratedMessageV3 messageV3) {
-        //  EventBusUtils.post(new MessageEventBus(messageType,PhoneCmd.getPhoneCmd(protoId,messageV3)));
-    }
-
     private void incommingState(String number) {
-        KLog.e("incommingState number = " + number);
-       /* Intent intent = new Intent("com.qzy.tt.incoming");
-        intent.putExtra("phone_number",number);
-        context.sendBroadcast(intent);*/
+        LogUtils.e("incommingState number = " + number);
         AppUtils.wakeUpAndUnlock(context);
         Intent intent = new Intent(context, TellPhoneIncomingActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

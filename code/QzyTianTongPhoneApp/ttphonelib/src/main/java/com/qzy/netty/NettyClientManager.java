@@ -4,8 +4,6 @@ package com.qzy.netty;
 import com.google.protobuf.Message;
 import com.qzy.data.PhoneCmd;
 import com.qzy.data.PrototocalTools;
-import com.qzy.utils.ByteUtils;
-import com.socks.library.KLog;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;

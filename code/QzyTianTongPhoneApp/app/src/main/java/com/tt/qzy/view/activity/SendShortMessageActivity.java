@@ -22,7 +22,7 @@ import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.SmsBean;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.tt.phone.data.impl.ISendShortMessage;
-import com.socks.library.KLog;
+import com.qzy.utils.LogUtils;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.MsgAdapter;
 import com.tt.qzy.view.bean.MsgModel;
@@ -123,7 +123,7 @@ public class SendShortMessageActivity extends AppCompatActivity implements ISend
             List<ShortMessageDao> daoList =
                     ShortMessageManager.getInstance(this).queryShortMessageCondition(intent.getStringExtra(Constans.SHORT_MESSAGE_PHONE));
 
-            KLog.i("look short message = " + JSON.toJSONString(daoList));
+            LogUtils.i("look short message = " + JSON.toJSONString(daoList));
 
             for (ShortMessageDao shortMessageDao : daoList) {
 

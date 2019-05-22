@@ -6,24 +6,17 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.text.TextUtils;
 
-import com.alibaba.fastjson.JSON;
-import com.qzy.data.PhoneCmd;
 
-import com.qzy.tt.data.CallPhoneBackProtos;
 import com.qzy.tt.data.CallPhoneStateProtos;
-import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.tt.phone.data.impl.IPhoneStateListener;
-import com.socks.library.KLog;
+import com.qzy.utils.LogUtils;
 import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.AidlContactsActivity;
-import com.tt.qzy.view.activity.ContactsActivity;
 import com.tt.qzy.view.activity.DBMActivity;
 import com.tt.qzy.view.activity.TellPhoneActivity;
-import com.tt.qzy.view.application.TtPhoneApplication;
-import com.tt.qzy.view.bean.MallListModel;
 import com.tt.qzy.view.bean.ProtobufMessageModel;
 import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.MailListDao;
@@ -40,9 +33,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -159,7 +150,7 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView> im
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            KLog.i("action = " + action);
+            LogUtils.i("action = " + action);
             if (action.equals("com.qzy.tt.EVENT_BUS_TYPE_CONNECT_TIANTONG__CALL_PHONE")) {
                 if("call".equals(intent.getStringExtra("callPhone"))){
                     Intent intent1 = new Intent(mContext, TellPhoneActivity.class);
@@ -199,7 +190,7 @@ public class AidlPhoneFragmentPersenter extends BasePresenter<CallRecordView> im
 
                     @Override
                     public void onError(Throwable e) {
-                        KLog.i(" look over error message = " + e.getMessage().toString());
+                        LogUtils.i(" look over error message = " + e.getMessage().toString());
                         mView.get().showError(e.getMessage().toString(), true);
                     }
 

@@ -3,13 +3,11 @@ package com.tt.qzy.view.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 
-import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.tt.phone.service.TtPhoneService;
-import com.socks.library.KLog;
+import com.qzy.utils.LogUtils;
 
 
 /**
@@ -40,7 +38,7 @@ public class OverallReceiver extends BroadcastReceiver {
     private void wifiState(Intent intent,Context context){
         NetworkInfo info = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
         if (info.getState().equals(NetworkInfo.State.DISCONNECTED)) {
-            KLog.i("receiver tell phone activity");
+            LogUtils.i("receiver tell phone activity");
             Intent finshIntent = new Intent(CLEAR_TELL_PHONE_ACTIVITY);
             context.sendBroadcast(finshIntent);
         } else if (info.getState().equals(NetworkInfo.State.CONNECTED)) {

@@ -19,23 +19,18 @@ import com.qzy.QzySensorManager;
 import com.qzy.data.PhoneCmd;
 import com.qzy.data.PhoneStateUtils;
 
-import com.qzy.phone.pcm.AllLocalPcmManager;
 import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.tt.phone.data.impl.ITtPhoneCallStateLisenter;
 import com.qzy.utils.AndroidVoiceManager;
 import com.qzy.utils.LogUtils;
 import com.qzy.utils.TimeToolUtils;
-import com.socks.library.KLog;
 import com.tt.qzy.view.R;
-import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.layout.dialpad.InputPwdViewCall;
 import com.tt.qzy.view.presenter.activity.TellPhoneActivityPresenter;
 import com.tt.qzy.view.receiver.OverallReceiver;
 import com.tt.qzy.view.utils.AnswerBellManager;
-import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.NToast;
-import com.tt.qzy.view.utils.SPUtils;
 
 
 import java.lang.ref.WeakReference;
@@ -248,7 +243,7 @@ public class TellPhoneActivity extends AppCompatActivity {
      * @param cmd
      */
     private void updatePhoneState(PhoneCmd cmd) {
-        KLog.i("phone state = " + PhoneStateUtils.getTtPhoneState(cmd).ordinal());
+        LogUtils.i("phone state = " + PhoneStateUtils.getTtPhoneState(cmd).ordinal());
 
         switch (PhoneStateUtils.getTtPhoneState(cmd)) {
             case NOCALL:
@@ -276,7 +271,7 @@ public class TellPhoneActivity extends AppCompatActivity {
                 break;
             case CALL:
                 if(!CommonData.getInstance().isCallingIp(PhoneStateUtils.getTtPhoneStateNowCallingIp(cmd))){
-                    KLog.d("is not me calling  = ");
+                    LogUtils.d("is not me calling  = ");
                     break;
                 }
                 if(mAnswerBellManager != null){

@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.socks.library.KLog;
+import com.qzy.utils.LogUtils;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.bean.MsgModel;
 
@@ -48,7 +48,7 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.MsgViewHolder>{
 
     public void setData(List<MsgModel> msgList){
         this.mMsgList = msgList;
-        KLog.i("data list = " + JSON.toJSONString(mMsgList));
+        LogUtils.i("data list = " + JSON.toJSONString(mMsgList));
         notifyDataSetChanged();
     }
 

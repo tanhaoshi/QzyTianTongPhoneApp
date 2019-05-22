@@ -3,14 +3,8 @@ package com.tt.qzy.view.trace;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-import com.qzy.tt.phone.service.TtPhoneService;
-import com.qzy.utils.LogUtils;
-import com.socks.library.KLog;
 import com.tt.qzy.view.utils.AppUtils;
-import com.tt.qzy.view.utils.Constans;
-import com.tt.qzy.view.utils.SPUtils;
 import com.tt.qzy.view.utils.TimeTask;
 import com.xdandroid.hellodaemon.AbsWorkService;
 

@@ -1,10 +1,8 @@
 package com.qzy.netty;
 
 import com.qzy.utils.LogUtils;
-import com.socks.library.KLog;
 
 import java.net.InetSocketAddress;
-import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -17,7 +15,6 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandler;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -26,9 +23,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import io.netty.handler.timeout.IdleState;
-import io.netty.handler.timeout.IdleStateEvent;
-import io.netty.handler.timeout.IdleStateHandler;
 
 /**
  * Created by yj.zhang on 2018/7/31/031.
@@ -206,7 +200,7 @@ public class NettyClient {
         @Override
         public void channelInactive(ChannelHandlerContext channelHandlerContext) throws Exception {
             LogUtils.e("channelInactive" );
-            KLog.i(" no connect client netty ");
+            LogUtils.i(" no connect client netty ");
             connectHanlerCtx = null;
             if(connectedReadDataListener != null){
                 connectedReadDataListener.onConnectedState(false);
@@ -302,7 +296,7 @@ public class NettyClient {
             }
             //client = null;
         }catch (Exception e){
-            KLog.i("error value ="+e.getMessage().toString());
+            LogUtils.i("error value ="+e.getMessage().toString());
             e.printStackTrace();
         }
     }

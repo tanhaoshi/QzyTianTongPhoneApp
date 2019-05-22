@@ -24,7 +24,6 @@ import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
-import com.socks.library.KLog;
 import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.SendShortMessageActivity;

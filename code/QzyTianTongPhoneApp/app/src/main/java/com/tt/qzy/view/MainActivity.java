@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
 import com.qzy.tt.phone.service.TtPhoneService;
-import com.socks.library.KLog;
+import com.qzy.utils.LogUtils;
 import com.tt.qzy.view.activity.base.BaseActivity;
 import com.tt.qzy.view.bean.VersionCodeModel;
 import com.tt.qzy.view.db.dao.CallRecordDao;
@@ -456,7 +456,7 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        KLog.i("onDestroy");
+        LogUtils.i("onDestroy");
         SPUtils.putShare(MainActivity.this,Constans.CHECK_DBM_OPEN,false);
     }
 

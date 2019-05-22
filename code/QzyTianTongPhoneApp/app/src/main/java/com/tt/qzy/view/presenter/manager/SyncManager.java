@@ -7,9 +7,7 @@ import com.google.protobuf.GeneratedMessageV3;
 import com.qzy.data.PhoneCmd;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
-import com.qzy.tt.phone.data.impl.ITtPhoneCallStateBackListener;
 import com.qzy.utils.LogUtils;
-import com.socks.library.KLog;
 import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
 import com.tt.qzy.view.db.manager.CallRecordManager;
@@ -83,7 +81,7 @@ public class SyncManager {
 
                     @Override
                     public void onError(Throwable e) {
-                        KLog.i("look at error is = " + e.getMessage().toString());
+                        LogUtils.i("look at error is = " + e.getMessage().toString());
                     }
 
                     @Override
@@ -175,7 +173,7 @@ public class SyncManager {
         }
         List<ShortMessageDao> shortMessagList = handlerShortMessageAgrementData(list);
         ShortMessageManager.getInstance(mContext).insertShortMessageList(shortMessagList, mContext);
-        KLog.i("look over list size = " + mMessageList.size());
+        LogUtils.i("look over list size = " + mMessageList.size());
     }
 
     public List<ShortMessageDao> handlerShortMessageAgrementData(List<TtShortMessageProtos.TtShortMessage.ShortMessage> list) {
@@ -231,7 +229,7 @@ public class SyncManager {
                         disposeAlert();
                         // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SHORT_MESSAGE, PhoneCmd.getPhoneCmd(protoId,messageV3)));
                         /*if (iSyncMsgDataListener != null) {
-                            KLog.i("iSyncMsgDataListener handleShortMessageSignal  = ");
+                            LogUtils.i("iSyncMsgDataListener handleShortMessageSignal  = ");
                             iSyncMsgDataListener.onShorMsgSignalSyncFinish(PhoneCmd.getPhoneCmd(protoId, messageV3));
                         }*/
                         Iterator iter = hashMapSyncMsgData.entrySet().iterator();
@@ -240,7 +238,7 @@ public class SyncManager {
                             //Object key = entry.getKey();
                             ISyncMsgDataListener val = (ISyncMsgDataListener) entry.getValue();
                             if (val != null) {
-                                KLog.i("iSyncMsgDataListener handleShortMessageSignal  = ");
+                                LogUtils.i("iSyncMsgDataListener handleShortMessageSignal  = ");
                                 val.onShorMsgSignalSyncFinish(PhoneCmd.getPhoneCmd(protoId, messageV3));
                             }
                         }
@@ -248,7 +246,7 @@ public class SyncManager {
 
                     @Override
                     public void onError(Throwable e) {
-                        KLog.i("onError handleShortMessageSignal  = " + e.getMessage().toString());
+                        LogUtils.i("onError handleShortMessageSignal  = " + e.getMessage().toString());
                     }
 
                     @Override

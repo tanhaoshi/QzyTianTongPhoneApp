@@ -22,7 +22,6 @@ import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.tt.phone.data.impl.ITtPhoneCallStateBackListener;
 import com.qzy.tt.phone.data.impl.ITtPhoneCallStateLisenter;
 import com.qzy.utils.LogUtils;
-import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.db.dao.CallRecordDao;
@@ -181,12 +180,12 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
     public void onTianTongCallStatus(Object o) {
         PhoneCmd cmd = (PhoneCmd) o;
         CallPhoneBackProtos.CallPhoneBack callPhoneBack = (CallPhoneBackProtos.CallPhoneBack) cmd.getMessage();
-        KLog.i("tt_call_status is = " + callPhoneBack.getIsCalling());
+        LogUtils.i("tt_call_status is = " + callPhoneBack.getIsCalling());
         if (callPhoneBack.getIsCalling()) {
             if (callPhoneBack.getIp().equals(CommonData.getInstance().getLocalWifiIp())) {
 
             } else {
-                KLog.i("电话状态产生finsh");
+                LogUtils.i("电话状态产生finsh");
                 finish();
             }
         } else {
@@ -205,7 +204,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         startActivity(intent);
         RingManager.stopDefaultCallMediaPlayer(getApplication());
         mTellPhoneActivityPresenter.acceptCall();
-        KLog.i("通话产生finsh");
+        LogUtils.i("通话产生finsh");
         finish();
     }
 
@@ -214,7 +213,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
      */
     private void onEndCallState() {
         RingManager.stopDefaultCallMediaPlayer(getApplication());
-        KLog.i("挂断产生finsh");
+        LogUtils.i("挂断产生finsh");
         finish();
     }
 
@@ -224,7 +223,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
      * @param cmd
      */
     private void updatePhoneState(PhoneCmd cmd) {
-        KLog.i("phone state = " + PhoneStateUtils.getTtPhoneState(cmd).ordinal());
+        LogUtils.i("phone state = " + PhoneStateUtils.getTtPhoneState(cmd).ordinal());
         switch (PhoneStateUtils.getTtPhoneState(cmd)) {
             case NOCALL:
                 onEndCallState();
@@ -233,13 +232,13 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
                 break;
             case CALL:
                 if(!CommonData.getInstance().isCallingIp(PhoneStateUtils.getTtPhoneStateNowCallingIp(cmd))){
-                    KLog.d("is not me calling  = ");
+                    LogUtils.d("is not me calling  = ");
                     break;
                 }
                 //onCallingState();
                 break;
             case HUANGUP:
-                KLog.i("产生挂断");
+                LogUtils.i("产生挂断");
 
                 disposeAlert();
 
@@ -271,7 +270,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
     private volatile boolean isAlert = true;
 
     private void disposeAlert() {
-        KLog.i("dispose Alerter ");
+        LogUtils.i("dispose Alerter ");
         synchronized (this){
             if (isAlert ) {
                 Integer recordCount = (Integer) SPUtils.getShare(this, Constans.RECORD_ISREAD, 0);
@@ -308,7 +307,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if(action.equals(OverallReceiver.CLEAR_TELL_PHONE_ACTIVITY)){
-                KLog.i("wifi波动finsh");
+                LogUtils.i("wifi波动finsh");
                 finish();
             }
         }

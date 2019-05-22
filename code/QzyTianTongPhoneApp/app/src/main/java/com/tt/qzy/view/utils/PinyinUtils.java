@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Service;
 import android.os.Vibrator;
 
-import com.socks.library.KLog;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;

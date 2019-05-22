@@ -229,6 +229,7 @@ public class MainFragment extends Fragment implements MainFragmentView{
 
     /** 设置连接天通状态显示 */
     private void setConnectStateView(boolean isConnected) {
+        if(getActivity() == null) return;
         if (isConnected) {
             if(mCircleImageView != null) {
                 mCircleImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.yilianjie));

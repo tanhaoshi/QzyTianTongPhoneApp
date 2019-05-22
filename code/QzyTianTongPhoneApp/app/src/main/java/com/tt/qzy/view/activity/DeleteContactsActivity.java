@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.kaopiz.kprogresshud.KProgressHUD;
-import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.DeleteContactsAdapter;
 import com.tt.qzy.view.application.TtPhoneApplication;

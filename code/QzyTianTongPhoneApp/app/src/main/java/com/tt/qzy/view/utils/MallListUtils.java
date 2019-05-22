@@ -3,10 +3,9 @@ package com.tt.qzy.view.utils;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 import android.provider.ContactsContract;
 
-import com.socks.library.KLog;
+import com.qzy.utils.LogUtils;
 import com.tt.qzy.view.bean.MallListModel;
 
 import java.util.ArrayList;
@@ -36,11 +35,11 @@ public class MallListUtils {
                 }
                 return mallListModels;
             }else{
-                KLog.i("custor is null !");
+                LogUtils.i("custor is null !");
             }
         }catch (Exception e){
             e.printStackTrace();
-            KLog.i("error : " + e.getMessage().toString());
+            LogUtils.i("error : " + e.getMessage().toString());
         }
         return null;
     }

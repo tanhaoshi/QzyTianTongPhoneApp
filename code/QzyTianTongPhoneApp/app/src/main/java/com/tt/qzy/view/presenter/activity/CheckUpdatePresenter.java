@@ -12,7 +12,7 @@ import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.Status;
-import com.socks.library.KLog;
+import com.qzy.utils.LogUtils;
 import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.bean.VersionCodeModel;
 import com.tt.qzy.view.network.NetService;
@@ -60,7 +60,7 @@ public class CheckUpdatePresenter extends BasePresenter<CheckUpdateView>{
                     }
                     @Override
                     public void onError(Throwable e) {
-                        KLog.i("look over cause of error = " + e.getMessage());
+                        LogUtils.i("look over cause of error = " + e.getMessage());
                     }
                     @Override
                     public void onComplete() {
@@ -118,14 +118,14 @@ public class CheckUpdatePresenter extends BasePresenter<CheckUpdateView>{
                     @Override
                     public void onProgress(Progress progress) {
                         long progressPercent = progress.currentBytes * 100 / progress.totalBytes;
-                        KLog.i(" look over progress percent = " + progressPercent);
+                        LogUtils.i(" look over progress percent = " + progressPercent);
                         mView.get().onProgressPercent((int)progressPercent);
                     }
                 })
                 .start(new OnDownloadListener() {
                     @Override
                     public void onDownloadComplete() {
-                        KLog.i(" download complete !");
+                        LogUtils.i(" download complete !");
                         mView.get().onCompelete(installPath+"/"+Constans.fileName);
                     }
 

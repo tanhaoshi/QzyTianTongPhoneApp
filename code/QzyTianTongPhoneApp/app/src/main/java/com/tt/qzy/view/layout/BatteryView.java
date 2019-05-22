@@ -9,7 +9,6 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 
 public class BatteryView extends View {

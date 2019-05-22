@@ -2,10 +2,9 @@ package com.tt.qzy.view.db.manager;
 
 import android.content.Context;
 
-import com.socks.library.KLog;
+import com.qzy.utils.LogUtils;
 import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.db.CallRecordDaoDao;
-import com.tt.qzy.view.db.DaoMaster;
 import com.tt.qzy.view.db.DaoSession;
 import com.tt.qzy.view.db.dao.CallRecordDao;
 
@@ -114,7 +113,7 @@ public class CallRecordManager {
                 .where(new WhereCondition.StringCondition(
                         " date in " + "(select max(date) from CALL_RECORD_DAO group by NAME)"));
         List<CallRecordDao> daoList = db.list();
-        KLog.i("look at list size = " + daoList.size());
+        LogUtils.i("look at list size = " + daoList.size());
         if(daoList.size() > 0){
             return daoList;
         }else{
@@ -123,7 +122,7 @@ public class CallRecordManager {
                     .where(new WhereCondition.StringCondition(
                     " date in " + "(select max(date) from CALL_RECORD_DAO group by PHONE_NUMBER)"));
             List<CallRecordDao> list = queryBuilder.list();
-            KLog.i("look at list size = " + list.size());
+            LogUtils.i("look at list size = " + list.size());
             return list;
         }
     }

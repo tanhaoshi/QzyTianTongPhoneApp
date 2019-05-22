@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.qzy.tt.phone.data.TtPhoneDataManager;
-import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.base.BaseActivity;
 import com.tt.qzy.view.bean.SosSendMessageModel;

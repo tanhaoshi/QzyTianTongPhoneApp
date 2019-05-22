@@ -2,7 +2,6 @@ package com.qzy.tt.phone.netudp;
 
 
 import com.qzy.utils.LogUtils;
-import com.socks.library.KLog;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;

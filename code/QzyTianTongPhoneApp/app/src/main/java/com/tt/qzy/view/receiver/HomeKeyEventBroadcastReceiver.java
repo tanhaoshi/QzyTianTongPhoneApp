@@ -5,7 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
-import com.socks.library.KLog;
+import com.qzy.utils.LogUtils;
+
 
 public class HomeKeyEventBroadcastReceiver extends BroadcastReceiver{
 
@@ -32,7 +33,7 @@ public class HomeKeyEventBroadcastReceiver extends BroadcastReceiver{
             return;
         }
         String action = intent.getAction();
-        KLog.i("action : = " + action);
+        LogUtils.i("action : = " + action);
         if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
             String reason = intent.getStringExtra(SYSTEM_EVENT_REASON);
             if (null != reason) {

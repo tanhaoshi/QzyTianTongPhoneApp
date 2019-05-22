@@ -3,17 +3,11 @@ package com.tt.qzy.view.presenter.fragment;
 import android.content.Context;
 
 import com.alibaba.fastjson.JSON;
-import com.qzy.data.PhoneCmd;
 
-import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
-import com.socks.library.KLog;
-import com.tt.qzy.view.R;
+import com.qzy.utils.LogUtils;
 import com.tt.qzy.view.bean.ProtobufMessageModel;
-import com.tt.qzy.view.bean.ShortMessageModel;
-import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
-import com.tt.qzy.view.db.manager.CallRecordManager;
 import com.tt.qzy.view.db.manager.ShortMessageManager;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
 import com.tt.qzy.view.utils.DateUtil;
@@ -68,7 +62,7 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
             @Override
             public void subscribe(ObservableEmitter<List<ShortMessageDao>> e){
                 List<ShortMessageDao> daoList = ShortMessageManager.getInstance(mContext).queryList();
-                KLog.i("dao list size = " + JSON.toJSONString(daoList));
+                LogUtils.i("dao list size = " + JSON.toJSONString(daoList));
                 mView.get().getDaoListSize(daoList.size());
                 List<ShortMessageDao> messageDaoList = ShortMessageManager.getInstance(mContext).limitShortMessageList(offset,limit);
                 mView.get().getListSize(messageDaoList.size());
@@ -90,7 +84,7 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
 
                     @Override
                     public void onError(Throwable e) {
-                        KLog.i("look over shortmessage presenter error string value = " + e.getMessage());
+                        LogUtils.i("look over shortmessage presenter error string value = " + e.getMessage());
                         mView.get().showError(e.getMessage().toString(),true);
                     }
 
@@ -156,7 +150,7 @@ public class ShortMessagePresenter extends BasePresenter<ShortMessageView>{
                     }
                     @Override
                     public void onError(Throwable e) {
-                        KLog.i("look over shortmessage presenter error string value = " + e.getMessage());
+                        LogUtils.i("look over shortmessage presenter error string value = " + e.getMessage());
                         mView.get().showError(e.getMessage().toString(),true);
                     }
                     @Override

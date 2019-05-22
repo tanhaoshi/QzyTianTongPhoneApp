@@ -12,9 +12,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.common.util.concurrent.AbstractScheduledService;
 import com.kaopiz.kprogresshud.KProgressHUD;
-import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.ImportMailAdapter;
 import com.tt.qzy.view.bean.MallListModel;

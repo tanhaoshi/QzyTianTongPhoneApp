@@ -2,7 +2,6 @@ package com.qzy.tt.phone.netty;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.database.Observable;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -34,7 +33,6 @@ import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.SmsBean;
 import com.qzy.tt.phone.netudp.NetUdpThread;
 import com.qzy.utils.LogUtils;
-import com.socks.library.KLog;
 import com.tt.qzy.view.bean.AppInfoModel;
 import com.tt.qzy.view.bean.DatetimeModel;
 import com.tt.qzy.view.bean.EnableDataModel;
@@ -43,15 +41,9 @@ import com.tt.qzy.view.bean.SMAgrementModel;
 import com.tt.qzy.view.bean.SosSendMessageModel;
 import com.tt.qzy.view.bean.TtBeidouOpenBean;
 import com.tt.qzy.view.bean.WifiSettingModel;
-import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.Constans;
-import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.SPUtils;
-import com.tt.qzy.view.utils.ToastUtil;
 
-
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -59,14 +51,10 @@ import java.io.InputStream;
 
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.ChannelHandlerContext;
-import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
-import io.reactivex.FlowableEmitter;
-import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -108,7 +96,7 @@ public class PhoneNettyManager {
         mNettyClientManager = new NettyClientManager(nettyListener);
         mCmdHandler = new CmdHandler(context);
         initUdbConnect();
-        KLog.i("TtPhoneService boolean flag value = " + (Boolean) SPUtils.getShare(mContext, Constans.SERVER_FLAG, false));
+        LogUtils.i("TtPhoneService boolean flag value = " + (Boolean) SPUtils.getShare(mContext, Constans.SERVER_FLAG, false));
         if ((Boolean) SPUtils.getShare(mContext, Constans.SERVER_FLAG, false)) {
             connect(Constans.PORT, Constans.IP);
             SPUtils.putShare(mContext, Constans.SERVER_FLAG, false);
@@ -125,7 +113,7 @@ public class PhoneNettyManager {
         mCmdHandler.setOnCheckListener(new CmdHandler.CheckBeatListener() {
             @Override
             public void checkBeatState(boolean isBeat) {
-                KLog.i("look check state = " + isBeat);
+                LogUtils.i("look check state = " + isBeat);
                 isBeatState = isBeat;
             }
         });
@@ -133,11 +121,11 @@ public class PhoneNettyManager {
 
     public void checkConnectBeat() {
         if (NettyClient.getInstance().getConnectHanlerCtx() != null) {
-            KLog.i("send beat");
+            LogUtils.i("send beat");
             blockTaskCheckState();
         } else {
             //为空 释放重连
-            KLog.i("disconnect then connect");
+            LogUtils.i("disconnect then connect");
             mNettyClientManager.stop();
             mNettyClientManager = null;
             mNettyClientManager = new NettyClientManager(nettyListener);
@@ -172,11 +160,11 @@ public class PhoneNettyManager {
                         if (isBeatState) {
                             isBeatState = false;
                             isUdpHandlerConnect = false;
-                            KLog.i("return");
+                            LogUtils.i("return");
                             return;
                         } else {
                             isBeatState = false;
-                            KLog.i("reconnect");
+                            LogUtils.i("reconnect");
                             mNettyClientManager.stop();
                             mNettyClientManager = null;
                             mNettyClientManager = new NettyClientManager(nettyListener);
@@ -282,7 +270,7 @@ public class PhoneNettyManager {
      * @param phoneNumber
      */
     public void dialPhone(String phoneNumber) {
-        KLog.i("tell Phone phoneNumber ... ");
+        LogUtils.i("tell Phone phoneNumber ... ");
         CallPhoneProtos.CallPhone callPhone = CallPhoneProtos.CallPhone.newBuilder()
                 .setIp(CommonData.getInstance().getLocalWifiIp())
                 .setPhoneNumber(phoneNumber)
@@ -501,7 +489,7 @@ public class PhoneNettyManager {
             @Override
             public void transferred(int i) {
                 //                   LogUtils.d("-----------------transferred");
-                KLog.i("view download progress = " + i);
+                LogUtils.i("view download progress = " + i);
             }
 
             @Override

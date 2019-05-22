@@ -3,7 +3,6 @@ package com.tt.qzy.view.presenter.activity;
 import android.content.Context;
 
 import com.alibaba.fastjson.JSON;
-import com.socks.library.KLog;
 import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
 import com.tt.qzy.view.db.manager.CallRecordManager;

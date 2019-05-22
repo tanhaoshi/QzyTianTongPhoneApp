@@ -1,6 +1,6 @@
 package com.qzy.tt.phone.netty.fileupload;
 
-import com.socks.library.KLog;
+import com.qzy.utils.LogUtils;
 import com.tt.qzy.view.bean.FileUploadModel;
 
 import java.io.FileNotFoundException;
@@ -21,7 +21,7 @@ public class FileUploadClientHandler extends ChannelInboundHandlerAdapter {
     public FileUploadClientHandler(FileUploadModel ef) {
         if (ef.getFile().exists()) {
             if (!ef.getFile().isFile()) {
-                KLog.i("Not a file :" + ef.getFile());
+                LogUtils.i("Not a file :" + ef.getFile());
                 return;
             }
         }
@@ -39,7 +39,7 @@ public class FileUploadClientHandler extends ChannelInboundHandlerAdapter {
                 fileUploadFile.setBytes(bytes);
                 ctx.writeAndFlush(fileUploadFile);
             } else {
-                KLog.i("文件已经读完");
+                LogUtils.i("文件已经读完");
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -55,17 +55,17 @@ public class FileUploadClientHandler extends ChannelInboundHandlerAdapter {
             if (start != -1) {
                 randomAccessFile = new RandomAccessFile(fileUploadFile.getFile(), "r");
                 randomAccessFile.seek(start);
-                KLog.i("块儿长度：" + (randomAccessFile.length() / 10));
-                KLog.i("长度：" + (randomAccessFile.length() - start));
+                LogUtils.i("块儿长度：" + (randomAccessFile.length() / 10));
+                LogUtils.i("长度：" + (randomAccessFile.length() - start));
                 int a = (int) (randomAccessFile.length() - start);
                 int b = (int) (randomAccessFile.length() / 10);
                 if (a < b) {
                     lastLength = a;
                 }
                 byte[] bytes = new byte[lastLength];
-                KLog.i("-----------------------------" + bytes.length);
+                LogUtils.i("-----------------------------" + bytes.length);
                 if ((byteRead = randomAccessFile.read(bytes)) != -1 && (randomAccessFile.length() - start) > 0) {
-                    KLog.i("byte 长度：" + bytes.length);
+                    LogUtils.i("byte 长度：" + bytes.length);
                     fileUploadFile.setEndPos(byteRead);
                     fileUploadFile.setBytes(bytes);
                     try {
@@ -76,7 +76,7 @@ public class FileUploadClientHandler extends ChannelInboundHandlerAdapter {
                 } else {
                     randomAccessFile.close();
                     ctx.close();
-                    KLog.i("文件已经读完--------" + byteRead);
+                    LogUtils.i("文件已经读完--------" + byteRead);
                 }
             }
         }

@@ -18,11 +18,9 @@ import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.Status;
-import com.qzy.data.PhoneCmd;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.utils.LogUtils;
-import com.socks.library.KLog;
 import com.tt.qzy.view.application.TtPhoneApplication;
 import com.tt.qzy.view.bean.VersionCodeModel;
 import com.tt.qzy.view.db.dao.CallRecordDao;
@@ -81,7 +79,7 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView>{
 
                      @Override
                      public void onError(Throwable e) {
-                         KLog.i("look over cause of error = " + e.getMessage());
+                         LogUtils.i("look over cause of error = " + e.getMessage());
                      }
 
                      @Override
@@ -140,14 +138,14 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView>{
                     @Override
                     public void onProgress(Progress progress) {
                         long progressPercent = progress.currentBytes * 100 / progress.totalBytes;
-                        KLog.i(" look over progress percent = " + progressPercent);
+                        LogUtils.i(" look over progress percent = " + progressPercent);
                         mView.get().onProgressPercent((int)progressPercent);
                     }
                 })
                 .start(new OnDownloadListener() {
                     @Override
                     public void onDownloadComplete() {
-                        KLog.i(" download complete !");
+                        LogUtils.i(" download complete !");
                         mView.get().onCompelete(installPath+"/"+Constans.fileName);
                     }
 
@@ -201,7 +199,7 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView>{
     public void requestServerPhoneStatus(List<CallRecordDao> callRecordDaos){
         TtCallRecordProtos.TtCallRecordProto.Builder listRecorder = TtCallRecordProtos.TtCallRecordProto.newBuilder();
         for (CallRecordDao callInfo : callRecordDaos) {
-            KLog.e("callInfo = " + callInfo.toString());
+            LogUtils.e("callInfo = " + callInfo.toString());
             TtCallRecordProtos.TtCallRecordProto.CallRecord callRecord = TtCallRecordProtos.TtCallRecordProto.CallRecord.newBuilder()
                     .setId(callInfo.getServerId())
                     .setPhoneNumber(callInfo.getPhoneNumber())
@@ -229,9 +227,9 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView>{
     }
 
     public void requestPermission(String brand, Activity activity, String... permissions){
-        KLog.i("look up is not Xiaomi");
+        LogUtils.i("look up is not Xiaomi");
         if(DEVICE_BRAND.equals(brand)){
-            KLog.i("is xiaomi so start request permission");
+            LogUtils.i("is xiaomi so start request permission");
             ActivityCompat.requestPermissions(activity,permissions,PERMISSION_REQUEST_CODE);
         }else{
             return;

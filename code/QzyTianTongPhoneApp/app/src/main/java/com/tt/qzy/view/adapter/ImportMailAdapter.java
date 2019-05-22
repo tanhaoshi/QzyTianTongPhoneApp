@@ -8,11 +8,8 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
-import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.bean.MallListModel;
-import com.tt.qzy.view.bean.SortModel;
 
 import java.util.List;
 

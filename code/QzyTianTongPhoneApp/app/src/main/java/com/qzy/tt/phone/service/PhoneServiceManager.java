@@ -17,7 +17,6 @@ import com.qzy.tt.phone.data.impl.ITtPhoneCallStateLisenter;
 import com.qzy.tt.phone.netty.PhoneNettyManager;
 import com.qzy.utils.LogUtils;
 import com.qzy.utils.ToastUtils;
-import com.socks.library.KLog;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.SPUtils;
 import com.tt.qzy.view.utils.ToastUtil;
@@ -207,7 +206,7 @@ public class PhoneServiceManager {
      * 释放
      */
     public void relese() {
-        KLog.e("relese ..... ");
+        LogUtils.e("relese ..... ");
         if (mPhoneNettyManager != null) {
             mPhoneNettyManager.free();
         }

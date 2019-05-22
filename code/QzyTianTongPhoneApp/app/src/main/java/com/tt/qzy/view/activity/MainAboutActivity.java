@@ -7,7 +7,7 @@ import android.widget.TextView;
 import com.qzy.data.PhoneCmd;
 import com.qzy.tt.data.TtPhoneGetServerVersionProtos;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
-import com.socks.library.KLog;
+import com.qzy.utils.LogUtils;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.base.BaseActivity;
 import com.tt.qzy.view.presenter.activity.MainAboutPresenter;
@@ -106,11 +106,11 @@ public class MainAboutActivity extends BaseActivity<MainAboutView> implements Ma
         PhoneCmd cmd = (PhoneCmd)o;
         TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion getServerVersion = (TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion)
                 cmd.getMessage();
-        KLog.i("look at module version = " + getServerVersion.getTiantongModelVersion());
+        LogUtils.i("look at module version = " + getServerVersion.getTiantongModelVersion());
         about_soft_version.setText(getServerVersion.getServerApkVersionName());
         about_number.setText(getServerVersion.getServerSieralNo());
         String str = getServerVersion.getTiantongModelVersion().trim().substring(0,getServerVersion.getTiantongModelVersion().trim().length()-4);
-        KLog.i("string  = " +str);
+        LogUtils.i("string  = " +str);
         module_version.setText(str);
     }
 

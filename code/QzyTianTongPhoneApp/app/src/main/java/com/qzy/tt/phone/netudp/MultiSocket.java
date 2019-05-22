@@ -2,7 +2,8 @@ package com.qzy.tt.phone.netudp;
 
 
 
-import com.socks.library.KLog;
+
+import com.qzy.utils.LogUtils;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -54,7 +55,7 @@ public class MultiSocket {
 
     private void receiveBroadcast() throws IOException {
 
-        KLog.v( "sendMultiBroadcast...");
+        LogUtils.v( "sendMultiBroadcast...");
 
         socket = new MulticastSocket(8600);
 
@@ -70,7 +71,7 @@ public class MultiSocket {
 
         socket.receive(packet);
 
-        KLog.v( "get data = " + new String(packet.getData()).trim());
+        LogUtils.v( "get data = " + new String(packet.getData()).trim());
 
         if(mCallBack != null) mCallBack.receiveData(new String(packet.getData()).trim());
 

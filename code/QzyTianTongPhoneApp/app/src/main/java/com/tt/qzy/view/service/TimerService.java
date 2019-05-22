@@ -6,13 +6,10 @@ import android.os.IBinder;
 
 import com.qzy.tt.phone.data.SmsBean;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
-import com.socks.library.KLog;
 import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.SPUtils;
 import com.tt.qzy.view.utils.TimeTask;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.TimerTask;
 
 public class TimerService extends Service{

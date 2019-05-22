@@ -4,17 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.socks.library.KLog;
-import com.tt.qzy.view.activity.ImportMailActivity;
 import com.tt.qzy.view.adapter.ImportMailAdapter;
-import com.tt.qzy.view.adapter.SortAdapter;
 import com.tt.qzy.view.bean.MallListModel;
 import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.MailListDao;
-import com.tt.qzy.view.db.dao.ShortMessageDao;
 import com.tt.qzy.view.db.manager.CallRecordManager;
 import com.tt.qzy.view.db.manager.MailListManager;
-import com.tt.qzy.view.db.manager.ShortMessageManager;
 import com.tt.qzy.view.presenter.baselife.BasePresenter;
 import com.tt.qzy.view.utils.MallListUtils;
 import com.tt.qzy.view.utils.NToast;
