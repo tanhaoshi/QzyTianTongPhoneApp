@@ -62,6 +62,8 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
 
     private TellPhoneActivityPresenter mTellPhoneActivityPresenter;
 
+    //问题一：当挂断多次出现的时候
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,8 +119,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.btn_endcall:
-                isAlert = true;
-                //挂断
+
                 mTellPhoneActivityPresenter.endCall();
 
                 onEndCallState();
@@ -185,10 +186,11 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
             if (callPhoneBack.getIp().equals(CommonData.getInstance().getLocalWifiIp())) {
 
             } else {
+                KLog.i("电话状态产生finsh");
                 finish();
             }
         } else {
-            finish();
+
         }
     }
 
@@ -203,6 +205,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         startActivity(intent);
         RingManager.stopDefaultCallMediaPlayer(getApplication());
         mTellPhoneActivityPresenter.acceptCall();
+        KLog.i("通话产生finsh");
         finish();
     }
 
@@ -211,6 +214,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
      */
     private void onEndCallState() {
         RingManager.stopDefaultCallMediaPlayer(getApplication());
+        KLog.i("挂断产生finsh");
         finish();
     }
 
@@ -223,13 +227,11 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         KLog.i("phone state = " + PhoneStateUtils.getTtPhoneState(cmd).ordinal());
         switch (PhoneStateUtils.getTtPhoneState(cmd)) {
             case NOCALL:
-                isAlert = false;
                 onEndCallState();
                 break;
             case RING:
                 break;
             case CALL:
-                isAlert = false;
                 if(!CommonData.getInstance().isCallingIp(PhoneStateUtils.getTtPhoneStateNowCallingIp(cmd))){
                     KLog.d("is not me calling  = ");
                     break;
@@ -237,10 +239,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
                 //onCallingState();
                 break;
             case HUANGUP:
-
-                isAlert = true;
-
-                onEndCallState();
+                KLog.i("产生挂断");
 
                 disposeAlert();
 
@@ -257,37 +256,37 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
 
                     CallRecordManager.getInstance(this).insertCallRecord(callRecordDao, this);
                 }
+
+                onEndCallState();
+
                 break;
             case INCOMING:
-                isAlert = false;
                 break;
             case UNRECOGNIZED:
-                isAlert = false;
                 onEndCallState();
                 break;
         }
     }
 
-    private boolean isAlert = true;
+    private volatile boolean isAlert = true;
 
     private void disposeAlert() {
-        if (isAlert) {
-            Integer recordCount = (Integer) SPUtils.getShare(this, Constans.RECORD_ISREAD, 0);
-            recordCount = recordCount + 1;
-            SPUtils.putShare(this, Constans.RECORD_ISREAD, recordCount);
+        KLog.i("dispose Alerter ");
+        synchronized (this){
+            if (isAlert ) {
+                Integer recordCount = (Integer) SPUtils.getShare(this, Constans.RECORD_ISREAD, 0);
+                recordCount = recordCount + 1;
+                SPUtils.putShare(this, Constans.RECORD_ISREAD, recordCount);
 
-          /*  EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_RECORD_CALL_HISTROY
-                    ,Integer.valueOf(recordCount)));*/
-
-            Flowable.just(recordCount)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<Integer>() {
-                        @Override
-                        public void accept(Integer integer) throws Exception {
-                            TtPhoneDataManager.getInstance().getISyncDataListener("MainActivityPresenter").onCallingLogSyncFinish(Integer.valueOf(integer.intValue()));
-                        }
-                    });
-
+                Flowable.just(recordCount)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<Integer>() {
+                            @Override
+                            public void accept(Integer integer) throws Exception {
+                                TtPhoneDataManager.getInstance().getISyncDataListener("MainActivityPresenter").onCallingLogSyncFinish(Integer.valueOf(integer.intValue()));
+                            }
+                        });
+            }
             isAlert = false;
         }
     }
@@ -309,6 +308,7 @@ public class TellPhoneIncomingActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if(action.equals(OverallReceiver.CLEAR_TELL_PHONE_ACTIVITY)){
+                KLog.i("wifi波动finsh");
                 finish();
             }
         }

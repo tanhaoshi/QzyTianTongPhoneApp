@@ -299,6 +299,7 @@ public class CmdHandler {
                     }
                 }else{
                     if (mAllDataListener != null) {
+                        LogUtils.i("phoneState = "+callPhoneState.getPhoneState());
                         mAllDataListener.onTtPhoneCallState(PhoneCmd.getPhoneCmd(protoId, callPhoneState));
                     }
                 }
