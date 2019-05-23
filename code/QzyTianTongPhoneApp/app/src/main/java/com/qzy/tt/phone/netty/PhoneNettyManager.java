@@ -206,9 +206,9 @@ public class PhoneNettyManager {
                 return;
             }
             isUdpHandlerConnect = true;
-            //checkConnectBeat();
+            checkConnectBeat();
             isSleepDisconnect = false;
-            mNettyClientManager.startReconnected(Constans.PORT, Constans.IP);
+            //mNettyClientManager.startReconnected(Constans.PORT, Constans.IP);
             mhandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
