@@ -326,6 +326,8 @@ public class MainFragment extends Fragment implements MainFragmentView{
     }
 
     public void viewTransition(boolean isChange){
+        if(mainActivity == null) return;
+
         if(isChange){
             mScrollView.setVisibility(View.GONE);
             mFrameLayout.setVisibility(View.VISIBLE);
