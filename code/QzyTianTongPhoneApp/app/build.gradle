@@ -20,10 +20,27 @@ android {
         }
 
     }
+
+    signingConfigs {
+        configs {
+            keyAlias 'tt_application'
+            keyPassword 'qzy123456'
+            storeFile file('../tt_signature_file.jks')
+            storePassword 'qzy123456'
+        }
+    }
+
     buildTypes {
+
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.configs
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.configs
         }
     }
 
@@ -45,13 +62,48 @@ android {
         daoPackage 'com.tt.qzy.view.db'
     }
 
+
+    productFlavors{
+        Conquest{
+            applicationId defaultConfig.applicationId
+
+            manifestPlaceholders = [
+                    app_icon           : "@drawable/icon",
+                    app_name           : "@string/app_name",
+            ]
+        }
+        QzyTianTongPhone{
+            applicationId defaultConfig.applicationId
+
+            manifestPlaceholders = [
+                    app_icon           : "@drawable/icon",
+                    app_name           : "@string/app_name",
+            ]
+        }
+    }
+
+    sourceSets{
+        Conquest{
+            res.srcDirs = [
+                    'src/main/res',
+                    'src/main/res_conquest',
+            ]
+        }
+        QzyTianTongPhone{
+            res.srcDirs = [
+                    'src/main/res',
+                    'src/main/res_ttphone',
+            ]
+        }
+    }
+
     android.applicationVariants.all { variant ->
         variant.outputs.each { output ->
             def outputFile = output.packageApplication.outputFile
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
                 //这里修改apk文件名  Conquest QzyTianTongPhone
                 //def fileName = "demo_${variant.productFlavors[0].name}-${defaultConfig.versionCode}-${defaultConfig.versionName}-${releaseTime() }.apk"
-                def fileName = "Conquest" + "_" + defaultConfig.versionName + "_" + new Date().format("yyyy-MM-dd") + "_" + buildType.name + ".apk"
+                def fileName = "${variant.productFlavors[0].name}" + "_" + defaultConfig.versionName + "_" + new Date().format("yyyy-MM-dd") + "_" + buildType.name + ".apk"
                 output.outputFile = new File(outputFile.parent, fileName)
             }
         }
