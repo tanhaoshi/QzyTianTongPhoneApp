@@ -63,7 +63,6 @@ public class NettyClient {
 
 
     private NettyClient(IConnectedReadDataListener listener){
-
         connectedReadDataListener = listener;
         initNettyClient();
     }
@@ -230,6 +229,8 @@ public class NettyClient {
         @Override
         public void channelReadComplete(ChannelHandlerContext channelHandlerContext) throws Exception {
             LogUtils.e("channelReadComplete ");
+
+            connectHanlerCtx = channelHandlerContext;
 
             if (connectedReadDataListener != null && dataBuf != null) {
                 ByteBufInputStream inputStream = new ByteBufInputStream(dataBuf);

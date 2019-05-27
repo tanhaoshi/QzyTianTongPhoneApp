@@ -61,24 +61,41 @@ public class TtUpdateUtils {
         return 0;
     }
 
-    public static int getVersionCode(Context context) {
-        return getPackageInfo(context).versionCode;
+    /**
+     * Return the application's version code.
+     *
+     * @return the application's version code
+     */
+    public static int getAppVersionCode(Context context) {
+        return getAppVersionCode(context.getPackageName(),context);
     }
 
-    private static PackageInfo getPackageInfo(Context context) {
-        PackageInfo pi = null;
-
+    /**
+     * Return the application's version code.
+     *
+     * @param packageName The name of the package.
+     * @return the application's version code
+     */
+    public static int getAppVersionCode(final String packageName,Context context) {
+        if (isSpace(packageName)) return -1;
         try {
             PackageManager pm = context.getPackageManager();
-            pi = pm.getPackageInfo(context.getPackageName(),
-                    PackageManager.GET_CONFIGURATIONS);
-
-            return pi;
-        } catch (Exception e) {
+            PackageInfo pi = pm.getPackageInfo(packageName, 0);
+            return pi == null ? -1 : pi.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+            return -1;
         }
+    }
 
-        return pi;
+    private static boolean isSpace(final String s) {
+        if (s == null) return true;
+        for (int i = 0, len = s.length(); i < len; ++i) {
+            if (!Character.isWhitespace(s.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
 

@@ -59,11 +59,6 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
      * 连接天通
      */
     public void startConnect() {
-//        if (CommonData.getInstance().isConnected()) {
-//            Intent intent = new Intent(mContext, UserEditorsActivity.class);
-//            ((Activity) mContext).startActivityForResult(intent, 99);
-//            return;
-//        }
 
         if (!NetworkUtil.isWifiEnabled(mContext)) {
             WifiManager wfManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
@@ -79,7 +74,6 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
             NToast.shortToast(mContext, mContext.getString(R.string.TMT_PLEASE_CLOSE_DATA_MOBILE_AND_ENABLE_WIFI));
         }
 
-        //!ssid.contains(Constans.STANDARD_WIFI_NAME)
         if (TextUtils.isEmpty(ssid) || ssid.length() < 6 || !containsWifiSSID(ssid)) {
             NToast.shortToast(mContext, mContext.getString(R.string.TMT_connect_tiantong_please));
             Intent intent = new Intent("android.settings.WIFI_SETTINGS");
@@ -209,8 +203,7 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
      * 关闭设备链接
      */
     private void parseAppUploadFinsh(Object o) {
-        PhoneCmd cmd = (PhoneCmd) o;
-        TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse) cmd.getMessage();
+        TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse) o;
         if (updateResponse.getIsUpdateFinish()) {
             mView.get().isServerUpdate(true);
             TtPhoneDataManager.getInstance().disconnectTtPhoneServer();

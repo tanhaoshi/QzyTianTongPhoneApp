@@ -79,23 +79,23 @@ public class PhoneNettyManager {
 
     private Handler mhandler = new Handler(Looper.getMainLooper());
 
-    //用户点击连接
-    private boolean isUserHandlerConnect = false;
-
-    //由猫唤醒导致重连标志
-    private boolean isUdpHandlerConnect = false;
-
-    //netty通道异常 导致重连标志位
-    private boolean isNettyException = false;
-
-    //休眠前断开连接
-    private boolean isSleepDisconnect = false;
+//    //用户点击连接
+//    private boolean isUserHandlerConnect = false;
+//
+//    //由猫唤醒导致重连标志
+//    private boolean isUdpHandlerConnect = false;
+//
+//    //netty通道异常 导致重连标志位
+//    private boolean isNettyException = false;
+//
+//    //休眠前断开连接
+//    private boolean isSleepDisconnect = false;
 
     public PhoneNettyManager(Context context) {
         mContext = context;
         mNettyClientManager = new NettyClientManager(nettyListener);
         mCmdHandler = new CmdHandler(context);
-        initUdbConnect();
+//        initUdbConnect();
         LogUtils.i("TtPhoneService boolean flag value = " + (Boolean) SPUtils.getShare(mContext, Constans.SERVER_FLAG, false));
         if ((Boolean) SPUtils.getShare(mContext, Constans.SERVER_FLAG, false)) {
             connect(Constans.PORT, Constans.IP);
@@ -159,7 +159,7 @@ public class PhoneNettyManager {
                     public void onNext(Boolean aBoolean) {
                         if (isBeatState) {
                             isBeatState = false;
-                            isUdpHandlerConnect = false;
+//                            isUdpHandlerConnect = false;
                             LogUtils.i("return");
                             return;
                         } else {
@@ -200,21 +200,21 @@ public class PhoneNettyManager {
     private NetUdpThread.IUdpListener udpListener = new NetUdpThread.IUdpListener() {
         @Override
         public void onConnectStateMsg() {
-            LogUtils.d("server call client connect ");
-            if (!isUserHandlerConnect) {
-                LogUtils.d("user not connect so return ");
-                return;
-            }
-            isUdpHandlerConnect = true;
-            checkConnectBeat();
-            isSleepDisconnect = false;
-            //mNettyClientManager.startReconnected(Constans.PORT, Constans.IP);
-            mhandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mNetUdpThread.setReconnected(false);
-                }
-            }, 6000);
+//            LogUtils.d("server call client connect ");
+//            if (!isUserHandlerConnect) {
+//                LogUtils.d("user not connect so return ");
+//                return;
+//            }
+//            isUdpHandlerConnect = true;
+//            checkConnectBeat();
+//            isSleepDisconnect = false;
+//            //mNettyClientManager.startReconnected(Constans.PORT, Constans.IP);
+//            mhandler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    mNetUdpThread.setReconnected(false);
+//                }
+//            }, 6000);
         }
 
         @Override
@@ -250,7 +250,7 @@ public class PhoneNettyManager {
      * 开始连接
      */
     public void connect(int port, String ip) {
-        isUserHandlerConnect = true;
+//        isUserHandlerConnect = true;
         this.ip = ip;
         this.port = port;
         mNettyClientManager.startConnect(port, ip);
@@ -260,7 +260,7 @@ public class PhoneNettyManager {
      * 断开连接
      */
     public void stop() {
-        isUserHandlerConnect = false;
+//        isUserHandlerConnect = false;
         mNettyClientManager.stop();
     }
 
@@ -483,7 +483,7 @@ public class PhoneNettyManager {
             @Override
             public void started() {
                 LogUtils.e("-----------------started");
-                mCmdHandler.getmAllDataListener();
+                mCmdHandler.getmAllDataListener().onUpdatePercent(1);
             }
 
             @Override
@@ -686,17 +686,17 @@ public class PhoneNettyManager {
         public void onConnected() {
             LogUtils.i("netty connected ...");
 
-            if (isUdpHandlerConnect) {
-                isUdpHandlerConnect = false;
-            }
-
-            if (isNettyException) {
-                isNettyException = false;
-            }
-
-            if(isSleepDisconnect){
-                isSleepDisconnect = false;
-            }
+//            if (isUdpHandlerConnect) {
+//                isUdpHandlerConnect = false;
+//            }
+//
+//            if (isNettyException) {
+//                isNettyException = false;
+//            }
+//
+//            if(isSleepDisconnect){
+//                isSleepDisconnect = false;
+//            }
 
             setConnectedState();
         }
@@ -704,23 +704,23 @@ public class PhoneNettyManager {
         @Override
         public void onDisconnected() {
             LogUtils.i("netty disconnected ...");
-            if (isUserHandlerConnect && isUdpHandlerConnect) {
-                LogUtils.i("netty disconnected is wakeup ");
-                return;
-            }
+//            if (isUserHandlerConnect && isUdpHandlerConnect) {
+//                LogUtils.i("netty disconnected is wakeup ");
+//                return;
+//            }
+//
+//            if(isUserHandlerConnect && isSleepDisconnect){
+//                LogUtils.i("netty disconnected is sleep ");
+//                isSleepDisconnect = false;
+//                return;
+//            }
+//
+//            if (isUserHandlerConnect && isNettyException) {
+//                LogUtils.i("netty disconnected is exception ");
+//                return;
+//            }
 
-            if(isUserHandlerConnect && isSleepDisconnect){
-                LogUtils.i("netty disconnected is sleep ");
-                isSleepDisconnect = false;
-                return;
-            }
-
-            if (isUserHandlerConnect && isNettyException) {
-                LogUtils.i("netty disconnected is exception ");
-                return;
-            }
-
-            sendConnectedState(false);
+//            sendConnectedState(false);
             if (mCmdHandler != null) {
                 mCmdHandler.resetPhoneState();
             }
@@ -730,15 +730,16 @@ public class PhoneNettyManager {
         @Override
         public void onException(ChannelHandlerContext ctx) {
             LogUtils.i("netty onException...");
-            if(isUserHandlerConnect || isUdpHandlerConnect){
-                LogUtils.i("netty onException..isUserHandlerConnect or isUdpHandlerConnect.");
-                return;
-            }
-           if(!isNettyException){
-               isNettyException = true;
-                mNettyClientManager.stop();
+//            if(isUserHandlerConnect || isUdpHandlerConnect){
+//                LogUtils.i("netty onException..isUserHandlerConnect or isUdpHandlerConnect.");
+//                return;
+//            }
+//           if(!isNettyException){
+//               isNettyException = true;
+
+//                mNettyClientManager.stop();
                 mNettyClientManager.startReconnected(Constans.PORT, Constans.IP);
-           }
+//           }
         }
 
     };
@@ -763,7 +764,7 @@ public class PhoneNettyManager {
         }
         CommonData.getInstance().free();
         mCmdHandler.release();
-        releaseUdpConnect();
+//        releaseUdpConnect();
     }
 
 

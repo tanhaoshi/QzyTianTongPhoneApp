@@ -5,6 +5,8 @@ import com.google.protobuf.Message;
 import com.qzy.data.PhoneCmd;
 import com.qzy.data.PrototocalTools;
 
+import java.util.concurrent.ExecutorService;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
@@ -83,24 +85,31 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
 
 
     public void startReconnected(final int port, final String ip) {
-        isConnected = false;
-        if (mReconnectedThread == null) {
-            mReconnectedThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    while (!isConnected) {
-                        try {
-                            Thread.sleep(2000);
-                            startConnect(port, ip);
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
-        }
-        mReconnectedThread.start();
+//        isConnected = false;
+//        if (mReconnectedThread == null) {
+//            mReconnectedThread = new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    while (!isConnected) {
+//                        try {
+////                            Thread.sleep(2000);
+//                            startConnect(port, ip);
+//
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
+//            });
+//        }
+//        mReconnectedThread.start();
+        ExecutorService executorService = ThreadUtils.getCachedPool();
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                startConnect(port, ip);
+            }
+        });
     }
 
     private void stopReconnected() {

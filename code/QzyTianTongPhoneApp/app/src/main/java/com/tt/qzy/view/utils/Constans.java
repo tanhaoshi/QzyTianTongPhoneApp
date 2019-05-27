@@ -38,8 +38,8 @@ public interface Constans {
 
     int UPLOAD_PORT = 9998;
     int PORT = 9999;
-    // 13
-    String SERVER_APP_VERSION = "1";
+    // 13  当前服务的版本号为4
+    String SERVER_APP_VERSION = "4";
 
     int ANSWER = 1;
     int PUTOUT = 2;

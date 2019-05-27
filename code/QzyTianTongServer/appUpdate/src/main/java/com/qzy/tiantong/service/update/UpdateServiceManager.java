@@ -181,8 +181,7 @@ public class UpdateServiceManager implements IUpdateManager {
             String zipMd5 = updateAppInfo.getTiantongUpdateMd();
             LogUtils.d(" phoneAppVersion = " + phoneAppVersion + " serverAppVersion = " + serverAppVersion + " zipMd5 = " + zipMd5);
 
-
-            int nowServerVersion = TtUpdateUtils.getVersionCode(mContext);
+            int nowServerVersion = TtUpdateUtils.getAppVersionCode(mContext);
 
             LogUtils.d(" nowServerVersion = " + nowServerVersion);
 

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
 
+
 public class TtPhoneService extends Service {
 
     private PhoneServiceManager mPhoneServiceManager;
@@ -21,8 +22,6 @@ public class TtPhoneService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        mPhoneServiceManager = new PhoneServiceManager(getApplicationContext());
-        startNotifaction();
     }
 
     //8.0 启动服务必须调用
@@ -40,7 +39,9 @@ public class TtPhoneService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_NOT_STICKY;
+        mPhoneServiceManager = new PhoneServiceManager(getApplicationContext());
+        startNotifaction();
+        return START_STICKY;
     }
 
     @Override

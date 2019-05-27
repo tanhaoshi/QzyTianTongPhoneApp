@@ -32,19 +32,19 @@ public class TraceServiceImpl extends AbsWorkService {
         return sShouldStopService;
     }
 
-    private TimeTask mTimeTask;
+//    private TimeTask mTimeTask;
 
     @Override
     public void startWork(Intent intent, int flags, int startId) {
-        if(mTimeTask == null){
-            mTimeTask = new TimeTask(3000, new TimerTask() {
-                @Override
-                public void run() {
-                    timerSendMessage();
-                }
-            });
-            mTimeTask.start();
-        }
+//        if(mTimeTask == null){
+//            mTimeTask = new TimeTask(3000, new TimerTask() {
+//                @Override
+//                public void run() {
+//                    timerSendMessage();
+//                }
+//            });
+//            mTimeTask.start();
+//        }
     }
 
     private void timerSendMessage(){
@@ -60,7 +60,7 @@ public class TraceServiceImpl extends AbsWorkService {
 
     @Override
     public void stopWork(Intent intent, int flags, int startId) {
-        stopService();
+//        stopService();
     }
 
     @Override

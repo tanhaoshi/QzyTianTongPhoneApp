@@ -5,6 +5,8 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
+import android.widget.Toast;
+
 import com.github.jlmd.animatedcircleloadingview.animator.ViewAnimator;
 import com.github.jlmd.animatedcircleloadingview.component.InitialCenterCircleView;
 import com.github.jlmd.animatedcircleloadingview.component.MainCircleView;
@@ -94,6 +96,9 @@ public class AnimatedCircleLoadingView extends FrameLayout {
         startAnimationIndeterminate = false;
       }
       if (startAnimationDeterminate) {
+        if(percentIndicatorView.getParent() != null){
+           removeAllViews();
+        }
         addView(percentIndicatorView);
         viewAnimator.startAnimator();
         startAnimationDeterminate = false;
