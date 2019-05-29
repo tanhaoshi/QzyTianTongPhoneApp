@@ -600,24 +600,8 @@ public class PhoneNettyManager implements IMobileDataManager {
      */
     public TtPhoneBatteryProtos.TtPhoneBattery getTtPhoneBatteryToClient() {
         String level = ModuleDormancyUtil.getNodeString(Constant.BATTERY_PATH);
-        int dsoc = Integer.valueOf(level);
-        int real_soc = 0;
-        if(dsoc<0){
-          dsoc = 0;
-        }
-        if(dsoc<13){
-            real_soc = dsoc/4;
-        }else {
-            real_soc = 3 + (dsoc-12)*97/83;
-        }
-
-        if(real_soc > 100){
-            real_soc = 100;
-        }
-
-        LogUtils.i("battery value = " + real_soc);
         ttPhoneBattery = TtPhoneBatteryProtos.TtPhoneBattery.newBuilder()
-                .setLevel(real_soc)
+                .setLevel(Integer.valueOf(level))
                 .setScale(100)
                 .build();
         return ttPhoneBattery;
