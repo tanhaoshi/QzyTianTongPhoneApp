@@ -333,7 +333,12 @@ public class PhoneNettyManager implements IMobileDataManager {
             }
 
             if(mTtPhoneGetServerVersion == null || TextUtils.isEmpty(mTtPhoneGetServerVersion.getTiantongModelVersion())){
-                return;
+                mTtPhoneGetServerVersion = TtPhoneGetServerVersionProtos.TtPhoneGetServerVersion.newBuilder()
+                        .setIp("192.168.43.1")
+                        .setServerApkVersionName(BuildConfig.VERSION_NAME)
+                        .setServerSieralNo(QzySystemUtils.getSerialNumberCustom())
+                        .setTiantongModelVersion("未知")
+                        .build();
             }
             LogUtils.d(" ip = " + mTtPhoneGetServerVersion.getIp() + " versionName = " + mTtPhoneGetServerVersion.getServerApkVersionName() + " sieralNo = " + mTtPhoneGetServerVersion.getServerSieralNo());
             mNettyServerManager.sendData(ttPhoneGetServerVersion.getIp(),

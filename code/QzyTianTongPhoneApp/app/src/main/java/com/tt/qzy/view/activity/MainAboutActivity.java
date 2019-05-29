@@ -109,6 +109,9 @@ public class MainAboutActivity extends BaseActivity<MainAboutView> implements Ma
         LogUtils.i("look at module version = " + getServerVersion.getTiantongModelVersion());
         about_soft_version.setText(getServerVersion.getServerApkVersionName());
         about_number.setText(getServerVersion.getServerSieralNo());
+        if(getServerVersion.getTiantongModelVersion().trim().length() < 3){
+            return;
+        }
         String str = getServerVersion.getTiantongModelVersion().trim().substring(0,getServerVersion.getTiantongModelVersion().trim().length()-4);
         LogUtils.i("string  = " +str);
         module_version.setText(str);
