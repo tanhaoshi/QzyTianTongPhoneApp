@@ -1,5 +1,6 @@
 package com.tt.qzy.view.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -50,13 +51,6 @@ public class ImportMailAdapter extends RecyclerView.Adapter<DeleteContactsAdapte
         }
 
         holder.tvName.setText(this.mData.get(position).getName());
-        //  一整列的点击事件
-//        holder.tvName.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Toast.makeText(mContext, mData.get(position).getName(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
 
         holder.ck_chose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +73,13 @@ public class ImportMailAdapter extends RecyclerView.Adapter<DeleteContactsAdapte
             holder.ck_chose.setChecked(false);
         }
 
+    }
+
+    public void selectAll(){
+        for(MallListModel mallListModel : mData){
+            mallListModel.setChoosed(true);
+        }
+        notifyDataSetChanged();
     }
 
     @Override

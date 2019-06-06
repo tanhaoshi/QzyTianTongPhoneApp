@@ -17,6 +17,7 @@ import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.impl.IMainFragment;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.utils.IPUtil;
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.bean.AppInfoModel;
@@ -101,6 +102,7 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     private void startConnectMain() {
         setMainFragmentListener();
         if (TtPhoneDataManager.getInstance() != null) {
+            isUpdate = true;
             TtPhoneDataManager.getInstance().connectTtPhoneServer(Constans.IP, Constans.UPLOAD_PORT);
         }
     }
@@ -218,6 +220,7 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
         if (updateResponse.getIsUpdate()) {
             mView.get().upgradleServerApp();
         } else {
+            isUpdate = false;
             TtPhoneDataManager.getInstance().connectTtPhoneServer(Constans.IP, Constans.PORT);
         }
     }
@@ -274,28 +277,42 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
         TtPhoneDataManager.getInstance().dialTtPhone(phoneMumber);
     }
 
+    private boolean isUpdate = true;
+
     @Override
     public void isTtServerConnected(boolean connected) {
 
-        mView.get().connectedState(connected);
+        disposeConnect(connected);
+    }
 
-        if(connected) {
+    private void disposeConnect(boolean connectState){
+
+        if(connectState){
 
             saveLocalWIFIIP();
 
-            requireServerUpdate();
+            //如果是更新连接成功,
+            if(isUpdate){
 
-            //请求sos状态
-            TtPhoneDataManager.getInstance().getTtPhoneSosState();
+                requireServerUpdate();
 
-            //发送手机时间到服务器端
-            if (TtPhoneDataManager.getInstance() != null) {
-                DatetimeModel datetimeModel = new DatetimeModel(DateUtil.backTimeFomat(new Date()));
-                TtPhoneDataManager.getInstance().setDateAndTime(datetimeModel);
+            }else{
+                //不是update的更新 而是我们正常连接的更新
+
+                TtPhoneDataManager.getInstance().getTtPhoneSosState();
+
+                if (TtPhoneDataManager.getInstance() != null) {
+                    DatetimeModel datetimeModel = new DatetimeModel(DateUtil.backTimeFomat(new Date()));
+                    TtPhoneDataManager.getInstance().setDateAndTime(datetimeModel);
+                }
             }
-        }else{
+        }
+
+        if(!connectState && isUpdate){
             mView.get().upgradleNonconnect();
         }
+
+        mView.get().connectedState(connectState);
     }
 
     @Override

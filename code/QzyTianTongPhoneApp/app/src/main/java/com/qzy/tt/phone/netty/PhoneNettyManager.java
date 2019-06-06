@@ -316,9 +316,11 @@ public class PhoneNettyManager {
      * 发送连接状态
      */
     private void setConnectedState() {
-        boolean isconnected = mNettyClientManager.isConnected();
-        CommonData.getInstance().setConnected(isconnected);
-        sendConnectedState(isconnected);
+        synchronized (mNettyClientManager){
+            boolean isconnected = mNettyClientManager.isConnected();
+            CommonData.getInstance().setConnected(isconnected);
+            sendConnectedState(isconnected);
+        }
     }
 
 

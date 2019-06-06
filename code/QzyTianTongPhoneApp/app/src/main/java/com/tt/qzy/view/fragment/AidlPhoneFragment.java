@@ -1,6 +1,5 @@
 package com.tt.qzy.view.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,14 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
-import com.qzy.phone.pcm.AllLocalPcmManager;
 import com.qzy.tt.data.CallPhoneStateProtos;
-import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
 import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
-import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.adapter.CallRecordAdapter;
 import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.manager.CallRecordManager;
@@ -207,10 +203,13 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
                 NToast.shortToast(getActivity(),"设备未入网,请先入网!");
             }
         }else{
-            mPersenter.getCureentPhoneStateImpl();
+            NToast.shortToast(getActivity(),getString(R.string.TMT_be_occupied));
+//            mPersenter.getCureentPhoneStateImpl();
         }
         myInputPwdUtil.dismiss();
     }
+
+
 
     private String phoneNumber = "";
     @Override
@@ -225,7 +224,8 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
                 NToast.shortToast(getActivity(),"设备未入网,请先入网!");
             }
         }else{
-            mPersenter.getCureentPhoneStateImpl();
+            NToast.shortToast(getActivity(),getString(R.string.TMT_be_occupied));
+//            mPersenter.getCureentPhoneStateImpl();
         }
     }
 

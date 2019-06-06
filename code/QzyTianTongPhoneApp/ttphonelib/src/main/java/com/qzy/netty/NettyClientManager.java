@@ -58,14 +58,14 @@ public class NettyClientManager implements NettyClient.IConnectedReadDataListene
             }
         }
 
-        if (isConnected) {
+//        if (isConnected) {
 //            stopReconnected();
-        } else {
+//        } else {
 //            startReconnected(port,ip);
-            if (NettyClient.getInstance() != null) {
-                NettyClient.getInstance().stopConnected();
-            }
-        }
+//            if (NettyClient.getInstance() != null) {
+//                NettyClient.getInstance().stopConnected();
+//            }
+//        }
 
     }
 

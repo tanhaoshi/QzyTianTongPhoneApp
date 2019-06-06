@@ -27,12 +27,14 @@ import com.tt.qzy.view.layout.SideBar;
 import com.tt.qzy.view.presenter.activity.ImportMailPresenter;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.PinyinComparator;
+import com.tt.qzy.view.utils.ThreadUtils;
 import com.tt.qzy.view.view.ImportMailView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
+import java.util.concurrent.ExecutorService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -97,7 +99,8 @@ public class ImportMailActivity extends AppCompatActivity implements ImportMailV
     }
 
     private void selectAllMail(){
-        new Thread(new Runnable() {
+        ExecutorService executorService = ThreadUtils.getCachedPool();
+        executorService.execute(new Runnable() {
             @Override
             public void run() {
                 List<MallListModel> mallListModels = new ArrayList<>();
@@ -106,9 +109,14 @@ public class ImportMailActivity extends AppCompatActivity implements ImportMailV
                     mLongList.add(sourceDateList.get(i).getId());
                     mIntegers.add(i);
                 }
-                saveContactsMailList(ImportMailActivity.this,mLongList,mIntegers,sourceDateList);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.selectAll();
+                    }
+                });
             }
-        }).start();
+        });
     }
 
     private void initView() {
@@ -205,7 +213,27 @@ public class ImportMailActivity extends AppCompatActivity implements ImportMailV
         adapter.updateList(sourceDateList);
     }
 
-    private void saveContactsMailList(Activity context , List<Long> mLongList , List<Integer> mIntegers,List<MallListModel> listModels){
+    private void saveContactsMailList(final Activity context ,final List<Long> mLongList , final List<Integer> mIntegers,
+                                      final List<MallListModel> listModels){
+        ExecutorService executorService = ThreadUtils.getCachedPool();
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                if(null != mLongList && mLongList.size() > 0){
+                    for(int i=0;i<mLongList.size();i++){
+                        MailListDao mailListDao = new MailListDao();
+                        mailListDao.setPhone(sourceDateList.get(mIntegers.get(i)).getPhone());
+                        mailListDao.setName(sourceDateList.get(mIntegers.get(i)).getName());
+                        MailListManager.getInstance(context).insertMailListSignal(mailListDao,context);
+                    }
+                    importLocalLinkName();
+                    finish();
+                }
+            }
+        });
+    }
+
+    private void saveAll(Activity context , List<Long> mLongList , List<Integer> mIntegers,List<MallListModel> listModels){
         if(null != mLongList && mLongList.size() > 0){
             for(int i=0;i<mLongList.size();i++){
                 MailListDao mailListDao = new MailListDao();
@@ -214,10 +242,7 @@ public class ImportMailActivity extends AppCompatActivity implements ImportMailV
                 MailListManager.getInstance(context).insertMailListSignal(mailListDao,context);
             }
             importLocalLinkName();
-//            NToast.shortToast(ImportMailActivity.this,"导入成功!");
             finish();
-        }else{
-//            NToast.shortToast(ImportMailActivity.this,"请选中导入的联系人!");
         }
     }
 

@@ -147,7 +147,6 @@ public class TtPhoneDataManager implements ITtPhoneHandlerManager, ITtPhoneManag
                 if (mSyncManager != null && !connected) {
                     mSyncManager.setServerDisconnected();
                 }
-
             }
 
             @Override
