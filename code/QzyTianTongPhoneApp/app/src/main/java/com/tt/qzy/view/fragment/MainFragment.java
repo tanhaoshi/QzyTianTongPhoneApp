@@ -19,6 +19,7 @@ import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
 
 import com.qzy.tt.data.TtOpenBeiDouProtos;
 import com.qzy.tt.data.TtPhonePositionProtos;
+import com.socks.library.KLog;
 import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.SettingsActivity;
@@ -396,18 +397,19 @@ public class MainFragment extends Fragment implements MainFragmentView{
 
     @Override
     public void getServerSosStatus(boolean isSwitch) {
+        KLog.i("getServerSosStatus");
         sc_settin_testxinlv.setChecked(isSwitch);
         main_location.setChecked(isSwitch);
-        if (isSwitch == false) {
-            if (AppUtils.isServiceRunning("com.tt.qzy.view.service.TimerService", getActivity())) {
-                if (mIntent != null) {
-                    getActivity().stopService(mIntent);
-                } else {
-                    mIntent = new Intent(getActivity(), TimerService.class);
-                    getActivity().stopService(mIntent);
-                }
-            }
-        }
+//        if (isSwitch == false) {
+//            if (AppUtils.isServiceRunning("com.tt.qzy.view.service.TimerService", getActivity())) {
+//                if (mIntent != null) {
+//                    getActivity().stopService(mIntent);
+//                } else {
+//                    mIntent = new Intent(getActivity(), TimerService.class);
+//                    getActivity().stopService(mIntent);
+//                }
+//            }
+//        }
     }
 
     private void changePercent(final int i){

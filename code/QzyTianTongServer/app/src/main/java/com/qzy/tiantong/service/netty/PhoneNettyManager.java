@@ -529,7 +529,7 @@ public class PhoneNettyManager implements IMobileDataManager {
      * @param phoneNumber
      * @return
      */
-    private synchronized CallPhoneStateProtos.CallPhoneState getTtCallPhoneStateToClient(CallPhoneStateProtos.CallPhoneState.PhoneState phoneState, String phoneNumber) {
+    private CallPhoneStateProtos.CallPhoneState getTtCallPhoneStateToClient(CallPhoneStateProtos.CallPhoneState.PhoneState phoneState, String phoneNumber) {
         if (checkNettManagerIsNull()) return null;
         if (phoneNumber == null) {
             phoneNumber = "13352528585";
@@ -877,6 +877,7 @@ public class PhoneNettyManager implements IMobileDataManager {
             //关闭
             sendSosinitStatus(false);
         }
+
     }
 
     private void sendSosinitStatus(boolean isSwitch) {
@@ -967,7 +968,7 @@ public class PhoneNettyManager implements IMobileDataManager {
     /**
      * 更新服务端电话记录 中已读的状态 改为 来电状态
      */
-    public synchronized void updateCallRecordStatus(final TtCallRecordProtos.TtCallRecordProto ttCallRecordProto) {
+    public void updateCallRecordStatus(final TtCallRecordProtos.TtCallRecordProto ttCallRecordProto) {
         try {
             if (null != ttCallRecordProto) {
                 List<CallLogInfo> logInfos = new ArrayList<>();

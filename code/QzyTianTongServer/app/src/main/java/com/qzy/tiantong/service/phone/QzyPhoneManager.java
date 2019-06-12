@@ -6,9 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.support.annotation.RequiresApi;
 import android.telephony.PhoneStateListener;
 import android.telephony.ServiceState;
@@ -17,20 +15,17 @@ import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 
 import com.android.internal.telephony.ITelephony;
-import com.qzy.tiantong.lib.localsocket.LocalPcmSocketManager;
-import com.qzy.tiantong.lib.power.PowerUtils;
 import com.qzy.tiantong.lib.utils.LogUtils;
 import com.qzy.tiantong.service.atcommand.AtCommandToolManager;
 import com.qzy.tiantong.service.atcommand.AtCommandTools;
 import com.qzy.tiantong.service.service.ITianTongServer;
 import com.qzy.tiantong.service.utils.AppUtils;
-import com.qzy.tiantong.service.utils.Constant;
-import com.qzy.tiantong.service.utils.ModuleDormancyUtil;
 import com.qzy.tiantong.service.utils.PhoneUtils;
-import com.qzy.tiantong.service.utils.PowerControl;
+import com.qzy.tiantong.service.utils.ThreadUtils;
 import com.qzy.tt.data.TtPhoneWifiProtos;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Created by yj.zhang on 2018/8/3/003.
@@ -114,7 +109,6 @@ public class QzyPhoneManager {
 
     }
 
-
     /**
      * 挂断电话
      *
@@ -122,21 +116,19 @@ public class QzyPhoneManager {
      * @param
      */
     public void hangupPhone(final String ip) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                LogUtils.e("hangupPhone ..  ");
-                mServer.setEndCallingIp(ip);
-                endCall();
-                endCallingAndClearIp();
-                //挂断电话立马休眠模块
-                if (mServer != null) {
-                    mServer.getSystemSleepManager().sleepTianTong();
-                }
-            }
-        }).start();
+        LogUtils.e("hangupPhone ..  ");
+        if (mAtCommandToolManager != null) {
+            mAtCommandToolManager.sendAtCommand(AtCommandTools.at_command_hungup);
+        }
+        mServer.setEndCallingIp(ip);
+        sendPhonehangup();
+        endCallingAndClearIp();
+        //挂断电话立马休眠模块
+        if (mServer != null) {
+            mServer.getSystemSleepManager().sleepTianTong();
+        }
+//        endCall();
     }
-
 
     /**
      * 挂断并清除通话ip
@@ -164,25 +156,23 @@ public class QzyPhoneManager {
         sendPhoneCalling();
     }
 
-
     private void endCall() {
-        // IBinder iBinder = ServiceManager.getService(TELEPHONY_SERVICE);
-        // ServiceManager 是被系统隐藏掉了 所以只能用反射的方法获取
-        try {
-            Method method = Class.forName("android.os.ServiceManager").getMethod("getService", String.class);
-            IBinder binder = (IBinder) method.invoke(null, new Object[]{Context.TELEPHONY_SERVICE});
-            ITelephony telephony = ITelephony.Stub.asInterface(binder);
-            telephony.endCall();
-            if (mAtCommandToolManager != null) {
-                mAtCommandToolManager.sendAtCommand(AtCommandTools.at_command_hungup);
+        ExecutorService executorService = ThreadUtils.getCachedPool();
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Method method = Class.forName("android.os.ServiceManager").getMethod("getService", String.class);
+                    IBinder binder = (IBinder) method.invoke(null, new Object[]{Context.TELEPHONY_SERVICE});
+                    ITelephony telephony = ITelephony.Stub.asInterface(binder);
+                    telephony.endCall();
+                    LogUtils.d("endcall .....");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-            LogUtils.d("endcall .....");
-            sendPhonehangup();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        });
     }
-
 
     private boolean answerRingCall() {
         // IBinder iBinder = ServiceManager.getService(TELEPHONY_SERVICE);
@@ -344,10 +334,8 @@ public class QzyPhoneManager {
     }
 
     public void release() {
-
         if (mAtCommandToolManager != null) {
             mAtCommandToolManager.free();
         }
-
     }
 }

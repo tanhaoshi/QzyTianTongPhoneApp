@@ -37,7 +37,7 @@ public class ModuleDormancyUtil {
         return prop;
     }
 
-    public static synchronized void writeNode(final String path, final String state) {
+    public static void writeNode(final String path, final String state) {
         if(path.endsWith("/trigger")){
            writeNodeFileTriger(path,state);
         }else{
@@ -45,7 +45,7 @@ public class ModuleDormancyUtil {
         }
     }
 
-    public static synchronized void writeNodeFileTriger(final String path, final String state) {
+    public static void writeNodeFileTriger(final String path, final String state) {
         ExecutorService executorService = ThreadUtils.getCachedPool();
         executorService.submit(new Runnable() {
             @Override
@@ -146,7 +146,7 @@ public class ModuleDormancyUtil {
 //        }).start();
     }
 
-    public static synchronized void writeNodeFile(final String path, final String state) {
+    public static void writeNodeFile(final String path, final String state) {
         //  1代表已经休眠 0代表正常可工作状态
 //        try{
 //            BufferedWriter bufWriter = null;

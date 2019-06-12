@@ -25,6 +25,7 @@ import com.qzy.tt.phone.data.impl.ITtPhoneCallStateLisenter;
 import com.qzy.utils.AndroidVoiceManager;
 import com.qzy.utils.LogUtils;
 import com.qzy.utils.TimeToolUtils;
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.layout.dialpad.InputPwdViewCall;
 import com.tt.qzy.view.presenter.activity.TellPhoneActivityPresenter;
@@ -81,7 +82,6 @@ public class TellPhoneActivity extends AppCompatActivity {
         if (mTellPhoneActivityPresenter.getPhoneKeyForName(number) != null && mTellPhoneActivityPresenter.getPhoneKeyForName(number).length() > 0) {
             aidlName.setText(mTellPhoneActivityPresenter.getPhoneKeyForName(number));
         }
-        //EventBusUtils.register(TellPhoneActivity.this);
 
         input_call.setListener(new InputPwdViewCall.InputPwdListener() {
             @Override
@@ -122,16 +122,6 @@ public class TellPhoneActivity extends AppCompatActivity {
     private void unregisterReceiver() {
         unregisterReceiver(broadcastReceiver);
     }
-
-   /* @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MessageEventBus event) {
-        switch (event.getType()) {
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_STATE:
-                updatePhoneState((PhoneCmd) event.getObject());
-                break;
-        }
-    }*/
-
 
     /**
      * 设置电话通话状态

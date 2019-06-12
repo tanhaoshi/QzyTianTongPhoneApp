@@ -17,7 +17,7 @@ import com.qzy.tt.phone.common.CommonData;
 import com.qzy.tt.phone.data.impl.IMainFragment;
 import com.qzy.tt.phone.data.TtPhoneDataManager;
 import com.qzy.utils.IPUtil;
-import com.socks.library.KLog;
+import com.qzy.utils.LogUtils;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.activity.TellPhoneActivity;
 import com.tt.qzy.view.bean.AppInfoModel;
@@ -35,6 +35,15 @@ import com.tt.qzy.view.view.MainFragmentView;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by yj.zhang on 2018/9/17.
@@ -221,6 +230,7 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
             mView.get().upgradleServerApp();
         } else {
             isUpdate = false;
+            LogUtils.i("parse server is update boolean value = " + isUpdate);
             TtPhoneDataManager.getInstance().connectTtPhoneServer(Constans.IP, Constans.PORT);
         }
     }
@@ -277,7 +287,7 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
         TtPhoneDataManager.getInstance().dialTtPhone(phoneMumber);
     }
 
-    private boolean isUpdate = true;
+    volatile boolean isUpdate = true;
 
     @Override
     public void isTtServerConnected(boolean connected) {
@@ -294,7 +304,7 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
             //如果是更新连接成功,
             if(isUpdate){
 
-                requireServerUpdate();
+                monitorConnectTimeOut();
 
             }else{
                 //不是update的更新 而是我们正常连接的更新
@@ -313,6 +323,53 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
         }
 
         mView.get().connectedState(connectState);
+    }
+
+    //检测超时机制 或者数据丢失.
+    private void monitorConnectTimeOut(){
+        Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> observableEmitter) throws Exception {
+                long lastTime = System.currentTimeMillis();
+                LogUtils.i("look at last time = " + lastTime);
+                requireServerUpdate();
+                LogUtils.i(" subscribe look over isUpdate value = " + isUpdate);
+                observableEmitter.onNext(isUpdate);
+            }
+        }).delay(1, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
+
+                    }
+
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        LogUtils.i(" onNext look over isUpdate value = " + isUpdate);
+                        if(isUpdate){
+                            //出现异常 进行重连
+                            long currentTime = System.currentTimeMillis();
+                            LogUtils.i(" [normal] look at current time = " + currentTime);
+                            TtPhoneDataManager.getInstance().connectTtPhoneServer(Constans.IP, Constans.PORT);
+                        }else{
+                            long currentTime = System.currentTimeMillis();
+                            LogUtils.i(" [error]  look at current time = " + currentTime);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
@@ -349,7 +406,6 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     }
 
     private void requireServerUpdate(){
-
         try {
             if(TextUtils.isEmpty(fileMd5)){
                 AssetManager assetManager = mContext.getAssets();
@@ -359,6 +415,7 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
                     fileMd5));
         } catch (IOException e) {
             e.printStackTrace();
+            TtPhoneDataManager.getInstance().connectTtPhoneServer(Constans.IP, Constans.PORT);
         }
     }
 

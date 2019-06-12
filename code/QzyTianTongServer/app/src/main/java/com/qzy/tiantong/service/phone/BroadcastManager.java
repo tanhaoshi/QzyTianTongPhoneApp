@@ -201,18 +201,6 @@ public class BroadcastManager {
         // Intent handling is asynchronous -- assume it will happen soon.
     }
 
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what){
-                case 1:
-                    mServer.initTtPcmDevice();
-                    break;
-            }
-        }
-    };
-
     public void release(){
         mContext.unregisterReceiver(mReceiver);
     }

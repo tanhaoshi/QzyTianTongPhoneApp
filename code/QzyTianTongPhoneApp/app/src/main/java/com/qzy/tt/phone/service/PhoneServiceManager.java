@@ -42,8 +42,6 @@ public class PhoneServiceManager {
      *
      * @param context
      */
-
-
 //    private QzySensorManager mQzySensorManager;
     public PhoneServiceManager(Context context) {
         mContext = context;
@@ -53,25 +51,12 @@ public class PhoneServiceManager {
         initProtocal();
     }
 
-
-
-
-
     /**
      * 初始化通讯协议
      */
     private void initProtocal() {
         mAllLocalPcmManager = AllLocalPcmManager.getInstance(mContext);
     }
-
-    /*@Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onMessageEvent(MessageEventBus event) {
-        switch (event.getType()) {
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_STATE:
-                updatePhoneState((PhoneCmd) event.getObject());
-                break;
-        }
-    }*/
 
     /**
      * 设置电话通话状态
@@ -85,7 +70,6 @@ public class PhoneServiceManager {
             }
         });
     }
-
 
     /**
      * 更新天通电话状态
@@ -109,7 +93,6 @@ public class PhoneServiceManager {
                     startPlayerProtocal();
                 }
                 break;
-
             case CALL:
                 if (CommonData.getInstance().isCallingIp(callingIp)) {
                     if (!isRing || isComing) {
@@ -145,45 +128,51 @@ public class PhoneServiceManager {
      * 开始录音
      */
     public void startProtocal() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (mAllLocalPcmManager != null) {
-                    mAllLocalPcmManager.start();
-                }
-            }
-        }).start();
-
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (mAllLocalPcmManager != null) {
+//                    mAllLocalPcmManager.start();
+//                }
+//            }
+//        }).start();
+        if (mAllLocalPcmManager != null) {
+            mAllLocalPcmManager.start();
+        }
     }
 
     /**
      * 开始播放
      */
     public void startPlayerProtocal() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (mAllLocalPcmManager != null) {
-                    mAllLocalPcmManager.startPlayer();
-                }
-            }
-        }).start();
-
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (mAllLocalPcmManager != null) {
+//                    mAllLocalPcmManager.startPlayer();
+//                }
+//            }
+//        }).start();
+        if (mAllLocalPcmManager != null) {
+            mAllLocalPcmManager.startPlayer();
+        }
     }
 
     /**
      * 结束录音
      */
     public void stopProtocal() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (mAllLocalPcmManager != null) {
-                    mAllLocalPcmManager.stop();
-                }
-            }
-        }).start();
-
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (mAllLocalPcmManager != null) {
+//                    mAllLocalPcmManager.stop();
+//                }
+//            }
+//        }).start();
+        if (mAllLocalPcmManager != null) {
+            mAllLocalPcmManager.stop();
+        }
     }
 
 
@@ -191,15 +180,17 @@ public class PhoneServiceManager {
      * 释放协议资源
      */
     private void releaseProtocal() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (mAllLocalPcmManager != null) {
-                    mAllLocalPcmManager.free();  // modifed by yj.zhang 2019 03 19  把onstop改成了free
-                }
-            }
-        }).start();
-
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (mAllLocalPcmManager != null) {
+//                    mAllLocalPcmManager.free();  // modifed by yj.zhang 2019 03 19  把onstop改成了free
+//                }
+//            }
+//        }).start();
+        if (mAllLocalPcmManager != null) {
+            mAllLocalPcmManager.free();  // modifed by yj.zhang 2019 03 19  把onstop改成了free
+        }
     }
 
     /**
@@ -214,7 +205,6 @@ public class PhoneServiceManager {
         if (TtPhoneDataManager.getInstance() != null) {
             TtPhoneDataManager.getInstance().free();
         }
-
 
         releaseProtocal();
     }

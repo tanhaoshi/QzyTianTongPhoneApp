@@ -182,7 +182,7 @@ public class TianTongServiceManager implements ITianTongServer {
      * @param ip
      */
     @Override
-    public synchronized boolean setCurrenCallingIp(String ip) {
+    public boolean setCurrenCallingIp(String ip) {
         LogUtils.e("1111 setCurrenCallingIp = " + ip);
         String callingIp = PhoneClientManager.getInstance().isCallingIp();
 

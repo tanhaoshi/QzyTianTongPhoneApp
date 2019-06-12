@@ -164,7 +164,7 @@ public class CallLogManager {
      * @param ttDeleCallLog
      * @return
      */
-    public static synchronized boolean deleteCallLog(Context context,TtDeleCallLogProtos.TtDeleCallLog ttDeleCallLog){
+    public static boolean deleteCallLog(Context context,TtDeleCallLogProtos.TtDeleCallLog ttDeleCallLog){
         try{
             if(ttDeleCallLog.getIsDeleAll()){
                 return PhoneUtils.deleteAllCallLog(context);
@@ -194,7 +194,7 @@ public class CallLogManager {
      * @param ttDeleSms
      * @return
      */
-    public static synchronized void deleteSms(Context context,TtDeleSmsProtos.TtDeleSms ttDeleSms){
+    public static void deleteSms(Context context,TtDeleSmsProtos.TtDeleSms ttDeleSms){
         try{
             if(ttDeleSms.getIsDeleAll()){
                  PhoneUtils.delAllSms(context);
