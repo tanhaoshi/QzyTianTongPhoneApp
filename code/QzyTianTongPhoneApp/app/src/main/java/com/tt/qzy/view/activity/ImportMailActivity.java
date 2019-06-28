@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.ImportMailAdapter;
 import com.tt.qzy.view.bean.MallListModel;
@@ -25,6 +26,7 @@ import com.tt.qzy.view.db.manager.ShortMessageManager;
 import com.tt.qzy.view.layout.ClearEditText;
 import com.tt.qzy.view.layout.SideBar;
 import com.tt.qzy.view.presenter.activity.ImportMailPresenter;
+import com.tt.qzy.view.utils.AppUtils;
 import com.tt.qzy.view.utils.NToast;
 import com.tt.qzy.view.utils.PinyinComparator;
 import com.tt.qzy.view.utils.ThreadUtils;
@@ -32,7 +34,10 @@ import com.tt.qzy.view.view.ImportMailView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.concurrent.ExecutorService;
 
@@ -44,6 +49,7 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -64,13 +70,13 @@ public class ImportMailActivity extends AppCompatActivity implements ImportMailV
     @BindView(R.id.custom_input)
     ClearEditText mClearEditText;
 
-    private List<MallListModel> sourceDateList = new ArrayList<>();
+    private List<MallListModel> sourceDateList = new LinkedList<>();
 
     private ImportMailAdapter adapter;
     private KProgressHUD mHUD;
 
-    private final List<Long> mLongList = new ArrayList<>();
-    private final List<Integer> mIntegers = new ArrayList<>();
+    private final List<Long> mLongList = new LinkedList<>();
+    private final List<Integer> mIntegers = new LinkedList<>();
 
     private ImportMailPresenter mPresenter;
 
@@ -86,14 +92,24 @@ public class ImportMailActivity extends AppCompatActivity implements ImportMailV
         loadData(true);
     }
 
-    @OnClick({R.id.base_iv_back,R.id.base_tv_toolbar_right})
+    @OnClick({R.id.base_iv_back,R.id.base_tv_toolbar_right,R.id.base_tv_toolbar_title})
     public void onClick(View view){
         switch (view.getId()){
             case R.id.base_iv_back:
                 selectAllMail();
                 break;
             case R.id.base_tv_toolbar_right:
+                mHUD.show();
                 saveContactsMailList(ImportMailActivity.this,mLongList,mIntegers,sourceDateList);
+                break;
+            case R.id.base_tv_toolbar_title:
+                //1561708553807 1561708557684
+                for(int i=0; i<5000; i++){
+                    MallListModel mallListModel1 = new MallListModel("153672588:"+i,
+                            "张"+AppUtils.getRandomWord()+AppUtils.getRandomWord());
+                    sourceDateList.add(mallListModel1);
+                }
+                adapter.updateList(sourceDateList);
                 break;
         }
     }
@@ -148,7 +164,6 @@ public class ImportMailActivity extends AppCompatActivity implements ImportMailV
         mClearEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //模糊搜索完毕后会出现一个新的List 我应当把这个List保存下来。
                 mPresenter.filterData(sourceDateList,s.toString(),pinyinComparator,adapter);
             }
 
@@ -215,54 +230,133 @@ public class ImportMailActivity extends AppCompatActivity implements ImportMailV
 
     private void saveContactsMailList(final Activity context ,final List<Long> mLongList , final List<Integer> mIntegers,
                                       final List<MallListModel> listModels){
-        ExecutorService executorService = ThreadUtils.getCachedPool();
-        executorService.execute(new Runnable() {
+        io.reactivex.Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
-            public void run() {
+            public void subscribe(ObservableEmitter<Boolean> observableEmitter) {
                 if(null != mLongList && mLongList.size() > 0){
-                    for(int i=0;i<mLongList.size();i++){
-                        MailListDao mailListDao = new MailListDao();
-                        mailListDao.setPhone(sourceDateList.get(mIntegers.get(i)).getPhone());
-                        mailListDao.setName(sourceDateList.get(mIntegers.get(i)).getName());
-                        MailListManager.getInstance(context).insertMailListSignal(mailListDao,context);
+                    try{
+                        MailListManager.getInstance(context).deleteAllMail(context);
+                        final List<MailListDao> mailListDaos = new LinkedList<>();
+                        for(int i=0;i<mLongList.size();i++){
+                            MailListDao mailListDao = new MailListDao
+                                    (sourceDateList.get(mIntegers.get(i)).getPhone(),
+                                            sourceDateList.get(mIntegers.get(i)).getName()
+                                            ,null,null,null,null,
+                                            null,null);
+                            mailListDaos.add(mailListDao);
+                        }
+                        MailListManager.getInstance(context).insertMailListList(mailListDaos,context);
+                    }finally {
+                        importLocalLinkName();
+                        observableEmitter.onNext(true);
                     }
-                    importLocalLinkName();
-                    finish();
                 }
             }
-        });
-    }
+        }).subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
 
-    private void saveAll(Activity context , List<Long> mLongList , List<Integer> mIntegers,List<MallListModel> listModels){
-        if(null != mLongList && mLongList.size() > 0){
-            for(int i=0;i<mLongList.size();i++){
-                MailListDao mailListDao = new MailListDao();
-                mailListDao.setPhone(sourceDateList.get(mIntegers.get(i)).getPhone());
-                mailListDao.setName(sourceDateList.get(mIntegers.get(i)).getName());
-                MailListManager.getInstance(context).insertMailListSignal(mailListDao,context);
-            }
-            importLocalLinkName();
-            finish();
-        }
+                    }
+
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        KLog.i("onError message = " + throwable.getMessage().toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     public void importLocalLinkName(){
-        List<MailListDao> listModels = MailListManager.getInstance(ImportMailActivity.this).queryMailList();
-        for(MailListDao mallListModel : listModels){
-            String phone = mallListModel.getPhone();
-            String name = mallListModel.getName();
-            List<CallRecordDao> daoList = CallRecordManager.getInstance(ImportMailActivity.this).queryKeyOnPhoneNumber(phone);
-            if(null != daoList && daoList.size() > 0){
-                for(CallRecordDao callRecordDao : daoList){
-                    callRecordDao.setName(name);
-                    CallRecordManager.getInstance(ImportMailActivity.this).updateRecordName(callRecordDao);
+        try{
+            checkEquallyLink();
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mHUD.dismiss();
+                    finish();
+                }
+            });
+        }finally {
+
+        }
+    }
+
+    private void checkEquallyLink(){
+
+        List<CallRecordDao> daoList = CallRecordManager.getInstance(ImportMailActivity.this).queryCallRecordList();
+        List<ShortMessageDao> messageDaoList = ShortMessageManager.getInstance(this).queryShortMessageList();
+        Map<String, Integer> callRecordMap   = new HashMap<String,Integer>();
+        Map<String,Integer>  shortMessageMap = new HashMap<String,Integer>();
+
+        if(daoList != null && daoList.size() > 0){
+
+            for(CallRecordDao callRecordDao : daoList){
+
+                callRecordMap.put(callRecordDao.getPhoneNumber(),1);
+
+            }
+
+            for(MallListModel mallListModel : sourceDateList){
+
+                Integer temp = callRecordMap.get(mallListModel.getPhone());
+
+                if(temp != null){
+                    List<CallRecordDao> keyList = CallRecordManager.getInstance(ImportMailActivity.this)
+                            .queryKeyOnPhoneNumber(mallListModel.getPhone());
+
+                    if(null != keyList && keyList.size() > 0){
+                        List<CallRecordDao> buildRecordDao = new LinkedList<>();
+                        for(CallRecordDao callRecordDao : daoList){
+                            callRecordDao.setName(mallListModel.getName());
+                            buildRecordDao.add(callRecordDao);
+                        }
+                        CallRecordManager.getInstance(ImportMailActivity.this).updateTxRecordName(buildRecordDao);
+                    }
                 }
             }
-            List<ShortMessageDao> shortMessageDaos = ShortMessageManager.getInstance(ImportMailActivity.this).queryPrimaryOfPhone(phone);
-            if(null != daoList && daoList.size() > 0){
-                for(ShortMessageDao shortMessageDao : shortMessageDaos){
-                    shortMessageDao.setName(name);
-                    ShortMessageManager.getInstance(ImportMailActivity.this).updateShortMessageName(shortMessageDao);
+        }
+
+        if(messageDaoList != null && messageDaoList.size()>0){
+
+            for(ShortMessageDao shortMessageDao : messageDaoList){
+
+                shortMessageMap.put(shortMessageDao.getNumberPhone(),1);
+            }
+
+            for(MallListModel mallListModel : sourceDateList){
+
+                Integer temp = shortMessageMap.get(mallListModel.getPhone());
+
+                if(temp != null){
+
+                    List<ShortMessageDao> shortMessageDaos = ShortMessageManager.getInstance(ImportMailActivity.this)
+                            .queryPrimaryOfPhone(mallListModel.getPhone());
+
+                    if(null != shortMessageDaos && shortMessageDaos.size() > 0){
+
+                        List<ShortMessageDao> buildShortMessageDao = new LinkedList<>();
+                        for(ShortMessageDao shortMessageDao : shortMessageDaos){
+
+                            shortMessageDao.setName(mallListModel.getName());
+
+                            buildShortMessageDao.add(shortMessageDao);
+                        }
+
+                        ShortMessageManager.getInstance(ImportMailActivity.this).updateShortMessageList(buildShortMessageDao);
+                    }
+
                 }
             }
         }

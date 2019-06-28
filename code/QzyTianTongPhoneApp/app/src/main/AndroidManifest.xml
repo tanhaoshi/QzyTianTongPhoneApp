@@ -44,7 +44,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -76,9 +76,9 @@
         <activity
             android:name=".activity.TellPhoneActivity"
             android:configChanges="keyboardHidden|orientation|fontScale"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/CommonViewStyle"></activity>
+            android:launchMode="singleTask"
+            android:theme="@style/TellPhoneStyle"></activity>
         <activity
             android:name=".activity.TellPhoneIncomingActivity"
             android:configChanges="keyboardHidden|orientation|fontScale"
@@ -150,12 +150,24 @@
             android:configChanges="keyboardHidden|orientation|fontScale"
             android:screenOrientation="portrait"
             android:theme="@style/CommonViewStyle"></activity>
-        <activity android:name=".activity.ImportMailActivity"></activity>
-        <activity android:name=".activity.CheckUpdateActivity"></activity>
+        <activity
+            android:name=".activity.ImportMailActivity"
+            android:configChanges="keyboardHidden|orientation|fontScale"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonViewStyle"></activity>
+        <activity
+            android:name=".activity.CheckUpdateActivity"
+            android:configChanges="keyboardHidden|orientation|fontScale"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonViewStyle"></activity>
 
         <service android:name=".trace.TraceServiceImpl" />
 
-        <activity android:name=".activity.DBMActivity"></activity>
+        <activity
+            android:name=".activity.DBMActivity"
+            android:configChanges="keyboardHidden|orientation|fontScale"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonViewStyle"></activity>
     </application>
 
 </manifest>

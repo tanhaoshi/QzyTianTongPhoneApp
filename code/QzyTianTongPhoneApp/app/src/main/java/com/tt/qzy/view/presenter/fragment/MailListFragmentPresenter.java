@@ -9,7 +9,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
+import com.google.common.util.concurrent.ListenableFutureTask;
 import com.qzy.tt.data.TtCallRecordProtos;
+import com.socks.library.KLog;
 import com.tt.qzy.view.activity.ContactsActivity;
 import com.tt.qzy.view.activity.ImportMailActivity;
 import com.tt.qzy.view.adapter.SortAdapter;
@@ -23,11 +25,19 @@ import com.tt.qzy.view.utils.Constans;
 import com.tt.qzy.view.utils.PinyinComparator;
 import com.tt.qzy.view.utils.MallListUtils;
 import com.tt.qzy.view.utils.PinyinUtils;
+import com.tt.qzy.view.utils.ThreadUtils;
 import com.tt.qzy.view.view.MailListView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.LockSupport;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -55,11 +65,27 @@ public class MailListFragmentPresenter extends BasePresenter<MailListView>{
     }
 
     public void getMallList(final Context context){
+
         Observable.create(new ObservableOnSubscribe<List<MallListModel>>() {
             @Override
             public void subscribe(ObservableEmitter<List<MallListModel>> e) throws Exception {
+
                 List<MailListDao> listDaos = MailListManager.getInstance(context).queryMailList();
-                e.onNext(removeDuplicate(mergeData(listDaos,context)));
+
+                if(listDaos != null && listDaos.size() > 2000){
+                    long currentTime = System.currentTimeMillis();
+                    KLog.i("look over current time = " + currentTime);
+                    concurrenceDispose(listDaos);
+
+                }else{
+                    long currentTime = System.currentTimeMillis();
+                    KLog.i("look over current time = " + currentTime);
+                    List<MallListModel> listModels = mergeData(listDaos);
+
+                    List<MallListModel> duplicateList = removeDuplicate(listModels);
+
+                    e.onNext(duplicateList);
+                }
             }
         }).subscribeOn(Schedulers.io())
           .unsubscribeOn(Schedulers.io())
@@ -70,11 +96,14 @@ public class MailListFragmentPresenter extends BasePresenter<MailListView>{
               }
               @Override
               public void onNext(List<MallListModel> value) {
-                  mView.get().loadData(value);
                   onComplete();
+                  long lastTime = System.currentTimeMillis();
+                  KLog.i("look over current time = " + lastTime);
+                  mView.get().loadData(value);
               }
               @Override
               public void onError(Throwable e) {
+                  KLog.i("look over error message : " + e.getMessage().toString()  );
                   mView.get().showError(e.getMessage().toString(),true);
               }
               @Override
@@ -84,12 +113,122 @@ public class MailListFragmentPresenter extends BasePresenter<MailListView>{
           });
     }
 
+    /*
+     * use multi thread dispose complex data
+     *
+     * @param listDaos
+     */
+    private void concurrenceDispose(final List<MailListDao> listDaos){
+
+        List<List<MailListDao>> lists = groupList(listDaos);
+
+        final Semaphore semaphore = new Semaphore(lists.size());
+
+        ExecutorService executorService = ThreadUtils.getCachedPool();
+
+        for(final List<MailListDao> listDaoList : lists){
+
+            executorService.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try{
+                        List<MallListModel> listModels = mergeData(listDaoList);
+                        semaphore.acquire();
+                        if(listModels.size() > 0){
+                            getBackDisposeData(listModels,listDaos);
+                        }
+                        semaphore.release();
+                    }catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    }
+
+    private volatile List<MallListModel> mMallListModels;
+
+    private void getBackDisposeData(List<MallListModel> listModels,List<MailListDao> listDaos){
+        synchronized (this){
+
+            if(mMallListModels != null && mMallListModels.size() > 0){
+
+                mMallListModels.addAll(listModels);
+
+            }else{
+
+                mMallListModels = new ArrayList<>();
+
+                mMallListModels.addAll(listModels);
+            }
+        }
+        if(mMallListModels.size() == listDaos.size()){
+            responseMallModel(mMallListModels);
+        }
+
+    }
+
+    private void responseMallModel(final List<MallListModel> listModels){
+        Observable.create(new ObservableOnSubscribe<List<MallListModel>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<MallListModel>> observableEmitter) {
+                List<MallListModel> list = removeDuplicate(listModels);
+                observableEmitter.onNext(list);
+            }
+        }).subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<MallListModel>>() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<MallListModel> listModels) {
+                        mView.get().hideProgress();
+                        long lastTime = System.currentTimeMillis();
+                        KLog.i("look over current time = " + lastTime);
+                        mView.get().loadData(listModels);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    /**
+     * List segmentation
+     */
+    private List<List<MailListDao>> groupList(List<MailListDao> list) {
+        List<List<MailListDao>> listGroup = new ArrayList<>();
+        int listSize = list.size();
+        int toIndex = 2000;
+        int size = list.size();
+        for (int i = 0; i < size; i += 2000) {
+            if (i + 2000 > listSize) {
+                toIndex = listSize - i;
+            }
+            List<MailListDao> newList = list.subList(i, i + toIndex);
+            listGroup.add(newList);
+        }
+        return listGroup;
+    }
+
     public void getContactsMallList(final Context context){
         Intent intent = new Intent(context, ImportMailActivity.class);
         context.startActivity(intent);
     }
 
-    public void filterData(List<MallListModel> sourceDateList , String filterStr , PinyinComparator pinyinComparator, SortAdapter sortAdapter) {
+    public void filterData(List<MallListModel> sourceDateList , String filterStr , PinyinComparator pinyinComparator,
+                           SortAdapter sortAdapter) {
         List<MallListModel> filterDateList = new ArrayList<>();
         if (TextUtils.isEmpty(filterStr)) {
             filterDateList = sourceDateList;
@@ -111,48 +250,29 @@ public class MailListFragmentPresenter extends BasePresenter<MailListView>{
         sortAdapter.updateList(filterDateList);
     }
 
-    private List<MallListModel> mergeData(List<MailListDao> listDaos,Context context){
-        List<MallListModel> listModels = new ArrayList<>();
-        for(MailListDao mailListDao : listDaos){
-            listModels.add(new MallListModel(mailListDao.getPhone(),mailListDao.getName(),mailListDao.getId()));
+    private List<MallListModel> mergeData(List<MailListDao> listDaos){
+        List<MallListModel> listModels = new LinkedList<>();
+        Iterator iterator = listDaos.iterator();
+
+        while (iterator.hasNext()){
+            MailListDao mailListDao = (MailListDao)iterator.next();
+            MallListModel mallListModel = new MallListModel(mailListDao.getPhone(),mailListDao.getName());
+            listModels.add(mallListModel);
         }
         return listModels;
     }
 
-    private List<MallListModel> handleData(List<MallListModel> listDaos,Context context){
-        List<MallListModel> listModels = new ArrayList<>();
-        for(MallListModel mailListDao : listDaos){
-            listModels.add(new MallListModel(mailListDao.getPhone(),mailListDao.getName(),mailListDao.getId()));
-        }
-        return listModels;
-    }
-
-    private void saveInSqlite(Context context,List<MallListModel> list){
-        List<MailListDao> mailListDaos = new ArrayList<>();
+    public List<MallListModel> removeDuplicate(List<MallListModel> list) {
+        Map<String,MallListModel> mallListModelMap = new HashMap<>();
         for(MallListModel mallListModel : list){
-            MailListDao mailListDao = new MailListDao();
-            mailListDao.setPhone(mallListModel.getPhone());
-            mailListDao.setName(mallListModel.getName());
-            mailListDaos.add(mailListDao);
-        }
-        MailListManager.getInstance(context).insertMailListList(mailListDaos,context);
-    }
-
-    public List<MallListModel> removeDuplicate(List<MallListModel> list)  {
-        for  ( int  i  =   0 ; i  <  list.size()  -   1 ; i ++ )  {
-            for  ( int  j  =  list.size()  -   1 ; j  >  i; j -- )  {
-                if(list.get(j).getName() != null && list.get(i).getName()!=null){
-                    if  (list.get(j).getName().equals(list.get(i).getName()))  {
-                        list.remove(j);
-                    }
-                }else if(list.get(j).getName() == null){
-                    list.remove(j);
-                }else if(list.get(i).getName() == null){
-                    list.remove(i);
-                }
+            String name = mallListModel.getName();
+            if(mallListModelMap.containsKey(name)){
+                continue;
             }
+            mallListModelMap.put(name,mallListModel);
         }
-        return list;
+        List<MallListModel> mallListModels = new ArrayList<>(mallListModelMap.values());
+        return mallListModels;
     }
 
     public void startTargetActivity(Context context ,String phone){

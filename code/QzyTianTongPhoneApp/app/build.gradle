@@ -10,7 +10,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 22
         versionCode 1
-        versionName "3.1.9"
+        versionName "3.2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         javaCompileOptions {
@@ -57,7 +57,7 @@ android {
     }
 //    output.outputFile.parent,"app_device_v"+defaultConfig.versionName+"_"+new Date().format("yyyy-MM-dd")+"_"+buildType.name+".apk"
     greendao {
-        schemaVersion 11
+        schemaVersion 15
         targetGenDir 'src/main/java'
         daoPackage 'com.tt.qzy.view.db'
     }

@@ -27,6 +27,13 @@
 
     <!-- 所有普通的view的样式 -->
     <style name="CommonViewStyle" parent="BaseAppTheme">
+        <item name="android:launchMode">singleTop</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
+
+    <!-- 所有普通的view的样式 -->
+    <style name="TellPhoneStyle" parent="BaseAppTheme">
+        <item name="android:launchMode">singleTask</item>
         <item name="android:windowFullscreen">false</item>
     </style>
 

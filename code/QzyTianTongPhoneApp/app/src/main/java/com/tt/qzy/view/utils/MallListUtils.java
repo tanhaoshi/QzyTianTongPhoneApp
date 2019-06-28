@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 
 import com.qzy.utils.LogUtils;
+import com.socks.library.KLog;
 import com.tt.qzy.view.bean.MallListModel;
 
 import java.util.ArrayList;
@@ -14,10 +15,11 @@ import java.util.List;
 public class MallListUtils {
 
     public static List<MallListModel> readContacts(Context context) {
+        Cursor cursor = null;
         try {
             List<MallListModel> mallListModels = null;
             ContentResolver cr = context.getContentResolver();
-            Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+            cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
             if(cursor != null){
                 mallListModels = new ArrayList<>();
                 while (cursor.moveToNext()) {
@@ -40,6 +42,9 @@ public class MallListUtils {
         }catch (Exception e){
             e.printStackTrace();
             LogUtils.i("error : " + e.getMessage().toString());
+        }finally {
+            KLog.i("The cursor is close ");
+            if(cursor != null) cursor.close();
         }
         return null;
     }

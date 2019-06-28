@@ -8,6 +8,7 @@ import com.qzy.data.PhoneCmd;
 import com.qzy.tt.data.TtCallRecordProtos;
 import com.qzy.tt.data.TtShortMessageProtos;
 import com.qzy.utils.LogUtils;
+import com.socks.library.KLog;
 import com.tt.qzy.view.db.dao.CallRecordDao;
 import com.tt.qzy.view.db.dao.ShortMessageDao;
 import com.tt.qzy.view.db.manager.CallRecordManager;
@@ -114,10 +115,7 @@ public class SyncManager {
             }
         }
         if (isRecord) {
-            // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_RECORD_CALL_HISTROY,Integer.valueOf(count)));
-            /*if(iSyncDataListener != null){
-                iSyncDataListener.onCallingLogSyncFinish(Integer.valueOf(count));
-            }*/
+
             if (hashMapSyncData != null) {
                 Iterator iter = hashMapSyncData.entrySet().iterator();
                 while (iter.hasNext()) {
@@ -173,7 +171,6 @@ public class SyncManager {
         }
         List<ShortMessageDao> shortMessagList = handlerShortMessageAgrementData(list);
         ShortMessageManager.getInstance(mContext).insertShortMessageList(shortMessagList, mContext);
-        LogUtils.i("look over list size = " + mMessageList.size());
     }
 
     public List<ShortMessageDao> handlerShortMessageAgrementData(List<TtShortMessageProtos.TtShortMessage.ShortMessage> list) {
@@ -206,6 +203,7 @@ public class SyncManager {
 
             SPUtils.putShare(mContext, Constans.SHORTMESSAGE_ISREAD, count);
         }
+
         return shortMessageDaos;
     }
 
@@ -227,11 +225,7 @@ public class SyncManager {
                     @Override
                     public void onNext(ShortMessageDao value) {
                         disposeAlert();
-                        // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_RESPONSE_SHORT_MESSAGE, PhoneCmd.getPhoneCmd(protoId,messageV3)));
-                        /*if (iSyncMsgDataListener != null) {
-                            LogUtils.i("iSyncMsgDataListener handleShortMessageSignal  = ");
-                            iSyncMsgDataListener.onShorMsgSignalSyncFinish(PhoneCmd.getPhoneCmd(protoId, messageV3));
-                        }*/
+
                         Iterator iter = hashMapSyncMsgData.entrySet().iterator();
                         while (iter.hasNext()) {
                             Map.Entry entry = (Map.Entry) iter.next();
@@ -266,11 +260,6 @@ public class SyncManager {
         recordCount = recordCount + 1;
         SPUtils.putShare(mContext, Constans.SHORTMESSAGE_ISREAD, recordCount);
 
-        // EventBus.getDefault().post(new MessageEventBus(IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_LOCAL_SHORT_MESSAGE_HISTROY,Integer.valueOf(recordCount)));
-       /* if(iSyncDataListener != null){
-            iSyncDataListener.onDisposeAlertSyncFinish(Integer.valueOf(recordCount));
-        }*/
-
         if (hashMapSyncData != null) {
             Iterator iter = hashMapSyncData.entrySet().iterator();
             while (iter.hasNext()) {
@@ -285,16 +274,6 @@ public class SyncManager {
         }
 
     }
-
-  /*  @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MessageEventBus event) {
-        switch (event.getType()) {
-            case IMessageEventBustType.EVENT_BUS_TYPE_CONNECT_TIANTONG_REQUEST_SERVER_NONCONNECT:
-                isShortMessage = true;
-                isRecord = true;
-                break;
-        }
-    }*/
 
     /**
      * 连接断开通知这里停止同步

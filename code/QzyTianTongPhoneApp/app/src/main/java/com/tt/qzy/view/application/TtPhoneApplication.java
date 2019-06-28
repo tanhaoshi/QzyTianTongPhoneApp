@@ -112,7 +112,7 @@ public class TtPhoneApplication extends Application {
             }
         };
         //默認調用false false為我們自定義的捕捉異常
-        CrashHandler.getInstance().init(this, crashUploader, restartIntent,false);
+        CrashHandler.getInstance().init(this, crashUploader, restartIntent,true);
 
     }
 

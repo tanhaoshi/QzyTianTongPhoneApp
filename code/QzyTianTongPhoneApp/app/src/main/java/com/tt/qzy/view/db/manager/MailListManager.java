@@ -51,29 +51,21 @@ public class MailListManager {
         if (mailListDaos == null || mailListDaos.isEmpty()) {
             return;
         }
-//        DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
-//        DaoSession daoSession = daoMaster.newSession();
         MailListDaoDao userDao = daoSession.getMailListDaoDao();
         userDao.insertInTx(mailListDaos);
     }
 
     public void insertMailListSignal(MailListDao mailListDao, Context context){
-//        DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
-//        DaoSession daoSession = daoMaster.newSession();
         MailListDaoDao mailListDaoDao = daoSession.getMailListDaoDao();
         mailListDaoDao.insert(mailListDao);
     }
 
     public void deleteMailContacts(MailListDao dao , Context context){
-//        DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
-//        DaoSession daoSession = daoMaster.newSession();
         MailListDaoDao mailListDaoDao = daoSession.getMailListDaoDao();
         mailListDaoDao.delete(dao);
     }
 
     public void deleteAllMail(Context context){
-//        DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
-//        DaoSession daoSession = daoMaster.newSession();
         MailListDaoDao mailListDaoDao = daoSession.getMailListDaoDao();
         mailListDaoDao.deleteAll();
     }

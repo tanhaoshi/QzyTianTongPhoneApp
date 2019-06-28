@@ -20,12 +20,14 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 public final class AppUtils {
 
@@ -203,4 +205,26 @@ public final class AppUtils {
             if(o == null) throw new NullPointerException();
         }
     }
+
+    /**
+     ** 获取随机汉字
+     ** @return
+     */
+   public static String getRandomWord(){
+       String str = "";
+       int heightPos;
+       int lowPos;
+       Random rd = new Random();
+       heightPos = 176 + Math.abs(rd.nextInt(39));
+       lowPos = 161 + Math.abs(rd.nextInt(93));
+       byte[] bt = new byte[2];
+       bt[0] = Integer.valueOf(heightPos).byteValue();
+       bt[1] = Integer.valueOf(lowPos).byteValue();
+       try {
+           str = new String(bt, "GBK");
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+       return str;
+   }
 }

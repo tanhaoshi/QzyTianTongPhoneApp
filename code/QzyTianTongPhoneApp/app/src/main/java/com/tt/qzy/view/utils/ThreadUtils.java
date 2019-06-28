@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.socks.library.KLog;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -227,7 +229,7 @@ public final class ThreadUtils {
                     try{
                         super.run();
                     }catch (Exception e){
-                        Log.i("ThreadUtils","Request threw uncaught throwable");
+                        KLog.i("ThreadUtils exception message : " + e.getMessage().toString());
                     }
                 }
             };

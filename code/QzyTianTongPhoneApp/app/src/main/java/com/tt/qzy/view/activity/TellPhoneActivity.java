@@ -71,6 +71,7 @@ public class TellPhoneActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav
                 | View.SYSTEM_UI_FLAG_IMMERSIVE);
         setContentView(R.layout.activity_tell_phone);
+        KLog.i("onCreate ..");
         registerReceiver();
         mQzySensorManager = new QzySensorManager(getApplicationContext());
         ButterKnife.bind(this);
@@ -214,6 +215,7 @@ public class TellPhoneActivity extends AppCompatActivity {
             mHandler.sendEmptyMessage(MSG_CALLING_TIME_REMOVE);
         }
         isFinsh = false;
+        KLog.i("111111111111111111111111111111111111 ");
         finish();
     }
 
@@ -233,7 +235,7 @@ public class TellPhoneActivity extends AppCompatActivity {
      * @param cmd
      */
     private void updatePhoneState(PhoneCmd cmd) {
-        LogUtils.i("phone state = " + PhoneStateUtils.getTtPhoneState(cmd).ordinal());
+        KLog.i("phone state = " + PhoneStateUtils.getTtPhoneState(cmd).ordinal());
 
         switch (PhoneStateUtils.getTtPhoneState(cmd)) {
             case NOCALL:
@@ -252,7 +254,9 @@ public class TellPhoneActivity extends AppCompatActivity {
                 if(mAnswerBellManager != null){
                     mAnswerBellManager.stopPlay();
                 }
-                onEndCallState();
+                if(isFinsh){
+                    onEndCallState();
+                }
                 break;
             case RING:
                 if(mAnswerBellManager != null){
@@ -313,12 +317,16 @@ public class TellPhoneActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        KLog.i("onNewIntent ..");
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         isFinsh = false;
         mQzySensorManager.freeSenerState();
-        // EventBusUtils.unregister(TellPhoneActivity.this);
-        //finish();
     }
 
     @Override
@@ -328,6 +336,7 @@ public class TellPhoneActivity extends AppCompatActivity {
             mAnswerBellManager.release();
             mAnswerBellManager = null;
         }
+        KLog.i("onDestroy");
         AndroidVoiceManager.setVoiceMusic(this);
         unregisterReceiver();
     }
@@ -342,3 +351,4 @@ public class TellPhoneActivity extends AppCompatActivity {
         }
     };
 }
+

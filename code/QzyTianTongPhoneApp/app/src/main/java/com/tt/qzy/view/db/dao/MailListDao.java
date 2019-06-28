@@ -1,5 +1,6 @@
 package com.tt.qzy.view.db.dao;
 
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
@@ -9,21 +10,13 @@ public class MailListDao {
 
     @Id(autoincrement = true)
     private Long id;
-    //号码
     private String phone;
-    //用户名
     private String name;
-    //号码归属地
     private String ownership;
-    //通话时长
     private String tellTime;
-    //来电时间戳
     private String dataTime;
-    //创建时间
     private String createDate;
-    //邮箱
     private String mail;
-    //qq号
     private String qq;
     @Generated(hash = 129014901)
     public MailListDao(Long id, String phone, String name, String ownership,
@@ -40,9 +33,15 @@ public class MailListDao {
         this.qq = qq;
     }
 
-    public MailListDao(String phone,String name){
+    public MailListDao(String phone,String name,String ownership,String tellTime,String dataTime,String createDate,String mail,String qq){
         this.phone = phone;
         this.name = name;
+        this.ownership = ownership;
+        this.tellTime = tellTime;
+        this.dataTime = dataTime;
+        this.createDate = createDate;
+        this.mail = mail;
+        this.qq = qq;
     }
 
     @Generated(hash = 1958615879)

@@ -68,6 +68,11 @@ public class ShortMessageManager {
        daoDao.update(shortMessageDao);
     }
 
+    public void updateShortMessageList(List<ShortMessageDao> messageDaoList){
+       ShortMessageDaoDao daoDao = daoSession.getShortMessageDaoDao();
+       daoDao.updateInTx(messageDaoList);
+    }
+
     public List<ShortMessageDao> limitShortMessageList(int offset,int limit){
         ShortMessageDaoDao dao = daoSession.getShortMessageDaoDao();
         List<ShortMessageDao> list = dao.queryBuilder().

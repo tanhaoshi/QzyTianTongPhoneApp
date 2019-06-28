@@ -18,7 +18,7 @@ public class MallListModel implements Comparable<MallListModel>{
 
     public MallListModel(String phone,String name,Long id){
         if(name == null){
-            name = "无用户名";
+            name = "无名";
         }
         pinyin = PinyinUtils.getPingYin(name); // 根据姓名获取拼音
         letters = pinyin.substring(0, 1).toUpperCase(); // 获取拼音首字母并转成大写
@@ -28,6 +28,23 @@ public class MallListModel implements Comparable<MallListModel>{
         this.phone = phone;
         this.name = name;
         this.id = id;
+    }
+
+    /**
+     * time consuming reason
+     * @since especially when there's a lot of data
+     * */
+    public MallListModel(String phone,String name){
+        if(name == null){
+            name ="无名";
+        }
+        pinyin = PinyinUtils.getPingYin(name); // 根据姓名获取拼音
+        letters = pinyin.substring(0, 1).toUpperCase(); // 获取拼音首字母并转成大写
+        if (!letters.matches("[A-Z]")) { // 如果不在A-Z中则默认为“#”
+            letters = "#";
+        }
+        this.phone = phone;
+        this.name = name;
     }
 
     public String getPinyin() {

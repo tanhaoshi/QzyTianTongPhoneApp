@@ -25,9 +25,13 @@ import android.widget.TextView;
 import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
 import com.qzy.tt.phone.service.TtPhoneService;
 import com.qzy.utils.LogUtils;
+import com.socks.library.KLog;
 import com.tt.qzy.view.activity.base.BaseActivity;
+import com.tt.qzy.view.bean.AllArea;
+import com.tt.qzy.view.bean.MallListModel;
 import com.tt.qzy.view.bean.VersionCodeModel;
 import com.tt.qzy.view.db.dao.CallRecordDao;
+import com.tt.qzy.view.db.dao.MailListDao;
 import com.tt.qzy.view.db.manager.CallRecordManager;
 import com.tt.qzy.view.fragment.AidlPhoneFragment;
 import com.tt.qzy.view.fragment.MailListFragment;
@@ -44,6 +48,8 @@ import com.tt.qzy.view.view.MainActivityView;
 import com.xdandroid.hellodaemon.IntentWrapper;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -87,7 +93,9 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startService();
+        KLog.i("onCreate");
     }
+
 
     @SuppressLint("MissingSuperCall")
     @Override
@@ -225,11 +233,11 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
                 }
                 break;
             case R.id.tab_mail:
-                if(tt_status){
+//                if(tt_status){
                     showMailListFragment();
-                }else{
-                    NToast.shortToast(this,getString(R.string.TMT_THE_DEVICE_NOT_OPERATION));
-                }
+//                }else{
+//                    NToast.shortToast(this,getString(R.string.TMT_THE_DEVICE_NOT_OPERATION));
+//                }
                 break;
         }
     }
@@ -450,7 +458,7 @@ public class MainActivity extends BaseActivity<MainActivityView> implements Main
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         showMainFragment();
-
+        KLog.i("onNewIntent");
     }
 
     @Override

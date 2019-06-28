@@ -68,6 +68,11 @@ public class CallRecordManager {
         dao.update(callRecordDao);
     }
 
+    public void updateTxRecordName(List<CallRecordDao> callRecordDaos){
+        CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
+        dao.updateInTx(callRecordDaos);
+    }
+
     public void deleteRecordList(){
         CallRecordDaoDao dao = daoSession.getCallRecordDaoDao();
         dao.deleteAll();
@@ -82,10 +87,7 @@ public class CallRecordManager {
         if (callRecordDaos == null || callRecordDaos.isEmpty()) {
             return;
         }
-//        DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
-//        DaoSession daoSession = daoMaster.newSession();
         CallRecordDaoDao callRecordDao = daoSession.getCallRecordDaoDao();
-//        callRecordDao.insertOrReplaceInTx(callRecordDaos);
         callRecordDao.insertInTx(callRecordDaos);
     }
 
@@ -93,8 +95,6 @@ public class CallRecordManager {
         if( null == dao){
             return;
         }
-//        DaoMaster daoMaster = new DaoMaster(DBManager.getInstance(context).getReadableDatabase());
-//        DaoSession daoSession = daoMaster.newSession();
         CallRecordDaoDao callRecordDao = daoSession.getCallRecordDaoDao();
         callRecordDao.insert(dao);
     }

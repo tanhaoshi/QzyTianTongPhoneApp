@@ -222,20 +222,6 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     }
 
     /**
-     * 返回设备服务端APP是否需要更新
-     */
-    private void parseServerAppVersion(Object o) {
-        TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse) o;
-        if (updateResponse.getIsUpdate()) {
-            mView.get().upgradleServerApp();
-        } else {
-            isUpdate = false;
-            LogUtils.i("parse server is update boolean value = " + isUpdate);
-            TtPhoneDataManager.getInstance().connectTtPhoneServer(Constans.IP, Constans.PORT);
-        }
-    }
-
-    /**
      * 返回gps准确位置进行解析
      *
      * @param object
@@ -288,12 +274,33 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
     }
 
     volatile boolean isUpdate = true;
+    volatile boolean isStatus = true;
+
+    /**
+     * 返回设备服务端APP是否需要更新
+     */
+    private void parseServerAppVersion(Object o) {
+        // 2
+        TtPhoneUpdateResponseProtos.UpdateResponse updateResponse = (TtPhoneUpdateResponseProtos.UpdateResponse) o;
+        if (updateResponse.getIsUpdate()) {
+            mView.get().upgradleServerApp();
+        } else {
+            isUpdate = false;
+            LogUtils.i("parse server is update boolean value = " + isStatus);
+            TtPhoneDataManager.getInstance().connectTtPhoneServer(Constans.IP, Constans.PORT);
+        }
+        isStatus = true;
+    }
 
     @Override
     public void isTtServerConnected(boolean connected) {
-
         disposeConnect(connected);
     }
+
+    //1.The first possibility 因为首先连接都会是更新的端口 所以肯定能进来
+    //2.当我们连接成功的时候 需要判断的是 现在要去更新还是去连接我们正常的端口。
+    //3.现在就有两种情况 更新端口 还是 正常接口 但是问题是 当我们连接了一个更新端口的时候
+    // 我们会开启一个监视器去监听 当前是否发生改变
 
     private void disposeConnect(boolean connectState){
 
@@ -301,14 +308,16 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
 
             saveLocalWIFIIP();
 
-            //如果是更新连接成功,
             if(isUpdate){
+                //   1
+                isStatus = false;
 
+                requireServerUpdate();
+
+                //开启了一个3秒后的监听器 监听状态的改变。
                 monitorConnectTimeOut();
 
             }else{
-                //不是update的更新 而是我们正常连接的更新
-
                 TtPhoneDataManager.getInstance().getTtPhoneSosState();
 
                 if (TtPhoneDataManager.getInstance() != null) {
@@ -332,24 +341,20 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentView> imple
             public void subscribe(ObservableEmitter<Boolean> observableEmitter) throws Exception {
                 long lastTime = System.currentTimeMillis();
                 LogUtils.i("look at last time = " + lastTime);
-                requireServerUpdate();
-                LogUtils.i(" subscribe look over isUpdate value = " + isUpdate);
                 observableEmitter.onNext(isUpdate);
             }
-        }).delay(1, TimeUnit.SECONDS)
+        }).delay(3, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Boolean>() {
                     @Override
                     public void onSubscribe(Disposable disposable) {
-
                     }
-
                     @Override
                     public void onNext(Boolean aBoolean) {
-                        LogUtils.i(" onNext look over isUpdate value = " + isUpdate);
-                        if(isUpdate){
+                        LogUtils.i(" onNext look over isUpdate value = " + isStatus);
+                        if(!isStatus){
                             //出现异常 进行重连
                             long currentTime = System.currentTimeMillis();
                             LogUtils.i(" [normal] look at current time = " + currentTime);

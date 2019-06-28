@@ -18,6 +18,7 @@ import com.kaopiz.kprogresshud.KProgressHUD;
 import com.qzy.tt.data.CallPhoneStateProtos;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
+import com.socks.library.KLog;
 import com.tt.qzy.view.MainActivity;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.adapter.CallRecordAdapter;
@@ -209,9 +210,8 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
         myInputPwdUtil.dismiss();
     }
 
-
-
     private String phoneNumber = "";
+
     @Override
     public void onClick(int position,final String diapadNumber) {
         phoneNumber = diapadNumber;
@@ -304,6 +304,7 @@ public class AidlPhoneFragment extends Fragment implements PopWindow.OnDismissLi
     @Override
     public void showError(String msg, boolean pullToRefresh) {
         mHUD.dismiss();
+        KLog.i("error = " + msg);
         NToast.shortToast(getActivity(),msg);
     }
 

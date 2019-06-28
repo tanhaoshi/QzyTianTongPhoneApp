@@ -1,26 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="date">
-        <item>张三</item>
-        <item>李四</item>
-        <item>王五</item>
-        <item>赵六</item>
-        <item>房八</item>
-        <item>测试</item>
-        <item>真的</item>
-        <item>如果</item>
-        <item>发了信息</item>
-        <item>搜索</item>
-        <item>java</item>
-        <item>狗蛋</item>
-        <item>钩子</item>
-        <item>android</item>
-        <item>潜入</item>
-        <item>嵌入式</item>
-        <item>搞了</item>
-        <item>windows</item>
-        <item>走开</item>
-        <item>放过来</item>
-        <item>item</item>
+
     </string-array>
 </resources>

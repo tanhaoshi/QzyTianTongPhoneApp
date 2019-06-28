@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.socks.library.KLog;
 import com.tt.qzy.view.R;
 import com.tt.qzy.view.bean.MallListModel;
 
